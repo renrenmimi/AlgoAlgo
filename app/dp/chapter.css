@@ -1,0 +1,74 @@
+/* 第 7 章 · 动态规划入门(data-ch="dp")专属样式。
+   规则:全部包在 [data-ch="dp"] 下或带 dp- 前缀;颜色只用 CSS token。 */
+
+/* — 五步法步骤卡 — */
+
+[data-ch="dp"] .dp-steps {
+  counter-reset: dpstep;
+  display: grid;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+[data-ch="dp"] .dp-step {
+  counter-increment: dpstep;
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 14px;
+  align-items: flex-start;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--panel);
+  padding: 14px 18px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+[data-ch="dp"] .dp-step:hover {
+  border-color: var(--acc-border);
+  box-shadow: 0 6px 22px var(--acc-glow);
+}
+
+[data-ch="dp"] .dp-step::before {
+  content: counter(dpstep);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 22px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: var(--acc-soft);
+  color: var(--acc-ink);
+  border: 1px solid var(--acc-border);
+}
+
+[data-ch="dp"] .dp-step h4 {
+  font-size: 14.5px;
+  margin: 2px 0 4px;
+}
+
+[data-ch="dp"] .dp-step p {
+  margin: 0;
+  font-size: 13.2px;
+  color: var(--text-2);
+}
+
+/* — 贪心反例的两列对比 — */
+
+[data-ch="dp"] .dp-duel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 16px 0;
+}
+
+[data-ch="dp"] .dp-duel .card b.mono {
+  font-size: 15px;
+}
+
+@media (max-width: 760px) {
+  [data-ch="dp"] .dp-duel {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,124 @@
+/* 第 12 章 · 字符串算法(data-ch="strings")专属样式。
+   规则:自定义类名一律带 .str- 前缀,或整体包在 [data-ch="strings"] 下;
+   颜色只用 CSS token(var(--acc) 等),深浅主题自动适配,禁止写死。 */
+
+/* ── 可视化里的自定义单元格状态(复用全局 .cell,只补两种状态) ── */
+
+/* src:next 构建时「当前拿来对比的前缀字符 pattern[j]」—— 蓝实线 */
+[data-ch="strings"] .cell.src {
+  border-color: var(--info);
+  background: var(--info-bg);
+  color: var(--info);
+  box-shadow: 0 0 14px color-mix(in oklab, var(--info) 26%, transparent);
+}
+
+/* pref:已经匹配上的前缀段 —— 蓝虚线,弱于 src */
+[data-ch="strings"] .cell.pref {
+  border-color: color-mix(in oklab, var(--info) 55%, var(--border-strong));
+  border-style: dashed;
+  color: var(--info);
+}
+
+/* ── 可视化行:左侧「文本 / 模式」标签 + 右侧字符网格 ── */
+
+[data-ch="strings"] .str-tagrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+[data-ch="strings"] .str-tag {
+  flex: 0 0 auto;
+  width: 52px;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-3);
+  letter-spacing: 0.02em;
+}
+
+/* ── 两列对比卡(暴力 vs KMP 世界观) ── */
+
+[data-ch="strings"] .str-cmp {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 16px 0;
+}
+
+@media (max-width: 760px) {
+  [data-ch="strings"] .str-cmp {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── 正文里的要点小列表 ── */
+
+[data-ch="strings"] .str-list {
+  margin: 10px 0 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 8px;
+}
+
+[data-ch="strings"] .str-list li {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-2);
+}
+
+[data-ch="strings"] .str-list li b {
+  color: var(--text);
+}
+
+/* ── 滚动哈希:哈希值读数条 ── */
+
+[data-ch="strings"] .str-hashbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+[data-ch="strings"] .str-hashbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--panel-2);
+  color: var(--text-2);
+}
+
+[data-ch="strings"] .str-hashbox b {
+  font-size: 17px;
+  color: var(--acc-ink);
+}
+
+[data-ch="strings"] .str-hashbox[data-role="target"] {
+  border-color: var(--acc-border);
+  background: var(--acc-soft);
+}
+
+[data-ch="strings"] .str-hashop {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-3);
+}
+
+[data-ch="strings"] .str-hashok {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--ok) 40%, transparent);
+  background: var(--ok-bg);
+  color: var(--ok);
+  font-weight: 700;
+  font-size: 12.5px;
+}

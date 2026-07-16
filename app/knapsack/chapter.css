@@ -1,0 +1,263 @@
+/* 第 8 章 · 背包问题(data-ch="knapsack")专属样式。
+   规则:自定义类名一律带 kp- 前缀,或整体包在 [data-ch="knapsack"] 下;
+   颜色只用 CSS token(var(--acc)/--info/--ok/--risk 等),深浅主题自动适配。 */
+
+/* ---------- 背包问题定义卡 ---------- */
+
+[data-ch="knapsack"] .kp-def {
+  display: grid;
+  gap: 10px;
+  border: 1px solid var(--acc-border);
+  border-radius: 16px;
+  background: var(--acc-soft);
+  padding: 16px 20px;
+  margin: 16px 0;
+}
+
+[data-ch="knapsack"] .kp-def h4 {
+  margin: 0;
+  font-size: 14.5px;
+  color: var(--acc-ink);
+}
+
+[data-ch="knapsack"] .kp-def p {
+  margin: 0;
+  font-size: 13.4px;
+  color: var(--text-2);
+}
+
+/* ---------- 转移方程高亮盒 ---------- */
+
+[data-ch="knapsack"] .kp-formula {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  text-align: center;
+  border: 1px dashed var(--acc-border);
+  border-radius: 14px;
+  background: var(--panel);
+  color: var(--acc-ink);
+  padding: 16px 14px;
+  margin: 16px 0;
+  line-height: 1.9;
+}
+
+[data-ch="knapsack"] .kp-formula b {
+  color: var(--acc-ink);
+}
+
+[data-ch="knapsack"] .kp-formula .dim {
+  color: var(--text-3);
+  font-size: 12px;
+}
+
+/* ---------- 两列对比(正序/倒序、回溯/背包、组合/排列) ---------- */
+
+[data-ch="knapsack"] .kp-duel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 16px 0;
+}
+
+[data-ch="knapsack"] .kp-duel .card b.mono {
+  font-size: 15px;
+}
+
+@media (max-width: 760px) {
+  [data-ch="knapsack"] .kp-duel {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- KnapSackLab:0-1 背包实验室 ---------- */
+
+[data-ch="knapsack"] .kp-lab-grid {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+[data-ch="knapsack"] .kp-item {
+  width: 108px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 12px 8px;
+  border-radius: 14px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--panel-2);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-ch="knapsack"] .kp-item:hover {
+  border-color: var(--acc-border);
+}
+
+[data-ch="knapsack"] .kp-item.on {
+  border-color: var(--acc);
+  background: var(--acc-soft);
+  color: var(--acc-ink);
+  box-shadow: 0 6px 20px var(--acc-glow);
+  transform: translateY(-3px);
+}
+
+[data-ch="knapsack"] .kp-item-emoji {
+  font-size: 26px;
+  line-height: 1.1;
+}
+
+[data-ch="knapsack"] .kp-item-name {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+[data-ch="knapsack"] .kp-item-stat {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+[data-ch="knapsack"] .kp-item.on .kp-item-stat {
+  color: var(--acc-ink);
+}
+
+[data-ch="knapsack"] .kp-gauge {
+  width: min(420px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+[data-ch="knapsack"] .kp-gauge-bar {
+  height: 14px;
+  border-radius: 999px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+[data-ch="knapsack"] .kp-gauge-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--acc);
+  transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-ch="knapsack"] .kp-gauge-fill.over {
+  background: var(--risk);
+}
+
+[data-ch="knapsack"] .kp-gauge-nums {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+
+[data-ch="knapsack"] .kp-over {
+  color: var(--risk);
+  font-weight: 700;
+}
+
+/* ---------- RollingCompare:正序/倒序切换 ---------- */
+
+[data-ch="knapsack"] .kp-modebar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+[data-ch="knapsack"] .kp-mode-btn {
+  flex: 1 1 auto;
+  min-width: 180px;
+  padding: 9px 12px;
+  border-radius: 11px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--panel-2);
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+[data-ch="knapsack"] .kp-mode-btn:hover {
+  border-color: var(--acc-border);
+}
+
+[data-ch="knapsack"] .kp-mode-btn.on {
+  border-color: var(--acc);
+  background: var(--acc-soft);
+  color: var(--acc-ink);
+}
+
+[data-ch="knapsack"] .kp-roll-row {
+  display: grid;
+  grid-template-columns: repeat(6, 48px);
+  gap: 10px;
+  justify-content: center;
+}
+
+[data-ch="knapsack"] .kp-roll-tagcell {
+  min-height: 38px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+[data-ch="knapsack"] .kp-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 6px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+[data-ch="knapsack"] .kp-tag.write {
+  color: var(--acc-ink);
+  background: var(--acc-soft);
+  border-color: var(--acc-border);
+}
+
+[data-ch="knapsack"] .kp-tag.read {
+  color: var(--info);
+  background: var(--info-bg);
+  border-color: color-mix(in oklab, var(--info) 40%, transparent);
+}
+
+[data-ch="knapsack"] .kp-tag.read.dirty {
+  color: var(--risk);
+  background: var(--risk-bg);
+  border-color: color-mix(in oklab, var(--risk) 40%, transparent);
+}
+
+/* 读取格子的描边(旧值 = 蓝,脏值 = 红) */
+[data-ch="knapsack"] .cell.kp-read {
+  border-color: var(--info);
+  border-style: dashed;
+  background: var(--info-bg);
+  color: var(--info);
+}
+
+[data-ch="knapsack"] .cell.kp-read.dirty {
+  border-color: var(--risk);
+  background: var(--risk-bg);
+  color: var(--risk);
+}
+
+/* ---------- 背包家族速查表微调 ---------- */
+
+[data-ch="knapsack"] .kp-fam-note {
+  font-size: 12.5px;
+  color: var(--text-3);
+  margin-top: 6px;
+}

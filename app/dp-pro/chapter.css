@@ -1,0 +1,228 @@
+/* 第 10 章 · DP 进阶(data-ch="dp-pro")专属样式。
+   规则:自定义类名一律带 .pro- 前缀,或整体裹在 [data-ch="dp-pro"] 下;
+   颜色只用 CSS token(var(--acc) 等),深浅主题自动适配,禁止写死颜色。 */
+
+/* ---------- 四大类型总览卡 ---------- */
+
+[data-ch="dp-pro"] .pro-type-ico {
+  font-size: 26px;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+/* ---------- 股票族谱阶梯 ---------- */
+
+[data-ch="dp-pro"] .pro-ladder {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+[data-ch="dp-pro"] .pro-rung {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--acc-border);
+  border-radius: 14px;
+  background: var(--panel);
+  padding: 12px 16px;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+[data-ch="dp-pro"] .pro-rung:hover {
+  border-color: var(--acc-border);
+  border-left-color: var(--acc);
+  box-shadow: 0 6px 22px var(--acc-glow);
+  transform: translateX(3px);
+}
+
+[data-ch="dp-pro"] .pro-rung-lc {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--acc-ink);
+  background: var(--acc-soft);
+  border: 1px solid var(--acc-border);
+  border-radius: 9px;
+  padding: 5px 9px;
+  white-space: nowrap;
+}
+
+[data-ch="dp-pro"] .pro-rung h4 {
+  margin: 0 0 3px;
+  font-size: 14px;
+}
+
+[data-ch="dp-pro"] .pro-rung p {
+  margin: 0;
+  font-size: 12.8px;
+  color: var(--text-2);
+}
+
+[data-ch="dp-pro"] .pro-rung .add {
+  color: var(--acc-ink);
+  font-weight: 600;
+}
+
+/* ---------- 状态机转移图(SVG) ---------- */
+
+.pro-fsm-svg {
+  display: block;
+  margin: 0 auto;
+  font-family: var(--font-mono);
+}
+
+.pro-fsm-box rect {
+  fill: var(--panel-2);
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pro-fsm-box .pro-fsm-name {
+  fill: var(--text-2);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pro-fsm-box .pro-fsm-val {
+  fill: var(--text);
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.pro-fsm-box.on rect {
+  fill: var(--acc-soft);
+  stroke: var(--acc);
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 10px var(--acc-glow));
+}
+
+.pro-fsm-box.on .pro-fsm-name,
+.pro-fsm-box.on .pro-fsm-val {
+  fill: var(--acc-ink);
+}
+
+.pro-fsm-box.ans rect {
+  fill: var(--ok-bg);
+  stroke: var(--ok);
+  stroke-width: 2.5;
+}
+
+.pro-fsm-box.ans .pro-fsm-val {
+  fill: var(--ok);
+}
+
+.pro-fsm-edge {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 2;
+  transition: stroke 0.3s, stroke-width 0.3s;
+}
+
+.pro-fsm-edge.on {
+  stroke: var(--acc);
+  stroke-width: 3;
+}
+
+.pro-fsm-lab {
+  fill: var(--text-3);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* ---------- 区间 DP 气球值标注 ---------- */
+
+.pro-bval {
+  color: var(--acc-ink);
+  font-weight: 700;
+}
+
+/* ---------- 状压 DP 实验室 ---------- */
+
+.pro-lamp-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pro-lamp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 96px;
+  padding: 12px 8px;
+  border-radius: 14px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--panel-2);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pro-lamp:hover {
+  border-color: var(--acc-border);
+}
+
+.pro-lamp.on {
+  border-color: var(--acc);
+  background: var(--acc-soft);
+  color: var(--acc-ink);
+  box-shadow: 0 0 18px var(--acc-glow);
+  transform: translateY(-3px);
+}
+
+.pro-lamp-bit {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-3);
+}
+
+.pro-lamp.on .pro-lamp-bit {
+  color: var(--acc-ink);
+}
+
+.pro-lamp-num {
+  font-family: var(--font-mono);
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.pro-lamp-state {
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.pro-mask-readout {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.pro-mask-readout b {
+  color: var(--acc-ink);
+}
+
+/* ---------- 数位/概率 DP 一句话地图 ---------- */
+
+[data-ch="dp-pro"] .pro-mini {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 16px 0;
+}
+
+@media (max-width: 760px) {
+  [data-ch="dp-pro"] .pro-mini,
+  [data-ch="dp-pro"] .grid-3 {
+    grid-template-columns: 1fr;
+  }
+}

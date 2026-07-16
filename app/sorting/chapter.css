@@ -1,0 +1,250 @@
+/* 第 1 章 · 排序(data-ch="sorting")专属样式。
+   规则:全部带 srt- 前缀或包在 [data-ch="sorting"] 下;颜色只用 CSS token。 */
+
+/* ============ 条形图排序实验室 ============ */
+
+[data-ch="sorting"] .srt-algo-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+[data-ch="sorting"] .srt-legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--text-2);
+  margin-bottom: 4px;
+}
+
+[data-ch="sorting"] .srt-sw {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--panel-2);
+  vertical-align: -1px;
+  margin-right: 5px;
+}
+[data-ch="sorting"] .srt-sw[data-state="cmp"] { border-color: var(--acc); background: var(--acc-soft); }
+[data-ch="sorting"] .srt-sw[data-state="swap"] { border-color: var(--risk); background: var(--risk-bg); }
+[data-ch="sorting"] .srt-sw[data-state="sorted"] { border-color: var(--ok); background: var(--ok-bg); }
+[data-ch="sorting"] .srt-sw[data-state="key"] { border-color: var(--info); background: var(--info-bg); }
+[data-ch="sorting"] .srt-sw[data-state="min"] { border-color: var(--warn); background: var(--warn-bg); }
+
+[data-ch="sorting"] .srt-bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 10px;
+  height: 190px;
+  width: 100%;
+  padding-bottom: 26px;
+}
+
+[data-ch="sorting"] .srt-bar {
+  width: 40px;
+  border-radius: 9px 9px 3px 3px;
+  border: 1.6px solid var(--border-strong);
+  background: var(--panel-2);
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 5px;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-ch="sorting"] .srt-bar-v {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-2);
+}
+
+[data-ch="sorting"] .srt-bar[data-state="cmp"] {
+  border-color: var(--acc);
+  background: var(--acc-soft);
+  box-shadow: 0 0 16px var(--acc-glow);
+  transform: translateY(-5px);
+}
+[data-ch="sorting"] .srt-bar[data-state="cmp"] .srt-bar-v { color: var(--acc-ink); }
+
+[data-ch="sorting"] .srt-bar[data-state="swap"] {
+  border-color: var(--risk);
+  background: var(--risk-bg);
+  transform: translateY(-5px);
+}
+[data-ch="sorting"] .srt-bar[data-state="swap"] .srt-bar-v { color: var(--risk); }
+
+[data-ch="sorting"] .srt-bar[data-state="sorted"] {
+  border-color: var(--ok);
+  background: var(--ok-bg);
+}
+[data-ch="sorting"] .srt-bar[data-state="sorted"] .srt-bar-v { color: var(--ok); }
+
+[data-ch="sorting"] .srt-bar[data-state="key"] {
+  border-color: var(--info);
+  background: var(--info-bg);
+  transform: translateY(-5px);
+}
+[data-ch="sorting"] .srt-bar[data-state="key"] .srt-bar-v { color: var(--info); }
+
+[data-ch="sorting"] .srt-bar[data-state="min"] {
+  border-color: var(--warn);
+  background: var(--warn-bg);
+}
+[data-ch="sorting"] .srt-bar[data-state="min"] .srt-bar-v { color: var(--warn); }
+
+/* ============ 归并 / 计数 的多行单元格布局 ============ */
+
+[data-ch="sorting"] .srt-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+  align-items: center;
+}
+
+[data-ch="sorting"] .srt-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+[data-ch="sorting"] .srt-row-lab {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+[data-ch="sorting"] .srt-cells {
+  display: flex;
+  gap: 8px;
+  min-height: 44px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* 计数排序的桶:数字标签在下 */
+[data-ch="sorting"] .srt-bucket {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+[data-ch="sorting"] .srt-bucket-lab {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+}
+
+/* ============ 稳定性演示 ============ */
+
+[data-ch="sorting"] .srt-stab {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+[data-ch="sorting"] .srt-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 58px;
+  height: 62px;
+  border-radius: 13px;
+  border: 1.6px solid var(--border-strong);
+  background: var(--panel-2);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-ch="sorting"] .srt-chip .k {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+}
+[data-ch="sorting"] .srt-chip .tag {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-3);
+}
+/* 同一 key 用同一色相区分,方便肉眼追踪原始顺序 */
+[data-ch="sorting"] .srt-chip[data-hue="a"] { border-color: var(--acc-border); background: var(--acc-soft); }
+[data-ch="sorting"] .srt-chip[data-hue="a"] .k { color: var(--acc-ink); }
+[data-ch="sorting"] .srt-chip[data-hue="b"] { border-color: color-mix(in oklab, var(--info) 45%, transparent); background: var(--info-bg); }
+[data-ch="sorting"] .srt-chip[data-hue="b"] .k { color: var(--info); }
+[data-ch="sorting"] .srt-chip[data-hue="c"] { border-color: color-mix(in oklab, var(--ok) 45%, transparent); background: var(--ok-bg); }
+[data-ch="sorting"] .srt-chip[data-hue="c"] .k { color: var(--ok); }
+
+[data-ch="sorting"] .srt-stab-note {
+  font-size: 12px;
+  color: var(--text-2);
+  text-align: center;
+  margin-top: 6px;
+  min-height: 20px;
+}
+
+/* ============ 合并区间数轴 ============ */
+
+[data-ch="sorting"] .srt-track {
+  position: relative;
+  width: min(100%, 560px);
+  height: 34px;
+  border-radius: 10px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+}
+
+[data-ch="sorting"] .srt-seg {
+  position: absolute;
+  top: 4px;
+  height: 26px;
+  min-width: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  border: 1.5px solid var(--border-strong);
+  background: var(--panel-2);
+  color: var(--text-2);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-ch="sorting"] .srt-seg[data-tone="in"] { border-color: var(--border-strong); }
+[data-ch="sorting"] .srt-seg[data-tone="cur"] {
+  border-color: var(--acc);
+  background: var(--acc-soft);
+  color: var(--acc-ink);
+  box-shadow: 0 0 14px var(--acc-glow);
+  z-index: 2;
+}
+[data-ch="sorting"] .srt-seg[data-tone="done"] {
+  border-color: var(--ok);
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
+/* ============ 决策树下界示意 ============ */
+
+[data-ch="sorting"] .srt-lb {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 14px 0;
+}
+@media (max-width: 760px) {
+  [data-ch="sorting"] .srt-lb { grid-template-columns: 1fr; }
+}

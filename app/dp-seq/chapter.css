@@ -1,0 +1,81 @@
+/* 第 9 章 · 子序列 DP(data-ch="dp-seq")专属样式。
+   规则:自定义类名一律带章节前缀 seq-,或整体包在 [data-ch="dp-seq"] 下;
+   颜色只用 CSS token(var(--acc) / var(--info) 等),禁止写死。 */
+
+/* — SubseqLab:子序列 vs 子数组交互行 — */
+
+[data-ch="dp-seq"] .seq-toks {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-bottom: 22px;
+}
+
+/* — LisPlayer:两行(nums / dp)递推动画 — */
+
+[data-ch="dp-seq"] .seq-lis {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  align-items: center;
+}
+
+[data-ch="dp-seq"] .seq-lis-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+[data-ch="dp-seq"] .seq-lis-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+}
+
+[data-ch="dp-seq"] .seq-lis-cells {
+  display: grid;
+  gap: 8px;
+  padding-bottom: 22px;
+}
+
+/* 合法前驱高亮 —— 用 info(蓝)与「转移来源」语义保持一致 */
+[data-ch="dp-seq"] .cell.seq-pred {
+  border-color: var(--info);
+  background: var(--info-bg);
+  color: var(--info);
+}
+
+/* — 双序列对比 / 回文两视角:两列卡片,窄屏堆叠 — */
+
+[data-ch="dp-seq"] .seq-duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 16px 0;
+}
+
+@media (max-width: 760px) {
+  [data-ch="dp-seq"] .seq-duo {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* — 操作 → 来源格 图例小徽标 — */
+
+[data-ch="dp-seq"] .seq-op {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 3px 9px;
+  border-radius: 8px;
+  border: 1px solid var(--acc-border);
+  background: var(--acc-soft);
+  color: var(--acc-ink);
+  margin: 2px 6px 2px 0;
+}

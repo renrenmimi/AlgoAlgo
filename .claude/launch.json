@@ -1,0 +1,15 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "algoalgo",
+      "runtimeExecutable": "zsh",
+      "runtimeArgs": [
+        "-c",
+        "export PATH=\"$HOME/.nvm/versions/node/v22.21.1/bin:$PATH\" && npm run dev -- -p ${PORT:-3200}"
+      ],
+      "autoPort": true,
+      "port": 3200
+    }
+  ]
+}
