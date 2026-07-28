@@ -387,17 +387,21 @@ export function SubsetLab() {
         </div>
 
         <div className="bit-subset-grid">
-          {Array.from({ length: 1 << n }, (_, s) => (
-            <button
-              key={s}
-              type="button"
-              className={`bit-subcell${s === mask ? " on" : ""}`}
-              onClick={() => setMask(s)}
-              title={`子集 ${s}`}
-            >
-              {s.toString(2).padStart(n, "0")}
-            </button>
-          ))}
+          {Array.from({ length: 1 << n }, (_, s) => {
+            const set = ELEMS.filter((_, i) => (s >> i) & 1).join("");
+            return (
+              <button
+                key={s}
+                type="button"
+                className={`bit-subcell${s === mask ? " on" : ""}`}
+                onClick={() => setMask(s)}
+                data-tip={`${s} = { ${set || "∅"} }`}
+                aria-label={`子集 ${s},${set || "空集"}`}
+              >
+                {s.toString(2).padStart(n, "0")}
+              </button>
+            );
+          })}
         </div>
       </div>
 

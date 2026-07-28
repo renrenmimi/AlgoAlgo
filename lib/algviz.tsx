@@ -14,7 +14,7 @@
 // 播放控制统一复用 lib/stepper 的 useStepper + StepControls。
 
 import { useMemo, type ReactNode } from "react";
-import { useStepper, StepControls } from "@/lib/stepper";
+import { useStepper, StepControls, useEdgeFade } from "@/lib/stepper";
 
 /* ================================================================
    DPTable —— DP 表格填充器
@@ -55,11 +55,12 @@ export function DPTable({
   const f = frames[stepper.step];
   const cols = Math.max(...frames.map((fr) => Math.max(...fr.cells.map((r) => r.length))));
   const hasRowLab = !!rowLabels?.length;
+  const edge = useEdgeFade<HTMLDivElement>();
 
   return (
     <div className="viz">
       <div className="viz-title">{title}</div>
-      <div className="viz-stage" style={{ overflowX: "auto" }}>
+      <div ref={edge.ref} data-fade={edge.fade} className="viz-stage" style={{ overflowX: "auto" }}>
         <div
           className="dpt"
           style={{
@@ -171,6 +172,7 @@ export function TreePlayer({
 }) {
   const stepper = useStepper(frames.length, 1400);
   const f = frames[stepper.step];
+  const edge = useEdgeFade<HTMLDivElement>();
 
   // 按标签长度自动估宽:纯字符串标签超出默认宽度时加宽,消除长标签溢出节点框
   const widthOf = (n: TreeNodeSpec): number => {
@@ -234,7 +236,7 @@ export function TreePlayer({
           <span className="viz-key"><i className="tp-sw" data-state="memo" />查表命中</span>
         </div>
       )}
-      <div className="viz-stage" style={{ overflowX: "auto" }}>
+      <div ref={edge.ref} data-fade={edge.fade} className="viz-stage" style={{ overflowX: "auto" }}>
         <svg
           className="tp-svg"
           viewBox={`0 0 ${layout.width} ${layout.height}`}
@@ -328,6 +330,7 @@ export function RangeShrink({
   const f = frames[stepper.step];
   const n = max - min + 1;
   const values = Array.from({ length: n }, (_, i) => min + i);
+  const edge = useEdgeFade<HTMLDivElement>();
 
   return (
     <div className="viz">
@@ -335,7 +338,7 @@ export function RangeShrink({
         {title}
         {unit && <span className="dim" style={{ fontWeight: 400 }}>(单位:{unit})</span>}
       </div>
-      <div className="viz-stage" style={{ flexDirection: "column", gap: 4, overflowX: "auto" }}>
+      <div ref={edge.ref} data-fade={edge.fade} className="viz-stage" style={{ flexDirection: "column", gap: 4, overflowX: "auto" }}>
         <div
           style={{
             display: "grid",

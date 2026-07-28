@@ -261,6 +261,7 @@
 }
 
 [data-ch="bits"] .bit-subcell {
+  position: relative;
   padding: 6px 0;
   border-radius: var(--r-xs);
   border: 1px solid var(--border);
@@ -277,6 +278,57 @@
 [data-ch="bits"] .bit-subcell:hover {
   border-color: var(--acc-border);
   color: var(--text-2);
+  z-index: 3;
+}
+
+/* 自定义提示气泡:替代原生 title,悬停/聚焦显示该子集对应的集合内容 */
+[data-ch="bits"] .bit-subcell::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translate(-50%, 4px);
+  padding: 5px 10px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--acc-border);
+  background: color-mix(in oklab, var(--panel-solid) 94%, transparent);
+  box-shadow: var(--hi-soft), var(--shadow-2);
+  backdrop-filter: blur(10px);
+  color: var(--text);
+  font-size: 12px;
+  letter-spacing: normal;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.16s ease, transform 0.16s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 气泡下方的小三角 */
+[data-ch="bits"] .bit-subcell::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 3px);
+  width: 8px;
+  height: 8px;
+  transform: translate(-50%, 4px) rotate(45deg);
+  background: var(--panel-solid);
+  border-right: 1px solid var(--acc-border);
+  border-bottom: 1px solid var(--acc-border);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.16s ease, transform 0.16s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-ch="bits"] .bit-subcell:hover::after,
+[data-ch="bits"] .bit-subcell:focus-visible::after {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+[data-ch="bits"] .bit-subcell:hover::before,
+[data-ch="bits"] .bit-subcell:focus-visible::before {
+  opacity: 1;
+  transform: translate(-50%, 0) rotate(45deg);
 }
 
 [data-ch="bits"] .bit-subcell.on {

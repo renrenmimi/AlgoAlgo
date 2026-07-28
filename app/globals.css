@@ -1936,6 +1936,25 @@ li code {
   background: var(--acc);
 }
 
+/* 边缘渐隐:内容在「还能滑」的那一侧柔和淡出成「→ 还有更多」的暗示,
+   由 lib/stepper.tsx 的 useEdgeFade 在真正溢出时设 data-fade,滚到头自动消失。
+   用 mask 淡到透明 → 与背景无关,深浅主题通用。 */
+.viz-stage {
+  transition: mask-image 0.25s ease;
+}
+.viz-stage[data-fade="right"] {
+  -webkit-mask-image: linear-gradient(to right, #000 88%, transparent);
+  mask-image: linear-gradient(to right, #000 88%, transparent);
+}
+.viz-stage[data-fade="left"] {
+  -webkit-mask-image: linear-gradient(to left, #000 88%, transparent);
+  mask-image: linear-gradient(to left, #000 88%, transparent);
+}
+.viz-stage[data-fade="both"] {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
 .viz-ctl {
   display: flex;
   flex-wrap: wrap;

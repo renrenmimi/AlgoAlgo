@@ -8,6 +8,36 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
+// 让横向可滚动的舞台在「还能滑」的那一侧淡出边缘 —— 内容到边缘不是被切,
+// 而是柔和地渐隐成「→ 还有更多」的暗示。仅在真正溢出时出现,滚到头自动消失。
+// 返回 ref 挂到 .viz-stage,data 值挂到同一元素的 data-fade 上。
+export function useEdgeFade<T extends HTMLElement = HTMLDivElement>() {
+  const ref = useRef<T>(null);
+  const [fade, setFade] = useState<"none" | "left" | "right" | "both">("none");
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => {
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      if (maxScroll <= 2) return setFade("none"); // 放得下 → 不渐隐(顺带清掉 resize 后的残留)
+      const canL = el.scrollLeft > 2;
+      const canR = el.scrollLeft < maxScroll - 2;
+      setFade(canL && canR ? "both" : canL ? "left" : canR ? "right" : "none");
+    };
+    update();
+    el.addEventListener("scroll", update, { passive: true });
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    window.addEventListener("resize", update);
+    return () => {
+      el.removeEventListener("scroll", update);
+      ro.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+  return { ref, fade };
+}
+
 export interface ArrayCell {
   v: ReactNode;
   state?: "lit" | "ok" | "bad" | "ghost";
@@ -118,11 +148,14 @@ export function ArrayStepper({
   const stepper = useStepper(frames.length);
   const f = frames[stepper.step];
   const n = Math.max(...frames.map((fr) => fr.cells.length));
+  const edge = useEdgeFade<HTMLDivElement>();
 
   return (
     <div className="viz">
       <div className="viz-title">{title}</div>
       <div
+        ref={edge.ref}
+        data-fade={edge.fade}
         className="viz-stage"
         style={{
           flexDirection: "column",
