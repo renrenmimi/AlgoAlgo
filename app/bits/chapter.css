@@ -1,21 +1,21 @@
 /* 第 4 章 · 位运算(data-ch="bits")专属样式。
-   规则:全部带 bit- 前缀或裹在 [data-ch="bits"] 下;颜色只用 CSS token,
-   深浅主题自动适配。 */
+   规则:全部裹在 [data-ch="bits"] 作用域下,自定义类一律带 bit- 前缀;
+   颜色只用 CSS token,圆角/阴影/发光用设计系统标尺,深浅主题自动适配。 */
 
 /* ---------- 位灯:通用一盏灯 ---------- */
 
-.bit-lamps {
+[data-ch="bits"] .bit-lamps {
   display: flex;
   gap: 8px;
   align-items: flex-end;
 }
 
-.bit-grp {
+[data-ch="bits"] .bit-grp {
   display: flex;
   gap: 3px;
 }
 
-.bit-lamp {
+[data-ch="bits"] .bit-lamp {
   width: 26px;
   height: 34px;
   display: flex;
@@ -23,69 +23,71 @@
   align-items: center;
   justify-content: center;
   gap: 2px;
-  border-radius: 7px;
+  border-radius: var(--r-xs);
   border: 1.5px solid var(--border-strong);
   background: var(--panel-2);
   color: var(--text-3);
   font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
   cursor: pointer;
   padding: 0;
+  box-shadow: var(--hi-soft);
   transition: all 0.22s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.bit-lamp .bit-lamp-v {
+[data-ch="bits"] .bit-lamp .bit-lamp-v {
   font-size: 14px;
   font-weight: 700;
   line-height: 1;
 }
 
-.bit-lamp .bit-lamp-n {
+[data-ch="bits"] .bit-lamp .bit-lamp-n {
   font-size: 8.5px;
   opacity: 0.6;
   line-height: 1;
 }
 
-.bit-lamp:hover:not(.bit-lamp-static) {
+[data-ch="bits"] .bit-lamp:hover:not(.bit-lamp-static) {
   border-color: var(--acc-border);
   transform: translateY(-2px);
 }
 
-.bit-lamp.on {
+[data-ch="bits"] .bit-lamp.on {
   border-color: var(--acc);
   background: var(--acc-soft);
   color: var(--acc-ink);
-  box-shadow: 0 0 14px var(--acc-glow);
+  box-shadow: var(--hi-soft), var(--glow-sm);
 }
 
-.bit-lamp.sign {
+[data-ch="bits"] .bit-lamp.sign {
   border-color: var(--info);
 }
 
-.bit-lamp.sign.on {
+[data-ch="bits"] .bit-lamp.sign.on {
   border-color: var(--info);
   background: var(--info-bg);
   color: var(--info);
-  box-shadow: 0 0 14px color-mix(in oklab, var(--info) 40%, transparent);
+  box-shadow: var(--hi-soft), 0 0 14px color-mix(in oklab, var(--info) 40%, transparent);
 }
 
-.bit-lamp.res {
+[data-ch="bits"] .bit-lamp.res {
   cursor: default;
 }
 
-.bit-lamp.res.on {
+[data-ch="bits"] .bit-lamp.res.on {
   border-color: var(--ok);
   background: var(--ok-bg);
   color: var(--ok);
-  box-shadow: 0 0 14px color-mix(in oklab, var(--ok) 40%, transparent);
+  box-shadow: var(--hi-soft), 0 0 14px color-mix(in oklab, var(--ok) 40%, transparent);
 }
 
-.bit-lamp-static {
+[data-ch="bits"] .bit-lamp-static {
   cursor: default;
 }
 
 /* ---------- 位灯实验室读数 ---------- */
 
-.bit-readout {
+[data-ch="bits"] .bit-readout {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -95,79 +97,83 @@
   border-top: 1px dashed var(--border);
   font-size: 13px;
   color: var(--text-2);
+  font-variant-numeric: tabular-nums;
 }
 
-.bit-readout b {
+[data-ch="bits"] .bit-readout b {
   color: var(--acc-ink);
 }
 
-.bit-binline {
+[data-ch="bits"] .bit-binline {
   font-size: 11.5px;
   color: var(--text-3);
   letter-spacing: 0.5px;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ---------- 运算符游乐场 ---------- */
 
-.bit-op-row {
+[data-ch="bits"] .bit-op-row {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 8px;
 }
 
-.bit-op {
+[data-ch="bits"] .bit-op {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2px;
   min-width: 58px;
   padding: 7px 10px;
-  border-radius: 11px;
+  border-radius: var(--r-sm);
   border: 1px solid var(--border);
   background: var(--panel);
   color: var(--text-2);
   cursor: pointer;
+  box-shadow: var(--hi-soft);
   transition: all 0.2s;
 }
 
-.bit-op .mono {
+[data-ch="bits"] .bit-op .mono {
   font-size: 15px;
   font-weight: 700;
 }
 
-.bit-op-name {
+[data-ch="bits"] .bit-op-name {
   font-size: 10px;
   opacity: 0.8;
 }
 
-.bit-op:hover {
+[data-ch="bits"] .bit-op:hover {
   border-color: var(--acc-border);
 }
 
-.bit-op.on {
+[data-ch="bits"] .bit-op.on {
   border-color: var(--acc);
   background: var(--acc-soft);
   color: var(--acc-ink);
-  box-shadow: 0 4px 16px var(--acc-glow);
+  box-shadow: var(--hi-soft), var(--glow-md);
 }
 
-.bit-oprow {
+[data-ch="bits"] .bit-oprow {
   display: flex;
   align-items: center;
   gap: 14px;
   flex-wrap: wrap;
 }
 
-.bit-oprow-lab {
+[data-ch="bits"] .bit-oprow-lab {
   min-width: 78px;
   font-size: 13px;
   font-weight: 600;
   color: var(--text-2);
   text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
-.bit-oprow-res {
+[data-ch="bits"] .bit-oprow-res {
   margin-top: 4px;
   padding-top: 12px;
   border-top: 1px dashed var(--border);
@@ -175,11 +181,11 @@
   justify-content: flex-start;
 }
 
-.bit-oprow-res .bit-oprow-lab {
+[data-ch="bits"] .bit-oprow-res .bit-oprow-lab {
   color: var(--ok);
 }
 
-.bit-shift-ctl {
+[data-ch="bits"] .bit-shift-ctl {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -187,64 +193,66 @@
 
 /* ---------- 集合实验室 ---------- */
 
-.bit-set-elems {
+[data-ch="bits"] .bit-set-elems {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.bit-elem {
+[data-ch="bits"] .bit-elem {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 5px;
   padding: 10px 14px;
-  border-radius: 14px;
+  border-radius: var(--r-md);
   border: 1.5px solid var(--border-strong);
   background: var(--panel-2);
   cursor: pointer;
+  box-shadow: var(--hi-soft);
   transition: all 0.22s cubic-bezier(0.22, 1, 0.36, 1);
   filter: grayscale(0.7);
   opacity: 0.65;
 }
 
-.bit-elem .bit-elem-face {
+[data-ch="bits"] .bit-elem .bit-elem-face {
   font-size: 26px;
   line-height: 1;
 }
 
-.bit-elem .bit-elem-tag {
+[data-ch="bits"] .bit-elem .bit-elem-tag {
   font-size: 10.5px;
   color: var(--text-3);
 }
 
-.bit-elem.on {
+[data-ch="bits"] .bit-elem.on {
   border-color: var(--acc);
   background: var(--acc-soft);
-  box-shadow: 0 6px 18px var(--acc-glow);
+  box-shadow: var(--hi-soft), var(--glow-md);
   filter: none;
   opacity: 1;
   transform: translateY(-3px);
 }
 
-.bit-elem.on .bit-elem-tag {
+[data-ch="bits"] .bit-elem.on .bit-elem-tag {
   color: var(--acc-ink);
 }
 
-.bit-set-readout {
+[data-ch="bits"] .bit-set-readout {
   display: flex;
   flex-wrap: wrap;
   gap: 6px 26px;
   font-size: 13.5px;
   color: var(--text-2);
+  font-variant-numeric: tabular-nums;
 }
 
-.bit-set-readout b {
+[data-ch="bits"] .bit-set-readout b {
   color: var(--acc-ink);
 }
 
-.bit-subset-grid {
+[data-ch="bits"] .bit-subset-grid {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   gap: 5px;
@@ -252,25 +260,26 @@
   max-width: 460px;
 }
 
-.bit-subcell {
+[data-ch="bits"] .bit-subcell {
   padding: 6px 0;
-  border-radius: 7px;
+  border-radius: var(--r-xs);
   border: 1px solid var(--border);
   background: var(--panel);
   color: var(--text-3);
   font-family: var(--font-mono);
   font-size: 11.5px;
   letter-spacing: 1px;
+  font-variant-numeric: tabular-nums;
   cursor: pointer;
   transition: all 0.16s;
 }
 
-.bit-subcell:hover {
+[data-ch="bits"] .bit-subcell:hover {
   border-color: var(--acc-border);
   color: var(--text-2);
 }
 
-.bit-subcell.on {
+[data-ch="bits"] .bit-subcell.on {
   border-color: var(--acc);
   background: var(--acc-soft);
   color: var(--acc-ink);
@@ -278,10 +287,10 @@
 }
 
 @media (max-width: 640px) {
-  .bit-subset-grid {
+  [data-ch="bits"] .bit-subset-grid {
     grid-template-columns: repeat(4, 1fr);
   }
-  .bit-oprow-lab {
+  [data-ch="bits"] .bit-oprow-lab {
     min-width: 0;
     text-align: left;
   }
@@ -289,20 +298,20 @@
 
 /* ---------- 补码对照小卡(§01) ---------- */
 
-.bit-twoc {
+[data-ch="bits"] .bit-twoc {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 10px;
   margin: 16px 0;
 }
 
-.bit-twoc .card .mono {
+[data-ch="bits"] .bit-twoc .card .mono {
   font-size: 12.5px;
   color: var(--acc-ink);
 }
 
 @media (max-width: 720px) {
-  .bit-twoc {
+  [data-ch="bits"] .bit-twoc {
     grid-template-columns: 1fr;
   }
 }

@@ -23,7 +23,7 @@
   display: inline-block;
   width: 12px;
   height: 12px;
-  border-radius: 4px;
+  border-radius: var(--r-xs);
   border: 1.5px solid var(--border-strong);
   background: var(--panel-2);
   vertical-align: -1px;
@@ -47,7 +47,7 @@
 
 [data-ch="sorting"] .srt-bar {
   width: 40px;
-  border-radius: 9px 9px 3px 3px;
+  border-radius: var(--r-sm) var(--r-sm) 3px 3px;
   border: 1.6px solid var(--border-strong);
   background: var(--panel-2);
   position: relative;
@@ -55,6 +55,7 @@
   align-items: flex-start;
   justify-content: center;
   padding-top: 5px;
+  box-shadow: var(--hi-soft);
   transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -63,12 +64,13 @@
   font-size: 12.5px;
   font-weight: 700;
   color: var(--text-2);
+  font-variant-numeric: tabular-nums;
 }
 
 [data-ch="sorting"] .srt-bar[data-state="cmp"] {
   border-color: var(--acc);
   background: var(--acc-soft);
-  box-shadow: 0 0 16px var(--acc-glow);
+  box-shadow: var(--hi-soft), var(--glow-sm);
   transform: translateY(-5px);
 }
 [data-ch="sorting"] .srt-bar[data-state="cmp"] .srt-bar-v { color: var(--acc-ink); }
@@ -144,6 +146,7 @@
   font-weight: 600;
   color: var(--text-3);
   font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
 }
 
 /* ============ 稳定性演示 ============ */
@@ -163,9 +166,10 @@
   gap: 2px;
   width: 58px;
   height: 62px;
-  border-radius: 13px;
+  border-radius: var(--r-md);
   border: 1.6px solid var(--border-strong);
   background: var(--panel-2);
+  box-shadow: var(--hi-soft), var(--shadow-1);
   transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 [data-ch="sorting"] .srt-chip .k {
@@ -173,6 +177,7 @@
   font-size: 20px;
   font-weight: 800;
   color: var(--text);
+  font-variant-numeric: tabular-nums;
 }
 [data-ch="sorting"] .srt-chip .tag {
   font-size: 11px;
@@ -201,9 +206,10 @@
   position: relative;
   width: min(100%, 560px);
   height: 34px;
-  border-radius: 10px;
+  border-radius: var(--r-sm);
   background: var(--panel-2);
   border: 1px solid var(--border);
+  box-shadow: var(--hi-soft);
 }
 
 [data-ch="sorting"] .srt-seg {
@@ -211,7 +217,7 @@
   top: 4px;
   height: 26px;
   min-width: 30px;
-  border-radius: 8px;
+  border-radius: var(--r-xs);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -221,6 +227,7 @@
   border: 1.5px solid var(--border-strong);
   background: var(--panel-2);
   color: var(--text-2);
+  font-variant-numeric: tabular-nums;
   transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 [data-ch="sorting"] .srt-seg[data-tone="in"] { border-color: var(--border-strong); }
@@ -228,7 +235,7 @@
   border-color: var(--acc);
   background: var(--acc-soft);
   color: var(--acc-ink);
-  box-shadow: 0 0 14px var(--acc-glow);
+  box-shadow: var(--glow-sm);
   z-index: 2;
 }
 [data-ch="sorting"] .srt-seg[data-tone="done"] {

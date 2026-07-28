@@ -6,6 +6,7 @@
 // ④ 四大范式鸟瞰 + 14 章世界地图 + 怎么用这套课。
 
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import "./home.css";
 import { CHAPTERS } from "@/lib/curriculum";
 import {
@@ -153,6 +154,54 @@ const QUIZ: QuizItem[] = [
   },
 ];
 
+/* ---------- 首屏统计 ---------- */
+
+const STATS: { to: number; suffix?: string; label: string }[] = [
+  { to: 14, label: "章节 · 由易到难" },
+  { to: 150, suffix: "+", label: "LeetCode 高频题" },
+  { to: 3, label: "语言对照 Java/Py/JS" },
+  { to: 4, label: "大范式 分治/回溯/贪心/DP" },
+];
+
+// 进场时数字从 0 滚到目标值(easeOutCubic);尊重「减弱动态」时直接落定。
+function CountStat({ to, suffix = "", label }: { to: number; suffix?: string; label: string }) {
+  const [n, setN] = useState(0);
+  const started = useRef(false);
+
+  useEffect(() => {
+    if (started.current) return;
+    started.current = true;
+    const reduce =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      setN(to);
+      return;
+    }
+    const dur = 900;
+    const t0 = performance.now();
+    let raf = 0;
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - t0) / dur);
+      const eased = 1 - Math.pow(1 - t, 3);
+      setN(Math.round(eased * to));
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [to]);
+
+  return (
+    <div className="home-stat">
+      <div className="v">
+        {n}
+        {suffix}
+      </div>
+      <div className="k">{label}</div>
+    </div>
+  );
+}
+
 /* ---------- 页面 ---------- */
 
 export default function Home() {
@@ -176,30 +225,17 @@ export default function Home() {
             三语言对照 → LeetCode 高频精讲。看见算法怎么「想」,而不是背它的代码。
           </p>
           <div className="home-cta">
-            <Link href="/sorting" className="btn btn-primary">
-              从第 1 章 · 排序开始 →
+            <Link href="/sorting" className="btn btn-primary cta-go">
+              从第 1 章 · 排序开始 <span className="cta-arrow" aria-hidden="true">→</span>
             </Link>
             <a href="#map" className="btn">
               看世界地图
             </a>
           </div>
           <div className="home-stats">
-            <div className="home-stat">
-              <div className="v">14</div>
-              <div className="k">章节 · 由易到难</div>
-            </div>
-            <div className="home-stat">
-              <div className="v">150+</div>
-              <div className="k">LeetCode 高频题</div>
-            </div>
-            <div className="home-stat">
-              <div className="v">3</div>
-              <div className="k">语言对照 Java/Py/JS</div>
-            </div>
-            <div className="home-stat">
-              <div className="v">4</div>
-              <div className="k">大范式 分治/回溯/贪心/DP</div>
-            </div>
+            {STATS.map((s) => (
+              <CountStat key={s.label} to={s.to} suffix={s.suffix} label={s.label} />
+            ))}
           </div>
         </div>
         <Reveal delay={150}>
@@ -533,6 +569,9 @@ function fact(n) {
                 className="map-card"
                 style={{ "--ch-hue": c.hue } as React.CSSProperties}
               >
+                <span className="map-watermark" aria-hidden="true">
+                  {c.num}
+                </span>
                 <div className="map-head">
                   <span className="map-num">{c.num}</span>
                   <span className="map-title">{c.title}</span>

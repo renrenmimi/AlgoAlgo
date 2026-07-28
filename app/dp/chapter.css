@@ -17,15 +17,16 @@
   gap: 14px;
   align-items: flex-start;
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: var(--r-lg);
   background: var(--panel);
   padding: 14px 18px;
+  box-shadow: var(--hi-soft), var(--shadow-1);
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 [data-ch="dp"] .dp-step:hover {
   border-color: var(--acc-border);
-  box-shadow: 0 6px 22px var(--acc-glow);
+  box-shadow: var(--hi-soft), var(--glow-md);
 }
 
 [data-ch="dp"] .dp-step::before {
@@ -33,11 +34,12 @@
   font-family: var(--font-display);
   font-weight: 800;
   font-size: 22px;
+  font-variant-numeric: tabular-nums;
   width: 44px;
   height: 44px;
   display: grid;
   place-items: center;
-  border-radius: 13px;
+  border-radius: var(--r-md);
   background: var(--acc-soft);
   color: var(--acc-ink);
   border: 1px solid var(--acc-border);

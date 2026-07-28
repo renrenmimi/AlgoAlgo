@@ -82,6 +82,7 @@
   gap: 12px;
   font-family: var(--font-mono);
   font-size: 13px;
+  font-variant-numeric: tabular-nums;
 }
 
 [data-ch="strings"] .str-hashbox {
@@ -89,14 +90,16 @@
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  border-radius: 12px;
+  border-radius: var(--r-md);
   border: 1.5px solid var(--border-strong);
   background: var(--panel-2);
   color: var(--text-2);
+  box-shadow: var(--hi-soft), var(--shadow-1);
 }
 
 [data-ch="strings"] .str-hashbox b {
   font-size: 17px;
+  font-variant-numeric: tabular-nums;
   color: var(--acc-ink);
 }
 

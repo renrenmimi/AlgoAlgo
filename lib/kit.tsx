@@ -34,6 +34,15 @@ export function Reveal({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+
+    // 挂载时若已在视口内(或视口上方),立即显示 —— 避免首屏/快速跳转后内容停在隐藏态
+    const r = el.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    if (r.top < vh * 0.95) {
+      setInView(true);
+      return;
+    }
+
     const io = new IntersectionObserver(
       ([e]) => {
         if (e.isIntersecting) {
@@ -41,10 +50,17 @@ export function Reveal({
           io.disconnect();
         }
       },
-      { rootMargin: "0px 0px -8% 0px", threshold: 0.05 },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.01 },
     );
     io.observe(el);
-    return () => io.disconnect();
+
+    // 兜底:无论 IO 是否触发,2.5s 后强制显示,内容永不隐形
+    const fallback = window.setTimeout(() => setInView(true), 2500);
+
+    return () => {
+      io.disconnect();
+      window.clearTimeout(fallback);
+    };
   }, []);
 
   return (

@@ -172,6 +172,19 @@ export function TreePlayer({
   const stepper = useStepper(frames.length, 1400);
   const f = frames[stepper.step];
 
+  // 按标签长度自动估宽:纯字符串标签超出默认宽度时加宽,消除长标签溢出节点框
+  const widthOf = (n: TreeNodeSpec): number => {
+    if (n.w) return n.w;
+    if (typeof n.label === "string" || typeof n.label === "number") {
+      const s = String(n.label);
+      // 中文按 ~13px/字、其余按 ~8px/字 粗估,两侧各留 11px 内衬
+      let units = 0;
+      for (const ch of s) units += /[一-鿿＀-￯]/.test(ch) ? 1.55 : 1;
+      return Math.max(nodeW, Math.ceil(units * 8.2 + 22));
+    }
+    return nodeW;
+  };
+
   const layout = useMemo(() => {
     const children = new Map<string, TreeNodeSpec[]>();
     const byId = new Map<string, TreeNodeSpec>();
@@ -187,7 +200,8 @@ export function TreePlayer({
     }
     const pos = new Map<string, { x: number; y: number }>();
     let leafX = 0;
-    const slotW = nodeW + gapX;
+    const maxW = Math.max(nodeW, ...nodes.map(widthOf));
+    const slotW = maxW + gapX;
     const place = (n: TreeNodeSpec, depth: number): number => {
       const kids = children.get(n.id) ?? [];
       let x: number;
@@ -205,6 +219,7 @@ export function TreePlayer({
     const width = Math.max(leafX * slotW, slotW);
     const maxY = Math.max(...[...pos.values()].map((p) => p.y));
     return { pos, byId, width, height: maxY + NODE_H / 2 + 8 };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nodes, nodeW, gapX, gapY]);
 
   return (
@@ -249,7 +264,7 @@ export function TreePlayer({
           {nodes.map((n) => {
             const c = layout.pos.get(n.id)!;
             const st = f.states[n.id];
-            const w = n.w ?? nodeW;
+            const w = widthOf(n);
             return (
               <g key={n.id} className="tp-node" data-state={st ?? "idle"}>
                 <rect

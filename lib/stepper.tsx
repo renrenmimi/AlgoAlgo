@@ -122,7 +122,16 @@ export function ArrayStepper({
   return (
     <div className="viz">
       <div className="viz-title">{title}</div>
-      <div className="viz-stage" style={{ flexDirection: "column", gap: 6 }}>
+      <div
+        className="viz-stage"
+        style={{
+          flexDirection: "column",
+          gap: 6,
+          overflowX: "auto",
+          // safe center:窄屏数组超宽时靠左可滚,不把左侧格子推进够不着的负区
+          alignItems: "safe center",
+        }}
+      >
         {/* 指针行 */}
         <div
           style={{

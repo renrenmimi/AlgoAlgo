@@ -1,10 +1,10 @@
 /* 第 11 章 · 数学与数论(data-ch="math")专属样式。
-   规则:自定义类名一律带 mth- 前缀(或包在 [data-ch="math"] 下);
-   颜色只用 CSS token(var(--acc) 等),深浅主题自动适配,禁止写死颜色。 */
+   规则:自定义类名一律带 mth- 前缀,且整体裹在 [data-ch="math"] 作用域下,
+   避免全局泄漏;颜色只用 CSS token(var(--acc) 等),深浅主题自动适配,禁止写死。 */
 
 /* ============ 埃氏筛网格 ============ */
 
-.mth-sieve {
+[data-ch="math"] .mth-sieve {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   gap: 7px;
@@ -12,49 +12,50 @@
   max-width: 460px;
 }
 
-.mth-sv-cell {
+[data-ch="math"] .mth-sv-cell {
   aspect-ratio: 1 / 1;
   display: grid;
   place-items: center;
-  border-radius: 10px;
+  border-radius: var(--r-sm);
   border: 1.5px solid var(--border-strong);
   background: var(--panel-2);
   font-family: var(--font-mono);
   font-size: 14px;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
   color: var(--text);
   transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.mth-sv-cell[data-s="one"] {
+[data-ch="math"] .mth-sv-cell[data-s="one"] {
   color: var(--text-3);
   border-style: dashed;
   opacity: 0.5;
 }
 
-.mth-sv-cell[data-s="prime"] {
+[data-ch="math"] .mth-sv-cell[data-s="prime"] {
   border-color: var(--acc-border);
   background: var(--acc-soft);
   color: var(--acc-ink);
-  box-shadow: 0 0 12px var(--acc-glow);
+  box-shadow: var(--glow-sm);
 }
 
-.mth-sv-cell[data-s="cur"] {
+[data-ch="math"] .mth-sv-cell[data-s="cur"] {
   border-color: var(--acc);
   background: var(--acc-soft);
   color: var(--acc-ink);
-  box-shadow: 0 0 20px var(--acc-glow);
+  box-shadow: var(--glow-md);
   transform: translateY(-4px) scale(1.08);
 }
 
-.mth-sv-cell[data-s="hit"] {
+[data-ch="math"] .mth-sv-cell[data-s="hit"] {
   border-color: var(--risk);
   background: var(--risk-bg);
   color: var(--risk);
   text-decoration: line-through;
 }
 
-.mth-sv-cell[data-s="cross"] {
+[data-ch="math"] .mth-sv-cell[data-s="cross"] {
   color: var(--text-3);
   border-color: var(--border);
   background: transparent;
@@ -63,7 +64,7 @@
 }
 
 /* 图例小色块 */
-.mth-sv-sw {
+[data-ch="math"] .mth-sv-sw {
   width: 14px;
   height: 14px;
   border-radius: 4px;
@@ -72,31 +73,32 @@
   vertical-align: middle;
   margin-right: 5px;
 }
-.mth-sv-sw[data-s="prime"] { border-color: var(--acc-border); background: var(--acc-soft); }
-.mth-sv-sw[data-s="cur"] { border-color: var(--acc); background: var(--acc-soft); }
-.mth-sv-sw[data-s="hit"] { border-color: var(--risk); background: var(--risk-bg); }
-.mth-sv-sw[data-s="cross"] { border-color: var(--border); background: transparent; }
+[data-ch="math"] .mth-sv-sw[data-s="prime"] { border-color: var(--acc-border); background: var(--acc-soft); }
+[data-ch="math"] .mth-sv-sw[data-s="cur"] { border-color: var(--acc); background: var(--acc-soft); }
+[data-ch="math"] .mth-sv-sw[data-s="hit"] { border-color: var(--risk); background: var(--risk-bg); }
+[data-ch="math"] .mth-sv-sw[data-s="cross"] { border-color: var(--border); background: transparent; }
 
 /* ============ Nim 博弈 ============ */
 
-.mth-nim-status {
+[data-ch="math"] .mth-nim-status {
   font-family: var(--font-mono);
   font-size: 14px;
+  font-variant-numeric: tabular-nums;
   color: var(--text-2);
   padding: 8px 16px;
   border-radius: 999px;
   border: 1px solid var(--acc-border);
   background: var(--acc-soft);
 }
-.mth-nim-status b { color: var(--acc-ink); }
-.mth-nim-status[data-lose="true"] {
+[data-ch="math"] .mth-nim-status b { color: var(--acc-ink); }
+[data-ch="math"] .mth-nim-status[data-lose="true"] {
   border-color: color-mix(in oklab, var(--risk) 40%, transparent);
   background: var(--risk-bg);
   color: var(--risk);
 }
-.mth-nim-status[data-lose="true"] b { color: var(--risk); }
+[data-ch="math"] .mth-nim-status[data-lose="true"] b { color: var(--risk); }
 
-.mth-stones {
+[data-ch="math"] .mth-stones {
   display: flex;
   flex-wrap: wrap;
   gap: 9px;
@@ -106,7 +108,7 @@
   min-height: 40px;
 }
 
-.mth-stone {
+[data-ch="math"] .mth-stone {
   width: 26px;
   height: 26px;
   border-radius: 50%;
@@ -116,53 +118,55 @@
     var(--acc-strong) 70%
   );
   border: 1px solid var(--acc-border);
-  box-shadow: 0 2px 6px var(--acc-glow);
+  box-shadow: var(--hi-soft), var(--glow-sm);
 }
 
 /* ============ 通用编号步骤卡(找不变量三步法 / gcd 推导) ============ */
 
-.mth-steps {
+[data-ch="math"] .mth-steps {
   counter-reset: mthstep;
   display: grid;
   gap: 10px;
   margin: 18px 0;
 }
 
-.mth-step {
+[data-ch="math"] .mth-step {
   counter-increment: mthstep;
   display: grid;
   grid-template-columns: 44px 1fr;
   gap: 14px;
   align-items: flex-start;
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: var(--r-lg);
   background: var(--panel);
   padding: 14px 18px;
+  box-shadow: var(--hi-soft), var(--shadow-1);
   transition: border-color 0.2s, box-shadow 0.2s;
 }
-.mth-step:hover {
+[data-ch="math"] .mth-step:hover {
   border-color: var(--acc-border);
-  box-shadow: 0 6px 22px var(--acc-glow);
+  box-shadow: var(--hi-soft), var(--glow-md);
 }
-.mth-step::before {
+[data-ch="math"] .mth-step::before {
   content: counter(mthstep);
   font-family: var(--font-display);
   font-weight: 800;
   font-size: 22px;
+  font-variant-numeric: tabular-nums;
   width: 44px;
   height: 44px;
   display: grid;
   place-items: center;
-  border-radius: 13px;
+  border-radius: var(--r-md);
   background: var(--acc-soft);
   color: var(--acc-ink);
   border: 1px solid var(--acc-border);
 }
-.mth-step h4 {
+[data-ch="math"] .mth-step h4 {
   font-size: 14.5px;
   margin: 2px 0 4px;
 }
-.mth-step p {
+[data-ch="math"] .mth-step p {
   margin: 0;
   font-size: 13.2px;
   color: var(--text-2);
@@ -170,17 +174,17 @@
 
 /* ============ 两列对比(贪心 vs DP 式) ============ */
 
-.mth-duel {
+[data-ch="math"] .mth-duel {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
   margin: 16px 0;
 }
-.mth-duel .card b.mono { font-size: 15px; }
+[data-ch="math"] .mth-duel .card b.mono { font-size: 15px; }
 
 /* ============ 快乐数 next 链 ============ */
 
-.mth-chain {
+[data-ch="math"] .mth-chain {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -188,30 +192,31 @@
   margin: 14px 0;
   font-family: var(--font-mono);
 }
-.mth-chain-node {
+[data-ch="math"] .mth-chain-node {
   padding: 7px 12px;
-  border-radius: 10px;
+  border-radius: var(--r-sm);
   border: 1.5px solid var(--border-strong);
   background: var(--panel-2);
   font-size: 14px;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
   color: var(--text);
 }
-.mth-chain-node[data-s="ok"] {
+[data-ch="math"] .mth-chain-node[data-s="ok"] {
   border-color: var(--ok);
   background: var(--ok-bg);
   color: var(--ok);
 }
-.mth-chain-node[data-s="loop"] {
+[data-ch="math"] .mth-chain-node[data-s="loop"] {
   border-color: var(--risk);
   background: var(--risk-bg);
   color: var(--risk);
 }
-.mth-chain-arrow {
+[data-ch="math"] .mth-chain-arrow {
   color: var(--acc);
   font-size: 13px;
 }
-.mth-chain-loop {
+[data-ch="math"] .mth-chain-loop {
   color: var(--risk);
   font-size: 12.5px;
   font-family: var(--font-mono);
@@ -219,6 +224,12 @@
 }
 
 @media (max-width: 760px) {
-  .mth-duel { grid-template-columns: 1fr; }
-  .mth-sieve { max-width: 100%; }
+  [data-ch="math"] .mth-duel { grid-template-columns: 1fr; }
+  [data-ch="math"] .mth-sieve { max-width: 100%; }
+}
+
+@media (max-width: 460px) {
+  /* 10 列 1fr 会自适应收窄不溢出,仅缩小间距/字号保可读 */
+  [data-ch="math"] .mth-sieve { gap: 5px; }
+  [data-ch="math"] .mth-sv-cell { font-size: 12px; border-width: 1px; }
 }

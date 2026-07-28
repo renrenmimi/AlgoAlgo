@@ -132,6 +132,15 @@ lib/<ch>-data.tsx      本章题单 PROBLEMS + 测验 QUIZ 数据
 --ok --warn --risk --info --text-2 --border` 等,深浅主题自动适配,禁止写死颜色。
 滑杆排版类 `.bigo-slider` 在 home.css(章节别用,自己在 chapter.css 里写)。
 
+**设计系统标尺(2026-07 精装改版新增,优先用这些而非硬编码数值)**:
+- 圆角:`--r-xs`(7)`--r-sm`(10)`--r-md`(14)`--r-lg`(18)`--r-xl`(24)。卡片/viz 用
+  `--r-lg`/`--r-xl`,按钮/小元件 `--r-sm`,单元格/徽章 `--r-xs`~`--r-sm`。
+- 阴影:`--shadow-1`(轻)`--shadow-2`(卡片)`--shadow-3`(浮层);发光 `--glow-sm/-md/-lg`
+  (跟随章节主色)。玻璃顶部高光 `--hi`(强)`--hi-soft`(弱);渐变描边 `--edge`;
+  柔和主色渐变底 `--grad-soft`;极淡主色 `--acc-faint`。
+- 卡片材质约定:`box-shadow: var(--hi-soft), var(--shadow-1)`;hover 换 `var(--glow-lg)` 或 `--glow-md`。
+- 度量数字加 `font-variant-numeric: tabular-nums`(等宽对齐)。
+
 ## JSX 文案注意
 
 - 正文引号直接用中文「」和"",不要转义英文引号;

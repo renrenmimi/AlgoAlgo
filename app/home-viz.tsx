@@ -32,26 +32,32 @@ const H_NODES: HNode[] = [
   { id: "b2", x: 332, y: 168, label: "…", parent: "b" },
 ];
 
-// 每帧:各节点状态(未列出 = idle)
+// 每帧:各节点状态(未列出 = idle)。
+// 【首帧刻意做「富状态」】:根节点已点亮(cur)、两条主干已在候选路径上(path),
+// 一进首屏右侧就是「有内容、好看」的画面,而不是等动画跑几秒才浮现。
+// 之后逐帧展开探索:进 A 撞两次死路 → 回退 → 进 B 命中解;末帧短暂定格庆祝后循环。
 const H_FRAMES: Record<string, NState>[] = [
-  { r: "cur" },
-  { r: "path", a: "cur" },
-  { r: "path", a: "path", a1: "cur" },
-  { r: "path", a: "path", a1: "dead" },
-  { r: "path", a: "path", a1: "dead", a2: "cur" },
-  { r: "path", a: "path", a1: "dead", a2: "dead" },
-  { r: "path", a: "dead", a1: "dead", a2: "dead" },
-  { r: "path", a: "dead", a1: "dead", a2: "dead", b: "cur" },
-  { r: "path", a: "dead", a1: "dead", a2: "dead", b: "path", b1: "cur" },
-  { r: "sol", a: "dead", a1: "dead", a2: "dead", b: "sol", b1: "sol" },
-  { r: "sol", a: "dead", a1: "dead", a2: "dead", b: "sol", b1: "sol" },
+  { r: "cur", a: "path", b: "path" }, // 首帧:根点亮 + 主干候选,一进来就满
+  { r: "path", a: "cur", b: "path" }, // 决定先探 A 分支
+  { r: "path", a: "path", a1: "cur", b: "path" }, // 试 a1
+  { r: "path", a: "path", a1: "dead", a2: "cur", b: "path" }, // a1 死路 → 试 a2
+  { r: "path", a: "dead", a1: "dead", a2: "dead", b: "path" }, // A 整枝无解 → 回退
+  { r: "path", a: "dead", a1: "dead", a2: "dead", b: "cur" }, // 转而探 B 分支
+  { r: "path", a: "dead", a1: "dead", a2: "dead", b: "path", b1: "cur" }, // 试 b1
+  { r: "sol", a: "dead", a1: "dead", a2: "dead", b: "sol", b1: "sol" }, // 命中!解路径亮绿
+  { r: "sol", a: "dead", a1: "dead", a2: "dead", b: "sol", b1: "sol" }, // 定格一拍再循环
 ];
 
 export function HeroDecision() {
   const [tick, setTick] = useState(0);
 
   useEffect(() => {
-    const t = setInterval(() => setTick((v) => v + 1), 950);
+    // 尊重「减弱动态」:直接停在首帧 —— 它已被设计成「富状态」,静态也好看。
+    const reduce =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) return;
+    const t = setInterval(() => setTick((v) => v + 1), 1000);
     return () => clearInterval(t);
   }, []);
 

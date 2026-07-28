@@ -18,15 +18,16 @@
   gap: 14px;
   align-items: flex-start;
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: var(--r-lg);
   background: var(--panel);
   padding: 14px 18px;
+  box-shadow: var(--hi-soft), var(--shadow-1);
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 [data-ch="greedy"] .grd-step:hover {
   border-color: var(--acc-border);
-  box-shadow: 0 6px 22px var(--acc-glow);
+  box-shadow: var(--hi-soft), var(--glow-md);
 }
 
 [data-ch="greedy"] .grd-step::before {
@@ -38,10 +39,12 @@
   height: 44px;
   display: grid;
   place-items: center;
-  border-radius: 13px;
+  border-radius: var(--r-md);
   background: var(--acc-soft);
   color: var(--acc-ink);
   border: 1px solid var(--acc-border);
+  box-shadow: var(--hi-soft);
+  font-variant-numeric: tabular-nums;
 }
 
 [data-ch="greedy"] .grd-step h4 {
@@ -103,7 +106,8 @@
 [data-ch="greedy"] .grd-timeline {
   position: relative;
   width: 100%;
-  padding: 4px 8px 2px;
+  /* 顶部留白给 lastEnd 竖线标签,避免它压到上方图例 */
+  padding: 18px 8px 2px;
   box-sizing: border-box;
 }
 
@@ -111,7 +115,7 @@
   position: relative;
   height: 28px;
   margin-bottom: 7px;
-  border-radius: 8px;
+  border-radius: var(--r-sm);
   background: repeating-linear-gradient(
     90deg,
     transparent,
@@ -129,7 +133,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 7px;
+  border-radius: var(--r-xs);
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 700;
@@ -137,6 +141,7 @@
   border: 1.5px solid var(--border-strong);
   background: var(--panel-2);
   color: var(--text-2);
+  font-variant-numeric: tabular-nums;
   transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   box-sizing: border-box;
 }
@@ -150,7 +155,7 @@
   border-color: var(--acc);
   background: var(--acc-soft);
   color: var(--acc-ink);
-  box-shadow: 0 0 16px var(--acc-glow);
+  box-shadow: var(--glow-sm);
   z-index: 3;
 }
 
@@ -180,13 +185,19 @@
 
 [data-ch="greedy"] .grd-marker-lab {
   position: absolute;
-  top: -6px;
-  left: 4px;
+  /* 居中挂在竖线上、坐进容器顶部 18px 留白里,靠近右端也不会溢出轨道 */
+  top: 0;
+  left: 0;
+  transform: translateX(-50%);
+  padding: 1px 5px;
+  border-radius: var(--r-xs);
+  background: var(--acc-faint);
   font-family: var(--font-mono);
   font-size: 10.5px;
   font-weight: 700;
   color: var(--acc-ink);
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 [data-ch="greedy"] .grd-axis {
@@ -201,6 +212,7 @@
   font-family: var(--font-mono);
   font-size: 10px;
   color: var(--text-3);
+  font-variant-numeric: tabular-nums;
 }
 
 /* 时间轴图例小方块 */
@@ -208,7 +220,7 @@
   display: inline-block;
   width: 14px;
   height: 14px;
-  border-radius: 4px;
+  border-radius: var(--r-xs);
   border: 1.5px solid var(--border-strong);
   vertical-align: -2px;
   margin-right: 4px;
@@ -240,6 +252,8 @@
   color: var(--acc-ink);
   background: var(--acc-soft);
   border: 1.5px solid var(--acc-border);
+  box-shadow: var(--hi-soft), var(--shadow-1);
+  font-variant-numeric: tabular-nums;
 }
 
 [data-ch="greedy"] .grd-coin-sum {
@@ -247,6 +261,7 @@
   font-size: 22px;
   font-weight: 800;
   color: var(--text);
+  font-variant-numeric: tabular-nums;
 }
 
 [data-ch="greedy"] .grd-coin-sum .grd-sum-ok { color: var(--warn); }
@@ -265,7 +280,7 @@
 
 [data-ch="greedy"] .grd-wiggle .grd-wcol {
   width: 30px;
-  border-radius: 6px 6px 0 0;
+  border-radius: var(--r-xs) var(--r-xs) 0 0;
   background: var(--panel-2);
   border: 1.5px solid var(--border-strong);
   display: flex;
@@ -276,6 +291,7 @@
   font-weight: 700;
   color: var(--text-2);
   padding-top: 3px;
+  font-variant-numeric: tabular-nums;
 }
 
 [data-ch="greedy"] .grd-wiggle .grd-wcol[data-peak="1"] {

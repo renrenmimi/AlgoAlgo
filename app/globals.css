@@ -37,6 +37,26 @@
     0 16px 48px rgba(0, 0, 0, 0.42);
   --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.3);
 
+  /* 三级阴影标尺(纵深) */
+  --shadow-1: 0 2px 10px rgba(0, 0, 0, 0.34);
+  --shadow-2:
+    0 1px 2px rgba(0, 0, 0, 0.4),
+    0 14px 40px rgba(0, 0, 0, 0.44);
+  --shadow-3:
+    0 2px 4px rgba(0, 0, 0, 0.5),
+    0 30px 70px rgba(0, 0, 0, 0.55);
+  /* 玻璃顶部内高光 + 底部内暗线(材质感) */
+  --hi: inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.28);
+  --hi-soft: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  /* 圆角标尺(全站统一) */
+  --r-xs: 7px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 18px;
+  --r-xl: 24px;
+
   /* 章节色的明度/彩度参数(深色下更亮更荧光) */
   --acc-l: 76%;
   --acc-c: 0.15;
@@ -92,6 +112,17 @@
     0 16px 48px rgba(23, 28, 45, 0.09);
   --shadow-soft: 0 8px 28px rgba(23, 28, 45, 0.07);
 
+  --shadow-1: 0 2px 10px rgba(23, 28, 45, 0.06);
+  --shadow-2:
+    0 1px 2px rgba(23, 28, 45, 0.05),
+    0 14px 40px rgba(23, 28, 45, 0.1);
+  --shadow-3:
+    0 2px 6px rgba(23, 28, 45, 0.08),
+    0 30px 70px rgba(23, 28, 45, 0.14);
+  --hi: inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(23, 28, 45, 0.04);
+  --hi-soft: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+
   --acc-l: 50%;
   --acc-c: 0.16;
   --acc-strong-l: 44%;
@@ -143,7 +174,24 @@
   --acc-border: oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.34);
   --acc-glow: oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.3);
   --acc-ink: oklch(from var(--acc) calc(l + 0.08) calc(c - 0.03) h);
+  --acc-faint: oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.06);
   --grad: linear-gradient(120deg, var(--acc) 0%, var(--acc-2) 100%);
+  --grad-soft: linear-gradient(
+    135deg,
+    oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.14),
+    oklch(var(--acc-l) var(--acc-c) var(--hue2) / 0.05) 65%,
+    transparent
+  );
+  /* 发光标尺(跟随章节主色) */
+  --glow-sm: 0 0 14px var(--acc-glow);
+  --glow-md: 0 6px 22px var(--acc-glow);
+  --glow-lg: 0 12px 40px var(--acc-glow);
+  /* 玻璃描边:上缘亮、下缘暗,配合 --hi 造出「打光」质感 */
+  --edge: linear-gradient(
+    180deg,
+    oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.28),
+    var(--border) 40%
+  );
 }
 
 [data-theme="light"] [data-ch],
@@ -198,10 +246,33 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-ui);
-  font-size: 15.5px;
-  line-height: 1.75;
+  font-size: 16px;
+  line-height: 1.78;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  font-feature-settings: "ss01", "cv01";
+}
+
+/* 全局细颗粒噪点 —— 消除纯色塑料感,几乎不可见但去数码味 */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--noise-o, 0.035);
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+[data-theme="light"] {
+  --noise-o: 0.02;
+}
+
+/* 内容层浮在噪点之上 */
+.shell {
+  position: relative;
+  z-index: 1;
 }
 
 h1, h2, h3, h4 {
@@ -245,9 +316,30 @@ button {
   border-radius: 4px;
 }
 
+/* 交互元素统一柔和聚焦环 */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+.side-link:focus-visible,
+.q-opt:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--acc-border);
+}
+
 .mono {
   font-family: var(--font-mono);
   font-size: 0.92em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 度量数字统一等宽对齐 */
+.hero-title,
+.big-o,
+.dpt-cell,
+.rs-cell,
+.cell,
+.cl-n {
+  font-variant-numeric: tabular-nums;
 }
 
 .dim {
@@ -262,6 +354,27 @@ button {
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
+}
+
+/* 超缓慢旋转的锥形光环 —— 给背景加一层若有若无的流动 */
+.aurora::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120vmax;
+  height: 120vmax;
+  transform: translate(-50%, -50%);
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    oklch(70% 0.16 var(--hue) / 0.05) 70deg,
+    transparent 150deg,
+    oklch(70% 0.15 var(--hue2) / 0.045) 240deg,
+    transparent 320deg
+  );
+  filter: blur(30px);
+  animation: aurora-spin 60s linear infinite;
 }
 
 .aurora-a,
@@ -305,6 +418,11 @@ button {
   background-size: 44px 44px;
   opacity: var(--grid-o);
   mask-image: radial-gradient(ellipse 90% 55% at 50% 0%, #000 0%, transparent 78%);
+}
+
+@keyframes aurora-spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 @keyframes drift-a {
@@ -361,11 +479,27 @@ html[data-sidebar="collapsed"] .sidebar {
   height: 40px;
   display: grid;
   place-items: center;
-  border-radius: 13px;
+  border-radius: var(--r-sm);
   background: var(--grad);
-  box-shadow: 0 4px 18px var(--acc-glow);
+  box-shadow: 0 4px 18px var(--acc-glow), var(--hi-soft);
   color: #fff;
   flex: 0 0 auto;
+  position: relative;
+  animation: brand-breath 4.5s ease-in-out infinite;
+}
+
+.brand-mark::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.35), transparent 55%);
+  opacity: 0.7;
+}
+
+@keyframes brand-breath {
+  0%, 100% { box-shadow: 0 4px 18px var(--acc-glow), var(--hi-soft); }
+  50% { box-shadow: 0 6px 26px var(--acc-glow), 0 0 0 3px var(--acc-faint), var(--hi-soft); }
 }
 
 .brand-name {
@@ -424,6 +558,21 @@ html[data-sidebar="collapsed"] .sidebar {
   background: oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.12);
   border-color: oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.28);
   color: var(--text);
+  box-shadow: var(--hi-soft), 0 4px 16px oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.14);
+}
+
+/* active 项左侧竖光条 */
+.side-link.active::before {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 18px;
+  border-radius: 3px;
+  background: oklch(var(--acc-l) var(--acc-c) var(--hue));
+  box-shadow: 0 0 10px oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.7);
 }
 
 .side-num {
@@ -487,19 +636,33 @@ html[data-sidebar="collapsed"] .sidebar {
 }
 
 .progress {
-  height: 5px;
-  border-radius: 4px;
+  height: 6px;
+  border-radius: 999px;
   background: var(--panel-2);
   overflow: hidden;
   margin-top: 8px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 .progress-fill {
   height: 100%;
-  border-radius: 4px;
+  border-radius: 999px;
   background: var(--grad);
-  box-shadow: 0 0 10px var(--acc-glow);
+  box-shadow: 0 0 12px var(--acc-glow), inset 0 1px 0 rgba(255, 255, 255, 0.35);
   transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+}
+
+.progress-fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  filter: blur(2px);
 }
 
 /* — 主区 — */
@@ -703,9 +866,10 @@ html[data-sidebar="collapsed"] .sidebar {
   font-family: var(--font-display);
   font-size: clamp(40px, 6.2vw, 64px);
   font-weight: 800;
-  letter-spacing: 0.005em;
-  line-height: 1.08;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
   margin: 0 0 6px;
+  text-wrap: balance;
 }
 
 .hero-title .grad {
@@ -730,7 +894,10 @@ html[data-sidebar="collapsed"] .sidebar {
   color: var(--text-2);
   max-width: 640px;
   margin: 0 0 26px;
-  line-height: 1.7;
+  line-height: 1.72;
+  padding-left: 16px;
+  border-left: 2px solid transparent;
+  border-image: var(--edge) 1;
 }
 
 .hero-essence strong,
@@ -742,16 +909,17 @@ html[data-sidebar="collapsed"] .sidebar {
 /* 巨型章节编号水印 */
 .hero-watermark {
   position: absolute;
-  top: -8px;
-  right: -10px;
+  top: -14px;
+  right: -6px;
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(120px, 22vw, 230px);
+  font-size: clamp(120px, 22vw, 240px);
   line-height: 1;
   background: linear-gradient(
-    160deg,
-    oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.16),
-    transparent 72%
+    155deg,
+    oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.2),
+    oklch(var(--acc-l) var(--acc-c) var(--hue2) / 0.05) 55%,
+    transparent 78%
   );
   -webkit-background-clip: text;
   background-clip: text;
@@ -759,6 +927,16 @@ html[data-sidebar="collapsed"] .sidebar {
   pointer-events: none;
   user-select: none;
   z-index: -1;
+  filter: drop-shadow(0 8px 40px var(--acc-glow));
+}
+
+@media (max-width: 760px) {
+  .hero-watermark {
+    font-size: clamp(84px, 30vw, 130px);
+    top: -6px;
+    right: -2px;
+    opacity: 0.55;
+  }
 }
 
 /* hero 内导航 chips */
@@ -868,10 +1046,12 @@ li code {
   font-size: 0.88em;
   background: var(--panel-2);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--r-xs);
   padding: 1.5px 6px;
   color: var(--acc-ink);
-  white-space: nowrap;
+  white-space: normal;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
 }
 
 /* — 卡片与网格 — */
@@ -882,19 +1062,24 @@ li code {
 
 .card {
   position: relative;
-  border-radius: 18px;
+  border-radius: var(--r-lg);
   border: 1px solid var(--border);
   background: var(--panel);
   backdrop-filter: blur(10px);
   padding: 18px 20px;
-  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.25s, box-shadow 0.25s;
+  box-shadow: var(--hi-soft), var(--shadow-1);
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.28s, box-shadow 0.28s;
+}
+
+.card.hoverable {
+  cursor: default;
 }
 
 .card.hoverable:hover {
   transform: translateY(-3px);
   border-color: var(--acc-border);
-  box-shadow: 0 12px 36px var(--acc-glow);
+  box-shadow: var(--hi-soft), var(--glow-lg);
 }
 
 .card-kicker {
@@ -930,20 +1115,30 @@ li code {
 .callout {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 13px;
-  border-radius: 16px;
+  gap: 14px;
+  border-radius: var(--r-md);
   border: 1px solid var(--border);
   background: var(--panel);
-  padding: 15px 18px;
+  padding: 16px 18px 16px 16px;
   margin: 18px 0;
-  font-size: 14px;
+  font-size: 14.5px;
   color: var(--text-2);
   border-left: 3px solid var(--acc);
+  box-shadow: var(--hi-soft), var(--shadow-1);
 }
 
 .callout .ico {
-  font-size: 17px;
-  line-height: 1.5;
+  font-size: 15px;
+  line-height: 1;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: var(--acc-soft);
+  border: 1px solid var(--acc-border);
+  box-shadow: var(--hi-soft);
+  flex: 0 0 auto;
 }
 
 .callout b {
@@ -959,8 +1154,11 @@ li code {
 }
 
 .callout[data-tone="warn"] { border-left-color: var(--warn); background: var(--warn-bg); }
+.callout[data-tone="warn"] .ico { background: var(--warn-bg); border-color: color-mix(in oklab, var(--warn) 40%, transparent); }
 .callout[data-tone="deep"] { border-left-color: var(--info); background: var(--info-bg); }
+.callout[data-tone="deep"] .ico { background: var(--info-bg); border-color: color-mix(in oklab, var(--info) 40%, transparent); }
 .callout[data-tone="win"]  { border-left-color: var(--ok); background: var(--ok-bg); }
+.callout[data-tone="win"] .ico { background: var(--ok-bg); border-color: color-mix(in oklab, var(--ok) 40%, transparent); }
 .callout[data-tone="story"] {
   border-left-color: var(--acc);
   background: linear-gradient(
@@ -995,8 +1193,12 @@ li code {
   font-weight: 600;
   padding: 12px 16px;
   border-bottom: 1px solid var(--border-strong);
-  background: var(--panel-2);
+  background: color-mix(in oklab, var(--panel-solid) 90%, transparent);
   white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  backdrop-filter: blur(8px);
 }
 
 .t-table td {
@@ -1084,44 +1286,61 @@ li code {
   justify-content: center;
   gap: 8px;
   padding: 9px 17px;
-  border-radius: 12px;
+  border-radius: var(--r-sm);
   border: 1px solid var(--border-strong);
   background: var(--panel-2);
   color: var(--text);
   font-size: 13.5px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.18s, background 0.18s, box-shadow 0.18s, filter 0.18s;
   user-select: none;
+  box-shadow: var(--hi-soft);
 }
 
 .btn:hover {
   border-color: var(--acc-border);
   background: var(--acc-soft);
-  transform: translateY(-1px);
+  transform: translateY(-1.5px);
+  box-shadow: var(--hi-soft), var(--glow-sm);
 }
 
 .btn:active {
-  transform: translateY(0) scale(0.98);
+  transform: translateY(0) scale(0.97);
 }
 
 .btn:disabled {
-  opacity: 0.45;
+  opacity: 0.4;
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
 }
 
 .btn-primary {
+  position: relative;
   border: none;
   background: var(--grad);
   color: #fff;
-  box-shadow: 0 4px 18px var(--acc-glow);
+  box-shadow: 0 4px 18px var(--acc-glow), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  overflow: hidden;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.18);
+}
+
+/* 主按钮顶部高光条 */
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 50% 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent);
+  pointer-events: none;
 }
 
 .btn-primary:hover {
   background: var(--grad);
-  filter: brightness(1.1);
-  box-shadow: 0 6px 24px var(--acc-glow);
+  filter: brightness(1.08) saturate(1.05);
+  transform: translateY(-1.5px);
+  box-shadow: 0 8px 28px var(--acc-glow), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .btn-ghost {
@@ -1178,12 +1397,12 @@ li code {
 /* ---------- 8. 代码窗口 ---------- */
 
 .codewin {
-  border-radius: 16px;
+  border-radius: var(--r-md);
   border: 1px solid var(--border-strong);
   background: var(--code-bg);
   overflow: hidden;
   margin: 18px 0;
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--shadow-2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .codewin-bar {
@@ -1191,8 +1410,8 @@ li code {
   align-items: center;
   gap: 12px;
   padding: 10px 14px;
-  background: var(--code-bar);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent), var(--code-bar);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .codewin-dots {
@@ -1265,6 +1484,11 @@ li code {
   display: flex;
   padding: 0 16px;
   white-space: pre;
+  transition: background 0.12s;
+}
+
+.cl:hover {
+  background: rgba(255, 255, 255, 0.028);
 }
 
 .cl-n {
@@ -1312,10 +1536,11 @@ li code {
 }
 
 .q-item {
-  border-radius: 18px;
+  border-radius: var(--r-lg);
   border: 1px solid var(--border);
   background: var(--panel);
   padding: 18px 20px;
+  box-shadow: var(--hi-soft), var(--shadow-1);
   transition: border-color 0.25s, box-shadow 0.25s;
 }
 
@@ -1357,20 +1582,22 @@ li code {
   gap: 11px;
   text-align: left;
   padding: 11px 14px;
-  border-radius: 13px;
+  border-radius: var(--r-sm);
   border: 1px solid var(--border);
   background: var(--panel);
   color: var(--text-2);
   font-size: 13.8px;
   line-height: 1.55;
   cursor: pointer;
-  transition: all 0.18s;
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.18s, background 0.18s, color 0.18s;
 }
 
 .q-opt:hover:not(:disabled) {
   border-color: var(--acc-border);
   background: var(--acc-soft);
   color: var(--text);
+  transform: translateX(3px);
 }
 
 .q-opt .key {
@@ -1404,6 +1631,7 @@ li code {
   border-color: color-mix(in oklab, var(--ok) 50%, transparent);
   background: var(--ok-bg);
   color: var(--text);
+  box-shadow: 0 0 20px color-mix(in oklab, var(--ok) 22%, transparent);
 }
 
 .q-opt.right .key {
@@ -1500,11 +1728,21 @@ li code {
 }
 
 .prob {
-  border-radius: 16px;
+  border-radius: var(--r-md);
   border: 1px solid var(--border);
   background: var(--panel);
   overflow: hidden;
-  transition: border-color 0.2s;
+  box-shadow: var(--hi-soft);
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.prob:hover {
+  box-shadow: var(--hi-soft), var(--shadow-1);
+}
+
+.prob.open {
+  border-color: var(--acc-border);
+  box-shadow: var(--hi-soft), var(--glow-sm);
 }
 
 .prob.done {
@@ -1621,13 +1859,13 @@ li code {
 /* ---------- 10. 可视化通用 ---------- */
 
 .viz {
-  border-radius: 20px;
+  border-radius: var(--r-xl);
   border: 1px solid var(--border-strong);
   background:
     radial-gradient(
-      ellipse 80% 60% at 50% 0%,
-      oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.06),
-      transparent 70%
+      ellipse 85% 65% at 50% 0%,
+      oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.08),
+      transparent 72%
     ),
     var(--panel);
   backdrop-filter: blur(12px);
@@ -1635,30 +1873,67 @@ li code {
   margin: 20px 0;
   overflow: hidden;
   position: relative;
+  box-shadow: var(--hi-soft), var(--shadow-2);
+}
+
+/* viz 顶部一条主色光缝 */
+.viz::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.55),
+    transparent
+  );
 }
 
 .viz-title {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--text-2);
+  color: var(--text);
   margin-bottom: 16px;
+  letter-spacing: 0.01em;
 }
 
 .viz-title::before {
-  content: "▶";
-  font-size: 9px;
-  color: var(--acc);
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--acc);
+  box-shadow: 0 0 8px var(--acc-glow);
+  flex: 0 0 auto;
 }
 
 .viz-stage {
   min-height: 120px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 0;
+  /* safe:放得下时居中,放不下时退回起始对齐 —— 避免居中把溢出内容推到
+     scrollLeft:0 也够不着的负区(窄屏下 DP 表/决策树左侧列会被永久裁掉) */
+  align-items: safe center;
+  justify-content: safe center;
+  padding: 14px 2px;
+  scrollbar-width: thin;
+}
+
+/* 可横向滚动的舞台:细主题滚动条,让「还能滑」这件事被看见 */
+.viz-stage::-webkit-scrollbar {
+  height: 7px;
+}
+.viz-stage::-webkit-scrollbar-thumb {
+  background: var(--acc-border);
+  border-radius: 999px;
+}
+.viz-stage::-webkit-scrollbar-thumb:hover {
+  background: var(--acc);
 }
 
 .viz-ctl {
@@ -2054,15 +2329,31 @@ li code {
 /* ---------- 11. 要点卡 / 章节页脚 ---------- */
 
 .kp {
-  border-radius: 20px;
+  position: relative;
+  border-radius: var(--r-xl);
   border: 1px solid var(--acc-border);
   background: linear-gradient(
     150deg,
-    oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.1),
-    transparent 60%
-  );
-  padding: 24px 26px;
+    oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.12),
+    oklch(var(--acc-l) var(--acc-c) var(--hue2) / 0.04) 55%,
+    transparent 75%
+  ),
+  var(--panel);
+  padding: 26px 28px;
   margin: 24px 0;
+  box-shadow: var(--hi-soft), var(--shadow-2), 0 0 40px var(--acc-glow);
+  overflow: hidden;
+}
+
+.kp::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--acc), transparent);
+  opacity: 0.6;
 }
 
 .kp-title {
@@ -2099,6 +2390,7 @@ li code {
   font-size: 10px;
   line-height: 2.2;
   flex: 0 0 auto;
+  text-shadow: 0 0 8px var(--acc-glow);
 }
 
 .kp li b { color: var(--text); }
@@ -2116,16 +2408,18 @@ li code {
   flex-direction: column;
   gap: 6px;
   padding: 18px 20px;
-  border-radius: 18px;
+  border-radius: var(--r-lg);
   border: 1px solid var(--border);
   background: var(--panel);
+  box-shadow: var(--hi-soft);
   transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .ch-footer-link:hover {
   border-color: oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.4);
   background: oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.09);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: var(--hi-soft), 0 12px 34px oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.22);
 }
 
 .ch-footer-link.next {
@@ -2158,14 +2452,17 @@ li code {
 
 .reveal {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateY(22px);
+  filter: blur(6px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .reveal.in {
   opacity: 1;
   transform: none;
+  filter: none;
 }
 
 @keyframes fade-in {
@@ -2198,6 +2495,11 @@ li code {
 @keyframes pulse-glow {
   0%, 100% { box-shadow: 0 0 10px var(--acc-glow); }
   50% { box-shadow: 0 0 26px var(--acc-glow); }
+}
+
+/* 边框流光(克制使用:首页 CTA / KeyPoints) */
+@keyframes edge-shimmer {
+  to { background-position: 200% center; }
 }
 
 @media (max-width: 1080px) {
@@ -2276,5 +2578,7 @@ li code {
     transition-duration: 0.01ms !important;
   }
   html { scroll-behavior: auto; }
-  .reveal { opacity: 1; transform: none; }
+  .reveal { opacity: 1; transform: none; filter: none; }
+  .aurora::before { animation: none; }
+  .brand-mark { animation: none; }
 }

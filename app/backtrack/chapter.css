@@ -32,9 +32,10 @@
   display: grid;
   gap: 4px;
   padding: 8px;
-  border-radius: 14px;
+  border-radius: var(--r-md);
   background: var(--panel-2);
   border: 1px solid var(--border-strong);
+  box-shadow: var(--hi-soft), var(--shadow-1);
 }
 
 [data-ch="backtrack"] .bt-sq {
@@ -42,12 +43,13 @@
   height: 50px;
   display: grid;
   place-items: center;
-  border-radius: 8px;
+  border-radius: var(--r-xs);
   font-size: 26px;
   line-height: 1;
   background: var(--panel);
   border: 1.5px solid var(--border);
   color: var(--text);
+  box-shadow: var(--hi-soft);
   transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -59,7 +61,7 @@
   border-color: var(--acc);
   background: var(--acc-soft);
   color: var(--acc-ink);
-  box-shadow: 0 0 16px var(--acc-glow);
+  box-shadow: var(--hi-soft), var(--glow-sm);
   transform: translateY(-2px);
 }
 
@@ -106,5 +108,16 @@
 @media (max-width: 760px) {
   [data-ch="backtrack"] .bt-duo {
     grid-template-columns: 1fr;
+  }
+}
+
+/* 窄屏:排列实验室的行标签放弃固定宽度,避免右对齐标签把单元格挤出容器 */
+@media (max-width: 480px) {
+  [data-ch="backtrack"] .bt-perm-row {
+    gap: 8px 12px;
+  }
+  [data-ch="backtrack"] .bt-perm-lab {
+    width: auto;
+    text-align: center;
   }
 }

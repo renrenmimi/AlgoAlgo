@@ -72,8 +72,9 @@
   gap: 6px;
   font-family: var(--font-mono);
   font-size: 12px;
+  font-variant-numeric: tabular-nums;
   padding: 3px 9px;
-  border-radius: 8px;
+  border-radius: var(--r-xs);
   border: 1px solid var(--acc-border);
   background: var(--acc-soft);
   color: var(--acc-ink);

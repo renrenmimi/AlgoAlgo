@@ -48,10 +48,41 @@
   margin-top: 28px;
 }
 
+/* 主 CTA:克制的高光扫过 + 箭头 hover 位移 */
+.cta-go {
+  position: relative;
+}
+
+.cta-go .cta-arrow {
+  display: inline-block;
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cta-go:hover .cta-arrow {
+  transform: translateX(4px);
+}
+
+/* 缓慢扫过的一道高光(btn-primary 自带 overflow:hidden 会裁剪它);
+   reduced-motion 下 globals 已全局静音动画。 */
+.cta-go::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 34%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 66%
+  );
+  background-size: 220% 100%;
+  animation: edge-shimmer 3.8s linear infinite;
+  pointer-events: none;
+}
+
 .home-stats {
-  display: flex;
-  gap: 28px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 18px 22px;
   margin-top: 38px;
   padding-top: 22px;
   border-top: 1px solid var(--border);
@@ -60,7 +91,9 @@
 .home-stat .v {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 26px;
+  font-size: 28px;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
   background: var(--grad);
   -webkit-background-clip: text;
   background-clip: text;
@@ -71,20 +104,36 @@
   font-size: 12px;
   color: var(--text-3);
   letter-spacing: 0.05em;
+  margin-top: 2px;
 }
 
 /* — 变形动画 — */
 
 .hm-wrap {
   position: relative;
-  border-radius: 24px;
-  border: 1px solid var(--border);
+  overflow: hidden;
+  border-radius: var(--r-xl);
+  border: 1px solid var(--acc-border);
   background:
     radial-gradient(ellipse 70% 55% at 50% 0%, var(--acc-soft), transparent 75%),
+    var(--grad-soft),
     var(--panel);
-  backdrop-filter: blur(12px);
-  padding: 18px 14px 10px;
-  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(14px);
+  padding: 20px 16px 12px;
+  box-shadow: var(--hi-soft), var(--shadow-2);
+}
+
+/* 顶部主色光缝 —— 玻璃被从上方打了一道光 */
+.hm-wrap::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 1.5px;
+  background: var(--grad);
+  box-shadow: 0 0 12px var(--acc-glow);
+  pointer-events: none;
 }
 
 .hm-svg {
@@ -329,12 +378,14 @@
   flex-direction: column;
   gap: 8px;
   padding: 18px;
-  border-radius: 18px;
-  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  /* 每张卡按本章主色描一道极淡的边 —— 14 张卡一起像一张星图 */
+  border: 1px solid oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.22);
   background: var(--panel);
   backdrop-filter: blur(10px);
   position: relative;
   overflow: hidden;
+  box-shadow: var(--hi-soft), var(--shadow-1);
   transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
     border-color 0.28s, box-shadow 0.28s;
 }
@@ -353,13 +404,49 @@
 }
 
 .map-card:hover {
-  transform: translateY(-4px);
-  border-color: oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.45);
-  box-shadow: 0 14px 40px oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.22);
+  transform: translateY(-5px);
+  border-color: oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.5);
+  /* 主色发光(等价于本章的 --glow-md) */
+  box-shadow: var(--hi-soft), 0 10px 30px oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.28);
 }
 
 .map-card:hover::before {
   opacity: 1;
+}
+
+.map-card:hover .map-watermark {
+  opacity: 0.9;
+}
+
+/* 淡淡的章号水印(位于卡片右下,被 overflow 裁一角) */
+.map-watermark {
+  position: absolute;
+  right: 8px;
+  bottom: -20px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 92px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  background: linear-gradient(
+    155deg,
+    oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.16),
+    transparent 72%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 0.3s;
+}
+
+/* 让正文压在 ::before 光晕与水印之上,保持清晰可读 */
+.map-head,
+.map-essence,
+.map-meta {
+  position: relative;
+  z-index: 1;
 }
 
 .map-head {

@@ -25,16 +25,17 @@
   align-items: center;
   border: 1px solid var(--border);
   border-left: 3px solid var(--acc-border);
-  border-radius: 14px;
+  border-radius: var(--r-md);
   background: var(--panel);
   padding: 12px 16px;
+  box-shadow: var(--hi-soft), var(--shadow-1);
   transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
 }
 
 [data-ch="dp-pro"] .pro-rung:hover {
   border-color: var(--acc-border);
   border-left-color: var(--acc);
-  box-shadow: 0 6px 22px var(--acc-glow);
+  box-shadow: var(--hi-soft), var(--glow-md);
   transform: translateX(3px);
 }
 
@@ -42,10 +43,11 @@
   font-family: var(--font-mono);
   font-weight: 800;
   font-size: 13px;
+  font-variant-numeric: tabular-nums;
   color: var(--acc-ink);
   background: var(--acc-soft);
   border: 1px solid var(--acc-border);
-  border-radius: 9px;
+  border-radius: var(--r-sm);
   padding: 5px 9px;
   white-space: nowrap;
 }
@@ -68,66 +70,69 @@
 
 /* ---------- 状态机转移图(SVG) ---------- */
 
-.pro-fsm-svg {
+[data-ch="dp-pro"] .pro-fsm-svg {
   display: block;
   margin: 0 auto;
+  max-width: 100%;
+  height: auto;
   font-family: var(--font-mono);
 }
 
-.pro-fsm-box rect {
+[data-ch="dp-pro"] .pro-fsm-box rect {
   fill: var(--panel-2);
   stroke: var(--border-strong);
   stroke-width: 1.5;
   transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.pro-fsm-box .pro-fsm-name {
+[data-ch="dp-pro"] .pro-fsm-box .pro-fsm-name {
   fill: var(--text-2);
   font-size: 13px;
   font-weight: 600;
 }
 
-.pro-fsm-box .pro-fsm-val {
+[data-ch="dp-pro"] .pro-fsm-box .pro-fsm-val {
   fill: var(--text);
   font-size: 17px;
   font-weight: 800;
+  font-variant-numeric: tabular-nums;
 }
 
-.pro-fsm-box.on rect {
+[data-ch="dp-pro"] .pro-fsm-box.on rect {
   fill: var(--acc-soft);
   stroke: var(--acc);
   stroke-width: 2.5;
   filter: drop-shadow(0 0 10px var(--acc-glow));
 }
 
-.pro-fsm-box.on .pro-fsm-name,
-.pro-fsm-box.on .pro-fsm-val {
+[data-ch="dp-pro"] .pro-fsm-box.on .pro-fsm-name,
+[data-ch="dp-pro"] .pro-fsm-box.on .pro-fsm-val {
   fill: var(--acc-ink);
 }
 
-.pro-fsm-box.ans rect {
+[data-ch="dp-pro"] .pro-fsm-box.ans rect {
   fill: var(--ok-bg);
   stroke: var(--ok);
   stroke-width: 2.5;
 }
 
-.pro-fsm-box.ans .pro-fsm-val {
+[data-ch="dp-pro"] .pro-fsm-box.ans .pro-fsm-val {
   fill: var(--ok);
 }
 
-.pro-fsm-edge {
+[data-ch="dp-pro"] .pro-fsm-edge {
   fill: none;
   stroke: var(--border-strong);
   stroke-width: 2;
   transition: stroke 0.3s, stroke-width 0.3s;
 }
 
-.pro-fsm-edge.on {
+[data-ch="dp-pro"] .pro-fsm-edge.on {
   stroke: var(--acc);
   stroke-width: 3;
 }
 
-.pro-fsm-lab {
+[data-ch="dp-pro"] .pro-fsm-lab {
   fill: var(--text-3);
   font-size: 11px;
   font-weight: 600;
@@ -135,79 +140,85 @@
 
 /* ---------- 区间 DP 气球值标注 ---------- */
 
-.pro-bval {
+[data-ch="dp-pro"] .pro-bval {
   color: var(--acc-ink);
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ---------- 状压 DP 实验室 ---------- */
 
-.pro-lamp-row {
+[data-ch="dp-pro"] .pro-lamp-row {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.pro-lamp {
+[data-ch="dp-pro"] .pro-lamp {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 3px;
   width: 96px;
   padding: 12px 8px;
-  border-radius: 14px;
+  border-radius: var(--r-md);
   border: 1.5px solid var(--border-strong);
   background: var(--panel-2);
   color: var(--text-2);
   cursor: pointer;
+  box-shadow: var(--hi-soft), var(--shadow-1);
   transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.pro-lamp:hover {
+[data-ch="dp-pro"] .pro-lamp:hover {
   border-color: var(--acc-border);
 }
 
-.pro-lamp.on {
+[data-ch="dp-pro"] .pro-lamp.on {
   border-color: var(--acc);
   background: var(--acc-soft);
   color: var(--acc-ink);
-  box-shadow: 0 0 18px var(--acc-glow);
+  box-shadow: var(--hi-soft), var(--glow-md);
   transform: translateY(-3px);
 }
 
-.pro-lamp-bit {
+[data-ch="dp-pro"] .pro-lamp-bit {
   font-family: var(--font-mono);
   font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
   color: var(--text-3);
 }
 
-.pro-lamp.on .pro-lamp-bit {
+[data-ch="dp-pro"] .pro-lamp.on .pro-lamp-bit {
   color: var(--acc-ink);
 }
 
-.pro-lamp-num {
+[data-ch="dp-pro"] .pro-lamp-num {
   font-family: var(--font-mono);
   font-size: 24px;
   font-weight: 800;
+  font-variant-numeric: tabular-nums;
   line-height: 1.1;
 }
 
-.pro-lamp-state {
+[data-ch="dp-pro"] .pro-lamp-state {
   font-family: var(--font-mono);
   font-size: 11px;
+  font-variant-numeric: tabular-nums;
 }
 
-.pro-mask-readout {
+[data-ch="dp-pro"] .pro-mask-readout {
   display: flex;
   gap: 22px;
   flex-wrap: wrap;
   justify-content: center;
   font-size: 13px;
+  font-variant-numeric: tabular-nums;
   color: var(--text-2);
 }
 
-.pro-mask-readout b {
+[data-ch="dp-pro"] .pro-mask-readout b {
   color: var(--acc-ink);
 }
 

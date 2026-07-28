@@ -30,6 +30,7 @@
   line-height: 1;
   color: var(--acc-ink);
   text-shadow: 0 0 26px var(--acc-glow);
+  font-variant-numeric: tabular-nums;
 }
 
 [data-ch="binary"] .bin-guess-sub {
@@ -38,6 +39,7 @@
   color: var(--text-3);
   margin-top: 8px;
   text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 
 [data-ch="binary"] .bin-guess-sub b {
@@ -61,9 +63,11 @@
   align-items: center;
   gap: 3px;
   padding: 9px 4px;
-  border-radius: 11px;
+  border-radius: var(--r-sm);
   border: 1.5px solid var(--border-strong);
   font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  box-shadow: var(--hi-soft);
 }
 
 [data-ch="binary"] .bin-ft-cell[data-v="F"] {
@@ -79,7 +83,7 @@
 }
 
 [data-ch="binary"] .bin-ft-cell[data-first="1"] {
-  box-shadow: 0 0 0 2px var(--acc), 0 0 16px var(--acc-glow);
+  box-shadow: 0 0 0 2px var(--acc), var(--glow-sm);
 }
 
 [data-ch="binary"] .bin-ft-k {
