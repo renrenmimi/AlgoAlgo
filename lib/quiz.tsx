@@ -81,12 +81,14 @@ export function Quiz({ ch, items }: { ch: ChapterId; items: QuizItem[] }) {
   );
 
   const setState = (i: number, st: ItemState) => {
-    setStates((prev) => {
-      const next = [...prev];
-      next[i] = st;
-      finish(next);
-      return next;
-    });
+    // 先在渲染外算好新数组,再分别提交状态与结算。
+    // (旧写法把 finish 塞进 setStates 的 updater 里 —— updater 必须是纯函数,
+    //  在里面调用 reportQuiz 会在 Quiz 渲染期间更新 ProgressProvider,
+    //  React 会告警,且 StrictMode 下 updater 被调两次会重复上报。)
+    const next = [...states];
+    next[i] = st;
+    setStates(next);
+    finish(next);
   };
 
   const reset = () => {

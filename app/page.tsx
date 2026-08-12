@@ -6,7 +6,7 @@
 // ④ 四大范式鸟瞰 + 14 章世界地图 + 怎么用这套课。
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import "./home.css";
 import { CHAPTERS } from "@/lib/curriculum";
 import {
@@ -166,11 +166,11 @@ const STATS: { to: number; suffix?: string; label: string }[] = [
 // 进场时数字从 0 滚到目标值(easeOutCubic);尊重「减弱动态」时直接落定。
 function CountStat({ to, suffix = "", label }: { to: number; suffix?: string; label: string }) {
   const [n, setN] = useState(0);
-  const started = useRef(false);
 
   useEffect(() => {
-    if (started.current) return;
-    started.current = true;
+    // 不要加「只跑一次」的 ref 守卫:StrictMode 会「挂载 → 清理 → 再挂载」,
+    // 守卫会让第二次直接 return、不再排 rAF,数字永远停在 0。
+    // 本 effect 自带 cancelAnimationFrame 清理,重复执行是安全的。
     const reduce =
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;

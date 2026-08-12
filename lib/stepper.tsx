@@ -84,8 +84,14 @@ export function useStepper(total: number, intervalMs = 1100) {
       setStep((s) => Math.min(total - 1, s + 1));
     },
     toggle: () => {
+      // 暂停时绝不跳帧。只有「当前已停止 + 停在末帧」时按下按钮才是「重播」,回到第 0 帧。
+      // (旧写法无条件先 setStep(0),导致在最后一帧上点「暂停」会把进度弹回开头。)
+      if (playing) {
+        setPlaying(false);
+        return;
+      }
       if (step >= total - 1) setStep(0);
-      setPlaying((p) => !p);
+      setPlaying(true);
     },
     reset: () => {
       setPlaying(false);
