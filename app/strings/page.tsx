@@ -445,7 +445,9 @@ function buildNext(p) {
         <RollingHash />
         <div className="prose" style={{ marginTop: 16 }}>
           <p>
-            把子串看成一个 base 进制的数:<code>hash = c₀·baseᵐ⁻¹ + c₁·baseᵐ⁻² + … + cₘ₋₁</code>。
+            把子串看成一个以 base 为权的<b>多项式</b>(polynomial rolling hash):
+            <code>hash = c₀·baseᵐ⁻¹ + c₁·baseᵐ⁻² + … + cₘ₋₁</code>。
+            (这里 cᵢ 取字符的 charCode,可以大于 base —— 它是哈希函数,不要求构成标准进制表示。)
             窗口右移时,<strong>移出最高位、其余整体左移一位(×base)、在最低位补入新字符</strong>,
             所以更新是 O(1)。为防止数值爆炸,全程对一个<strong>大质数取模</strong>:
           </p>
@@ -830,7 +832,8 @@ function buildNext(p) {
         <Callout tone="win" title="回文题的家族地图">
           <p>
             回文子串有两条主线:<b>连续子串</b>(本题,中心扩展 / Manacher / 区间 DP)与<b>子序列</b>
-            (LC 516 最长回文子序列,那是区间 DP,在第 10 章)。此外 LC 214 最短回文串会把回文和 KMP 焊在一起 ——
+            (LC 516 最长回文子序列 —— 第 9 章从 LCS 视角讲过
+            〔s 与 reverse(s) 求 LCS〕,第 10 章再用区间 DP 复盘一次)。此外 LC 214 最短回文串会把回文和 KMP 焊在一起 ——
             构造 <code>s + &apos;#&apos; + reverse(s)</code> 求 next 末位,就是「s 的最长回文前缀」。
             <b>回文 = 字符串与它翻转的自相似</b>,这个视角能串起本章一大半题。
           </p>
@@ -911,7 +914,7 @@ function buildNext(p) {
             note: (
               <>
                 两张 Map 分别管 s→t、t→s。反例 <code>badc → baba</code>:只查 m1 会漏,加上 m2 才能发现
-                d、c 都想映射到同一个字符。O(n) 时间。
+                <b>b 和 d</b> 都想映射到同一个 <code>b</code>(a 和 c 同理都映射到 <code>a</code>)。O(n) 时间。
               </>
             ),
           }}
