@@ -289,7 +289,7 @@ export default function Home() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">STANDARD 03</div>
-            <div className="card-title">🗣️ 最后要讲得清</div>
+            <div className="card-title">最后要讲得清</div>
             <p>
               为什么对、为什么快,要能说出来 —— 贪心要给交换论证,DP 要给状态定义。
               「我背过这题」在追问面前一文不值。
@@ -345,7 +345,7 @@ export default function Home() {
             </tbody>
           </table>
         </div>
-        <Callout tone="idea" title="推荐的学习姿势">
+        <Callout tone="idea" title="推荐的学习方式">
           <p>
             如果你还没学过数据结构,建议先完成 DataData 的前 9 章(至少到「堆」),
             再开始本课 —— 本课默认你已经知道数组/哈希/树/栈是什么。
@@ -377,7 +377,7 @@ export default function Home() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">要素 01</div>
-            <div className="card-title">🚪 基准情形</div>
+            <div className="card-title">基准情形</div>
             <p>
               不用递归就能直接回答的出口:fact(1)=1、空数组返回 0。
               <b>先写它,再写别的</b> —— 没有出口的递归是死循环。
@@ -385,7 +385,7 @@ export default function Home() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">要素 02</div>
-            <div className="card-title">🤝 递归信任</div>
+            <div className="card-title">递归信任</div>
             <p>
               写 fact(n) 时,<b>直接相信 fact(n−1) 会返回正确答案</b>,
               只管怎么用它拼出 fact(n)。不要在脑子里展开三层调用 —— 会疯的。
@@ -393,7 +393,7 @@ export default function Home() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">要素 03</div>
-            <div className="card-title">📉 状态收敛</div>
+            <div className="card-title">状态收敛</div>
             <p>
               每次调用都必须<b>向基准情形靠近</b>:n−1、区间砍半、树往下走一层。
               收敛方式,就是后面每个算法的「形状」。
@@ -474,7 +474,7 @@ function fact(n) {
         <div className="grid-2" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">PARADIGM 01 · 第 5 章</div>
-            <div className="card-title">🌳 穷举与回溯</div>
+            <div className="card-title">穷举与回溯</div>
             <p>
               「把所有可能都试一遍」—— 但试得聪明:把可能性组织成一棵<b>决策树</b>,
               走进死胡同立刻回头(剪枝)。它最慢,却是唯一<b>永远可用</b>的兜底,
@@ -483,7 +483,7 @@ function fact(n) {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">PARADIGM 02 · 第 1–2 章</div>
-            <div className="card-title">🔪 分治</div>
+            <div className="card-title">分治</div>
             <p>
               把大问题切成<b>互相独立</b>的同款小问题,递归解决再拼合:
               归并排序、快速幂、合并 K 个链表。子问题不重叠,是它和 DP 的分水岭。
@@ -491,7 +491,7 @@ function fact(n) {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">PARADIGM 03 · 第 6 章</div>
-            <div className="card-title">🍀 贪心</div>
+            <div className="card-title">贪心</div>
             <p>
               每一步都拿<b>当下最优</b>,永不回头。快得惊人,但必须先证明
               「局部最优不会毁掉全局最优」—— 证不出来就别贪,贪错了连错在哪都看不见。
@@ -499,7 +499,7 @@ function fact(n) {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">PARADIGM 04 · 第 7–10 章</div>
-            <div className="card-title">🧠 动态规划</div>
+            <div className="card-title">动态规划</div>
             <p>
               穷举时发现<b>同一个子问题被算了无数遍</b>?记下来,别重算。
               「暴力递归 → 记忆化 → 递推表格」,新手最大的劝退点,
@@ -615,14 +615,14 @@ function fact(n) {
       >
         <div className="grid-3 howto">
           <div className="card">
-            <div className="card-title">📖 先看懂</div>
+            <div className="card-title">先看懂</div>
             <p>
               直觉故事 → 为什么暴力不行 → 核心思想。每个结论都带着「为什么」,
               读不懂就退回上一节,不要硬冲。
             </p>
           </div>
           <div className="card">
-            <div className="card-title">🎮 再玩透</div>
+            <div className="card-title">再玩透</div>
             <p>
               每章都有逐帧可视化:DP 表格亲手一格格填、决策树一步步展开。
               <b>能预测下一帧</b>,才算真看懂了。

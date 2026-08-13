@@ -244,7 +244,7 @@ def mul(a: int, b: int) -> int:
             hl: [6],
             note: (
               <>
-                <b>爽点:</b>Python 整数<b>无限大</b>,永远不会溢出 ——
+                <b>优势:</b>Python 整数<b>无限大</b>,永远不会溢出 ——
                 这里取模纯粹是为了把数字压回小范围(否则大整数运算会越来越慢)。
                 所以 Python 选手最容易忽视溢出,换 Java/C++ 面试时务必补课。
               </>
@@ -574,7 +574,7 @@ def qpow(a: int, b: int, mod: int = MOD) -> int:
             hl: [12, 13],
             note: (
               <>
-                <b>爽点:</b><code>pow(a, b, mod)</code> 是内置快速幂,C 实现、飞快;
+                <b>优势:</b><code>pow(a, b, mod)</code> 是内置快速幂,C 实现、飞快;
                 <code>pow(a, -1, mod)</code>(3.8+)直接给模逆元。手写用于面试,平时直接调。
               </>
             ),
@@ -790,7 +790,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理求逆元`,
             hl: [5, 12],
             note: (
               <>
-                <b>爽点:</b><code>nums[i+1:] = reversed(nums[i+1:])</code> 一行原地反转右段。
+                <b>优势:</b><code>nums[i+1:] = reversed(nums[i+1:])</code> 一行原地反转右段。
                 切片赋值直接改原列表 —— 契合本题「原地修改、不返回」的要求。
               </>
             ),

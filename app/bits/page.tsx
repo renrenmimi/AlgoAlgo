@@ -681,7 +681,7 @@ export default function BitsChapter() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">衍生 01 · LC 231</div>
-            <div className="card-title">🎯 判断 2 的幂</div>
+            <div className="card-title">判断 2 的幂</div>
             <p>
               2 的幂二进制里<b>只有一个 1</b>。<code>n &gt; 0 &amp;&amp; (n &amp; (n−1)) == 0</code>
               —— 清掉唯一的 1 后得 0 即是。必须先判 <code>n &gt; 0</code>。
@@ -689,7 +689,7 @@ export default function BitsChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">衍生 02 · LC 461</div>
-            <div className="card-title">📏 汉明距离</div>
+            <div className="card-title">汉明距离</div>
             <p>
               两数「有几位不同」= <code>popcount(x ^ y)</code>。异或标出不同的位,
               再用 191 数 1 —— 两招组合拳。
@@ -697,7 +697,7 @@ export default function BitsChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">衍生 03 · LC 260</div>
-            <div className="card-title">🔱 两个单身</div>
+            <div className="card-title">两个单身</div>
             <p>
               全体异或得 a^b,用 <code>lowbit = x &amp; (−x)</code> 取一位分两组,
               每组各套一次 136。lowbit 是「分组」的利器。

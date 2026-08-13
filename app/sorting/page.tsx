@@ -125,7 +125,7 @@ export default function SortingChapter() {
         <div className="grid-3" style={{ marginTop: 4 }}>
           <div className="card hoverable">
             <div className="card-kicker">兄弟 01 · 冒泡</div>
-            <div className="card-title">🫧 大的往右冒</div>
+            <div className="card-title">大的往右冒</div>
             <p>
               <b>不变量:</b>第 i 轮后,<b>最右边 i 个</b>已是全局最大的 i 个、且已就位。
               相邻逆序就交换,大数像气泡上浮。唯一优点:某轮<b>零交换</b>即可提前退出,
@@ -134,7 +134,7 @@ export default function SortingChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">兄弟 02 · 选择</div>
-            <div className="card-title">🎯 每轮挑最小</div>
+            <div className="card-title">每轮挑最小</div>
             <p>
               <b>不变量:</b>第 i 轮后,<b>最左边 i 个</b>已是全局最小的 i 个、且已排好。
               每轮全扫一遍挑最小值换到前面。<b>交换次数最少</b>(≤ n−1 次),
@@ -143,7 +143,7 @@ export default function SortingChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">兄弟 03 · 插入</div>
-            <div className="card-title">🃏 摸牌插进手里</div>
+            <div className="card-title">摸牌插进手里</div>
             <p>
               <b>不变量:</b>第 i 轮后,<b>前 i 个</b>元素<b>内部</b>已有序(但不一定是最终位置)。
               像理扑克:摸一张插到左边有序牌的正确位置。<b>近乎有序时极快</b>(O(n)),
@@ -414,7 +414,7 @@ export default function SortingChapter() {
       >
         <div className="prose">
           <p>
-            归并是「先无脑劈,合并时才干活」;快排反过来 ——「<strong>划分时就干活,合并时啥也不用做</strong>」。
+            归并是「先不加判断地劈开,合并时才做实际工作」;快排反过来 ——「<strong>划分时就干活,合并时啥也不用做</strong>」。
             它的灵魂是一个叫 <strong>partition(划分)</strong>的操作:选一个<strong>基准(pivot)</strong>,
             扫一遍把<strong>比它小的甩到左边、比它大的留右边</strong>,基准自己落到中间的「分界缝」。
             这一趟走完,<strong>基准就到了它在最终有序数组里的正确位置,永远不用再动</strong>。
@@ -582,7 +582,7 @@ class Solution:
         <div className="srt-lb">
           <div className="card">
             <div className="card-kicker">前提</div>
-            <div className="card-title">🔀 n! 种可能</div>
+            <div className="card-title">n! 种可能</div>
             <p>
               n 个不同元素,可能的排列有 <b>n!</b> 种。排序算法必须能<b>区分出</b>其中每一种,
               才能保证对所有输入都排对。
@@ -590,7 +590,7 @@ class Solution:
           </div>
           <div className="card">
             <div className="card-kicker">工具</div>
-            <div className="card-title">🌳 一次比较 = 一个分叉</div>
+            <div className="card-title">一次比较 = 一个分叉</div>
             <p>
               每次「a 和 b 谁大」只有两个结果,是一棵二叉<b>决策树</b>的一个分叉。
               树高 h 的二叉树,最多只有 <b>2ʰ</b> 个叶子(结局)。
@@ -598,7 +598,7 @@ class Solution:
           </div>
           <div className="card">
             <div className="card-kicker">结论</div>
-            <div className="card-title">📉 h ≥ log₂(n!)</div>
+            <div className="card-title">h ≥ log₂(n!)</div>
             <p>
               要 2ʰ ≥ n!,就得 h ≥ log₂(n!) ≈ <b>n log₂n</b>。树高 = 最坏比较次数,
               于是<b>任何比较排序 ≥ O(n log n)</b>。铁律。
@@ -685,7 +685,7 @@ class Solution:
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">计数排序</div>
-            <div className="card-title">🪣 一值一桶</div>
+            <div className="card-title">一值一桶</div>
             <p>
               适合<b>整数、值域 k 不大</b>。O(n+k)。k 一大(如任意 32 位整数)就爆内存 ——
               这时它比快排还糟。
@@ -693,7 +693,7 @@ class Solution:
           </div>
           <div className="card hoverable">
             <div className="card-kicker">桶排序</div>
-            <div className="card-title">🗂️ 一段一桶</div>
+            <div className="card-title">一段一桶</div>
             <p>
               把值域切成若干区间桶,桶内再排(常用插入)。数据<b>均匀分布</b>时接近 O(n),
               分布不均则退化。
@@ -701,7 +701,7 @@ class Solution:
           </div>
           <div className="card hoverable">
             <div className="card-kicker">基数排序</div>
-            <div className="card-title">🔢 一位一轮</div>
+            <div className="card-title">一位一轮</div>
             <p>
               按个位、十位、百位……<b>逐位</b>用稳定计数排序。O(d·(n+k)),d = 位数。
               排大整数 / 定长字符串的利器,<b>依赖计数排序的稳定性</b>。
@@ -768,7 +768,7 @@ class Solution:
             <b>*</b> 计数排序用「前缀和 + 倒序填回」实现时稳定,用「倒桶」实现时不稳定 —— 取决于写法。
           </p>
           <p>
-            现在揭开谜底:你每天用的内置 <code>sort</code>,底层到底是谁?答案会让你会心一笑 ——
+            现在揭开谜底:你每天用的内置 <code>sort</code>,底层到底是谁?答案有点出人意料 ——
             <strong>它们没有押注单一算法,而是「混合排序」</strong>,把上表几位的长处拼在一起:
           </p>
         </div>

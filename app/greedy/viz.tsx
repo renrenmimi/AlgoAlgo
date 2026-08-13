@@ -511,7 +511,7 @@ export function CoinGreedyLab() {
 
   return (
     <div className="viz">
-      <div className="viz-title">硬币 [1, 3, 4] 凑 ¥6:贪心为什么会翻车</div>
+      <div className="viz-title">硬币 [1, 3, 4] 凑 ¥6:贪心为什么会失效</div>
       <div className="viz-stage" style={{ flexDirection: "column", gap: 14 }}>
         <div className="grd-coin-row">
           {picks.length === 0 ? (

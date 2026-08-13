@@ -84,7 +84,7 @@ export default function StringsChapter() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">浪费 01</div>
-            <div className="card-title">🔙 i 回退</div>
+            <div className="card-title">i 回退</div>
             <p>
               失配后主串指针被拉回起点 +1。<b>已经扫过的字符要重扫一遍</b> ——
               这是 O(n·m) 的直接来源。
@@ -92,7 +92,7 @@ export default function StringsChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">浪费 02</div>
-            <div className="card-title">🗑️ 情报丢弃</div>
+            <div className="card-title">情报丢弃</div>
             <p>
               失配前已经匹配的那段前缀,<b>本身就藏着模式串的结构信息</b>,
               暴力法却当垃圾扔了。
@@ -100,7 +100,7 @@ export default function StringsChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">处方</div>
-            <div className="card-title">📝 记住失败</div>
+            <div className="card-title">记住失败</div>
             <p>
               把「失败发生时,已匹配的后缀等于哪个前缀」预先算好、存成一张表 ——
               下次失配直接查表跳位。这就是 KMP。
@@ -157,14 +157,14 @@ export default function StringsChapter() {
         <div className="str-cmp">
           <div className="card">
             <div className="card-kicker">暴力法的世界观</div>
-            <div className="card-title">🐌 失败 = 从头再来</div>
+            <div className="card-title">失败 = 从头再来</div>
             <p>
               失配 → i 退回起点 +1,j 归零。已匹配前缀里的自相似结构,<b>完全没被利用</b>。
             </p>
           </div>
           <div className="card">
             <div className="card-kicker">KMP 的世界观</div>
-            <div className="card-title">🚀 失败 = 查一次表</div>
+            <div className="card-title">失败 = 查一次表</div>
             <p>
               失配 → i 不动,j = next[j−1]。<b>「已匹配后缀里有多长的一段等于前缀」直接决定跳到哪</b>,
               一步到位。

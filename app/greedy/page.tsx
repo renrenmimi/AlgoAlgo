@@ -64,8 +64,8 @@ export default function GreedyChapter() {
         essence={
           <>
             贪心是最诱人、也最危险的策略:<strong>每一步都拿眼前最好的</strong>,
-            快到起飞 —— 可它只在能证明「贪完不后悔」时才成立。本章教你三件事:
-            什么时候能贪、<strong>怎么证明能贪(交换论证)</strong>、以及贪心翻车时怎么优雅地退回 DP。
+            速度极快 —— 可它只在能证明「贪完不后悔」时才成立。本章教你三件事:
+            什么时候能贪、<strong>怎么证明能贪(交换论证)</strong>、以及贪心失效时怎么优雅地退回 DP。
           </>
         }
         chips={CHIPS}
@@ -96,7 +96,7 @@ export default function GreedyChapter() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">特征 01</div>
-            <div className="card-title">👀 局部最优 → 全局最优</div>
+            <div className="card-title">局部最优 → 全局最优</div>
             <p>
               贪心赌的是一件事:<b>每一步的局部最优,能累积成全局最优</b>。
               这个赌注不一定成立 —— 成立了才叫「贪心选择性质」,不成立就得换 DP。
@@ -104,7 +104,7 @@ export default function GreedyChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">特征 02</div>
-            <div className="card-title">🚫 不反悔</div>
+            <div className="card-title">不反悔</div>
             <p>
               选了就不撤回,不像回溯会退一步。正因为不回头,才快 ——
               但也正因为不回头,<b>一旦某一步选错就无从挽回</b>。
@@ -121,8 +121,8 @@ export default function GreedyChapter() {
         </div>
         <Callout tone="warn" title="贪心最大的坑:它「看起来」总是对的">
           <p>
-            贪心的代码往往短到可疑,跑几个例子还都过 —— 于是你以为对了。
-            但「测了几个例子都对」<b>不是证明</b>。经典翻车:硬币面额 <code>[1, 3, 4]</code> 凑 ¥6,
+            贪心的代码往往短得让人不放心,跑几个例子还都过 —— 于是你以为对了。
+            但「测了几个例子都对」<b>不是证明</b>。经典反例:硬币面额 <code>[1, 3, 4]</code> 凑 ¥6,
             贪心先拿最大的 4,只能 4+1+1 = 3 枚;而最优是 3+3 = <b>2 枚</b>。
             贪心永远看不见「两个 3」那条路 —— 这就是本章 §07 要专门解剖的反例,也是下一章 DP 的开场戏。
             <b>能不能证明,是贪心和「碰巧对」的唯一区别。</b>
@@ -134,7 +134,7 @@ export default function GreedyChapter() {
             找最优的前缀编码。Fano 自己和香农(Shannon)都只想出了自顶向下的次优解。
             Huffman 差点放弃去背书应考,却在最后一刻灵光一现:<b>自底向上,每次合并两个频率最小的节点</b> ——
             一个纯粹的贪心。结果他的作业解法,反而超过了两位大师。哈夫曼编码至今仍活在 JPEG、
-            MP3、ZIP 里。贪心一旦被证明成立,就是又快又漂亮的屠龙术。
+            MP3、ZIP 里。贪心一旦被证明成立,就是又快又可靠的解法。
           </p>
         </Callout>
       </Section>
@@ -321,7 +321,7 @@ export default function GreedyChapter() {
           </div>
           <div className="viz-msg">
             高亮的 4 个点组成摆动子序列 1 → 7 → 2 → 5(差值 +6, −5, +3 正负交替);
-            灰色的 4 被跳过,因为 1 → 4 → 7 是同方向的,4 白给。
+            灰色的 4 被跳过,因为 1 → 4 → 7 是同方向的,4 不贡献长度。
           </div>
         </div>
         <CodeTabs
@@ -867,7 +867,7 @@ export default function GreedyChapter() {
         <div className="grid-3" style={{ marginTop: 6 }}>
           <div className="card hoverable">
             <div className="card-kicker">同款 · LC 452</div>
-            <div className="card-title">🎈 最少的箭</div>
+            <div className="card-title">最少的箭</div>
             <p>
               按右端排,一支箭射在当前最小右端,凡是 <code>start ≤</code> 该值的气球都被穿爆;
               遇到够不着的换新箭。和 435 是<b>同一道题换皮</b>。
@@ -875,7 +875,7 @@ export default function GreedyChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">变体 · LC 763</div>
-            <div className="card-title">🔤 划分字母区间</div>
+            <div className="card-title">划分字母区间</div>
             <p>
               先记每个字母<b>最后出现的下标</b>,遍历时把当前段右界扩到「段内字母的最远出现处」,
               扫到右界就切一刀 —— 本质是合并同字母的区间。
@@ -883,7 +883,7 @@ export default function GreedyChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">对照 · LC 56(复盘)</div>
-            <div className="card-title">🔗 合并区间</div>
+            <div className="card-title">合并区间</div>
             <p>
               目标是<b>合并</b>不是筛选,所以<b>按左端排</b>:能接上就把终点取 max,
               接不上就另起一段。主讲在第 1 章排序,此处专门用来对照排序键的选择。
@@ -941,8 +941,8 @@ export default function GreedyChapter() {
       >
         <div className="prose">
           <p>
-            学到这里你手里握着一把快刀,但请记住本章开头的警告:<strong>贪心会翻车</strong>。
-            最著名的翻车现场就在下一章的开场 —— <strong>LC 322 零钱兑换</strong>。
+            学到这里你手里握着一把快刀,但请记住本章开头的警告:<strong>贪心会失效</strong>。
+            最典型的失效场景就在下一章的开场 —— <strong>LC 322 零钱兑换</strong>。
             硬币面额 <code>[1, 3, 4]</code>,凑 ¥6。亲手玩一下,感受贪心是怎么和最优解擦肩而过的:
           </p>
         </div>
@@ -953,7 +953,7 @@ export default function GreedyChapter() {
             <div className="card-title"><b className="mono">4 + 1 + 1 = 3 枚</b></div>
             <p>
               先抓最大的 4(剩 2)→ 3 超了,只能 1 + 1。每一步都「当下最优」,
-              却一头扎进了回不去的世界线 —— 它<b>永远看不见「两个 3」</b>。
+              却走进了无法回退的分支 —— 它<b>永远看不见「两个 3」</b>。
             </p>
           </div>
           <div className="card">
@@ -1006,9 +1006,9 @@ export default function GreedyChapter() {
         </div>
         <Callout tone="idea" title="范式雷达 · 一道最优化题的标准过脑顺序">
           <p>
-            碰到最优化问题,按这个顺序在脑子里过一遍,就是标准答题姿势:
+            碰到最优化问题,按这个顺序梳理一遍,就是标准的作答顺序:
             <b>回溯</b>(枚举所有选择,必对但指数级,只配当草稿)→
-            <b>贪心</b>(每步局部最优,最快,但<b>必须能证明</b>,[1,3,4] 上直接翻车)→
+            <b>贪心</b>(每步局部最优,最快,但<b>必须能证明</b>,[1,3,4] 上直接失效)→
             <b>DP</b>(枚举决策 + 记账,必对,多项式时间)。
             一句话判据:<b>能证明交换论证就贪,证不出就 DP。</b>这条叙事线,下一章会全程展开。
           </p>

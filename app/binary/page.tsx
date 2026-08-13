@@ -188,7 +188,7 @@ export default function BinaryChapter() {
               <>
                 <b>省心处:</b>Python 整数是无限精度,<code>lo + hi</code> 不会溢出,
                 写 <code>(lo + hi) // 2</code> 也安全。但跨语言保持 <code>lo + (hi - lo) // 2</code>{" "}
-                这个习惯,换到 Java / C++ 就不会翻车。
+                这个习惯,换到 Java / C++ 也不会出错。
               </>
             ),
           }}
@@ -216,7 +216,7 @@ export default function BinaryChapter() {
         <div className="grid-3 bin-tri" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">死因 01</div>
-            <div className="card-title">📐 区间定义与循环条件不一致</div>
+            <div className="card-title">区间定义与循环条件不一致</div>
             <p>
               选了闭区间 <code>[lo, hi]</code>,while 就必须是 <code>lo &lt;= hi</code>
               (lo==hi 时区间里还有一个数)。用 <code>lo &lt; hi</code> 会漏查最后一个。
@@ -225,7 +225,7 @@ export default function BinaryChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">死因 02</div>
-            <div className="card-title">🧮 mid 溢出</div>
+            <div className="card-title">mid 溢出</div>
             <p>
               <code>(lo + hi) / 2</code> 在定长整型里可能溢出。永远写
               <code>lo + (hi - lo) / 2</code> —— 差值减半再加回,结果一样,却绝不越界。
@@ -233,7 +233,7 @@ export default function BinaryChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">死因 03</div>
-            <div className="card-title">🔁 边界没挪动</div>
+            <div className="card-title">边界没挪动</div>
             <p>
               每轮 lo 或 hi <b>必须朝中间挪至少一格</b>(mid±1)。若写成
               <code>lo = mid</code> 而 mid 恰等于 lo,区间不缩小 → 死循环。闭区间下就该 mid±1。
@@ -277,7 +277,7 @@ export default function BinaryChapter() {
           <p>
             <b>题意(LC 34):</b>在升序数组里找 target 的<strong>起始和结束下标</strong>,
             不存在返回 [−1, −1]。<b> 暴力:</b>找到一个后向左右线性扩张 ——
-            全是 target 时退化到 O(n),白瞎了有序性。<b> 正解:</b>
+            全是 target 时退化到 O(n),完全没有利用有序性。<b> 正解:</b>
             左边界 = lower_bound(target);右边界 = 「第一个 &gt; target」再退一格。逐帧看:
           </p>
         </div>
@@ -341,7 +341,7 @@ export default function BinaryChapter() {
             note: (
               <>
                 <b>标准库彩蛋:</b>Python 的 <code>bisect_left</code> 就是 lower_bound、
-                <code>bisect_right</code> 就是 upper_bound。面试想秒杀可直接调,
+                <code>bisect_right</code> 就是 upper_bound。面试中可直接调用,
                 但手写一遍才真懂边界。
               </>
             ),
@@ -376,7 +376,7 @@ export default function BinaryChapter() {
             → 就是上面的 <code>lower_bound(t)</code> 与 <code>lower_bound(t+1)-1</code>;
             ②「target 出现几次?」→ 右界 − 左界 + 1,或直接 upper_bound − lower_bound;
             ③「LC 35 搜索插入位置怎么做?」→ 答案就是 lower_bound(target),
-            连「是否存在」都不用判 —— 找边界模板的一鱼多吃。
+            连「是否存在」都不用判 —— 同一个找边界模板的多种用法。
           </p>
         </Callout>
       </Section>
@@ -463,8 +463,8 @@ export default function BinaryChapter() {
             hl: [8, 14],
             note: (
               <>
-                <b>爽点:</b>Python 的链式比较 <code>nums[lo] &lt;= target &lt; nums[mid]</code>
-                {" "}直接照抄数学区间写法,可读性拉满,也不会写错方向。
+                <b>优势:</b>Python 的链式比较 <code>nums[lo] &lt;= target &lt; nums[mid]</code>
+                {" "}直接照抄数学区间写法,可读性好,也不会写错方向。
               </>
             ),
           }}
@@ -497,7 +497,7 @@ export default function BinaryChapter() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">变式 01 · LC 153</div>
-            <div className="card-title">🔻 找旋转最小值</div>
+            <div className="card-title">找旋转最小值</div>
             <p>
               拿 <code>nums[mid]</code> 和<b>右端点</b> <code>nums[hi]</code> 比:
               大于 hi 说明最小值在右(lo=mid+1),否则 hi=mid。收敛到单点即最小。
@@ -515,7 +515,7 @@ export default function BinaryChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">变式 03 · LC 154</div>
-            <div className="card-title">🔻⚠️ 最小值 + 重复</div>
+            <div className="card-title">⚠️ 最小值 + 重复</div>
             <p>
               153 的重复版:<code>a[mid]==a[hi]</code> 时无法判断,只能 <code>hi--</code>
               保守收缩,最坏 <BigO o="n" />。它和 81 是「重复破坏二段性」的一对孪生反例。

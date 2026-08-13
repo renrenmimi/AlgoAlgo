@@ -360,7 +360,7 @@ export default function KnapsackChapter() {
             一个容量有限的书包,一堆各有重量与价值的物品 ——{" "}
             <strong>怎么装,价值最大?</strong>这道题本身不难,难的是它会换上千百种皮:
             分割数组、凑硬币、拼单词、掷骰子……本章把第 7 章的「选 / 不选」升级成一套建模流程,
-            并讲透全书最容易翻车的一行:<strong>一维滚动数组,到底正序还是倒序。</strong>
+            并讲透全书最容易写错的一行:<strong>一维滚动数组,到底正序还是倒序。</strong>
           </>
         }
         chips={CHIPS}
@@ -401,7 +401,7 @@ export default function KnapsackChapter() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">物品用几次</div>
-            <div className="card-title">🎒 0-1 背包</div>
+            <div className="card-title">0-1 背包</div>
             <p>
               每件物品<b>最多用一次</b>。是最基础的形态,分割子集、目标和、一和零都是它。
               一维滚动时容量<b>倒序</b>。
@@ -417,7 +417,7 @@ export default function KnapsackChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">物品用几次</div>
-            <div className="card-title">🔢 多重背包</div>
+            <div className="card-title">多重背包</div>
             <p>
               每件物品有<b>固定个数</b>上限。可拆成 0-1(或二进制优化),
               掷骰子、分组选择都属于这一支,§07 末尾一句话带过。
@@ -760,7 +760,7 @@ export default function KnapsackChapter() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">变式 · LC 1049</div>
-            <div className="card-title">🪨 最后一块石头 II</div>
+            <div className="card-title">最后一块石头 II</div>
             <p>
               把石头分两堆使差最小 ⇒ 让一堆尽量接近 sum/2。容量 sum/2、重量既是费用也是价值,
               求<b>最多装多满</b>,答案 = sum − 2×maxHalf。416 的「能否」升级成「多满」。
@@ -768,7 +768,7 @@ export default function KnapsackChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">变式 · LC 494</div>
-            <div className="card-title">🎯 目标和</div>
+            <div className="card-title">目标和</div>
             <p>
               把「能否装满」再升级成「有几种装满法」—— 下一节主讲。装满型的三级跳:
               <b>能否 → 多满 → 几种</b>。
@@ -776,7 +776,7 @@ export default function KnapsackChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">识别信号</div>
-            <div className="card-title">🔎 何时想到装满型</div>
+            <div className="card-title">何时想到装满型</div>
             <p>
               题面出现「分成两半」「凑出某个和」「刚好等于」—— 先算总和、定出目标容量,
               十有八九是 0-1 背包的装满型。
@@ -999,7 +999,7 @@ export default function KnapsackChapter() {
           <p>
             背包的「容量」本质是一种<b>受限资源</b>。一种资源 → 一维 dp;两种资源(0 和 1)→ 二维;
             三种就三维。只要每件物品仍是「用一次」,新增的每一维都照 0-1 的规矩倒序即可。
-            题目给你几种「不能超」的预算,dp 就开几维 —— 别慌,骨架永远是那句「选 / 不选」。
+            题目给你几种「不能超」的预算,dp 就开几维 —— 骨架始终是那句「选 / 不选」。
           </p>
         </Callout>
       </Section>
@@ -1123,7 +1123,7 @@ export default function KnapsackChapter() {
         <div className="grid-3" style={{ marginTop: 8 }}>
           <div className="card hoverable">
             <div className="card-kicker">同构 · LC 279</div>
-            <div className="card-title">🔲 完全平方数</div>
+            <div className="card-title">完全平方数</div>
             <p>
               把 1,4,9,16… 当作面额无限的「硬币」,凑出 n 用的最少个数 ——
               和 322 一字不改,只是硬币换成了平方数。
@@ -1131,7 +1131,7 @@ export default function KnapsackChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">排列味 · LC 139</div>
-            <div className="card-title">🧩 单词拆分</div>
+            <div className="card-title">单词拆分</div>
             <p>
               词典里的词可重复用,且<b>顺序重要</b>(拼的是一句话)—— 外层遍历长度、内层枚举单词,
               是完全背包的排列写法(详见下一节)。
@@ -1139,7 +1139,7 @@ export default function KnapsackChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">拓展 · 多重背包</div>
-            <div className="card-title">🔢 每件有个数上限</div>
+            <div className="card-title">每件有个数上限</div>
             <p>
               介于 0-1 与完全之间:每件最多 k 个。朴素做法把「k 个」摊成 k 件跑 0-1;
               进阶用<b>二进制拆分</b>(把 k 拆成 1,2,4,…)把 k 件压到 log k 件,是面试彩蛋。

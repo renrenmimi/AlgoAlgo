@@ -99,7 +99,7 @@ export default function BacktrackChapter() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">识别信号 01</div>
-            <div className="card-title">🌲 求「所有方案」</div>
+            <div className="card-title">求「所有方案」</div>
             <p>
               题目要「列出全部组合 / 排列 / 切法 / 路径」,而不是求一个数值最优 ——
               这几乎必然是回溯(或它的记忆化升级 DP)。
@@ -107,7 +107,7 @@ export default function BacktrackChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">识别信号 02</div>
-            <div className="card-title">🔢 选择步数不固定</div>
+            <div className="card-title">选择步数不固定</div>
             <p>
               「选 k 个」「切若干段」「填满棋盘」—— 步数是变量,for 循环写不出层数,
               只能靠递归一层层往下。
@@ -115,7 +115,7 @@ export default function BacktrackChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">代价预警</div>
-            <div className="card-title">💣 指数级</div>
+            <div className="card-title">指数级</div>
             <p>
               回溯是穷举,复杂度通常是 <BigO o="2n" /> 或 O(n!) 起步。
               所以<b>剪枝</b>不是锦上添花,常常是「能不能过」的生死线。
@@ -147,7 +147,7 @@ export default function BacktrackChapter() {
         <div className="grid-3">
           <div className="card hoverable">
             <div className="card-kicker">问题一</div>
-            <div className="card-title">🎒 路径(path)</div>
+            <div className="card-title">路径(path)</div>
             <p>
               已经做出的选择,记在一个列表里。它就是决策树上<b>从根到当前节点</b>的那条路 ——
               到达终点时,它(的一份拷贝)就是一个答案。
@@ -155,7 +155,7 @@ export default function BacktrackChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">问题二</div>
-            <div className="card-title">📋 选择列表</div>
+            <div className="card-title">选择列表</div>
             <p>
               当前这一步<b>还能选哪些</b>。组合/子集用 <span className="mono">startIndex</span>
               (只往后选),排列用 <span className="mono">used</span> 数组(排除已用),
@@ -164,7 +164,7 @@ export default function BacktrackChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">问题三</div>
-            <div className="card-title">🏁 结束条件</div>
+            <div className="card-title">结束条件</div>
             <p>
               什么时候到达决策树的<b>叶子</b>。选够 k 个、切到字符串末尾、放满 n 行 ——
               到了就收集结果并 return。
@@ -418,7 +418,7 @@ function backtrack(n, k, start) {
         <div className="grid-3">
           <div className="card hoverable">
             <div className="card-kicker">LC 17 · 电话字母</div>
-            <div className="card-title">📱 多个集合各选一个</div>
+            <div className="card-title">多个集合各选一个</div>
             <p>
               不是从<b>同一个</b>集合选,而是每层换一个集合(数字 2→"abc",3→"def"……)。
               所以<b>没有 startIndex</b>,用 index 定位「这一层该用哪组字母」。结束条件:选够所有数字。
@@ -444,7 +444,7 @@ function backtrack(n, k, start) {
         <div className="grid-3" style={{ marginTop: 14 }}>
           <div className="card hoverable">
             <div className="card-kicker">LC 40 · 组合总和 II</div>
-            <div className="card-title">🚫 有重复元素、各用一次</div>
+            <div className="card-title">有重复元素、各用一次</div>
             <p>
               数组含重复,每个只用一次,还要求结果不重复。<b>排序 + 树层去重</b>:
               <span className="mono">i &gt; start &amp;&amp; nums[i] == nums[i-1]</span> 跳过同层重复。
@@ -461,7 +461,7 @@ function backtrack(n, k, start) {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">一句话总纲</div>
-            <div className="card-title">🧭 改哪儿,一眼看穿</div>
+            <div className="card-title">改哪儿,一眼看穿</div>
             <p>
               <b>能否重复选</b> → 传 i 还是 i+1;<b>是否多集合</b> → 有没有 startIndex;
               <b>有无重复元素</b> → 要不要排序去重;<b>额外约束</b> → 加几处剪枝。
@@ -497,7 +497,7 @@ function backtrack(n, k, start) {
           </div>
           <div className="card">
             <div className="card-kicker">LC 93 · 复原 IP 地址</div>
-            <div className="card-title">🌐 约束一大堆 = 剪枝一大堆</div>
+            <div className="card-title">约束一大堆 = 剪枝一大堆</div>
             <p>
               同一套切割骨架,只是限制多:必须<b>正好切 4 段</b>、每段数值 0~255、除「0」外不能有前导零。
               把「段数」当第二维(切满 4 段是结束条件),每段不合法就剪掉。
@@ -761,7 +761,7 @@ function backtrack(n, k, start) {
         id="dedup"
         index="08"
         title="去重两板斧:树层去重 vs 树枝去重"
-        desc="当数组里有重复元素,如何让答案不重复?这是回溯最容易翻车、也是面试最爱问的一处"
+        desc="当数组里有重复元素,如何让答案不重复?这是回溯最容易出错、也是面试最爱问的一处"
         badge={<span className="chip" data-tone="warn">高频考点</span>}
       >
         <div className="prose">

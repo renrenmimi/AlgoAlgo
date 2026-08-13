@@ -413,7 +413,7 @@ export default function DPChapter() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">诊断 01</div>
-            <div className="card-title">🔁 重叠子问题</div>
+            <div className="card-title">重叠子问题</div>
             <p>
               f(3) 被完整算了 2 遍、f(2) 3 遍、f(1) 5 遍 ——
               递归树里大量枝条<b>长得一模一样</b>。这是病根:重复劳动随 n 指数增长。
@@ -421,7 +421,7 @@ export default function DPChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">诊断 02</div>
-            <div className="card-title">🧩 最优子结构</div>
+            <div className="card-title">最优子结构</div>
             <p>
               f(5) 的答案能由 f(4)、f(3) 的答案<b>直接拼出来</b>,
               不需要知道那些方案「具体长什么样」。子问题的答案可信、可复用。
@@ -429,7 +429,7 @@ export default function DPChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">处方</div>
-            <div className="card-title">📝 记账</div>
+            <div className="card-title">记账</div>
             <p>
               既然同一个问题会被问很多遍,而答案又不会变 ——
               <b>算完记下来,下次直接查</b>。这一下,就是动态规划的全部。
@@ -607,7 +607,7 @@ export default function DPChapter() {
             hl: [7],
             note: (
               <>
-                <b>爽点:</b>Python 的元组解包让「转移 + 滚动」一行写完,
+                <b>优势:</b>Python 的元组解包让「转移 + 滚动」一行写完,
                 且右边先整体求值,不会出现覆盖顺序 bug。
               </>
             ),
@@ -750,7 +750,7 @@ export default function DPChapter() {
           <p>
             ① <b>状态含糊</b>:「dp[i] 表示答案」不叫定义 —— 是「以 i 结尾」还是「前 i 个」?
             差一个字,转移全变(53 vs 198 正是这对区别);
-            ② <b>初始化偷懒</b>:63 题第一行遇到障碍后仍无脑填 1,秒错;
+            ② <b>初始化省事</b>:63 题第一行遇到障碍后仍一律填 1,直接出错;
             ③ <b>转移抄模板</b>:计数用 +、最值用 min/max、可行性用「或」——
             算子跟着<b>问题问什么</b>走,不跟着上一道题走。
           </p>
@@ -842,15 +842,15 @@ export default function DPChapter() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">换皮 01 · LC 63</div>
-            <div className="card-title">🧱 加障碍</div>
+            <div className="card-title">加障碍</div>
             <p>
               障碍格 dp = 0;<b>第一行/列被障碍截断后,其后全是 0</b>,
-              不能无脑填 1 —— 全题只考初始化的边界意识。
+              不能不加判断地填 1 —— 全题只考初始化的边界意识。
             </p>
           </div>
           <div className="card hoverable">
             <div className="card-kicker">换皮 02 · LC 64</div>
-            <div className="card-title">💰 求最小和</div>
+            <div className="card-title">求最小和</div>
             <p>
               把 + 换成 min:<code>dp[i][j] = min(上, 左) + grid[i][j]</code>,
               第一行/列变成前缀和。骨架一个字没动。
@@ -858,7 +858,7 @@ export default function DPChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">换皮 03 · LC 120</div>
-            <div className="card-title">🔺 三角形</div>
+            <div className="card-title">三角形</div>
             <p>
               自底向上填,<code>dp[j] = tri[i][j] + min(dp[j], dp[j+1])</code> ——
               倒着来,左右边界问题自动消失。
@@ -981,7 +981,7 @@ export default function DPChapter() {
         id="coin"
         index="07"
         title="贪心失效之地:零钱兑换"
-        desc="精讲 D · LC 322 —— 上一章的贪心在这里翻车,DP 接住"
+        desc="精讲 D · LC 322 —— 上一章的贪心在这里失效,DP 接住"
         badge={<span className="lc-badge" data-d="medium">MEDIUM</span>}
       >
         <div className="prose">
@@ -1000,7 +1000,7 @@ export default function DPChapter() {
             </div>
             <p>
               先拿 ¥4(剩 2)→ ¥3 超了,拿 ¥1(剩 1)→ 再拿 ¥1。
-              <b>3 枚</b>。每一步都「当下最优」,却再也回不去拿两个 ¥3 的世界线。
+              <b>3 枚</b>。每一步都「当下最优」,却再也无法退回「两枚 ¥3」那条路径。
             </p>
           </div>
           <div className="card">
@@ -1016,7 +1016,7 @@ export default function DPChapter() {
         </div>
         <div className="prose">
           <p>
-            为什么贪心会翻车?硬币系统 [1,3,4] 不满足<strong>贪心选择性质</strong>:
+            为什么贪心会失效?硬币系统 [1,3,4] 不满足<strong>贪心选择性质</strong>:
             拿走 ¥4 这个「局部最优」会破坏「全局最优」(3+3)的结构。
             贪心章教过:<strong>证明不了交换论证,就不要贪</strong>。此时退回 DP:
             状态 dp[a] = 凑出金额 a 的最少硬币数,按「最后一枚硬币是谁」分类:
@@ -1101,9 +1101,9 @@ export default function DPChapter() {
           <p>
             走到这里,你已经见过三种世界观在同一类问题上的表现:
             <b>回溯</b>枚举所有拿法(必对,但 O(面额^金额) 起步)→
-            <b>贪心</b>每步拿最大(最快,但需要证明,[1,3,4] 上直接翻车)→
+            <b>贪心</b>每步拿最大(最快,但需要证明,[1,3,4] 上直接失效)→
             <b>DP</b> 枚举决策 + 记账(必对,多项式时间)。
-            面试遇到最优化问题,按这个顺序过一遍脑子,就是标准答题姿势。
+            面试遇到最优化问题,按这个顺序梳理一遍,就是标准的作答顺序。
           </p>
         </Callout>
       </Section>
@@ -1153,7 +1153,7 @@ export default function DPChapter() {
             「<b>枚举最后一步</b>」(322 的最后一枚硬币)是万能的转移起手式。
           </>,
           <>
-            贪心翻车之地就是 DP 的主场:证不出贪心选择性质(硬币 [1,3,4]),
+            贪心失效之处正是 DP 的主场:证不出贪心选择性质(硬币 [1,3,4]),
             就退回「枚举所有决策 + 记账」。
           </>,
           <>

@@ -353,7 +353,7 @@ const LIS_N2 = {
     hl: [7, 8, 9],
     note: (
       <>
-        <b>爽点:</b><code>max(dp)</code> 一行取全表最大;空数组要另外判(题目保证 n ≥ 1 就免了)。
+        <b>优势:</b><code>max(dp)</code> 一行取全表最大;空数组要另外判(题目保证 n ≥ 1 就免了)。
       </>
     ),
   },
@@ -421,7 +421,7 @@ class Solution:
     hl: [7],
     note: (
       <>
-        <b>爽点:</b><code>bisect_left</code> 一行完成二分。若求「最长<b>不下降</b>子序列」
+        <b>优势:</b><code>bisect_left</code> 一行完成二分。若求「最长<b>不下降</b>子序列」
         (允许相等),把它换成 <code>bisect_right</code> 即可。
       </>
     ),
@@ -517,7 +517,7 @@ export default function DpSeqChapter() {
         <div className="seq-duo">
           <div className="card hoverable">
             <div className="card-kicker">子序列 · 允许跳</div>
-            <div className="card-title">🪁 状态常按「以 i 结尾 / 前 i 个」定义</div>
+            <div className="card-title">状态常按「以 i 结尾 / 前 i 个」定义</div>
             <p>
               因为可以跳过元素,转移时「放弃当前元素」是合法选项 ——
               于是不匹配就<b>取上一个最优</b>(max),绝不清零。代表:LIS、LCS、编辑距离。
@@ -525,14 +525,14 @@ export default function DpSeqChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">子数组 · 必须连</div>
-            <div className="card-title">🧱 状态几乎总是「以 i 结尾」</div>
+            <div className="card-title">状态几乎总是「以 i 结尾」</div>
             <p>
               连续的段有明确的「末尾」,一旦末尾对不上,整段作废 ——
               于是不匹配就<b>归零</b>重来,答案在全表最大值里。代表:718、最大子数组和(53)。
             </p>
           </div>
         </div>
-        <Callout tone="warn" title="新手最容易在这里翻车">
+        <Callout tone="warn" title="新手最容易在这里出错">
           <p>
             拿到题先问一句:<b>它要的是「顺序对就行」还是「必须连着」?</b>
             —— 「最长公共<b>子序列</b>」和「最长公共<b>子数组</b>」只差两个字,
@@ -596,7 +596,7 @@ export default function DpSeqChapter() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">复杂度对比</div>
-            <div className="card-title">📉 O(n²) → O(n log n)</div>
+            <div className="card-title">O(n²) → O(n log n)</div>
             <p>
               内层「回头扫一遍」被「二分找位置」取代:n 次操作、每次 O(log n)。
               n = 10⁵ 时 O(n²) 要百亿次、二分版只要百万级。
@@ -604,7 +604,7 @@ export default function DpSeqChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">变式 · LC 673</div>
-            <div className="card-title">🔢 数 LIS 有几条</div>
+            <div className="card-title">数 LIS 有几条</div>
             <p>
               在 dp[i] 旁再挂 cnt[i]:发现更长就<b>重置计数</b>,长度打平就<b>累加计数</b>。
               「主数组 + 计数数组」是计数型 DP 的通用套路。
@@ -1001,7 +1001,7 @@ export default function DpSeqChapter() {
             hl: [13, 14, 15, 16],
             note: (
               <>
-                <b>爽点:</b>Python 的 <code>min</code> 直接吃三个参数,增删改一行写完。
+                <b>优势:</b>Python 的 <code>min</code> 直接吃三个参数,增删改一行写完。
                 三个来源格分别是左、上、对角 —— 和可视化里高亮的三格一一对应。
               </>
             ),
@@ -1055,7 +1055,7 @@ export default function DpSeqChapter() {
           <div className="seq-duo">
             <div className="card">
               <div className="card-kicker">视角一 · 中心扩展(向外)</div>
-              <div className="card-title">🎯 枚举中心,两边同时扩</div>
+              <div className="card-title">枚举中心,两边同时扩</div>
               <p>
                 回文关于中心对称,所以枚举 <b>2n−1 个中心</b>(n 个单字符 + n−1 个字符缝隙,
                 分管奇 / 偶长度),每个向两边扩到不等为止。O(n²) 时间、<b>O(1) 空间</b>,
@@ -1064,7 +1064,7 @@ export default function DpSeqChapter() {
             </div>
             <div className="card">
               <div className="card-kicker">视角二 · 区间 DP(向内)</div>
-              <div className="card-title">📐 dp[i][j] 描述一段区间</div>
+              <div className="card-title">dp[i][j] 描述一段区间</div>
               <p>
                 dp[i][j] 表示子串 s[i..j] 的性质(是否回文 / 最长回文子序列)。
                 转移看两端 s[i]、s[j],依赖<b>更短的内层区间</b> dp[i+1][j-1] ——

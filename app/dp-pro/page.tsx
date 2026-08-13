@@ -298,7 +298,7 @@ export default function DPProChapter() {
             note: (
               <>
                 元组解包会先把右边三项<b>整体求值</b>(全用昨天的值),再一起赋值 ——
-                天然免掉临时变量,这正是 Python 写状态机 DP 的爽点。
+                天然免掉临时变量,这正是 Python 写状态机 DP 的便利之处。
               </>
             ),
           }}
@@ -438,7 +438,7 @@ export default function DPProChapter() {
         <div className="grid-2" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">同款套路 · LC 543(复盘)</div>
-            <div className="card-title">🌲 二叉树的直径</div>
+            <div className="card-title">二叉树的直径</div>
             <p>
               「返回值 ≠ 答案」的树形 DP:dfs 返回「向下的最大深度」,却在每个节点用
               <b>左深 + 右深</b>顺手更新全局答案。返回一个量、更新另一个量 —— 树形 DP 的通用手筋
@@ -447,7 +447,7 @@ export default function DPProChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">进阶 · LC 968(复盘)</div>
-            <div className="card-title">📷 监控二叉树</div>
+            <div className="card-title">监控二叉树</div>
             <p>
               每个节点返回三态:未覆盖 / 已覆盖 / 有摄像头。自底向上 + 贪心
               (让摄像头尽量装在叶子的父层)。树形 DP 与贪心合体,难度更高,主线过后再碰。
