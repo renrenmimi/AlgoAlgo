@@ -55,8 +55,7 @@ Build with type checking: `npm run build`.
 
 ## Structure
 
-Next.js 15 (App Router) + TypeScript + React 19, plain CSS — no Tailwind, deliberately few
-dependencies. Zero backend: no API routes, so everything prerenders to static pages.
+Next.js 15 (App Router) + TypeScript + React 19, plain CSS, no Tailwind. No API routes, so everything prerenders to static pages.
 
 Each chapter is one folder under `app/` holding its page, its visualizations (`viz.tsx`) and
 its own stylesheet, paired with a data file under `lib/` for the problem sets. Frames are
