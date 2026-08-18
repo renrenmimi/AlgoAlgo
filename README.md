@@ -18,7 +18,7 @@ BFS/DFS, monotonic stacks) live there; the general problem-solving strategies li
 
 *Sorting, replayed frame by frame*
 
-## The 13 chapters
+## Chapters
 
 | # | Chapter | What it covers |
 |---|---|---|
