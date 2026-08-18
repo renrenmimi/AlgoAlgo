@@ -38,7 +38,7 @@ BFS/DFS, monotonic stacks) live there; the general problem-solving strategies li
 | ✦ | Atlas | A decision map across both sites: signal → technique |
 
 Each chapter follows the same rhythm: an intuition first, then a frame-by-frame
-visualization, then real code in Java / Python / JavaScript, then the interview follow-ups,
+visualization, then code in Java / Python / JavaScript, then the interview follow-ups,
 then a quiz. Progress is stored locally in the browser.
 
 ## Running locally
@@ -55,7 +55,7 @@ Build with type checking: `npm run build`.
 
 ## Structure
 
-Next.js 15 (App Router) + TypeScript + React 19, plain CSS, no Tailwind. No API routes, so everything prerenders to static pages.
+Next.js 15 (App Router) + TypeScript + React 19, plain CSS. No API routes, so everything prerenders to static pages.
 
 Each chapter is one folder under `app/` holding its page, its visualizations (`viz.tsx`) and
 its own stylesheet, paired with a data file under `lib/` for the problem sets. Frames are
