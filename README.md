@@ -10,6 +10,14 @@ Sister site: [DataData](https://data-data.vercel.app) (data structures). The spl
 deliberate — techniques that hang off a specific structure (two pointers, sliding window,
 BFS/DFS, monotonic stacks) live there; the general problem-solving strategies live here.
 
+![The course home — 13 chapters from sorting to string matching](docs/home.jpg)
+
+*The course home — 13 chapters from sorting to string matching*
+
+![Sorting, replayed frame by frame](docs/sorting.jpg)
+
+*Sorting, replayed frame by frame*
+
 ## The 13 chapters
 
 | # | Chapter | What it covers |
