@@ -7,6 +7,7 @@
 // 树/图等自由形态的动画请在章节内自建组件,但控制条样式(.viz-ctl)通用。
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useL, type Loc } from "@/lib/i18n";
 
 // 让横向可滚动的舞台在「还能滑」的那一侧淡出边缘 —— 内容到边缘不是被切,
 // 而是柔和地渐隐成「→ 还有更多」的暗示。仅在真正溢出时出现,滚到头自动消失。
@@ -46,9 +47,9 @@ export interface ArrayCell {
 export interface ArrayFrame {
   cells: ArrayCell[];
   /** 指针标签,渲染在单元格上方,如 { i: 2, label: "slow" } */
-  ptrs?: { i: number; label: string }[];
-  /** 本帧旁白 */
-  msg: ReactNode;
+  ptrs?: { i: number; label: Loc<string> }[];
+  /** 本帧旁白 —— 直接写 JSX 并在里面用 <T en zh />,或传 { en, zh } */
+  msg: Loc<ReactNode>;
 }
 
 export function useStepper(total: number, intervalMs = 1100) {
@@ -109,6 +110,7 @@ export function StepControls({
   step: number;
   total: number;
 }) {
+  const L = useL();
   return (
     <div className="viz-ctl">
       <button
@@ -117,10 +119,14 @@ export function StepControls({
         onClick={stepper.prev}
         disabled={step === 0}
       >
-        ← 上一步
+        {L({ en: "← Back", zh: "← 上一步" })}
       </button>
       <button type="button" className="btn btn-sm btn-primary" onClick={stepper.toggle}>
-        {stepper.playing ? "⏸ 暂停" : step >= total - 1 ? "↻ 重播" : "▶ 自动播放"}
+        {stepper.playing
+          ? L({ en: "⏸ Pause", zh: "⏸ 暂停" })
+          : step >= total - 1
+            ? L({ en: "↻ Replay", zh: "↻ 重播" })
+            : L({ en: "▶ Play", zh: "▶ 自动播放" })}
       </button>
       <button
         type="button"
@@ -128,7 +134,7 @@ export function StepControls({
         onClick={stepper.next}
         disabled={step >= total - 1}
       >
-        下一步 →
+        {L({ en: "Next →", zh: "下一步 →" })}
       </button>
       <span
         className="mono dim"
@@ -146,11 +152,12 @@ export function ArrayStepper({
   frames,
   cellW = 56,
 }: {
-  title: string;
+  title: Loc<ReactNode>;
   frames: ArrayFrame[];
   /** 单元格宽度(含间隙),用于指针定位 */
   cellW?: number;
 }) {
+  const L = useL();
   const stepper = useStepper(frames.length);
   const f = frames[stepper.step];
   const n = Math.max(...frames.map((fr) => fr.cells.length));
@@ -158,7 +165,7 @@ export function ArrayStepper({
 
   return (
     <div className="viz">
-      <div className="viz-title">{title}</div>
+      <div className="viz-title">{L(title)}</div>
       <div
         ref={edge.ref}
         data-fade={edge.fade}
@@ -192,9 +199,9 @@ export function ArrayStepper({
                   justifyContent: "flex-end",
                 }}
               >
-                {here.map((p) => (
-                  <span key={p.label} className="ptr">
-                    {p.label}
+                {here.map((p, k) => (
+                  <span key={k} className="ptr">
+                    {L(p.label)}
                   </span>
                 ))}
               </div>
@@ -228,7 +235,7 @@ export function ArrayStepper({
         </div>
       </div>
       <div className="viz-msg" aria-live="polite">
-        {f.msg}
+        {L(f.msg)}
       </div>
       <StepControls stepper={stepper} step={stepper.step} total={frames.length} />
     </div>

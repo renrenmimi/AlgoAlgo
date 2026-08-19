@@ -15,6 +15,7 @@
 
 import { useMemo, type ReactNode } from "react";
 import { useStepper, StepControls, useEdgeFade } from "@/lib/stepper";
+import { T, useL, type Loc } from "@/lib/i18n";
 
 /* ================================================================
    DPTable —— DP 表格填充器
@@ -30,7 +31,8 @@ export interface DPCell {
 export interface DPFrame {
   /** 整表快照:rows × cols。一维表就传一行。 */
   cells: DPCell[][];
-  msg: ReactNode;
+  /** 本帧旁白 —— 直接写 JSX 并在里面用 <T en zh />,或传 { en, zh } */
+  msg: Loc<ReactNode>;
 }
 
 export function DPTable({
@@ -41,25 +43,28 @@ export function DPTable({
   cornerLabel,
   cellW = 52,
 }: {
-  title: string;
+  title: Loc<ReactNode>;
   frames: DPFrame[];
   /** 顶部表头(列),如物品容量 0..W 或字符串的每个字符 */
-  colLabels?: ReactNode[];
+  colLabels?: Loc<ReactNode[]>;
   /** 左侧表头(行),如物品名或另一个字符串的字符 */
-  rowLabels?: ReactNode[];
+  rowLabels?: Loc<ReactNode[]>;
   /** 左上角标注,如 "dp" */
-  cornerLabel?: ReactNode;
+  cornerLabel?: Loc<ReactNode>;
   cellW?: number;
 }) {
+  const L = useL();
   const stepper = useStepper(frames.length);
   const f = frames[stepper.step];
   const cols = Math.max(...frames.map((fr) => Math.max(...fr.cells.map((r) => r.length))));
-  const hasRowLab = !!rowLabels?.length;
+  const cLabs = colLabels === undefined ? undefined : L(colLabels);
+  const rLabs = rowLabels === undefined ? undefined : L(rowLabels);
+  const hasRowLab = !!rLabs?.length;
   const edge = useEdgeFade<HTMLDivElement>();
 
   return (
     <div className="viz">
-      <div className="viz-title">{title}</div>
+      <div className="viz-title">{L(title)}</div>
       <div ref={edge.ref} data-fade={edge.fade} className="viz-stage" style={{ overflowX: "auto" }}>
         <div
           className="dpt"
@@ -67,12 +72,16 @@ export function DPTable({
             gridTemplateColumns: `${hasRowLab ? "auto " : ""}repeat(${cols}, ${cellW}px)`,
           }}
         >
-          {colLabels && (
+          {cLabs && (
             <>
-              {hasRowLab && <div className="dpt-corner">{cornerLabel}</div>}
+              {hasRowLab && (
+                <div className="dpt-corner">
+                  {cornerLabel === undefined ? null : L(cornerLabel)}
+                </div>
+              )}
               {Array.from({ length: cols }).map((_, j) => (
                 <div key={`c${j}`} className="dpt-lab">
-                  {colLabels[j] ?? ""}
+                  {cLabs[j] ?? ""}
                 </div>
               ))}
             </>
@@ -82,14 +91,14 @@ export function DPTable({
               key={i}
               row={row}
               cols={cols}
-              lab={hasRowLab ? rowLabels![i] ?? "" : undefined}
+              lab={hasRowLab ? rLabs![i] ?? "" : undefined}
               cellW={cellW}
             />
           ))}
         </div>
       </div>
       <div className="viz-msg" aria-live="polite">
-        {f.msg}
+        {L(f.msg)}
       </div>
       <StepControls stepper={stepper} step={stepper.step} total={frames.length} />
     </div>
@@ -135,7 +144,8 @@ function FragmentRow({
 
 export interface TreeNodeSpec {
   id: string;
-  label: ReactNode;
+  /** 节点标签。文字标签在 SVG 里没有换行,英文比中文长,必要时用 w 加宽。 */
+  label: Loc<ReactNode>;
   /** 不填 = 根节点 */
   parent?: string;
   /** 节点宽度覆盖(标签较长时用) */
@@ -144,10 +154,14 @@ export interface TreeNodeSpec {
 
 export type TreeNodeState = "cur" | "path" | "done" | "dead" | "sol" | "memo";
 
+/** 语言解析后的节点(内部用):label 已是当前语言的 ReactNode */
+type ResolvedNode = Omit<TreeNodeSpec, "label"> & { label: ReactNode };
+
 export interface TreeFrame {
   /** 只列出「非默认态」的节点;未列出的节点为幽灵态(尚未访问) */
   states: Record<string, TreeNodeState>;
-  msg: ReactNode;
+  /** 本帧旁白 —— 直接写 JSX 并在里面用 <T en zh />,或传 { en, zh } */
+  msg: Loc<ReactNode>;
 }
 
 const NODE_H = 32;
@@ -161,7 +175,7 @@ export function TreePlayer({
   gapY = 34,
   legend = true,
 }: {
-  title: string;
+  title: Loc<ReactNode>;
   nodes: TreeNodeSpec[];
   frames: TreeFrame[];
   nodeW?: number;
@@ -170,12 +184,20 @@ export function TreePlayer({
   /** 是否显示状态图例 */
   legend?: boolean;
 }) {
+  const L = useL();
   const stepper = useStepper(frames.length, 1400);
   const f = frames[stepper.step];
   const edge = useEdgeFade<HTMLDivElement>();
+  const rtitle = L(title);
+
+  // 先把标签解析成当前语言,再排版 —— 中英标签宽度不同,切语言要重排。
+  const rnodes = useMemo<ResolvedNode[]>(
+    () => nodes.map((n) => ({ ...n, label: L(n.label) })),
+    [nodes, L],
+  );
 
   // 按标签长度自动估宽:纯字符串标签超出默认宽度时加宽,消除长标签溢出节点框
-  const widthOf = (n: TreeNodeSpec): number => {
+  const widthOf = (n: ResolvedNode): number => {
     if (n.w) return n.w;
     if (typeof n.label === "string" || typeof n.label === "number") {
       const s = String(n.label);
@@ -188,10 +210,10 @@ export function TreePlayer({
   };
 
   const layout = useMemo(() => {
-    const children = new Map<string, TreeNodeSpec[]>();
-    const byId = new Map<string, TreeNodeSpec>();
-    const roots: TreeNodeSpec[] = [];
-    for (const n of nodes) {
+    const children = new Map<string, ResolvedNode[]>();
+    const byId = new Map<string, ResolvedNode>();
+    const roots: ResolvedNode[] = [];
+    for (const n of rnodes) {
       byId.set(n.id, n);
       if (n.parent) {
         if (!children.has(n.parent)) children.set(n.parent, []);
@@ -202,9 +224,9 @@ export function TreePlayer({
     }
     const pos = new Map<string, { x: number; y: number }>();
     let leafX = 0;
-    const maxW = Math.max(nodeW, ...nodes.map(widthOf));
+    const maxW = Math.max(nodeW, ...rnodes.map(widthOf));
     const slotW = maxW + gapX;
-    const place = (n: TreeNodeSpec, depth: number): number => {
+    const place = (n: ResolvedNode, depth: number): number => {
       const kids = children.get(n.id) ?? [];
       let x: number;
       if (kids.length === 0) {
@@ -222,18 +244,33 @@ export function TreePlayer({
     const maxY = Math.max(...[...pos.values()].map((p) => p.y));
     return { pos, byId, width, height: maxY + NODE_H / 2 + 8 };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nodes, nodeW, gapX, gapY]);
+  }, [rnodes, nodeW, gapX, gapY]);
 
   return (
     <div className="viz">
-      <div className="viz-title">{title}</div>
+      <div className="viz-title">{rtitle}</div>
       {legend && (
         <div className="viz-legend" aria-hidden>
-          <span className="viz-key"><i className="tp-sw" data-state="cur" />当前</span>
-          <span className="viz-key"><i className="tp-sw" data-state="path" />当前路径</span>
-          <span className="viz-key"><i className="tp-sw" data-state="dead" />死路/剪枝</span>
-          <span className="viz-key"><i className="tp-sw" data-state="sol" />解</span>
-          <span className="viz-key"><i className="tp-sw" data-state="memo" />查表命中</span>
+          <span className="viz-key">
+            <i className="tp-sw" data-state="cur" />
+            <T en="Current node" zh="当前" />
+          </span>
+          <span className="viz-key">
+            <i className="tp-sw" data-state="path" />
+            <T en="Current path" zh="当前路径" />
+          </span>
+          <span className="viz-key">
+            <i className="tp-sw" data-state="dead" />
+            <T en="Pruned" zh="死路/剪枝" />
+          </span>
+          <span className="viz-key">
+            <i className="tp-sw" data-state="sol" />
+            <T en="Solution" zh="解" />
+          </span>
+          <span className="viz-key">
+            <i className="tp-sw" data-state="memo" />
+            <T en="Cache hit" zh="查表命中" />
+          </span>
         </div>
       )}
       <div ref={edge.ref} data-fade={edge.fade} className="viz-stage" style={{ overflowX: "auto" }}>
@@ -242,10 +279,10 @@ export function TreePlayer({
           viewBox={`0 0 ${layout.width} ${layout.height}`}
           style={{ width: "100%", maxWidth: layout.width, minWidth: Math.min(layout.width, 560) }}
           role="img"
-          aria-label={title}
+          aria-label={typeof rtitle === "string" ? rtitle : undefined}
         >
           {/* 边:父底 → 子顶,状态跟随子节点 */}
-          {nodes.map((n) => {
+          {rnodes.map((n) => {
             if (!n.parent) return null;
             const p = layout.pos.get(n.parent)!;
             const c = layout.pos.get(n.id)!;
@@ -263,7 +300,7 @@ export function TreePlayer({
             );
           })}
           {/* 节点 */}
-          {nodes.map((n) => {
+          {rnodes.map((n) => {
             const c = layout.pos.get(n.id)!;
             const st = f.states[n.id];
             const w = widthOf(n);
@@ -285,7 +322,7 @@ export function TreePlayer({
         </svg>
       </div>
       <div className="viz-msg" aria-live="polite">
-        {f.msg}
+        {L(f.msg)}
       </div>
       <StepControls stepper={stepper} step={stepper.step} total={frames.length} />
     </div>
@@ -297,16 +334,17 @@ export function TreePlayer({
    ================================================================ */
 
 export interface RangeFrame {
-  /** 仍然存活的候选区间(闭区间,按值而非下标) */
+  /** 仍然存活的候选区间(闭区间 [lo, hi],按值而非下标) */
   lo: number;
   hi: number;
   /** 本轮试探的候选值(如二分的 mid) */
   probe?: number;
-  /** 试探判定:ok = 可行(答案 ≤ probe 一侧),no = 不可行 */
+  /** 试探判定:ok = probe 可行,no = probe 不可行 */
   verdict?: "ok" | "no";
   /** 已锁定的最终答案 */
   answer?: number;
-  msg: ReactNode;
+  /** 本帧旁白 —— 直接写 JSX 并在里面用 <T en zh />,或传 { en, zh } */
+  msg: Loc<ReactNode>;
 }
 
 export function RangeShrink({
@@ -317,15 +355,16 @@ export function RangeShrink({
   unit,
   cellW = 44,
 }: {
-  title: string;
+  title: Loc<ReactNode>;
   /** 候选值域(含端点),建议宽度 ≤ 20 保证可读 */
   min: number;
   max: number;
   frames: RangeFrame[];
-  /** 数值的单位标注,如「根/小时」 */
-  unit?: string;
+  /** 数值的单位标注,如「bananas per hour」 */
+  unit?: Loc<string>;
   cellW?: number;
 }) {
+  const L = useL();
   const stepper = useStepper(frames.length);
   const f = frames[stepper.step];
   const n = max - min + 1;
@@ -335,8 +374,12 @@ export function RangeShrink({
   return (
     <div className="viz">
       <div className="viz-title">
-        {title}
-        {unit && <span className="dim" style={{ fontWeight: 400 }}>(单位:{unit})</span>}
+        {L(title)}
+        {unit && (
+          <span className="dim" style={{ fontWeight: 400 }}>
+            <T en={<>&nbsp;(unit: {L(unit)})</>} zh={<>(单位:{L(unit)})</>} />
+          </span>
+        )}
       </div>
       <div ref={edge.ref} data-fade={edge.fade} className="viz-stage" style={{ flexDirection: "column", gap: 4, overflowX: "auto" }}>
         <div
@@ -350,7 +393,13 @@ export function RangeShrink({
           {values.map((v) => (
             <div key={v} style={{ display: "flex", justifyContent: "center", alignItems: "flex-end" }}>
               {f.probe === v && (
-                <span className="ptr">{f.verdict === "ok" ? "✓试" : f.verdict === "no" ? "✗试" : "试"}</span>
+                <span className="ptr">
+                  {f.verdict === "ok"
+                    ? L({ en: "✓ try", zh: "✓试" })
+                    : f.verdict === "no"
+                      ? L({ en: "✗ try", zh: "✗试" })
+                      : L({ en: "try", zh: "试" })}
+                </span>
               )}
             </div>
           ))}
@@ -387,7 +436,7 @@ export function RangeShrink({
         </div>
       </div>
       <div className="viz-msg" aria-live="polite">
-        {f.msg}
+        {L(f.msg)}
       </div>
       <StepControls stepper={stepper} step={stepper.step} total={frames.length} />
     </div>
