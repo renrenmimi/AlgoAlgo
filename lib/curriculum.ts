@@ -40,8 +40,6 @@ export interface Chapter {
   title: Loc<string>;
   /** 英文名 —— hero 眉题固定用它,同时是命令面板的搜索键(两种语言都可搜) */
   en: string;
-  /** 副标(侧栏 / 命令面板的小字):显示「另一种语言」的章节名,作为术语对照 */
-  alt: Loc<string>;
   /** 一句话本质 */
   essence: Loc<string>;
   /** oklch 色相角,决定整章主题色 */
@@ -60,7 +58,6 @@ export const CHAPTERS: Chapter[] = [
     num: "00",
     title: { en: "Start Here · The Map", zh: "序章 · 算法地图" },
     en: "The Map & Recursion",
-    alt: { en: "序章 · 算法地图", zh: "The Map & Recursion" },
     essence: {
       en: "A data structure is a noun. An algorithm is a verb. This course teaches you to turn a problem into a sequence of decisions.",
       zh: "数据结构是名词,算法是动词 —— 这门课教你把问题变成一串决策。",
@@ -79,7 +76,6 @@ export const CHAPTERS: Chapter[] = [
     num: "01",
     title: { en: "Sorting", zh: "排序" },
     en: "Sorting",
-    alt: { en: "排序", zh: "Sorting" },
     essence: {
       en: "Sorting is a museum of algorithmic ideas. Every speedup comes from seeing the data in a new way.",
       zh: "排序是算法思想的展览馆:每一次变快,都是一种新的世界观。",
@@ -98,7 +94,6 @@ export const CHAPTERS: Chapter[] = [
     num: "02",
     title: { en: "Divide and Conquer", zh: "分治" },
     en: "Divide & Conquer",
-    alt: { en: "分治", zh: "Divide & Conquer" },
     essence: {
       en: "Cut a large problem into smaller copies of itself, then trust the recursion to bring the answers back.",
       zh: "把大问题切成同款小问题,然后信任递归会把答案带回来。",
@@ -117,7 +112,6 @@ export const CHAPTERS: Chapter[] = [
     num: "03",
     title: { en: "Binary Search in Depth", zh: "二分进阶" },
     en: "Binary Search+",
-    alt: { en: "二分进阶", zh: "Binary Search+" },
     essence: {
       en: "When the answer is monotonic, finding it becomes guessing high or low.",
       zh: "只要答案有单调性,就能把「找答案」变成「猜大小」。",
@@ -136,7 +130,6 @@ export const CHAPTERS: Chapter[] = [
     num: "04",
     title: { en: "Bit Manipulation", zh: "位运算" },
     en: "Bit Manipulation",
-    alt: { en: "位运算", zh: "Bit Manipulation" },
     essence: {
       en: "One 32-bit int is 32 switches. AND, OR, NOT, and XOR are how you flip them.",
       zh: "一个 int 就是 32 盏灯 —— 与或非异或,拨的是开关。",
@@ -155,7 +148,6 @@ export const CHAPTERS: Chapter[] = [
     num: "05",
     title: { en: "Backtracking", zh: "回溯" },
     en: "Backtracking",
-    alt: { en: "回溯", zh: "Backtracking" },
     essence: {
       en: "Trying every option is not brute force if you undo each wrong turn and take the next road.",
       zh: "穷举不是蛮干:走进死胡同就退一步换条路,仅此而已。",
@@ -179,7 +171,6 @@ export const CHAPTERS: Chapter[] = [
     num: "06",
     title: { en: "Greedy", zh: "贪心" },
     en: "Greedy",
-    alt: { en: "贪心", zh: "Greedy" },
     essence: {
       en: "Take the best option available at each step. The hard part is proving you will not regret it later.",
       zh: "每一步都拿眼前最好的 —— 难的不是贪,是证明贪完不后悔。",
@@ -198,7 +189,6 @@ export const CHAPTERS: Chapter[] = [
     num: "07",
     title: { en: "Dynamic Programming", zh: "动态规划入门" },
     en: "DP Basics",
-    alt: { en: "动态规划入门", zh: "DP Basics" },
     essence: {
       en: "Write down the answer to each subproblem once, then reuse it. That is all dynamic programming does.",
       zh: "把算过的子问题记下来,别再算第二遍 —— 这就是 DP 的全部要点。",
@@ -217,7 +207,6 @@ export const CHAPTERS: Chapter[] = [
     num: "08",
     title: { en: "Knapsack Problems", zh: "背包问题" },
     en: "Knapsack",
-    alt: { en: "背包问题", zh: "Knapsack" },
     essence: {
       en: "Limited capacity, maximum value. Many DP interview questions are this problem in disguise.",
       zh: "容量有限,价值最大 —— 大量 DP 面试题都是它换的皮。",
@@ -236,7 +225,6 @@ export const CHAPTERS: Chapter[] = [
     num: "09",
     title: { en: "Subsequence DP", zh: "子序列 DP" },
     en: "Subsequence DP",
-    alt: { en: "子序列 DP", zh: "Subsequence DP" },
     essence: {
       en: "The whole relationship between two sequences fits in one two-dimensional table.",
       zh: "两个序列的关系,全写在一张二维表格里。",
@@ -255,7 +243,6 @@ export const CHAPTERS: Chapter[] = [
     num: "10",
     title: { en: "Advanced DP", zh: "DP 进阶" },
     en: "Advanced DP",
-    alt: { en: "DP 进阶", zh: "Advanced DP" },
     essence: {
       en: "State machines, intervals, trees, and bitmasks: four advanced maps of the DP world.",
       zh: "状态机、区间、树形、状压 —— DP 世界的四张高级地图。",
@@ -274,7 +261,6 @@ export const CHAPTERS: Chapter[] = [
     num: "11",
     title: { en: "Math & Number Theory", zh: "数学与数论" },
     en: "Math & Number Theory",
-    alt: { en: "数学与数论", zh: "Math & Number Theory" },
     essence: {
       en: "Math problems in interviews rarely test math. They test whether you can find the quantity that never changes.",
       zh: "数学题不考数学,考的是你能不能找到那个不变量。",
@@ -293,7 +279,6 @@ export const CHAPTERS: Chapter[] = [
     num: "12",
     title: { en: "String Algorithms", zh: "字符串算法" },
     en: "String Algorithms",
-    alt: { en: "字符串算法", zh: "String Algorithms" },
     essence: {
       en: "The core idea of KMP: every failed comparison tells you something useful about the next one.",
       zh: "KMP 的精髓:把每一次失败,都变成下一次的情报。",
@@ -312,7 +297,6 @@ export const CHAPTERS: Chapter[] = [
     num: "✦",
     title: { en: "Finale · Paradigm Atlas", zh: "终章 · 范式地图" },
     en: "Paradigm Atlas",
-    alt: { en: "终章 · 范式地图", zh: "Paradigm Atlas" },
     essence: {
       en: "The moment you read a problem, which approach should come to mind first?",
       zh: "看到题目的那一刻,你脑子里应该先想到哪个范式?",
@@ -333,6 +317,13 @@ export function chapterByPath(path: string): Chapter {
     (c) => c.href !== "/" && (path === c.href || path.startsWith(c.href + "/")),
   );
   return hit ?? CHAPTERS[0];
+}
+
+/** 侧栏 / 命令面板的副标。
+ *  中文界面下显示章节的英文名,作为术语对照;
+ *  英文界面下标题本身就是英文,再显示一遍只是重复,所以留空。 */
+export function subLabel(c: Chapter): Loc<string> {
+  return { en: "", zh: c.en };
 }
 
 export function prevNext(id: ChapterId): { prev?: Chapter; next?: Chapter } {

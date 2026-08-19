@@ -5,7 +5,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CHAPTERS, chapterByPath } from "@/lib/curriculum";
+import { CHAPTERS, chapterByPath, subLabel } from "@/lib/curriculum";
 import { useProgress } from "@/lib/progress";
 import { useShell } from "./theme-provider";
 import { BrandMark } from "./logo";
@@ -62,7 +62,9 @@ export default function Sidebar() {
                 </span>
                 <span className="side-title">
                   {L(c.title)}
-                  <span className="side-en">{L(c.alt)}</span>
+                  {L(subLabel(c)) && (
+                    <span className="side-en">{L(subLabel(c))}</span>
+                  )}
                 </span>
                 <span
                   className={`side-state ${state}`}
