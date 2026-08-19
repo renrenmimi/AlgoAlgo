@@ -19,6 +19,7 @@ import {
 import { CodeTabs } from "@/lib/code";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
+import { T } from "@/lib/i18n";
 import { PROBLEMS, QUIZ } from "@/lib/sorting-data";
 import {
   SortLab,
@@ -32,16 +33,16 @@ import {
 /* ================= 页面 ================= */
 
 const CHIPS = [
-  { id: "why", n: "01", label: "为什么学排序" },
-  { id: "n2", n: "02", label: "O(n²) 三兄弟" },
-  { id: "merge", n: "03", label: "归并 · 分治首秀" },
-  { id: "quick", n: "04", label: "快排 · partition" },
-  { id: "linear", n: "05", label: "突破比较下界" },
-  { id: "stable", n: "06", label: "稳定性 & 内置 sort" },
-  { id: "select", n: "07", label: "第 K 大" },
-  { id: "intervals", n: "08", label: "合并区间" },
-  { id: "problems", n: "09", label: "高频题单" },
-  { id: "quiz", n: "10", label: "通关测验" },
+  { id: "why", n: "01", label: { en: "Why sorting", zh: "为什么学排序" } },
+  { id: "n2", n: "02", label: { en: "Three O(n²) sorts", zh: "O(n²) 三兄弟" } },
+  { id: "merge", n: "03", label: { en: "Merge sort", zh: "归并 · 分治首秀" } },
+  { id: "quick", n: "04", label: { en: "Quicksort · partition", zh: "快排 · partition" } },
+  { id: "linear", n: "05", label: { en: "Sorting without comparing", zh: "突破比较下界" } },
+  { id: "stable", n: "06", label: { en: "Stability & built-in sort", zh: "稳定性 & 内置 sort" } },
+  { id: "select", n: "07", label: { en: "Kth largest", zh: "第 K 大" } },
+  { id: "intervals", n: "08", label: { en: "Merge intervals", zh: "合并区间" } },
+  { id: "problems", n: "09", label: { en: "Problem set", zh: "高频题单" } },
+  { id: "quiz", n: "10", label: { en: "Quiz", zh: "通关测验" } },
 ];
 
 export default function SortingChapter() {
@@ -49,19 +50,40 @@ export default function SortingChapter() {
     <main className="page" data-ch="sorting">
       <Hero
         ch="sorting"
-        title={
-          <>
-            排序 <span className="grad">Sorting</span>
-          </>
-        }
-        essence={
-          <>
-            排序看似只是「把数字从小排到大」,却是整门算法课的<strong>思想展览馆</strong>:
-            从蛮力的两两比较,到分治的一分为二,再到「根本不比较」的数数 ——
-            每一次变快,背后都是一种全新的世界观。学完这一章,你不仅会写排序,
-            更会看懂「为什么它能这么快」,以及<strong>什么时候该借排序给别的问题开路</strong>。
-          </>
-        }
+        title={{
+          en: (
+            <>
+              Sorting <span className="grad">algorithms</span>
+            </>
+          ),
+          zh: (
+            <>
+              排序 <span className="grad">Sorting</span>
+            </>
+          ),
+        }}
+        essence={{
+          en: (
+            <>
+              Sorting looks like one small task: put the values in order. It is
+              also the best place to learn <strong>how algorithms are designed</strong>.
+              This chapter moves from comparing pairs of values, to splitting the
+              array in two, to counting values instead of comparing them at all.
+              Every speedup comes from a different idea, not from more clever code.
+              By the end you will be able to write these sorts, explain why each
+              one is fast, and <strong>recognize when sorting first makes another
+              problem easy</strong>.
+            </>
+          ),
+          zh: (
+            <>
+              排序看似只是「把数字从小排到大」,却是整门算法课的<strong>思想展览馆</strong>:
+              从蛮力的两两比较,到分治的一分为二,再到「根本不比较」的数数 ——
+              每一次变快,背后都是一种全新的世界观。学完这一章,你不仅会写排序,
+              更会看懂「为什么它能这么快」,以及<strong>什么时候该借排序给别的问题开路</strong>。
+            </>
+          ),
+        }}
         chips={CHIPS}
       />
 
@@ -69,40 +91,148 @@ export default function SortingChapter() {
       <Section
         id="why"
         index="01"
-        title="为什么排序值得单开一章"
-        desc="排序很少是目的,却是无数算法的地基"
+        title={{
+          en: "Why sorting deserves its own chapter",
+          zh: "为什么排序值得单开一章",
+        }}
+        desc={{
+          en: "Sorting is rarely the goal. It is the ground that many other algorithms stand on.",
+          zh: "排序很少是目的,却是无数算法的地基",
+        }}
       >
         <div className="prose">
           <p>
-            先破除一个误会:面试里几乎没人让你「手写一个排序」当最终答案 ——
-            因为每种语言都内置了 <code>sort</code>。那为什么还要学?因为<strong>排序是一种预处理的世界观</strong>:
-            很多看起来杂乱无章的问题,<strong>只要先排个序,难度就塌了一半</strong>。
+            <T
+              en={
+                <>
+                  An interviewer will rarely ask you to write a sorting algorithm
+                  as the final answer, because every language already ships a{" "}
+                  <code>sort</code>. So why study them? Because{" "}
+                  <strong>sorting is a way of preparing data</strong>. Many problems
+                  look difficult while the input is in random order.{" "}
+                  <strong>Once the data is sorted, most of the difficulty is gone.</strong>
+                </>
+              }
+              zh={
+                <>
+                  先破除一个误会:面试里几乎没人让你「手写一个排序」当最终答案 ——
+                  因为每种语言都内置了 <code>sort</code>。那为什么还要学?因为<strong>排序是一种预处理的世界观</strong>:
+                  很多看起来杂乱无章的问题,<strong>只要先排个序,难度就塌了一半</strong>。
+                </>
+              }
+            />
           </p>
           <ul>
-            <li>二分查找要求数组<strong>有序</strong>(第 3 章)——「有序」从哪来?排序。</li>
-            <li>合并区间(LC 56)乱序时无从下手,<strong>按左端点排完</strong>,重叠的必然相邻。</li>
-            <li>找第 K 大(LC 215),partition 一步就能砍掉一半,根本不用全排。</li>
-            <li>去重、找众数、判断能否拼接、贪心的「先排后选」…… 背后都站着排序。</li>
+            <T
+              en={
+                <>
+                  <li>
+                    Binary search needs a <strong>sorted</strong> array (chapter 3).
+                    Sorting is what makes it sorted.
+                  </li>
+                  <li>
+                    Merging intervals (LC 56) is hard while the intervals are in
+                    random order. <strong>After you sort them by left endpoint</strong>,
+                    two intervals that overlap are always next to each other.
+                  </li>
+                  <li>
+                    For the kth largest element (LC 215), a single partition step
+                    removes about half of the array. You never sort all of it.
+                  </li>
+                  <li>
+                    Removing duplicates, finding the most frequent value, checking
+                    whether items can be joined, and almost every greedy algorithm
+                    start the same way: sort first.
+                  </li>
+                </>
+              }
+              zh={
+                <>
+                  <li>二分查找要求数组<strong>有序</strong>(第 3 章)——「有序」从哪来?排序。</li>
+                  <li>合并区间(LC 56)乱序时无从下手,<strong>按左端点排完</strong>,重叠的必然相邻。</li>
+                  <li>找第 K 大(LC 215),partition 一步就能砍掉一半,根本不用全排。</li>
+                  <li>去重、找众数、判断能否拼接、贪心的「先排后选」…… 背后都站着排序。</li>
+                </>
+              }
+            />
           </ul>
           <p>
-            更重要的是:排序算法本身是<strong>算法思想的最佳教具</strong>。这一章我们会亲眼见到
-            分治(归并)、随机化(快排)、以空间换时间(计数)、以及「稳定性」这种在工程里
-            要命、教材里却常被一笔带过的概念。它们全都会在后面的章节反复登场。
+            <T
+              en={
+                <>
+                  Sorting algorithms are also the{" "}
+                  <strong>best teaching material for algorithm design</strong>. In this
+                  chapter you will see divide and conquer (merge sort), randomization
+                  (quicksort), spending memory to save time (counting sort), and
+                  stability, which matters a great deal in real systems but is often
+                  covered in one line in a textbook. All of these ideas return in
+                  later chapters.
+                </>
+              }
+              zh={
+                <>
+                  更重要的是:排序算法本身是<strong>算法思想的最佳教具</strong>。这一章我们会亲眼见到
+                  分治(归并)、随机化(快排)、以空间换时间(计数)、以及「稳定性」这种在工程里
+                  要命、教材里却常被一笔带过的概念。它们全都会在后面的章节反复登场。
+                </>
+              }
+            />
           </p>
         </div>
-        <Callout tone="story" title="人类排了几千年,计算机排了七十年">
+        <Callout
+          tone="story"
+          title={{
+            en: "People have sorted things for centuries. Computers have done it for seventy years.",
+            zh: "人类排了几千年,计算机排了七十年",
+          }}
+        >
           <p>
-            图书馆按书号上架、扑克摸牌时理牌、Excel 点一下列头 —— 排序是人类最古老的整理本能。
-            1945 年 <b>冯·诺依曼</b>为第一台存储程序计算机写下的早期程序之一,就是<b>归并排序</b>;
-            1959 年 <b>Tony Hoare</b> 为了给俄英机器翻译排词典,发明了<b>快速排序</b>。
-            排序的历史,几乎就是计算机算法史本身。
+            <T
+              en={
+                <>
+                  Books arranged by call number, cards arranged in your hand, one
+                  click on a spreadsheet column header: putting things in order is an
+                  old human habit. In 1945 <b>John von Neumann</b> wrote{" "}
+                  <b>merge sort</b> as one of the earliest programs for a
+                  stored-program computer. In 1959 <b>Tony Hoare</b> invented{" "}
+                  <b>quicksort</b> while working on machine translation from Russian
+                  to English, where words had to be sorted before they could be looked
+                  up in a dictionary. The history of sorting is close to the history of
+                  computer algorithms itself.
+                </>
+              }
+              zh={
+                <>
+                  图书馆按书号上架、扑克摸牌时理牌、Excel 点一下列头 —— 排序是人类最古老的整理本能。
+                  1945 年 <b>冯·诺依曼</b>为第一台存储程序计算机写下的早期程序之一,就是<b>归并排序</b>;
+                  1959 年 <b>Tony Hoare</b> 为了给俄英机器翻译排词典,发明了<b>快速排序</b>。
+                  排序的历史,几乎就是计算机算法史本身。
+                </>
+              }
+            />
           </p>
         </Callout>
         <div className="prose">
           <p>
-            我们从最朴素的想法开始。给你一副乱牌 [5, 2, 9, 1, 6],怎么排?最直觉的三种办法
-            —— 冒泡、选择、插入 —— 都是 O(n²) 的「三兄弟」。别急着背代码,
-            先<strong>亲手播放</strong>它们,感受三种不同的「笨办法」到底笨在哪、又各有什么脾气:
+            <T
+              en={
+                <>
+                  Start from the most direct ideas. You are given the unsorted list
+                  [5, 2, 9, 1, 6]. How would you put it in order? The three most
+                  natural methods are bubble sort, selection sort, and insertion sort,
+                  and all three run in O(n²). Do not memorize the code yet.{" "}
+                  <strong>Play each one step by step</strong> and watch where the work
+                  goes in each of them:
+                </>
+              }
+              zh={
+                <>
+                  我们从最朴素的想法开始。给你一副乱牌 [5, 2, 9, 1, 6],怎么排?最直觉的三种办法
+                  —— 冒泡、选择、插入 —— 都是 O(n²) 的「三兄弟」。别急着背代码,
+                  先<strong>亲手播放</strong>它们,感受三种不同的「笨办法」到底笨在哪、又各有什么脾气:
+                </>
+              }
+            />
           </p>
         </div>
         <SortLab />

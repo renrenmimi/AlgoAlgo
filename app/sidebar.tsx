@@ -9,11 +9,13 @@ import { CHAPTERS, chapterByPath } from "@/lib/curriculum";
 import { useProgress } from "@/lib/progress";
 import { useShell } from "./theme-provider";
 import { BrandMark } from "./logo";
+import { T, useL } from "@/lib/i18n";
 
 export default function Sidebar() {
   const path = usePathname();
   const { sidebarOpen, setSidebarOpen } = useShell();
   const { ready, chapterState, totalProblems, data } = useProgress();
+  const L = useL();
 
   const current = chapterByPath(path);
   const doneCh = ready
@@ -28,7 +30,7 @@ export default function Sidebar() {
     <>
       <aside
         className={`sidebar${sidebarOpen ? " open" : ""}`}
-        aria-label="AlgoAlgo 章节导航"
+        aria-label={L({ en: "AlgoAlgo chapter navigation", zh: "AlgoAlgo 章节导航" })}
       >
         <Link href="/" className="brand" onClick={close} aria-label="AlgoAlgo">
           <span className="brand-mark" aria-hidden>
@@ -36,11 +38,13 @@ export default function Sidebar() {
           </span>
           <span>
             <span className="brand-name">AlgoAlgo</span>
-            <span className="brand-tagline">看得见的算法</span>
+            <span className="brand-tagline">
+              <T en="Algorithms you can see" zh="看得见的算法" />
+            </span>
           </span>
         </Link>
 
-        <nav className="side-nav" aria-label="章节">
+        <nav className="side-nav" aria-label={L({ en: "Chapters", zh: "章节" })}>
           {CHAPTERS.map((c) => {
             const active = c.id === current.id;
             const state = ready ? chapterState(c.id) : "new";
@@ -57,18 +61,18 @@ export default function Sidebar() {
                   {c.num}
                 </span>
                 <span className="side-title">
-                  {c.title}
-                  <span className="side-en">{c.en}</span>
+                  {L(c.title)}
+                  <span className="side-en">{L(c.alt)}</span>
                 </span>
                 <span
                   className={`side-state ${state}`}
-                  aria-label={
+                  aria-label={L(
                     state === "done"
-                      ? "已完成"
+                      ? { en: "Completed", zh: "已完成" }
                       : state === "doing"
-                        ? "进行中"
-                        : "未开始"
-                  }
+                        ? { en: "In progress", zh: "进行中" }
+                        : { en: "Not started", zh: "未开始" },
+                  )}
                 />
               </Link>
             );
@@ -77,8 +81,20 @@ export default function Sidebar() {
 
         <div className="side-status">
           <div>
-            已刷 <b>{totalProblems}</b> 题 · 完成 <b>{quizCount}</b> 个测验 ·
-            通关 <b>{doneCh}</b>/{CHAPTERS.length} 章
+            <T
+              en={
+                <>
+                  <b>{totalProblems}</b> solved · <b>{quizCount}</b> quizzes ·{" "}
+                  <b>{doneCh}</b>/{CHAPTERS.length} chapters
+                </>
+              }
+              zh={
+                <>
+                  已刷 <b>{totalProblems}</b> 题 · 完成 <b>{quizCount}</b> 个测验
+                  · 通关 <b>{doneCh}</b>/{CHAPTERS.length} 章
+                </>
+              }
+            />
           </div>
           <div
             className="progress"
@@ -86,7 +102,7 @@ export default function Sidebar() {
             aria-valuemin={0}
             aria-valuemax={100}
             aria-valuenow={progress}
-            aria-label="全书进度"
+            aria-label={L({ en: "Overall course progress", zh: "全书进度" })}
           >
             <div className="progress-fill" style={{ width: `${progress}%` }} />
           </div>

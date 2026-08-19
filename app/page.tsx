@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import "./home.css";
 import { CHAPTERS } from "@/lib/curriculum";
+import { useL } from "@/lib/i18n";
 import {
   Reveal,
   Section,
@@ -205,6 +206,7 @@ function CountStat({ to, suffix = "", label }: { to: number; suffix?: string; la
 /* ---------- 页面 ---------- */
 
 export default function Home() {
+  const L = useL();
   return (
     <main className="page" data-ch="home">
       {/* Hero */}
@@ -574,12 +576,12 @@ function fact(n) {
                 </span>
                 <div className="map-head">
                   <span className="map-num">{c.num}</span>
-                  <span className="map-title">{c.title}</span>
+                  <span className="map-title">{L(c.title)}</span>
                   <span className="map-en" style={{ marginLeft: "auto" }}>
                     {c.en}
                   </span>
                 </div>
-                <p className="map-essence">{c.essence}</p>
+                <p className="map-essence">{L(c.essence)}</p>
                 <div className="map-meta">
                   <span className="map-level" aria-label={`难度 ${c.level}/5`}>
                     {[1, 2, 3, 4, 5].map((l) => (

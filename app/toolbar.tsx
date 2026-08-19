@@ -1,11 +1,12 @@
 "use client";
 
-// 顶部工具条:侧栏开关 + 面包屑 + ⌘K + 偏好语言 + 主题切换。
+// 顶部工具条:侧栏开关 + 面包屑 + 界面语言(EN / 中文)+ 偏好代码语言 + ⌘K + 主题切换。
 // 偏好语言(Java/Python/JS)是全站联动的,这里给一个全局入口。
 
 import { usePathname } from "next/navigation";
 import { chapterByPath } from "@/lib/curriculum";
 import { useShell, useTheme, type CodeLang } from "./theme-provider";
+import { useL, useLang, type Lang } from "@/lib/i18n";
 
 const LANGS: { id: CodeLang; label: string }[] = [
   { id: "java", label: "Java" },
@@ -13,10 +14,17 @@ const LANGS: { id: CodeLang; label: string }[] = [
   { id: "js", label: "JS" },
 ];
 
+const UI_LANGS: { id: Lang; label: string }[] = [
+  { id: "en", label: "EN" },
+  { id: "zh", label: "中文" },
+];
+
 export default function Toolbar() {
   const path = usePathname();
   const ch = chapterByPath(path);
   const { theme, toggleTheme } = useTheme();
+  const { lang, setLang } = useLang();
+  const L = useL();
   const {
     setSidebarOpen,
     toggleSidebarCollapsed,
@@ -30,7 +38,7 @@ export default function Toolbar() {
       <button
         type="button"
         className="tb-btn"
-        aria-label="切换侧栏"
+        aria-label={L({ en: "Toggle sidebar", zh: "切换侧栏" })}
         onClick={() => {
           if (window.innerWidth <= 960) setSidebarOpen((v) => !v);
           else toggleSidebarCollapsed();
@@ -51,11 +59,33 @@ export default function Toolbar() {
         <span className="sep">/</span>
         <b>
           {ch.num !== "✦" ? `${ch.num} · ` : ""}
-          {ch.title}
+          {L(ch.title)}
         </b>
       </div>
 
-      <div className="seg" role="group" aria-label="偏好代码语言">
+      <div
+        className="seg seg-lang"
+        role="group"
+        aria-label={L({ en: "Interface language", zh: "界面语言" })}
+      >
+        {UI_LANGS.map((l) => (
+          <button
+            key={l.id}
+            type="button"
+            className={`seg-btn${lang === l.id ? " on" : ""}`}
+            aria-pressed={lang === l.id}
+            onClick={() => setLang(l.id)}
+          >
+            {l.label}
+          </button>
+        ))}
+      </div>
+
+      <div
+        className="seg seg-code"
+        role="group"
+        aria-label={L({ en: "Preferred code language", zh: "偏好代码语言" })}
+      >
         {LANGS.map((l) => (
           <button
             key={l.id}
@@ -72,16 +102,16 @@ export default function Toolbar() {
         type="button"
         className="tb-btn"
         onClick={() => setCmdkOpen(true)}
-        aria-label="打开命令面板"
+        aria-label={L({ en: "Open command palette", zh: "打开命令面板" })}
       >
-        跳转 <span className="tb-kbd">⌘K</span>
+        {L({ en: "Jump", zh: "跳转" })} <span className="tb-kbd">⌘K</span>
       </button>
 
       <button
         type="button"
         className="tb-btn"
         onClick={toggleTheme}
-        aria-label="切换主题"
+        aria-label={L({ en: "Toggle theme", zh: "切换主题" })}
       >
         {theme === "dark" ? "☾" : "☀"}
       </button>

@@ -18,18 +18,19 @@ import {
 import { CodeTabs } from "@/lib/code";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
+import { T } from "@/lib/i18n";
 import { PROBLEMS, QUIZ } from "@/lib/divide-data";
 import { PowTree, MergeSortLayers, MergeKLists, CrossMidLab, InversionLab } from "./viz";
 
 const CHIPS = [
-  { id: "why", n: "01", label: "分治三步" },
-  { id: "cost", n: "02", label: "递归树与复杂度" },
-  { id: "pow", n: "03", label: "快速幂 · LC 50" },
-  { id: "merge", n: "04", label: "归并分治 · LC 23" },
-  { id: "maxsub", n: "05", label: "最大子数组 · LC 53" },
-  { id: "inversion", n: "06", label: "逆序对 & Karatsuba" },
-  { id: "problems", n: "07", label: "高频题单" },
-  { id: "quiz", n: "08", label: "通关测验" },
+  { id: "why", n: "01", label: { en: "Three steps", zh: "分治三步" } },
+  { id: "cost", n: "02", label: { en: "Recursion tree", zh: "递归树与复杂度" } },
+  { id: "pow", n: "03", label: { en: "Fast power · LC 50", zh: "快速幂 · LC 50" } },
+  { id: "merge", n: "04", label: { en: "Merge k lists · LC 23", zh: "归并分治 · LC 23" } },
+  { id: "maxsub", n: "05", label: { en: "Max subarray · LC 53", zh: "最大子数组 · LC 53" } },
+  { id: "inversion", n: "06", label: { en: "Inversions & Karatsuba", zh: "逆序对 & Karatsuba" } },
+  { id: "problems", n: "07", label: { en: "Problem set", zh: "高频题单" } },
+  { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
 ];
 
 export default function DivideChapter() {
@@ -37,18 +38,42 @@ export default function DivideChapter() {
     <main className="page" data-ch="divide">
       <Hero
         ch="divide"
-        title={
-          <>
-            分治 <span className="grad">Divide & Conquer</span>
-          </>
-        }
-        essence={
-          <>
-            分治只有一句话:<strong>把大问题切成同款的小问题,信任递归把答案带回来,
-            再把子答案拼成总答案</strong>。序章教过的「递归信任」在这里第一次派上大用场 ——
-            你会看到指数级的暴力,如何被「对半砍」一路压成 O(n log n) 甚至 O(log n)。
-          </>
-        }
+        title={{
+          en: (
+            <>
+              Divide and <span className="grad">conquer</span>
+            </>
+          ),
+          zh: (
+            <>
+              分治 <span className="grad">Divide &amp; Conquer</span>
+            </>
+          ),
+        }}
+        essence={{
+          en: (
+            <>
+              Divide and conquer is one idea:{" "}
+              <strong>
+                cut a large problem into smaller problems of the same shape, let the
+                recursion solve each one, then combine the sub-answers into the final
+                answer
+              </strong>
+              . The introduction chapter asked you to trust recursion. This is the first
+              chapter where that trust pays off. You will see a slow O(n) or O(n²) method
+              become O(n log n), and sometimes O(log n), only because the input is cut in
+              half at every step.
+            </>
+          ),
+          zh: (
+            <>
+              分治只有一句话:<strong>把大问题切成同款的小问题,信任递归把答案带回来,
+              再把子答案拼成总答案</strong>。序章教过的「递归信任」在这里第一次派上大用场 ——
+              你会看到 O(n) 甚至 O(n²) 的暴力,如何被「对半砍」一路压成 O(n log n),
+              有时甚至压到 O(log n)。
+            </>
+          ),
+        }}
         chips={CHIPS}
       />
 
@@ -56,53 +81,154 @@ export default function DivideChapter() {
       <Section
         id="why"
         index="01"
-        title="分治三步:分 / 治 / 合"
-        desc="不是新魔法,是把「递归」从一种写法,升级成一种解题世界观"
+        title={{
+          en: "Three steps: divide, conquer, combine",
+          zh: "分治三步:分 / 治 / 合",
+        }}
+        desc={{
+          en: "Recursion is a way to write code. Divide and conquer is a way to design a solution.",
+          zh: "不是新魔法,是把「递归」从一种写法,升级成一种解题世界观",
+        }}
       >
         <div className="prose">
           <p>
-            先讲个场景。你面前有一叠 1000 张的选票要清点,一个人数到天黑。
-            聪明的做法:把票<strong>分成 10 摞</strong>,发给 10 个人各数一摞
-            (每个人又可以把自己那摞再分下去),最后<strong>把 10 个小计加起来</strong>。
-            这就是分治(Divide &amp; Conquer,古罗马人叫它「分而治之」):
-            大问题拆成同样形状的小问题,分头解决,再汇总。
+            <T
+              en={
+                <>
+                  Start with a simple picture. You have a stack of 1000 ballots to count.
+                  One person counting alone takes all day. A faster way:{" "}
+                  <strong>split the stack into 10 smaller stacks</strong> and give one
+                  stack to each of 10 people. Each person may split their stack again.
+                  At the end, <strong>add the 10 subtotals together</strong>. That is
+                  divide and conquer: cut the problem into smaller problems of the same
+                  shape, solve them separately, then combine the results.
+                </>
+              }
+              zh={
+                <>
+                  先讲个场景。你面前有一叠 1000 张的选票要清点,一个人数到天黑。
+                  聪明的做法:把票<strong>分成 10 摞</strong>,发给 10 个人各数一摞
+                  (每个人又可以把自己那摞再分下去),最后<strong>把 10 个小计加起来</strong>。
+                  这就是分治(Divide &amp; Conquer,古罗马人叫它「分而治之」):
+                  大问题拆成同样形状的小问题,分头解决,再汇总。
+                </>
+              }
+            />
           </p>
           <p>
-            它和序章的递归是什么关系?递归是<strong>「函数调用自己」这个语法工具</strong>;
-            分治是<strong>「用递归解题」的一种策略</strong> —— 而且是最经典的那种。
-            每道分治题,都能拆成雷打不动的三步:
+            <T
+              en={
+                <>
+                  How is this different from plain recursion? Recursion is{" "}
+                  <strong>the language feature that lets a function call itself</strong>.
+                  Divide and conquer is{" "}
+                  <strong>a strategy that uses recursion to solve a problem</strong>, and
+                  it is the most common one. Every divide and conquer solution has the
+                  same three steps.
+                </>
+              }
+              zh={
+                <>
+                  它和序章的递归是什么关系?递归是<strong>「函数调用自己」这个语法工具</strong>;
+                  分治是<strong>「用递归解题」的一种策略</strong> —— 而且是最经典的那种。
+                  每道分治题,都能拆成雷打不动的三步:
+                </>
+              }
+            />
           </p>
         </div>
         <div className="dvd-steps">
           <div className="dvd-step">
             <div className="dvd-step-ico" aria-hidden>✂️</div>
-            <h4>分<span className="en">Divide</span></h4>
+            <h4>
+              <T en={<>Divide</>} zh={<>分<span className="en">Divide</span></>} />
+            </h4>
             <p>
-              把规模为 n 的问题,切成若干个<b>同款、更小</b>的子问题
-              (通常对半,规模减到 n/2)。切法要保证子问题真的更小,否则递归停不下来。
+              <T
+                en={
+                  <>
+                    Cut a problem of size n into several <b>smaller problems of the same
+                    kind</b>, usually two problems of size n/2. Every piece must be
+                    strictly smaller than the original, otherwise the recursion never
+                    reaches the base case.
+                  </>
+                }
+                zh={
+                  <>
+                    把规模为 n 的问题,切成若干个<b>同款、更小</b>的子问题
+                    (通常对半,规模减到 n/2)。切法要保证子问题真的更小,否则递归停不下来。
+                  </>
+                }
+              />
             </p>
           </div>
           <div className="dvd-step">
             <div className="dvd-step-ico" aria-hidden>🧩</div>
-            <h4>治<span className="en">Conquer</span></h4>
+            <h4>
+              <T en={<>Conquer</>} zh={<>治<span className="en">Conquer</span></>} />
+            </h4>
             <p>
-              递归解决每个子问题。到了<b>基准情形</b>(小到不能再分,如单个元素)就直接返回。
-              这一步用的是序章的<b>「递归信任」</b>:相信递归会把子答案正确带回来,别去展开想细节。
+              <T
+                en={
+                  <>
+                    Solve each subproblem by recursion. When a subproblem is small enough
+                    to answer directly, such as a single element, return the answer at
+                    once. That case is the <b>base case</b>. Here you use the idea from
+                    the introduction chapter: <b>trust the recursion</b> to return a
+                    correct sub-answer, and do not trace the calls in your head.
+                  </>
+                }
+                zh={
+                  <>
+                    递归解决每个子问题。到了<b>基准情形</b>(小到不能再分,如单个元素)就直接返回。
+                    这一步用的是序章的<b>「递归信任」</b>:相信递归会把子答案正确带回来,别去展开想细节。
+                  </>
+                }
+              />
             </p>
           </div>
           <div className="dvd-step">
             <div className="dvd-step-ico" aria-hidden>🔗</div>
-            <h4>合<span className="en">Combine</span></h4>
+            <h4>
+              <T en={<>Combine</>} zh={<>合<span className="en">Combine</span></>} />
+            </h4>
             <p>
-              把子答案<b>拼装</b>成原问题的答案。这一步是分治的灵魂 ——
-              一道题好不好做、复杂度多少,几乎全看「合」有多贵。
+              <T
+                en={
+                  <>
+                    <b>Assemble</b> the sub-answers into the answer for the original
+                    problem. This step decides almost everything: how hard the problem is
+                    to solve, and what the final time complexity turns out to be.
+                  </>
+                }
+                zh={
+                  <>
+                    把子答案<b>拼装</b>成原问题的答案。这一步是分治的灵魂 ——
+                    一道题好不好做、复杂度多少,几乎全看「合」有多贵。
+                  </>
+                }
+              />
             </p>
           </div>
         </div>
         <div className="prose">
           <p>
-            这三步落到代码里,就是一个固定骨架。下面用<strong>归并排序</strong>当模板
-            (排序是分治的「首秀」,01 排序章会细讲它的稳定性与原地优化,这里只借它示范骨架):
+            <T
+              en={
+                <>
+                  In code the three steps become a fixed skeleton. The example below is{" "}
+                  <strong>merge sort</strong>. Sorting is the classic first use of divide
+                  and conquer. Chapter 01 covers its stability and its in-place version;
+                  here it only shows the skeleton.
+                </>
+              }
+              zh={
+                <>
+                  这三步落到代码里,就是一个固定骨架。下面用<strong>归并排序</strong>当模板
+                  (排序是分治的「首秀」,01 排序章会细讲它的稳定性与原地优化,这里只借它示范骨架):
+                </>
+              }
+            />
           </p>
         </div>
         <CodeTabs
@@ -110,40 +236,51 @@ export default function DivideChapter() {
           java={{
             code: `class Solution {
     public int[] sortArray(int[] a) {
-        if (a.length <= 1) return a;      // 治:单元素天然有序(基准情形)
-        int mid = a.length / 2;           // 分:对半切
+        if (a.length <= 1) return a;      // conquer: one element is already sorted
+        int mid = a.length / 2;           // divide: cut in half
         int[] left  = sortArray(Arrays.copyOfRange(a, 0, mid));
         int[] right = sortArray(Arrays.copyOfRange(a, mid, a.length));
-        return merge(left, right);        // 合:合并两段有序数组
+        return merge(left, right);        // combine: merge two sorted halves
     }
 
     private int[] merge(int[] x, int[] y) {
         int[] out = new int[x.length + y.length];
         int i = 0, j = 0, k = 0;
         while (i < x.length && j < y.length)
-            out[k++] = x[i] <= y[j] ? x[i++] : y[j++];  // <= 保证稳定
+            out[k++] = x[i] <= y[j] ? x[i++] : y[j++];  // <= keeps it stable
         while (i < x.length) out[k++] = x[i++];
         while (j < y.length) out[k++] = y[j++];
         return out;
     }
 }`,
             hl: [3, 4, 5, 6, 7],
-            note: (
-              <>
-                三步一目了然:<b>分</b>(对半)→ <b>治</b>(递归左右)→ <b>合</b>(merge)。
-                <code>Arrays.copyOfRange</code> 每层都新建数组,额外空间 O(n);排序章会讲带辅助数组的原地版。
-              </>
-            ),
+            note: {
+              en: (
+                <>
+                  The three steps are visible in order: <b>divide</b> (cut in half),{" "}
+                  <b>conquer</b> (recurse on both sides), <b>combine</b> (merge).{" "}
+                  <code>Arrays.copyOfRange</code> allocates a new array at every level, so
+                  this version uses O(n) extra space. Chapter 01 shows the version that
+                  reuses one shared buffer.
+                </>
+              ),
+              zh: (
+                <>
+                  三步一目了然:<b>分</b>(对半)→ <b>治</b>(递归左右)→ <b>合</b>(merge)。
+                  <code>Arrays.copyOfRange</code> 每层都新建数组,额外空间 O(n);排序章会讲带辅助数组的原地版。
+                </>
+              ),
+            },
           }}
           python={{
             code: `class Solution:
     def sortArray(self, a: list[int]) -> list[int]:
         if len(a) <= 1:
-            return a                     # 治:基准情形
-        mid = len(a) // 2                # 分:对半切
+            return a                     # conquer: base case
+        mid = len(a) // 2                # divide: cut in half
         left = self.sortArray(a[:mid])
         right = self.sortArray(a[mid:])
-        return self._merge(left, right)  # 合:合并两段有序
+        return self._merge(left, right)  # combine: merge two sorted halves
 
     def _merge(self, x: list[int], y: list[int]) -> list[int]:
         out, i, j = [], 0, 0
@@ -155,20 +292,30 @@ export default function DivideChapter() {
         out.extend(x[i:]); out.extend(y[j:])
         return out`,
             hl: [5, 6, 7, 8],
-            note: (
-              <>
-                <code>a[:mid]</code> 这类切片每次都<b>复制</b>一份,直观但有额外开销;
-                竞赛里常改成传下标 <code>(lo, hi)</code> 只读不复制。
-              </>
-            ),
+            note: {
+              en: (
+                <>
+                  A slice such as <code>a[:mid]</code> <b>copies</b> the elements every
+                  time. That is easy to read but it costs extra time and memory. A common
+                  alternative is to pass the index range <code>(lo, hi)</code> and read
+                  the original list in place.
+                </>
+              ),
+              zh: (
+                <>
+                  <code>a[:mid]</code> 这类切片每次都<b>复制</b>一份,直观但有额外开销;
+                  竞赛里常改成传下标 <code>(lo, hi)</code> 只读不复制。
+                </>
+              ),
+            },
           }}
           js={{
             code: `var sortArray = function (a) {
-  if (a.length <= 1) return a;          // 治:基准情形
-  const mid = a.length >> 1;            // 分:对半切
+  if (a.length <= 1) return a;          // conquer: base case
+  const mid = a.length >> 1;            // divide: cut in half
   const left = sortArray(a.slice(0, mid));
   const right = sortArray(a.slice(mid));
-  return merge(left, right);            // 合
+  return merge(left, right);            // combine
 };
 
 function merge(x, y) {
@@ -181,36 +328,116 @@ function merge(x, y) {
   return out;
 }`,
             hl: [2, 3, 4, 5, 6],
-            note: (
-              <>
-                <code>a.length &gt;&gt; 1</code> 是「整数除以 2」的位运算写法(右移一位)。
-                <code>slice</code> 同样是复制,数据量大时注意开销。
-              </>
-            ),
+            note: {
+              en: (
+                <>
+                  <code>a.length &gt;&gt; 1</code> shifts right by one bit, which is
+                  integer division by 2. <code>slice</code> also copies the elements, so
+                  it costs extra memory on large inputs.
+                </>
+              ),
+              zh: (
+                <>
+                  <code>a.length &gt;&gt; 1</code> 是「整数除以 2」的位运算写法(右移一位)。
+                  <code>slice</code> 同样是复制,数据量大时注意开销。
+                </>
+              ),
+            },
           }}
         />
-        <Callout tone="idea" title="为什么分治一定对?数学归纳法">
+        <Callout
+          tone="idea"
+          title={{
+            en: "Why is divide and conquer correct? Induction",
+            zh: "为什么分治一定对?数学归纳法",
+          }}
+        >
           <p>
-            证明分治正确,套的是<b>归纳法</b>,和证递归同一个模子:①<b>基准情形对</b>
-            —— 单个元素本身就是有序的,这一步显然成立;②<b>归纳步对</b> ——
-            假设递归能把左、右两半各自排好(归纳假设),只要 merge 能把两段有序数组正确合成一段有序,
-            那整段就对了。两步都成立 ⇒ 对任意规模都对。<b>你永远只需要证「合」这一步</b>,
-            递归的部分交给归纳假设,这正是「递归信任」的数学底气。
+            <T
+              en={
+                <>
+                  A divide and conquer solution is proved correct by <b>induction</b>, the
+                  same method used for recursion. Step one: <b>the base case is correct</b>.
+                  A single element is already sorted, so that is true. Step two:{" "}
+                  <b>the inductive step is correct</b>. Assume the recursive calls sort the
+                  left half and the right half correctly. If <code>merge</code> turns two
+                  sorted arrays into one sorted array, the whole array is sorted. Both
+                  steps hold, so the result holds for every input size.{" "}
+                  <b>You only ever have to prove the combine step</b>. The recursive part
+                  is covered by the inductive assumption. That is the reason you are
+                  allowed to trust the recursion.
+                </>
+              }
+              zh={
+                <>
+                  证明分治正确,套的是<b>归纳法</b>,和证递归同一个模子:①<b>基准情形对</b>
+                  —— 单个元素本身就是有序的,这一步显然成立;②<b>归纳步对</b> ——
+                  假设递归能把左、右两半各自排好(归纳假设),只要 merge 能把两段有序数组正确合成一段有序,
+                  那整段就对了。两步都成立 ⇒ 对任意规模都对。<b>你永远只需要证「合」这一步</b>,
+                  递归的部分交给归纳假设,这正是「递归信任」的数学底气。
+                </>
+              }
+            />
           </p>
         </Callout>
-        <Callout tone="warn" title="新手最容易翻的两条船">
+        <Callout
+          tone="warn"
+          title={{ en: "Two common beginner mistakes", zh: "新手最容易翻的两条船" }}
+        >
           <p>
-            ① <b>子问题没变小</b>:如果「分」之后子问题规模没真的下降(比如切出一个空段 + 原样大段),
-            递归就会无限套娃、栈溢出。务必保证每次都朝基准情形靠近。
-            ② <b>漏写基准情形</b>:忘了 <code>length &lt;= 1</code> 的出口,或出口条件写错,
-            同样停不下来。序章说过:<b>先写出口,再写递归</b>。
+            <T
+              en={
+                <>
+                  1. <b>The subproblem does not get smaller.</b> If the divide step
+                  produces one empty part and one part the same size as the input, the
+                  recursion never ends and the call stack overflows. Every call must move
+                  closer to the base case. 2. <b>The base case is missing or wrong.</b> If
+                  you forget the <code>length &lt;= 1</code> exit, or write the condition
+                  incorrectly, the recursion also never ends. The rule from the
+                  introduction chapter still applies: <b>write the exit first, then write
+                  the recursive calls</b>.
+                </>
+              }
+              zh={
+                <>
+                  ① <b>子问题没变小</b>:如果「分」之后子问题规模没真的下降(比如切出一个空段 + 原样大段),
+                  递归就会无限套娃、栈溢出。务必保证每次都朝基准情形靠近。
+                  ② <b>漏写基准情形</b>:忘了 <code>length &lt;= 1</code> 的出口,或出口条件写错,
+                  同样停不下来。序章说过:<b>先写出口,再写递归</b>。
+                </>
+              }
+            />
           </p>
         </Callout>
-        <Callout tone="deep" title="工程现场:分治是大规模计算的底层世界观">
+        <Callout
+          tone="deep"
+          title={{
+            en: "In practice: divide and conquer scales computation",
+            zh: "工程现场:分治是大规模计算的底层世界观",
+          }}
+        >
           <p>
-            Google 的 <b>MapReduce</b>、Hadoop、Spark,本质都是分治:把海量数据切片(map)分发到成千上万台机器,
-            各自算局部结果,再汇总(reduce)。数据大到单机装不下时,<b>外部归并排序</b>把文件切成能进内存的小块,
-            分别排好再多路归并 —— 就是本章 merge 的放大版。分治之所以重要,是因为它是「把大事拆成能并行的小事」的通用语言。
+            <T
+              en={
+                <>
+                  <b>MapReduce</b> (from Google), Hadoop, and Spark all use this structure.
+                  They split a large dataset into pieces, send the pieces to many machines
+                  that each compute a partial result (map), and then combine the partial
+                  results (reduce). When the data does not fit in memory,{" "}
+                  <b>external merge sort</b> splits the file into blocks that do fit, sorts
+                  each block, and merges the sorted blocks. That is the same merge step,
+                  applied to files instead of arrays. Divide and conquer matters because it
+                  is also the standard way to describe work that can run in parallel.
+                </>
+              }
+              zh={
+                <>
+                  Google 的 <b>MapReduce</b>、Hadoop、Spark,本质都是分治:把海量数据切片(map)分发到成千上万台机器,
+                  各自算局部结果,再汇总(reduce)。数据大到单机装不下时,<b>外部归并排序</b>把文件切成能进内存的小块,
+                  分别排好再多路归并 —— 就是本章 merge 的放大版。分治之所以重要,是因为它是「把大事拆成能并行的小事」的通用语言。
+                </>
+              }
+            />
           </p>
         </Callout>
       </Section>

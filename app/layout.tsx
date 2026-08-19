@@ -10,6 +10,7 @@ import { ProgressProvider } from "@/lib/progress";
 import Sidebar from "@/app/sidebar";
 import Toolbar from "@/app/toolbar";
 import CommandPalette from "@/app/command-palette";
+import { LangProvider, langScript } from "@/lib/i18n";
 
 // 三套字体:Syne(超大展示字,几何感强)、Space Grotesk(界面/标题)、
 // JetBrains Mono(代码/数字)。中文回落到 PingFang SC / 苹方,globals.css 里拼接。
@@ -34,11 +35,11 @@ const jetbrains = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "AlgoAlgo · 看得见的算法",
+    default: "AlgoAlgo · Algorithms You Can See",
     template: "%s · AlgoAlgo",
   },
   description:
-    "把每一个算法拆成慢动作:决策树逐帧展开、DP 表格逐格填充、Java / Python / JavaScript 三语言对照、LeetCode 高频题精讲。DataData(看得见的数据结构)姊妹篇。",
+    "Learn algorithms in slow motion. Decision trees expand frame by frame, DP tables fill cell by cell, and every solution is shown in Java, Python, and JavaScript, with detailed walkthroughs of common LeetCode problems. Sister course to DataData (Data Structures You Can See). Available in English and Chinese.",
 };
 
 export const viewport: Viewport = {
@@ -54,33 +55,36 @@ export default function RootLayout({
 }) {
   return (
     <html
-      lang="zh-CN"
+      lang="en"
       suppressHydrationWarning
       className={`${syne.variable} ${grotesk.variable} ${jetbrains.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: langScript }} />
       </head>
       <body>
-        <ThemeProvider>
-          <ShellProvider>
-            <ProgressProvider>
-              <div className="aurora" aria-hidden>
-                <div className="aurora-a" />
-                <div className="aurora-b" />
-                <div className="aurora-grid" />
-              </div>
-              <div className="shell">
-                <Sidebar />
-                <div className="shell-main">
-                  <Toolbar />
-                  <div className="shell-content">{children}</div>
+        <LangProvider>
+          <ThemeProvider>
+            <ShellProvider>
+              <ProgressProvider>
+                <div className="aurora" aria-hidden>
+                  <div className="aurora-a" />
+                  <div className="aurora-b" />
+                  <div className="aurora-grid" />
                 </div>
-              </div>
-              <CommandPalette />
-            </ProgressProvider>
-          </ShellProvider>
-        </ThemeProvider>
+                <div className="shell">
+                  <Sidebar />
+                  <div className="shell-main">
+                    <Toolbar />
+                    <div className="shell-content">{children}</div>
+                  </div>
+                </div>
+                <CommandPalette />
+              </ProgressProvider>
+            </ShellProvider>
+          </ThemeProvider>
+        </LangProvider>
       </body>
     </html>
   );

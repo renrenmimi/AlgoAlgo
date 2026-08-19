@@ -20,6 +20,7 @@ import { Quiz } from "@/lib/quiz";
 import { ProblemSet, type Problem } from "@/lib/problems";
 import { useProgress } from "@/lib/progress";
 import { CHAPTERS, type ChapterId } from "@/lib/curriculum";
+import { useL } from "@/lib/i18n";
 import { DecisionLab } from "./viz";
 
 // 10 个已完工章节:直接复用各自的 PROBLEMS,保证一字不差、进度互通。
@@ -75,6 +76,7 @@ const CHIPS = [
 
 export default function AtlasChapter() {
   const { data, ready } = useProgress();
+  const L = useL();
 
   // 只统计「本课 12 章」范围内已勾选的题,避免受其他键干扰。
   const chSet = new Set<string>(GROUPS.map((g) => g.ch));
@@ -161,7 +163,7 @@ export default function AtlasChapter() {
                   style={{ "--gh": meta.hue } as CSSProperties}
                 >
                   <span className="atl-group-num">{meta.num}</span>
-                  <span className="atl-group-title">{meta.title}</span>
+                  <span className="atl-group-title">{L(meta.title)}</span>
                   <Link href={meta.href} className="chip">
                     去复习 →
                   </Link>
@@ -224,7 +226,7 @@ export default function AtlasChapter() {
                 <div key={s.ch} className="atl-plan-note-item">
                   <Link href={s.href}>
                     <b>
-                      {meta.num} {meta.title}
+                      {meta.num} {L(meta.title)}
                     </b>
                   </Link>
                   {" —— "}

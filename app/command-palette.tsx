@@ -1,12 +1,14 @@
 "use client";
 
-// ⌘K 命令面板:模糊搜索章节(标题 / 英文名 / 标签),回车跳转。
+// ⌘K 命令面板:模糊搜索章节(中英标题 / 英文名 / 标签),回车跳转。
 // 全局键盘监听挂在这里;Esc 关闭,↑↓ 选择。
+// 搜索键两种语言都收进去,所以在英文界面下也能用中文关键词搜到章节。
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CHAPTERS } from "@/lib/curriculum";
 import { useShell } from "./theme-provider";
+import { pick, useL, useLang } from "@/lib/i18n";
 
 export default function CommandPalette() {
   const { cmdkOpen, setCmdkOpen } = useShell();
@@ -14,6 +16,8 @@ export default function CommandPalette() {
   const [sel, setSel] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const L = useL();
+  const { lang } = useLang();
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -41,9 +45,14 @@ export default function CommandPalette() {
     const q = query.trim().toLowerCase();
     if (!q) return CHAPTERS;
     return CHAPTERS.filter((c) =>
-      [c.title, c.en, c.num, ...c.tags].some((s) =>
-        s.toLowerCase().includes(q),
-      ),
+      [
+        pick(c.title, "en"),
+        pick(c.title, "zh"),
+        c.en,
+        c.num,
+        ...pick(c.tags, "en"),
+        ...pick(c.tags, "zh"),
+      ].some((s) => s.toLowerCase().includes(q)),
     );
   }, [query]);
 
@@ -61,11 +70,18 @@ export default function CommandPalette() {
         if (e.target === e.currentTarget) setCmdkOpen(false);
       }}
     >
-      <div className="cmdk" role="dialog" aria-label="快速跳转">
+      <div
+        className="cmdk"
+        role="dialog"
+        aria-label={L({ en: "Jump to a chapter", zh: "快速跳转" })}
+      >
         <input
           ref={inputRef}
           className="cmdk-input"
-          placeholder="搜索章节、算法、标签…"
+          placeholder={L({
+            en: "Search chapters, algorithms, tags…",
+            zh: "搜索章节、算法、标签…",
+          })}
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -85,7 +101,12 @@ export default function CommandPalette() {
         />
         <div className="cmdk-list">
           {hits.length === 0 && (
-            <div className="cmdk-empty">没有匹配的章节 —— 换个关键词?</div>
+            <div className="cmdk-empty">
+              {L({
+                en: "No chapter matches. Try another keyword.",
+                zh: "没有匹配的章节 —— 换个关键词?",
+              })}
+            </div>
           )}
           {hits.map((c, i) => (
             <button
@@ -98,11 +119,11 @@ export default function CommandPalette() {
             >
               <span className="side-num">{c.num}</span>
               <span style={{ flex: 1 }}>
-                {c.title}
-                <span className="side-en">{c.en}</span>
+                {L(c.title)}
+                <span className="side-en">{L(c.alt)}</span>
               </span>
               <span className="dim" style={{ fontSize: 11 }}>
-                {c.tags.slice(0, 2).join(" · ")}
+                {pick(c.tags, lang).slice(0, 2).join(" · ")}
               </span>
             </button>
           ))}

@@ -21,6 +21,7 @@ import { CodeTabs } from "@/lib/code";
 import { RangeShrink, type RangeFrame } from "@/lib/algviz";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
+import { T } from "@/lib/i18n";
 import { PROBLEMS, QUIZ } from "@/lib/binary-data";
 import { GuessLab, BoundaryStepper, RotatedStepper } from "./viz";
 
@@ -33,10 +34,26 @@ const KOKO_FRAMES: RangeFrame[] = [
     lo: 1,
     hi: 11,
     msg: (
-      <>
-        候选吃速 1~11 根/时(11 是最大的一堆)。核心洞察:速度越快 → 用时越少 →
-        越容易吃完 —— 这是一条<b>单调</b>的判定线,于是能二分。
-      </>
+      <T
+        en={
+          <>
+            The candidate speeds are 1 to 11 bananas per hour. The upper bound is
+            11 because 11 is the largest pile: Koko eats from only one pile per
+            hour, so any speed above 11 finishes each pile in the same one hour.
+            A faster speed never needs more time, so the test &quot;can she
+            finish within h hours&quot; is <b>monotonic</b> in k. That is what
+            makes binary search valid here.
+          </>
+        }
+        zh={
+          <>
+            候选吃速 1~11 根/时。上界取 11(最大的一堆):每小时只吃一堆,
+            速度超过 11 之后每堆仍然要占满一小时,再快也没有意义。
+            速度越快,总用时不会变多 —— 判定「能否在 h 小时内吃完」对 k
+            是<b>单调</b>的,于是可以二分。
+          </>
+        }
+      />
     ),
   },
   {
@@ -45,10 +62,22 @@ const KOKO_FRAMES: RangeFrame[] = [
     probe: 6,
     verdict: "ok",
     msg: (
-      <>
-        试 k=6:各堆用时 ⌈3/6⌉+⌈6/6⌉+⌈7/6⌉+⌈11/6⌉ = 1+1+2+2 = <b>6</b> ≤ 8,吃得完 ✓。
-        那答案 ≤ 6 —— 比 6 更快的速度都不必看了,收左半。
-      </>
+      <T
+        en={
+          <>
+            Try k = 6. The piles take ⌈3/6⌉+⌈6/6⌉+⌈7/6⌉+⌈11/6⌉ = 1+1+2+2 ={" "}
+            <b>6</b> hours, and 6 ≤ 8, so this speed works. Because the test is
+            monotonic, every speed above 6 also works. The answer is therefore at
+            most 6, and the right half can be dropped.
+          </>
+        }
+        zh={
+          <>
+            试 k=6:各堆用时 ⌈3/6⌉+⌈6/6⌉+⌈7/6⌉+⌈11/6⌉ = 1+1+2+2 = <b>6</b> ≤ 8,
+            吃得完 ✓。由单调性,比 6 更快的速度也都可行,所以答案 ≤ 6,右半可以整体丢掉。
+          </>
+        }
+      />
     ),
   },
   {
@@ -57,9 +86,21 @@ const KOKO_FRAMES: RangeFrame[] = [
     probe: 3,
     verdict: "no",
     msg: (
-      <>
-        试 k=3:1+2+3+4 = <b>10</b> &gt; 8,吃不完 ✗。k=3 及更慢的全部淘汰,lo = 4。
-      </>
+      <T
+        en={
+          <>
+            Try k = 3. The piles take 1+2+3+4 = <b>10</b> hours, and 10 &gt; 8,
+            so this speed fails. Every speed below 3 is even slower, so all of
+            them fail too. Set lo = 4.
+          </>
+        }
+        zh={
+          <>
+            试 k=3:1+2+3+4 = <b>10</b> &gt; 8,吃不完 ✗。比 3 更慢的速度更不可行,
+            一并淘汰,lo = 4。
+          </>
+        }
+      />
     ),
   },
   {
@@ -68,9 +109,21 @@ const KOKO_FRAMES: RangeFrame[] = [
     probe: 4,
     verdict: "ok",
     msg: (
-      <>
-        试 k=4:1+2+2+3 = <b>8</b> ≤ 8,刚好吃完 ✓!答案 ≤ 4,继续往左收(hi = 3)。
-      </>
+      <T
+        en={
+          <>
+            Try k = 4. The piles take 1+2+2+3 = <b>8</b> hours, and 8 ≤ 8, so it
+            works with no time to spare. Record 4 as the best answer so far, then
+            keep looking for something smaller: hi = 3.
+          </>
+        }
+        zh={
+          <>
+            试 k=4:1+2+2+3 = <b>8</b> ≤ 8,刚好吃完 ✓。把 4 记为当前最优候选,
+            再继续往更小的方向找:hi = 3。
+          </>
+        }
+      />
     ),
   },
   {
@@ -78,11 +131,24 @@ const KOKO_FRAMES: RangeFrame[] = [
     hi: 3,
     answer: 4,
     msg: (
-      <>
-        区间被挤空(lo=4 &gt; hi=3),循环结束,ans 停在最后一次记录的
-        <b> k = 4</b> —— 它就是「能在 8 小时吃完」的最小速度。
-        全程没有直接算「答案是几」,只反复问「这个速度行不行」—— 这就是二分答案。
-      </>
+      <T
+        en={
+          <>
+            The interval is now empty (lo = 4 &gt; hi = 3), so the loop stops.
+            The last recorded candidate is <b>k = 4</b>, the smallest speed that
+            finishes within 8 hours. Notice that the code never computed the
+            answer directly. It only asked &quot;does this speed work?&quot;
+            about four times. That is binary search on the answer.
+          </>
+        }
+        zh={
+          <>
+            区间被挤空(lo=4 &gt; hi=3),循环结束,ans 停在最后一次记录的
+            <b> k = 4</b> —— 它就是「能在 8 小时吃完」的最小速度。
+            全程没有直接计算答案,只反复问「这个速度行不行」—— 这就是二分答案。
+          </>
+        }
+      />
     ),
   },
 ];
@@ -90,14 +156,14 @@ const KOKO_FRAMES: RangeFrame[] = [
 /* ============ 页面 ============ */
 
 const CHIPS = [
-  { id: "why", n: "01", label: "模板复盘" },
-  { id: "bound", n: "02", label: "找边界" },
-  { id: "rotate", n: "03", label: "二段性 · 旋转" },
-  { id: "peak", n: "04", label: "峰值与矩阵" },
-  { id: "answer", n: "05", label: "二分答案" },
-  { id: "answer2", n: "06", label: "答案二分续" },
-  { id: "problems", n: "07", label: "高频题单" },
-  { id: "quiz", n: "08", label: "通关测验" },
+  { id: "why", n: "01", label: { en: "One template", zh: "模板复盘" } },
+  { id: "bound", n: "02", label: { en: "Boundaries", zh: "找边界" } },
+  { id: "rotate", n: "03", label: { en: "Rotated arrays", zh: "二段性 · 旋转" } },
+  { id: "peak", n: "04", label: { en: "Peaks, matrices", zh: "峰值与矩阵" } },
+  { id: "answer", n: "05", label: { en: "Search the answer", zh: "二分答案" } },
+  { id: "answer2", n: "06", label: { en: "More answer search", zh: "答案二分续" } },
+  { id: "problems", n: "07", label: { en: "Problem set", zh: "高频题单" } },
+  { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
 ];
 
 export default function BinaryChapter() {
