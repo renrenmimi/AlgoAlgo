@@ -2532,7 +2532,8 @@ li code {
     display: none;
   }
 
-  .toolbar .seg {
+  /* 只收起「偏好代码语言」,界面语言开关必须一直可用 */
+  .toolbar .seg-code {
     display: none;
   }
 
