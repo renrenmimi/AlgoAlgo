@@ -1,312 +1,35 @@
-// 终章 · 范式地图 —— 题单总表数据 + 20 周计划 + 面试标准 + 终极测验。
+// 终章 · 范式地图 —— 20 周计划 + 面试标准 + 复习节奏 + 全景图 + 终极测验。
 //
-// 全书题单总表:10 个已完工章节直接 import 各自的 PROBLEMS(见 page.tsx),
-// 保证与各章一字不差、进度互通;数学(11)与字符串(12)两章的数据文件尚未落地,
-// 这里按 CLAUDE.md「阶段二蓝图」的题单先行内联,pid 仍是 `math/<lc>`、`strings/<lc>`,
-// 将来那两章补齐后进度自然对接。
+// 全书题单总表不在这里:page.tsx 直接 import 12 章各自的 PROBLEMS,
+// 保证与各章一字不差、进度互通(pid 一律是 `<ch>/<lc>`)。
+//
+// 双语:prose 用 <T en zh />,需要纯字符串的地方用 Loc<string>。
 
-import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";
 import type { ChapterId } from "@/lib/curriculum";
 import type { ReactNode } from "react";
+import { T, type Loc } from "@/lib/i18n";
 
 /* ===================================================================== *
- * 11 数学与数论 —— 题单(数据文件未就位,内联占位,题号沿用蓝图)          *
+ * 20 周学习计划(内容映射到本课章节 / 姊妹篇 DataData 结构篇)             *
  * ===================================================================== */
 
-export const MATH_PROBLEMS: Problem[] = [
-  {
-    lc: 202,
-    title: "快乐数",
-    d: "easy",
-    tags: ["循环检测", "快慢指针"],
-    hint: "反复算「各位平方和」,要么到 1,要么绕圈 —— 绕圈就是一个环。",
-    key: (
-      <>
-        把「下一步 = 各位数字平方和」看成一条链:快乐数最终收敛到 1,
-        非快乐数会进入循环。用哈希集合记录见过的数,或用快慢指针检测环
-        —— 这正是链表找环的思路搬到数论上。
-      </>
-    ),
-  },
-  {
-    lc: 7,
-    title: "整数反转",
-    d: "medium",
-    tags: ["溢出", "模拟"],
-    hint: "难点不在反转,在反转后可能溢出 32 位 int。",
-    key: (
-      <>
-        逐位用 % 10 取末位、/ 10 去末位,拼进结果。关键是每次 push 前先判断
-        会不会越界:与 INT_MAX/10、INT_MIN/10 比较。数学题不考数学,考的是
-        <b>边界与溢出的防御意识</b>。
-      </>
-    ),
-  },
-  {
-    lc: 9,
-    title: "回文数",
-    d: "easy",
-    tags: ["数学"],
-    hint: "不转成字符串,能只反转「后半段」吗?",
-    key: (
-      <>
-        负数直接 false,末位为 0 且非 0 的数也 false。只反转后半部分,当反转值
-        ≥ 剩余前半时停,比较两半是否相等(奇数位去掉中间一位)。省一半运算,
-        也顺带回避溢出。
-      </>
-    ),
-  },
-  {
-    lc: 50,
-    title: "Pow(x, n)",
-    d: "medium",
-    tags: ["快速幂", "复盘"],
-    hint: "乘 n 次是 O(n);把指数折半呢?",
-    key: (
-      <>
-        快速幂:x^n = (x^(n/2))²,指数每次减半 ⇒ O(log n)。n 为负先取倒数,
-        注意 n = INT_MIN 取反会溢出(先转成 long)。本课 <b>02 分治章</b>已作精讲,
-        这里当作数学工具复盘。
-      </>
-    ),
-  },
-  {
-    lc: 69,
-    title: "x 的平方根",
-    d: "easy",
-    tags: ["二分", "复盘"],
-    hint: "答案落在 [0, x] 且单调 —— 猜一个数验证。",
-    key: (
-      <>
-        二分答案:找最大的 mid 使 mid·mid ≤ x(用 mid ≤ x/mid 防溢出);
-        或牛顿迭代 x = (x + n/x)/2 收敛更快。本课 <b>03 二分章</b>精讲过,
-        这里体会「开方 = 二分答案」的通用性。
-      </>
-    ),
-  },
-  {
-    lc: 169,
-    title: "多数元素",
-    d: "easy",
-    tags: ["摩尔投票"],
-    hint: "出现次数超过一半 —— 让它和别人「同归于尽」,谁还站着?",
-    key: (
-      <>
-        摩尔投票:维护候选 + 计数,遇相同 +1、不同 -1,计数归 0 换候选。
-        多数元素抵消掉所有其他元素后必然剩下,O(n) 时间、O(1) 空间。
-        本章精讲的「找不变量」典范。
-      </>
-    ),
-  },
-  {
-    lc: 31,
-    title: "下一个排列",
-    d: "medium",
-    tags: ["数学", "双指针"],
-    hint: "字典序的下一个:从右往左,找到第一个「该变大」的位置。",
-    key: (
-      <>
-        从右找第一个升序对 a[i] &lt; a[i+1];再从右找刚好大于 a[i] 的数与它交换;
-        最后把 i 之后的降序段反转成升序(变最小)。三步定式,是「构造下一个状态」
-        这类题的模板。
-      </>
-    ),
-  },
-  {
-    lc: 292,
-    title: "Nim 游戏",
-    d: "easy",
-    tags: ["博弈", "不变量"],
-    hint: "石子数是 4 的倍数时,先手怎么都赢不了 —— 为什么是 4?",
-    key: (
-      <>
-        谁面对 4 的倍数谁必败:因为无论拿 1/2/3,对手总能补齐到 4 的倍数还给你。
-        找到「4 的倍数」这个不变量,一行 <code>n % 4 != 0</code> 搞定。本章精讲。
-      </>
-    ),
-  },
-  {
-    lc: 1025,
-    title: "除数博弈",
-    d: "easy",
-    tags: ["博弈"],
-    hint: "先手拿到偶数总能赢,拿到奇数总会输 —— 归纳看看。",
-    key: (
-      <>
-        N 为偶数时先手必胜:减 1 把奇数丢给对手;奇数的所有因子都是奇数,减去后
-        又变偶数回到你手。归纳可证「偶数必胜」,答案就是 <code>N % 2 == 0</code>。
-      </>
-    ),
-  },
-  {
-    lc: 319,
-    title: "灯泡开关",
-    d: "medium",
-    tags: ["数学"],
-    hint: "第 i 个灯被切换的次数 = i 的约数个数。什么数约数个数是奇数?",
-    key: (
-      <>
-        灯 i 在第 d 轮被切换当且仅当 d 整除 i,所以切换次数 = i 的约数个数。
-        只有完全平方数的约数个数为奇数(其余约数成对),最终亮着的灯数 = ⌊√n⌋。
-        暴力 O(n) 被一句数学观察压成 O(1)。
-      </>
-    ),
-  },
-  {
-    lc: 204,
-    title: "计数质数",
-    d: "medium",
-    tags: ["埃氏筛", "补"],
-    hint: "别对每个数试除 —— 反过来,把每个质数的倍数划掉。",
-    key: (
-      <>
-        埃氏筛:从 2 起,把每个质数的倍数标记为合数(内层从 i·i 起跳),
-        剩下没被标记的就是质数。O(n log log n),远快于逐个试除的 O(n√n)。
-        本章精讲的「反向思维」代表。
-      </>
-    ),
-  },
-  {
-    lc: 43,
-    title: "字符串相乘",
-    d: "medium",
-    tags: ["模拟", "高精度"],
-    hint: "两个大数不能直接乘 —— 回忆小学竖式。",
-    key: (
-      <>
-        num1[i] × num2[j] 的结果落在结果数组的 i+j 与 i+j+1 两位上,逐位累加再统一
-        处理进位。避开大数溢出,用数组模拟竖式乘法,O(mn)。
-      </>
-    ),
-  },
-  {
-    lc: 67,
-    title: "二进制求和",
-    d: "easy",
-    tags: ["模拟", "复盘"],
-    hint: "和十进制加法一样,从末位往前带进位。",
-    key: (
-      <>
-        双指针从两串末位往前,逐位相加加进位,结果 % 2 入位、/ 2 进位。
-        本课 <b>04 位运算章</b>也从位的角度看过它 —— 同一道题,两种视角。
-      </>
-    ),
-  },
-];
+/** 归属:algo = 本课(算法篇),ds = DataData(结构篇),both = 两篇合流。
+ *  这是稳定 id,同时作为 CSS 的 [data-t] 选择器,不随语言变化。 */
+export type Track = "algo" | "ds" | "both";
 
-/* ===================================================================== *
- * 12 字符串算法 —— 题单(数据文件未就位,内联占位,题号沿用蓝图)         *
- * ===================================================================== */
-
-export const STRING_PROBLEMS: Problem[] = [
-  {
-    lc: 28,
-    title: "找出字符串中第一个匹配项的下标",
-    d: "easy",
-    tags: ["KMP", "滚动哈希"],
-    hint: "暴力匹配失败后从头再来 O(nm);失败其实藏着「情报」。",
-    key: (
-      <>
-        KMP 用 next(前缀函数)数组记住「已匹配前缀的最长可复用后缀」,失配时
-        模式串跳到该位置而非退回,主串指针从不回头 ⇒ O(n+m)。或用 Rabin-Karp
-        滚动哈希 O(n) 匹配。本章精讲双解(lc.md 规则 2)。
-      </>
-    ),
-  },
-  {
-    lc: 459,
-    title: "重复的子字符串",
-    d: "easy",
-    tags: ["KMP"],
-    hint: "若 s 由某段重复而成,它的「最长公共前后缀」会露馅。",
-    key: (
-      <>
-        构造 next 数组:若 s 能由子串重复构成,则最小周期 = n − next[n−1],
-        且它整除 n。或用巧解:(s+s) 掐头去尾若仍含 s,则 s 可由更小段重复。
-        本章精讲 next 数组的妙用。
-      </>
-    ),
-  },
-  {
-    lc: 5,
-    title: "最长回文子串",
-    d: "medium",
-    tags: ["中心扩展", "复盘"],
-    hint: "回文关于中心对称 —— 站在每个中心往两边扩。",
-    key: (
-      <>
-        枚举每个中心(奇数一个字符、偶数两个字符),向两边扩展取最长,O(n²)。
-        Manacher 可优化到 O(n)。本课 <b>09 子序列 DP 章</b>也从区间 DP 视角讲过,
-        对比两种建模(lc.md 规则 2)。
-      </>
-    ),
-  },
-  {
-    lc: 205,
-    title: "同构字符串",
-    d: "easy",
-    tags: ["哈希", "映射"],
-    hint: "s→t 要一一对应,而且反过来也要成立。",
-    key: (
-      <>
-        维护两张哈希表:s→t 与 t→s 的双向映射。逐字符检查,若已有映射但不一致就
-        return false。单向映射会漏掉「两个字符映到同一个」的情况。
-      </>
-    ),
-  },
-  {
-    lc: 8,
-    title: "字符串转换整数 atoi",
-    d: "medium",
-    tags: ["模拟", "溢出"],
-    hint: "没有算法,全是边界:空格、符号、非法字符、溢出。",
-    key: (
-      <>
-        按序:跳过前导空格 → 读符号 → 逐位累加数字,每步判断是否会溢出并 clamp
-        到 INT_MIN / INT_MAX。工程里「把需求翻译成严谨状态机」的练习题。
-      </>
-    ),
-  },
-  {
-    lc: 796,
-    title: "旋转字符串",
-    d: "easy",
-    tags: ["补", "滚动哈希"],
-    hint: "把 s 接在自己后面,goal 会不会藏在里面?",
-    key: (
-      <>
-        s 经若干次旋转能得到 goal ⟺ 长度相等且 goal 是 (s+s) 的子串,一行
-        <code>(s+s).contains(goal)</code> 搞定;也可用它练手 KMP / 滚动哈希。
-      </>
-    ),
-  },
-  {
-    lc: 214,
-    title: "最短回文串",
-    d: "hard",
-    tags: ["KMP", "选做"],
-    hint: "只能在前面加字符 —— 等价于找 s 最长的「回文前缀」。",
-    key: (
-      <>
-        在 s 前补最少字符成回文 = 求 s 的最长回文前缀,剩余部分反转后补到前面。
-        构造 s + '#' + reverse(s),对它求 next 数组,next[末尾] 即最长回文前缀长度。
-        KMP 的高阶应用。
-      </>
-    ),
-  },
-];
-
-/* ===================================================================== *
- * 20 周学习计划(lc.md 五,内容映射到本课章节 / DataData 结构篇)        *
- * ===================================================================== */
-
-export type Track = "算法篇" | "结构篇" | "两篇合流";
+export const TRACK_LABEL: Record<Track, Loc<string>> = {
+  algo: { en: "Algorithms", zh: "算法篇" },
+  ds: { en: "Structures", zh: "结构篇" },
+  both: { en: "Both", zh: "两篇合流" },
+};
 
 export interface WeekRow {
-  wk: string;
-  topic: string;
-  goal: string;
+  /** React key,与语言无关 */
+  id: string;
+  wk: Loc<string>;
+  topic: Loc<string>;
+  goal: Loc<string>;
   track: Track;
   /** 命中本课(算法篇)章节时给出路由,渲染成站内链接 */
   ch?: ChapterId;
@@ -314,89 +37,632 @@ export interface WeekRow {
 }
 
 export const WEEKS: WeekRow[] = [
-  { wk: "第 0 周", topic: "递归、Big-O、比较器、测试习惯", goal: "能独立写常用模板并解释复杂度", track: "算法篇", ch: "home", href: "/" },
-  { wk: "第 1 周", topic: "数组基础、快慢指针、原地修改", goal: "能处理下标、覆盖、删除与移动", track: "结构篇" },
-  { wk: "第 2 周", topic: "哈希、字符串计数、前缀和", goal: "能识别「查找 / 计数 / 区间和」", track: "结构篇" },
-  { wk: "第 3 周", topic: "链表、虚拟头结点、快慢指针", goal: "能独立画图并完成增删反转", track: "结构篇" },
-  { wk: "第 4 周", topic: "栈、队列、括号、表达式", goal: "能判断何时用 LIFO / FIFO", track: "结构篇" },
-  { wk: "第 5 周", topic: "双指针与滑动窗口", goal: "能写固定窗口与可变窗口模板", track: "结构篇" },
-  { wk: "第 6 周", topic: "二分查找及边界 → 二分进阶", goal: "能写闭区间、解释退出状态,并练二分答案", track: "算法篇", ch: "binary", href: "/binary" },
-  { wk: "第 7 周", topic: "排序、归并、快速选择 + 分治", goal: "能比较排序 / 堆 / Quickselect,会递归树估复杂度", track: "算法篇", ch: "sorting", href: "/sorting" },
-  { wk: "第 8 周", topic: "二叉树 DFS / BFS 与递归三要素", goal: "能写前中后序及层序", track: "结构篇" },
-  { wk: "第 9 周", topic: "BST、构造树、LCA", goal: "能利用 BST 有序性而非全遍历", track: "结构篇" },
-  { wk: "第 10 周", topic: "堆、Top-K、单调栈", goal: "能识别「最近更大 / 更小」与 Top-K", track: "结构篇" },
-  { wk: "第 11 周", topic: "回溯:组合、子集、排列", goal: "能画搜索树并处理 used / startIndex", track: "算法篇", ch: "backtrack", href: "/backtrack" },
-  { wk: "第 12 周", topic: "回溯:切割、棋盘、剪枝去重", goal: "能解释树层去重与树枝去重", track: "算法篇", ch: "backtrack", href: "/backtrack" },
-  { wk: "第 13 周", topic: "图的 DFS / BFS、岛屿、最短层数", goal: "能处理 visited、连通块、多源 BFS", track: "结构篇" },
-  { wk: "第 14 周", topic: "并查集、拓扑排序、基础最短路", goal: "掌握课程表、冗余边、Dijkstra", track: "结构篇" },
-  { wk: "第 15 周", topic: "贪心、区间、跳跃、股票贪心", goal: "能说明局部选择为什么成立", track: "算法篇", ch: "greedy", href: "/greedy" },
-  { wk: "第 16 周", topic: "DP 基础、网格、打家劫舍", goal: "按五步法写状态定义与转移", track: "算法篇", ch: "dp", href: "/dp" },
-  { wk: "第 17 周", topic: "背包、零钱、目标和", goal: "区分 0-1 / 完全背包与遍历顺序", track: "算法篇", ch: "knapsack", href: "/knapsack" },
-  { wk: "第 18 周", topic: "LIS / LCS / 股票 DP、进阶 DP + Trie", goal: "拿下重点进阶题,不求全覆盖", track: "算法篇", ch: "dp-seq", href: "/dp-seq" },
-  { wk: "第 19–20 周", topic: "混合限时、模拟面试、错题复刷", goal: "35–45 分钟完成中等题并口述全过程", track: "算法篇", ch: "atlas", href: "/atlas" },
+  {
+    id: "w0",
+    wk: { en: "Week 0", zh: "第 0 周" },
+    topic: {
+      en: "Recursion, Big-O, comparators, testing habits",
+      zh: "递归、Big-O、比较器、测试习惯",
+    },
+    goal: {
+      en: "Write the common templates without help and explain their complexity.",
+      zh: "能独立写出常用模板,并解释它的复杂度。",
+    },
+    track: "algo",
+    ch: "home",
+    href: "/",
+  },
+  {
+    id: "w1",
+    wk: { en: "Week 1", zh: "第 1 周" },
+    topic: {
+      en: "Array basics, fast and slow pointers, editing in place",
+      zh: "数组基础、快慢指针、原地修改",
+    },
+    goal: {
+      en: "Handle indexes, overwriting, deletion, and moving elements.",
+      zh: "能处理下标、覆盖、删除与移动。",
+    },
+    track: "ds",
+  },
+  {
+    id: "w2",
+    wk: { en: "Week 2", zh: "第 2 周" },
+    topic: {
+      en: "Hash tables, counting characters, prefix sums",
+      zh: "哈希、字符串计数、前缀和",
+    },
+    goal: {
+      en: "Recognize lookup, counting, and range-sum problems.",
+      zh: "能识别「查找 / 计数 / 区间和」三类问题。",
+    },
+    track: "ds",
+  },
+  {
+    id: "w3",
+    wk: { en: "Week 3", zh: "第 3 周" },
+    topic: {
+      en: "Linked lists, the dummy head node, fast and slow pointers",
+      zh: "链表、虚拟头结点、快慢指针",
+    },
+    goal: {
+      en: "Draw the pointers yourself, then insert, delete, and reverse.",
+      zh: "能独立画出指针图,并完成增、删、反转。",
+    },
+    track: "ds",
+  },
+  {
+    id: "w4",
+    wk: { en: "Week 4", zh: "第 4 周" },
+    topic: {
+      en: "Stacks, queues, brackets, expressions",
+      zh: "栈、队列、括号、表达式",
+    },
+    goal: {
+      en: "Decide when the order should be LIFO and when it should be FIFO.",
+      zh: "能判断何时该用 LIFO、何时该用 FIFO。",
+    },
+    track: "ds",
+  },
+  {
+    id: "w5",
+    wk: { en: "Week 5", zh: "第 5 周" },
+    topic: {
+      en: "Two pointers and the sliding window",
+      zh: "双指针与滑动窗口",
+    },
+    goal: {
+      en: "Write both the fixed-size and the variable-size window template.",
+      zh: "能写出固定窗口与可变窗口两套模板。",
+    },
+    track: "ds",
+  },
+  {
+    id: "w6",
+    wk: { en: "Week 6", zh: "第 6 周" },
+    topic: {
+      en: "Binary search and its boundaries, then binary search in depth",
+      zh: "二分查找及边界 → 二分进阶",
+    },
+    goal: {
+      en: "Write the closed-interval template, explain the state at exit, and practice guessing a monotonic answer.",
+      zh: "能写闭区间模板、解释退出时的状态,并练二分答案。",
+    },
+    track: "algo",
+    ch: "binary",
+    href: "/binary",
+  },
+  {
+    id: "w7",
+    wk: { en: "Week 7", zh: "第 7 周" },
+    topic: {
+      en: "Sorting, merging, quickselect, and divide and conquer",
+      zh: "排序、归并、快速选择 + 分治",
+    },
+    goal: {
+      en: "Compare comparison sorts, heaps, and quickselect, and estimate cost with a recursion tree.",
+      zh: "能比较「比较排序 / 堆 / 快速选择」,并用递归树估复杂度。",
+    },
+    track: "algo",
+    ch: "sorting",
+    href: "/sorting",
+  },
+  {
+    id: "w8",
+    wk: { en: "Week 8", zh: "第 8 周" },
+    topic: {
+      en: "Binary tree DFS and BFS, and the three parts of a recursive call",
+      zh: "二叉树 DFS / BFS 与递归三要素",
+    },
+    goal: {
+      en: "Write preorder, inorder, postorder, and level-order traversal.",
+      zh: "能写出前序、中序、后序与层序遍历。",
+    },
+    track: "ds",
+  },
+  {
+    id: "w9",
+    wk: { en: "Week 9", zh: "第 9 周" },
+    topic: {
+      en: "Binary search trees, building a tree, lowest common ancestor",
+      zh: "BST、构造树、最近公共祖先",
+    },
+    goal: {
+      en: "Use the ordering of a BST instead of visiting every node.",
+      zh: "能利用 BST 的有序性,而不是全树遍历。",
+    },
+    track: "ds",
+  },
+  {
+    id: "w10",
+    wk: { en: "Week 10", zh: "第 10 周" },
+    topic: {
+      en: "Heaps, Top-K, the monotonic stack",
+      zh: "堆、Top-K、单调栈",
+    },
+    goal: {
+      en: "Recognize the signals for next greater or smaller element, and for Top-K.",
+      zh: "能识别「最近更大 / 更小」与 Top-K 两类信号。",
+    },
+    track: "ds",
+  },
+  {
+    id: "w11",
+    wk: { en: "Week 11", zh: "第 11 周" },
+    topic: {
+      en: "Backtracking: combinations, subsets, permutations",
+      zh: "回溯:组合、子集、排列",
+    },
+    goal: {
+      en: "Draw the search tree, and handle used and startIndex correctly.",
+      zh: "能画出搜索树,并正确处理 used / startIndex。",
+    },
+    track: "algo",
+    ch: "backtrack",
+    href: "/backtrack",
+  },
+  {
+    id: "w12",
+    wk: { en: "Week 12", zh: "第 12 周" },
+    topic: {
+      en: "Backtracking: partitioning, board problems, pruning and duplicates",
+      zh: "回溯:切割、棋盘、剪枝去重",
+    },
+    goal: {
+      en: "Explain the difference between skipping duplicates across a level and along a branch.",
+      zh: "能解释树层去重与树枝去重的区别。",
+    },
+    track: "algo",
+    ch: "backtrack",
+    href: "/backtrack",
+  },
+  {
+    id: "w13",
+    wk: { en: "Week 13", zh: "第 13 周" },
+    topic: {
+      en: "Graph DFS and BFS, islands, fewest steps in an unweighted graph",
+      zh: "图的 DFS / BFS、岛屿、无权图最少步数",
+    },
+    goal: {
+      en: "Handle visited, connected components, and multi-source BFS.",
+      zh: "能处理 visited、连通块与多源 BFS。",
+    },
+    track: "ds",
+  },
+  {
+    id: "w14",
+    wk: { en: "Week 14", zh: "第 14 周" },
+    topic: {
+      en: "Union-find, topological sort, a first shortest-path algorithm",
+      zh: "并查集、拓扑排序、基础最短路",
+    },
+    goal: {
+      en: "Course Schedule, redundant connection, and Dijkstra on non-negative weights.",
+      zh: "掌握课程表、冗余连接,以及非负权图上的 Dijkstra。",
+    },
+    track: "ds",
+  },
+  {
+    id: "w15",
+    wk: { en: "Week 15", zh: "第 15 周" },
+    topic: {
+      en: "Greedy: intervals, jump game, stock problems",
+      zh: "贪心、区间、跳跃、股票贪心",
+    },
+    goal: {
+      en: "Explain why each local choice is safe, with an exchange argument.",
+      zh: "能用交换论证说明每一步的局部选择为什么成立。",
+    },
+    track: "algo",
+    ch: "greedy",
+    href: "/greedy",
+  },
+  {
+    id: "w16",
+    wk: { en: "Week 16", zh: "第 16 周" },
+    topic: {
+      en: "DP basics, grid DP, House Robber",
+      zh: "DP 基础、网格、打家劫舍",
+    },
+    goal: {
+      en: "Write the state definition and the transition with the five-step method.",
+      zh: "能按五步法写出状态定义与转移方程。",
+    },
+    track: "algo",
+    ch: "dp",
+    href: "/dp",
+  },
+  {
+    id: "w17",
+    wk: { en: "Week 17", zh: "第 17 周" },
+    topic: {
+      en: "Knapsack, coin change, target sum",
+      zh: "背包、零钱、目标和",
+    },
+    goal: {
+      en: "Tell 0/1 from unbounded knapsack, and get the loop order right.",
+      zh: "能区分 0-1 与完全背包,并写对遍历顺序。",
+    },
+    track: "algo",
+    ch: "knapsack",
+    href: "/knapsack",
+  },
+  {
+    id: "w18",
+    wk: { en: "Week 18", zh: "第 18 周" },
+    topic: {
+      en: "LIS, LCS, stock DP, advanced DP, and tries",
+      zh: "LIS / LCS / 股票 DP、进阶 DP + Trie",
+    },
+    goal: {
+      en: "Cover the important advanced problems. Full coverage is not the goal.",
+      zh: "拿下重点进阶题,不求全覆盖。",
+    },
+    track: "algo",
+    ch: "dp-seq",
+    href: "/dp-seq",
+  },
+  {
+    id: "w19",
+    wk: { en: "Weeks 19–20", zh: "第 19–20 周" },
+    topic: {
+      en: "Mixed timed sets, mock interviews, redoing what you got wrong",
+      zh: "混合限时、模拟面试、错题复刷",
+    },
+    goal: {
+      en: "Finish a medium problem in 35 to 45 minutes while explaining every step out loud.",
+      zh: "35–45 分钟完成一道中等题,并口述全过程。",
+    },
+    track: "algo",
+    ch: "atlas",
+    href: "/atlas",
+  },
 ];
 
-/** 20 周表未单列、随时插入的三门「工具 / 补漏」章 */
-export const SIDE_CHAPTERS: { ch: ChapterId; href: string; note: string }[] = [
-  { ch: "divide", href: "/divide", note: "分治:随第 7 周排序一起吃(快速幂 / 归并 / 主定理直觉)" },
-  { ch: "bits", href: "/bits", note: "位运算:轻量工具课,第 6–7 周穿插,为第 10 章状压 DP 铺路" },
-  { ch: "dp-pro", href: "/dp-pro", note: "DP 进阶:紧接第 18 周(状态机 / 区间 / 树形 / 状压)" },
-  { ch: "math", href: "/math", note: "数学与数论:查漏时按需插入(取模 / 质数筛 / 摩尔投票 / 博弈)" },
-  { ch: "strings", href: "/strings", note: "字符串算法:第 18 周后收尾(KMP / 滚动哈希 / 回文)" },
-];
+/** 20 周表未单列、可随时插入的「工具 / 补漏」章。
+ *  note 只写章名之后的说明,页面会把章名单独渲染成链接。 */
+export const SIDE_CHAPTERS: { ch: ChapterId; href: string; note: Loc<string> }[] =
+  [
+    {
+      ch: "divide",
+      href: "/divide",
+      note: {
+        en: "Take it together with sorting in week 7: fast exponentiation, merging, and an intuition for the master theorem.",
+        zh: "随第 7 周排序一起吃:快速幂、归并、主定理直觉。",
+      },
+    },
+    {
+      ch: "bits",
+      href: "/bits",
+      note: {
+        en: "A light tool chapter. Fit it into weeks 6 and 7; it prepares you for bitmask DP in chapter 10.",
+        zh: "轻量工具课,第 6–7 周穿插,为第 10 章状压 DP 铺路。",
+      },
+    },
+    {
+      ch: "dp-pro",
+      href: "/dp-pro",
+      note: {
+        en: "Right after week 18: state machines, interval DP, tree DP, and bitmask DP.",
+        zh: "紧接第 18 周:状态机、区间、树形、状压。",
+      },
+    },
+    {
+      ch: "math",
+      href: "/math",
+      note: {
+        en: "Insert it wherever you find a gap: modular arithmetic, the prime sieve, majority vote, and game theory.",
+        zh: "查漏时按需插入:取模、质数筛、摩尔投票、博弈。",
+      },
+    },
+    {
+      ch: "strings",
+      href: "/strings",
+      note: {
+        en: "Finish with it after week 18: KMP, rolling hash, and palindromes.",
+        zh: "第 18 周后收尾:KMP、滚动哈希、回文。",
+      },
+    },
+  ];
 
 /* ===================================================================== *
- * 面试级完成标准(lc.md 六)+ 复习节奏                                    *
+ * 面试级完成标准 + 复习节奏                                               *
  * ===================================================================== */
 
 export const STANDARDS: { icon: string; text: ReactNode }[] = [
-  { icon: "🗣", text: <>看到题目能<b>先说暴力解,再逐步优化</b> —— 而不是憋着憋出最优解。</> },
-  { icon: "🧭", text: <>能解释<b>为什么选这个数据结构 / 范式</b>,也能说清「为什么不用另一个」。</> },
-  { icon: "📐", text: <>能写出<b>时间与空间复杂度</b>,并讲得出这个数字怎么来的。</> },
-  { icon: "🧪", text: <>主动覆盖<b>空输入、单元素、重复值、越界、溢出</b>五类边界。</> },
-  { icon: "⌨️", text: <>在<b>没有自动补全</b>的白板 / 记事本里,也能写出可运行的代码。</> },
-  { icon: "⏱", text: <>限时内走完<b>澄清题意 → 设计 → 编码 → 测试</b>,而非只追 Accepted。</> },
+  {
+    icon: "🗣",
+    text: (
+      <T
+        en={
+          <>
+            When you read a problem, <b>describe the brute-force solution first,
+            then improve it step by step</b>. Do not stay silent until the
+            optimal answer arrives.
+          </>
+        }
+        zh={
+          <>
+            看到题目能<b>先说暴力解,再逐步优化</b> —— 而不是憋着,憋出最优解才开口。
+          </>
+        }
+      />
+    ),
+  },
+  {
+    icon: "🧭",
+    text: (
+      <T
+        en={
+          <>
+            Explain <b>why you chose this data structure or paradigm</b>, and
+            why you did not choose the obvious alternative.
+          </>
+        }
+        zh={
+          <>
+            能解释<b>为什么选这个数据结构 / 范式</b>,也能说清「为什么不用另一个」。
+          </>
+        }
+      />
+    ),
+  },
+  {
+    icon: "📐",
+    text: (
+      <T
+        en={
+          <>
+            State the <b>time and space complexity</b>, and explain where those
+            numbers come from.
+          </>
+        }
+        zh={
+          <>
+            能写出<b>时间与空间复杂度</b>,并讲得出这个数字是怎么来的。
+          </>
+        }
+      />
+    ),
+  },
+  {
+    icon: "🧪",
+    text: (
+      <T
+        en={
+          <>
+            Cover five kinds of edge case without being asked:{" "}
+            <b>empty input, one element, duplicate values, index out of range,
+            and overflow</b>.
+          </>
+        }
+        zh={
+          <>
+            主动覆盖<b>空输入、单元素、重复值、越界、溢出</b>五类边界。
+          </>
+        }
+      />
+    ),
+  },
+  {
+    icon: "⌨️",
+    text: (
+      <T
+        en={
+          <>
+            Write code that runs, on a whiteboard or in a plain text editor,{" "}
+            <b>with no autocomplete</b>.
+          </>
+        }
+        zh={
+          <>
+            在<b>没有自动补全</b>的白板 / 记事本里,也能写出可运行的代码。
+          </>
+        }
+      />
+    ),
+  },
+  {
+    icon: "⏱",
+    text: (
+      <T
+        en={
+          <>
+            Within the time limit, go through all four steps:{" "}
+            <b>clarify the question, design, code, test</b>. Getting Accepted is
+            not the goal.
+          </>
+        }
+        zh={
+          <>
+            限时内走完<b>澄清题意 → 设计 → 编码 → 测试</b>,而不是只追 Accepted。
+          </>
+        }
+      />
+    ),
+  },
 ];
 
-export const REVIEW: { tag: string; when: string; how: ReactNode }[] = [
-  { tag: "D+1", when: "第二天", how: <><b>口述</b>思路并手写核心代码 —— 说得出,才是真会。</> },
-  { tag: "D+7", when: "一周后", how: <><b>完整重做</b>一遍,不看笔记,检验记忆是否落地。</> },
-  { tag: "D+21", when: "三周后", how: <><b>限时重做</b>,模拟面试压力,把「会」逼成「熟」。</> },
-  { tag: "面试前", when: "冲刺期", how: <>按<b>模式随机抽题</b>,而不是按章节顺序回忆 —— 面试不会给你章节名。</> },
+export const REVIEW: {
+  id: string;
+  tag: Loc<string>;
+  when: Loc<string>;
+  how: ReactNode;
+}[] = [
+  {
+    id: "d1",
+    tag: "D+1",
+    when: { en: "The next day", zh: "第二天" },
+    how: (
+      <T
+        en={
+          <>
+            <b>Say the approach out loud</b> and write the core code by hand. If
+            you cannot explain it, you do not know it yet.
+          </>
+        }
+        zh={
+          <>
+            <b>口述</b>思路并手写核心代码 —— 说得出,才是真会。
+          </>
+        }
+      />
+    ),
+  },
+  {
+    id: "d7",
+    tag: "D+7",
+    when: { en: "One week later", zh: "一周后" },
+    how: (
+      <T
+        en={
+          <>
+            <b>Redo the whole problem</b> without your notes, to check what
+            actually stayed.
+          </>
+        }
+        zh={
+          <>
+            <b>完整重做</b>一遍,不看笔记,检验记忆是否落地。
+          </>
+        }
+      />
+    ),
+  },
+  {
+    id: "d21",
+    tag: "D+21",
+    when: { en: "Three weeks later", zh: "三周后" },
+    how: (
+      <T
+        en={
+          <>
+            <b>Redo it under a time limit</b>, so that solving it becomes
+            routine rather than possible.
+          </>
+        }
+        zh={
+          <>
+            <b>限时重做</b>,模拟面试压力,把「会」逼成「熟」。
+          </>
+        }
+      />
+    ),
+  },
+  {
+    id: "pre",
+    tag: { en: "Pre-interview", zh: "面试前" },
+    when: { en: "Final stretch", zh: "冲刺期" },
+    how: (
+      <T
+        en={
+          <>
+            <b>Pick problems at random by pattern</b>, not in chapter order. An
+            interview will not tell you which chapter the problem comes from.
+          </>
+        }
+        zh={
+          <>
+            按<b>模式随机抽题</b>,而不是按章节顺序回忆 —— 面试不会给你章节名。
+          </>
+        }
+      />
+    ),
+  },
 ];
 
 /* ===================================================================== *
  * DataData × AlgoAlgo 全景图                                             *
  * ===================================================================== */
 
+/** side 是稳定 id(同时是 CSS 的 [data-side] 选择器):ds = 结构篇,algo = 算法篇。 */
 export const PANORAMA: {
-  side: "结构篇" | "算法篇";
-  name: string;
-  desc: string;
-  items: string[];
+  side: "ds" | "algo";
+  sideLabel: Loc<string>;
+  name: Loc<string>;
+  desc: ReactNode;
+  items: ReactNode[];
 }[] = [
   {
-    side: "结构篇",
-    name: "DataData · 看得见的数据结构",
-    desc: "算法操作的「名词」—— 数据摆成什么形状,决定了能怎么快地动它。",
+    side: "ds",
+    sideLabel: { en: "Structures", zh: "结构篇" },
+    name: {
+      en: "DataData · Data structures you can see",
+      zh: "DataData · 看得见的数据结构",
+    },
+    desc: (
+      <T
+        en="The nouns an algorithm works on. The shape you store data in decides how fast you can move it."
+        zh="算法操作的「名词」—— 数据摆成什么形状,决定了能怎么快地动它。"
+      />
+    ),
     items: [
-      "数组 / 字符串 / 链表",
-      "栈 / 队列 / 单调栈 / 单调队列",
-      "哈希表 / 二叉树 / BST",
-      "堆 / Trie / 并查集 / 图",
-      "双指针 · 滑窗 · BFS · DFS · 拓扑 · Dijkstra",
+      <T
+        key="a"
+        en="Arrays / strings / linked lists"
+        zh="数组 / 字符串 / 链表"
+      />,
+      <T
+        key="b"
+        en="Stacks / queues / monotonic stack / monotonic deque"
+        zh="栈 / 队列 / 单调栈 / 单调队列"
+      />,
+      <T
+        key="c"
+        en="Hash tables / binary trees / binary search trees"
+        zh="哈希表 / 二叉树 / BST"
+      />,
+      <T
+        key="d"
+        en="Heaps / tries / union-find / graphs"
+        zh="堆 / Trie / 并查集 / 图"
+      />,
+      <T
+        key="e"
+        en="Two pointers · sliding window · BFS · DFS · topological sort · Dijkstra"
+        zh="双指针 · 滑窗 · BFS · DFS · 拓扑 · Dijkstra"
+      />,
     ],
   },
   {
-    side: "算法篇",
-    name: "AlgoAlgo · 看得见的算法",
-    desc: "作用在结构上的「动词」—— 把问题拆成一串决策与状态的演进。",
+    side: "algo",
+    sideLabel: { en: "Algorithms", zh: "算法篇" },
+    name: {
+      en: "AlgoAlgo · Algorithms you can see",
+      zh: "AlgoAlgo · 看得见的算法",
+    },
+    desc: (
+      <T
+        en="The verbs applied to those structures. Each one turns a problem into a sequence of decisions and states."
+        zh="作用在结构上的「动词」—— 把问题拆成一串决策与状态的演进。"
+      />
+    ),
     items: [
-      "排序 / 分治 / 二分进阶 / 位运算",
-      "回溯(决策树)/ 贪心(交换论证)",
-      "DP 四章:入门 → 背包 → 子序列 → 进阶",
-      "数学与数论 / 字符串算法(KMP)",
-      "范式选型:看到题 → 亮起哪盏灯",
+      <T
+        key="a"
+        en="Sorting / divide and conquer / binary search in depth / bit manipulation"
+        zh="排序 / 分治 / 二分进阶 / 位运算"
+      />,
+      <T
+        key="b"
+        en="Backtracking (a decision tree) / greedy (an exchange argument)"
+        zh="回溯(决策树)/ 贪心(交换论证)"
+      />,
+      <T
+        key="c"
+        en="Four DP chapters: basics → knapsack → subsequences → advanced"
+        zh="DP 四章:入门 → 背包 → 子序列 → 进阶"
+      />,
+      <T
+        key="d"
+        en="Math and number theory / string algorithms (KMP)"
+        zh="数学与数论 / 字符串算法(KMP)"
+      />,
+      <T
+        key="e"
+        en="Choosing a paradigm: from the problem statement to an approach"
+        zh="范式选型:看到题 → 亮起哪盏灯"
+      />,
     ],
   },
 ];
@@ -408,142 +674,311 @@ export const PANORAMA: {
 export const QUIZ: QuizItem[] = [
   {
     type: "choice",
-    q: "凑出目标金额的最少硬币数,面额 [1,3,4] 凑 6:贪心每次拿最大得 4+1+1=3 枚,但正解是 3+3=2 枚。这说明什么?",
-    opts: [
-      "贪心在这里失效,应换 DP 兜底",
-      "贪心永远不能用于硬币问题",
-      "题目数据一定有误",
-      "只能用回溯,DP 不适用",
-    ],
+    q: {
+      en: "Coins [1, 3, 4], target 6. Greedy takes the largest coin every time: 4 + 1 + 1, three coins. The best answer is 3 + 3, two coins. What does this show?",
+      zh: "凑出目标金额的最少硬币数,面额 [1,3,4] 凑 6:贪心每次拿最大得 4+1+1=3 枚,但正解是 3+3=2 枚。这说明什么?",
+    },
+    opts: {
+      en: [
+        "Greedy fails on this input, so DP is the fallback",
+        "Greedy can never be used on coin problems",
+        "The test data must be wrong",
+        "Only backtracking works here; DP does not apply",
+      ],
+      zh: [
+        "贪心在这里失效,应换 DP 兜底",
+        "贪心永远不能用于硬币问题",
+        "题目数据一定有误",
+        "只能用回溯,DP 不适用",
+      ],
+    },
     correct: 0,
-    wrong: [
-      undefined,
-      "换成 [1,5,10,25] 这种「整除链」面额,贪心又对了 —— 不能一棍子打死,要看能不能证明贪心选择性质。",
-      "数据没问题,是这组面额破坏了贪心的选择性质:局部拿最大反而绕远路。",
-      "回溯能得到对的答案但指数级会超时;DP 才是这题的正解(322 就是本课 06→07 章的贯穿反例)。",
-    ],
-    why: "「贪心失效 ⇒ DP 兜底」是本课 06 贪心 → 07 DP 的主线叙事;322 硬币 [1,3,4] 是那个经典反例。",
+    wrong: {
+      en: [
+        undefined,
+        "On other denomination sets greedy does give the best answer: the coins [1, 5, 10, 25], for example, or any set where each coin divides the next larger one. You cannot tell by looking, so you need a proof that the greedy choice is safe.",
+        "The data is fine. This set of denominations breaks the greedy choice property: taking the largest coin first leads to a longer answer.",
+        "Backtracking finds the right answer but takes exponential time. DP is the intended solution, and LC 322 with coins [1, 3, 4] is the counterexample that connects chapter 06 to chapter 07.",
+      ],
+      zh: [
+        undefined,
+        "换成 [1,5,10,25],或者任何「每个面额都整除下一个更大面额」的面额组,贪心又对了 —— 光看是看不出来的,得有证明。",
+        "数据没问题,是这组面额破坏了贪心选择性质:先拿最大反而绕远路。",
+        "回溯能得到对的答案,但指数级会超时;DP 才是这题的正解 —— 322 硬币 [1,3,4] 正是把 06 章接到 07 章的那个反例。",
+      ],
+    },
+    why: {
+      en: "\"Greedy has no proof here, so fall back to DP\" is the line that connects chapter 06 (Greedy) to chapter 07 (DP). Coin Change (LC 322) with coins [1, 3, 4] is the standard counterexample.",
+      zh: "「贪心失效 ⇒ DP 兜底」是本课 06 贪心 → 07 DP 的主线叙事;322 硬币 [1,3,4] 是那个经典反例。",
+    },
   },
   {
     type: "choice",
-    q: "在「旋转后的有序数组」里查找目标值,要求 O(log n)。选哪个范式?",
-    opts: [
-      "二分查找(判断哪半有序,朝有序那半收窄)",
-      "从头到尾顺序扫描",
-      "回溯枚举所有位置",
-      "动态规划",
-    ],
+    q: {
+      en: "You have to find a target value in a sorted array that has been rotated, in O(log n) time. Which paradigm?",
+      zh: "在「旋转后的有序数组」里查找目标值,要求 O(log n)。选哪个范式?",
+    },
+    opts: {
+      en: [
+        "Binary search: decide which half is sorted, then keep the half that can contain the target",
+        "Scan from the first element to the last",
+        "Backtracking over every position",
+        "Dynamic programming",
+      ],
+      zh: [
+        "二分查找(判断哪半有序,朝可能含目标的那半收窄)",
+        "从头到尾顺序扫描",
+        "回溯枚举所有位置",
+        "动态规划",
+      ],
+    },
     correct: 0,
-    wrong: [
-      undefined,
-      "顺序扫描 O(n),不满足 O(log n) 的硬要求。",
-      "回溯用于「列出所有可能」,这里只要定位一个值,杀鸡用牛刀还超时。",
-      "DP 需要重叠子问题,这里根本没有子问题结构。",
-    ],
-    why: "旋转数组仍有「二段性」:任意 mid 处总有一半是有序的,判断 target 落在哪半继续二分(本课 03 章 33 题)。",
+    wrong: {
+      en: [
+        undefined,
+        "A linear scan is O(n), which does not meet the required O(log n).",
+        "Backtracking is for listing every possibility. Here you only need to locate one value, and it would also be too slow.",
+        "DP needs overlapping subproblems. This problem has no subproblem structure at all.",
+      ],
+      zh: [
+        undefined,
+        "顺序扫描 O(n),不满足 O(log n) 的硬要求。",
+        "回溯用于「列出所有可能」,这里只要定位一个值,既大材小用又会超时。",
+        "DP 需要重叠子问题,这里根本没有子问题结构。",
+      ],
+    },
+    why: {
+      en: "A rotated sorted array still has a usable property: at any midpoint, one of the two halves is sorted. Check which half the target falls into and continue the binary search there (chapter 03, LC 33).",
+      zh: "旋转数组仍有「二段性」:任意 mid 处总有一半是有序的,判断 target 落在哪半继续二分(本课 03 章 33 题)。",
+    },
   },
   {
     type: "choice",
-    q: "题目要求「输出一个数组的全部排列」。首选?",
-    opts: [
-      "回溯(决策树 + used 数组,到底收集、回来撤销)",
-      "贪心",
-      "二分查找",
-      "前缀和",
-    ],
+    q: {
+      en: "The problem asks you to output every permutation of an array. First choice?",
+      zh: "题目要求「输出一个数组的全部排列」。首选?",
+    },
+    opts: {
+      en: [
+        "Backtracking: a decision tree with a used array, recording at the leaf and undoing on the way back",
+        "Greedy",
+        "Binary search",
+        "Prefix sums",
+      ],
+      zh: [
+        "回溯(决策树 + used 数组,到底收集、回来撤销)",
+        "贪心",
+        "二分查找",
+        "前缀和",
+      ],
+    },
     correct: 0,
-    wrong: [
-      undefined,
-      "贪心只产出一个「最好」的解,而排列要的是「所有」解。",
-      "二分是在有序空间里定位一个答案,不负责枚举。",
-      "前缀和处理的是区间求和,与枚举方案无关。",
-    ],
-    why: "「列出所有可行方案」= 回溯:每层选一个没用过的元素,走到底收集,返回时撤销选择(本课 05 章 46 题)。",
+    wrong: {
+      en: [
+        undefined,
+        "Greedy produces one best answer. Permutations ask for all answers.",
+        "Binary search locates one answer inside a range that behaves monotonically. It does not enumerate.",
+        "Prefix sums answer range-sum questions. They have nothing to do with enumerating candidates.",
+      ],
+      zh: [
+        undefined,
+        "贪心只产出一个「最好」的解,而排列要的是「所有」解。",
+        "二分是在单调的空间里定位一个答案,不负责枚举。",
+        "前缀和处理的是区间求和,与枚举方案无关。",
+      ],
+    },
+    why: {
+      en: "\"List every valid answer\" means backtracking: at each level pick an element you have not used, record the path at the leaf, and undo the choice when you return (chapter 05, LC 46).",
+      zh: "「列出所有可行方案」= 回溯:每层选一个没用过的元素,走到底收集,返回时撤销选择(本课 05 章 46 题)。",
+    },
   },
   {
     type: "choice",
-    q: "求 x 的 n 次方,n 可能高达 10⁹。选哪个?",
-    opts: [
-      "快速幂(分治:指数每次折半)",
-      "循环连乘 n 次",
-      "动态规划",
-      "贪心",
-    ],
+    q: {
+      en: "Compute x to the power n, where n can be as large as 10⁹. Which one?",
+      zh: "求 x 的 n 次方,n 可能高达 10⁹。选哪个?",
+    },
+    opts: {
+      en: [
+        "Fast exponentiation (divide and conquer: halve the exponent each step)",
+        "Multiply n times in a loop",
+        "Dynamic programming",
+        "Greedy",
+      ],
+      zh: [
+        "快速幂(分治:指数每次折半)",
+        "循环连乘 n 次",
+        "动态规划",
+        "贪心",
+      ],
+    },
     correct: 0,
-    wrong: [
-      undefined,
-      "连乘 O(n),n = 10⁹ 时直接超时。",
-      "幂运算的子问题彼此独立、不重复,记忆化没有收益 —— 不满足 DP 前提。",
-      "这里没有「局部最优」可贪。",
-    ],
-    why: "a^n = (a^(n/2))²,把指数折半 ⇒ O(log n)。分治的招牌应用(本课 02 章 50 题)。",
+    wrong: {
+      en: [
+        undefined,
+        "Repeated multiplication is O(n). With n = 10⁹ that is far too slow.",
+        "The subproblems of a power are independent and never repeat, so storing results gains nothing. DP's condition is not met.",
+        "There is no local choice to make here.",
+      ],
+      zh: [
+        undefined,
+        "连乘 O(n),n = 10⁹ 时直接超时。",
+        "幂运算的子问题彼此独立、不会重复,记忆化没有收益 —— 不满足 DP 的前提。",
+        "这里没有「局部最优」可贪。",
+      ],
+    },
+    why: {
+      en: "x^n = (x^(n/2))², so each step halves the exponent: O(log n). This is the standard divide and conquer application (chapter 02, LC 50).",
+      zh: "x^n = (x^(n/2))²,把指数折半 ⇒ O(log n)。分治的招牌应用(本课 02 章 50 题)。",
+    },
   },
   {
     type: "choice",
-    q: "判断「该不该上 DP」,最关键的信号是?",
-    opts: [
-      "存在「重叠子问题」且具备「最优子结构」",
-      "输入数组是有序的",
-      "题目要求输出所有具体方案",
-      "每一步都能用交换论证证明贪心成立",
-    ],
+    q: {
+      en: "What is the clearest signal that a problem needs DP?",
+      zh: "判断「该不该上 DP」,最关键的信号是?",
+    },
+    opts: {
+      en: [
+        "The same subproblems are solved again and again, and the optimal answer is built from optimal answers to those subproblems",
+        "The input array is sorted",
+        "The problem asks you to output every concrete answer",
+        "Every step can be justified with an exchange argument",
+      ],
+      zh: [
+        "存在「重叠子问题」,且具备「最优子结构」",
+        "输入数组是有序的",
+        "题目要求输出所有具体方案",
+        "每一步都能用交换论证证明贪心成立",
+      ],
+    },
     correct: 0,
-    wrong: [
-      undefined,
-      "「有序」是二分的信号,不是 DP 的。",
-      "「输出所有方案」是回溯的信号;DP 通常只求最优值 / 方案数。",
-      "能证明贪心成立就直接贪心,更快更省,不必上 DP。",
-    ],
-    why: "DP 两大前提:子问题会被重复计算(记忆化才有意义)+ 大问题最优由子问题最优拼成(最优子结构)。",
+    wrong: {
+      en: [
+        undefined,
+        "A sorted input points to binary search, not DP. And what binary search really needs is a predicate that switches from false to true only once over the range; a sorted array is the common special case.",
+        "\"Output every answer\" is the backtracking signal. DP usually returns an optimal value or a count.",
+        "If you can prove the greedy choice is safe, use greedy: it is faster and uses less memory. You do not need DP.",
+      ],
+      zh: [
+        undefined,
+        "「有序」是二分的信号,不是 DP 的 —— 而二分真正需要的是判定条件在区间上单调,有序数组只是最常见的特例。",
+        "「输出所有方案」是回溯的信号;DP 通常只求最优值或方案数。",
+        "能证明贪心成立就直接贪心,更快也更省空间,不必上 DP。",
+      ],
+    },
+    why: {
+      en: "DP has two conditions. Subproblems must repeat, otherwise storing their results gains nothing. And the optimal answer to the whole problem must be built from optimal answers to subproblems. Repeated subproblems are what separates DP from divide and conquer.",
+      zh: "DP 两大前提:子问题会被重复计算(记忆化才有意义)+ 大问题的最优由子问题的最优拼成(最优子结构)。「子问题重复」正是 DP 与分治的分界线。",
+    },
   },
   {
     type: "choice",
-    q: "「每次把当前最大值减半,k 次操作后求最小数组和」这类『每步取眼前最优、且能证明不后悔』的题,首选?",
-    opts: [
-      "贪心(常配大顶堆)",
-      "动态规划",
-      "回溯",
-      "二分答案",
-    ],
+    q: {
+      en: "\"Halve the largest value in the array, repeat k times, then minimize the array sum.\" For a problem where each step takes the locally best option and you can prove you will not regret it, what is the first choice?",
+      zh: "「每次把当前最大值减半,k 次操作后求最小数组和」这类「每步取眼前最优、且能证明不后悔」的题,首选?",
+    },
+    opts: {
+      en: [
+        "Greedy, usually with a max-heap",
+        "Dynamic programming",
+        "Backtracking",
+        "Binary search on the answer",
+      ],
+      zh: ["贪心(常配大顶堆)", "动态规划", "回溯", "二分答案"],
+    },
     correct: 0,
-    wrong: [
-      undefined,
-      "状态是「操作了几次、堆成什么样」,空间爆炸且无需记忆,DP 反而累赘。",
-      "回溯枚举每步选谁会指数级超时。",
-      "没有一个单调的「答案值域」可供猜测验证,二分答案无从下手。",
-    ],
-    why: "「每步拿当前最大来砍」用大顶堆实现的贪心;能用交换论证说明这样砍不会更差,就放心贪(本课 06 章)。",
+    wrong: {
+      en: [
+        undefined,
+        "The state would be \"how many operations are used, and what the heap looks like\". That state space is huge and nothing is ever reused, so DP only adds cost.",
+        "Backtracking would try every choice at every step, which takes exponential time.",
+        "There is no monotonic range of candidate answers to guess and verify here.",
+      ],
+      zh: [
+        undefined,
+        "状态是「操作了几次、堆成什么样」,空间爆炸且无需重用,DP 反而累赘。",
+        "回溯枚举每步选谁,会指数级超时。",
+        "没有一个单调的「答案值域」可供猜测验证,二分答案无从下手。",
+      ],
+    },
+    why: {
+      en: "Take the current largest value each time, using a max-heap. An exchange argument shows this choice is never worse, so greedy is safe here (chapter 06).",
+      zh: "「每步拿当前最大来砍」用大顶堆实现的贪心;能用交换论证说明这样砍不会更差,就放心贪(本课 06 章)。",
+    },
   },
   {
     type: "choice",
-    q: "求「两个字符串的最长公共子序列」长度。选哪个?",
-    opts: [
-      "二维 DP(dp[i][j] = 前 i、前 j 的 LCS)",
-      "贪心逐字符匹配",
-      "双指针一遍扫过去",
-      "哈希表计数",
-    ],
+    q: {
+      en: "Find the length of the longest common subsequence of two strings. Which one?",
+      zh: "求「两个字符串的最长公共子序列」长度。选哪个?",
+    },
+    opts: {
+      en: [
+        "Two-dimensional DP, where dp[i][j] is the LCS of the first i and the first j characters",
+        "Greedy matching character by character",
+        "One pass with two pointers",
+        "Counting with a hash table",
+      ],
+      zh: [
+        "二维 DP(dp[i][j] = 前 i、前 j 的 LCS)",
+        "贪心逐字符匹配",
+        "双指针一遍扫过去",
+        "哈希表计数",
+      ],
+    },
     correct: 0,
-    wrong: [
-      undefined,
-      "贪心的局部匹配可能堵死后面更长的配对,无法保证全局最长。",
-      "双指针适合「连续子串」或已排序数据;子序列允许跳过字符,一遍扫会漏。",
-      "哈希能数「有没有 / 几个」,数不出「保持顺序的最长」。",
-    ],
-    why: "两个序列的问题 → 二维表:字符相等取左上角 +1,否则取上 / 左的较大值(本课 09 章 1143)。",
+    wrong: {
+      en: [
+        undefined,
+        "A locally greedy match can block a longer pairing later, so it does not guarantee the global longest.",
+        "Two pointers suit a contiguous substring or sorted data. A subsequence may skip characters, so one pass misses answers.",
+        "A hash table counts whether something appears and how often. It cannot measure the longest match that keeps the original order.",
+      ],
+      zh: [
+        undefined,
+        "贪心的局部匹配可能堵死后面更长的配对,无法保证全局最长。",
+        "双指针适合「连续子串」或已排序数据;子序列允许跳过字符,一遍扫会漏。",
+        "哈希能数「有没有 / 几个」,数不出「保持顺序的最长」。",
+      ],
+    },
+    why: {
+      en: "A problem about two sequences maps to a two-dimensional table. If the two characters are equal, take the upper-left value plus 1. Otherwise take the larger of the values above and to the left (chapter 09, LC 1143).",
+      zh: "两个序列的问题 → 二维表:字符相等取左上角 +1,否则取上 / 左的较大值(本课 09 章 1143)。",
+    },
   },
   {
     type: "multi",
-    q: "关于「贪心 vs DP」,下列哪些说法正确?(多选)",
-    opts: [
-      "贪心一旦做出选择就不回头;DP 会把所有子问题的组合都算明白",
-      "贪心必须能证明「贪心选择性质」,证不出来就别贪",
-      "53 最大子数组、122 买卖股票 II,既能贪心也能 DP",
-      "DP 一定比贪心更快",
-    ],
+    q: {
+      en: "Which of these statements about greedy and DP are correct? (Select all that apply.)",
+      zh: "关于「贪心 vs DP」,下列哪些说法正确?(多选)",
+    },
+    opts: {
+      en: [
+        "Greedy never revisits a choice; DP works out the subproblems it needs and combines them",
+        "Greedy needs a proof that the greedy choice is safe. Without one, do not use it",
+        "Maximum Subarray (53) and Best Time to Buy and Sell Stock II (122) can each be solved by greedy or by DP",
+        "DP is always faster than greedy",
+      ],
+      zh: [
+        "贪心一旦做出选择就不回头;DP 会把需要的子问题都算清再组合",
+        "贪心必须能证明「贪心选择性质」,证不出来就别贪",
+        "53 最大子数组、122 买卖股票 II,既能贪心也能 DP",
+        "DP 一定比贪心更快",
+      ],
+    },
     correct: [0, 1, 2],
-    missHint: "前三条分别讲「不回头 / 需证明 / 同题多解」—— 再想想漏了哪条。",
-    extraHint: "「DP 一定更快」是错的:能贪心时贪心通常更快更省空间,DP 是通用兜底,不是速度更优。",
-    why: "贪心是「敢赌局部最优」,DP 是「把所有子问题都算清」;53 / 122 两种视角本课都讲过(lc.md 规则 2)。",
+    missHint: {
+      en: "The first three describe not revisiting choices, needing a proof, and one problem having two solutions. One of them is still unselected.",
+      zh: "前三条分别讲「不回头 / 需证明 / 同题多解」—— 再想想漏了哪条。",
+    },
+    extraHint: {
+      en: "\"DP is always faster\" is wrong. When greedy applies it is usually faster and uses less memory. DP is the general fallback, not the faster option.",
+      zh: "「DP 一定更快」是错的:能贪心时贪心通常更快更省空间,DP 是通用兜底,不是速度更优。",
+    },
+    why: {
+      en: "Greedy commits to a local choice and therefore needs a proof. DP works out every subproblem it needs. Problems 53 and 122 are taught from both angles in this course.",
+      zh: "贪心是「敢赌局部最优」,但要给出证明;DP 是「把需要的子问题都算清」。53 / 122 两种视角本课都讲过。",
+    },
   },
 ];
