@@ -449,7 +449,7 @@ export const PROBLEMS: Problem[] = [
         <>
           The product of num1[i] and num2[j] lands in positions i+j and i+j+1 of
           the result. Use an array of length m+n, add every product into it, then
-          normalise all the carries in one pass and strip the leading zeros. This
+          normalize all the carries in one pass and strip the leading zeros. This
           is the first form of <b>big-number multiplication</b>: once the numbers
           are wider than a 64-bit integer, digit-by-digit simulation is the only
           option. O(m × n).

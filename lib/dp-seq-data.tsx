@@ -345,26 +345,26 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Longest Palindromic Substring", zh: "最长回文子串" },
     d: "medium",
     tags: {
-      en: ["Palindrome", "Expand from centre", "Review"],
+      en: ["Palindrome", "Expand from center", "Review"],
       zh: ["回文", "中心扩展", "复盘"],
     },
     hint: {
-      en: "A substring must be contiguous. Instead of listing all substrings, list all possible centres of a palindrome and expand outwards.",
+      en: "A substring must be contiguous. Instead of listing all substrings, list all possible centers of a palindrome and expand outwards.",
       zh: "子串必须连续。与其枚举所有子串,不如枚举回文的「中心」,再向两边扩。",
     },
     key: {
       en: (
         <>
-          Expand from the centre: O(n²) time and <b>O(1) extra space</b>. There
-          are 2n-1 centres — n single characters for odd lengths and n-1 gaps
-          between neighbouring characters for even lengths. From each centre, move
+          Expand from the center: O(n²) time and <b>O(1) extra space</b>. There
+          are 2n-1 centers — n single characters for odd lengths and n-1 gaps
+          between neighboring characters for even lengths. From each center, move
           both ends outwards while the two characters are equal, and record the
           longest result. The interval DP form also works: dp[i][j] is whether
           s[i..j] is a palindrome, and dp[i][j] = (s[i] == s[j] &amp;&amp; (j - i
           &lt; 2 || dp[i+1][j-1])). It reads dp[i+1][j-1], the shorter interval
           inside it, so you must fill by increasing interval length (or with i
           descending), and it costs O(n²) space. Chapter 12 revisits this problem
-          together with Manacher&apos;s algorithm. Section 06 animates the centre
+          together with Manacher&apos;s algorithm. Section 06 animates the center
           expansion step by step.
         </>
       ),
@@ -387,7 +387,7 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Palindromic Substrings", zh: "回文子串" },
     d: "medium",
     tags: {
-      en: ["Palindrome", "Counting", "Expand from centre"],
+      en: ["Palindrome", "Counting", "Expand from center"],
       zh: ["回文", "计数", "中心扩展"],
     },
     hint: {
@@ -397,10 +397,10 @@ export const PROBLEMS: Problem[] = [
     key: {
       en: (
         <>
-          Count how many substrings are palindromes. Use the same 2n-1 centres.
+          Count how many substrings are palindromes. Use the same 2n-1 centers.
           Each time the two ends match during an expansion, one more palindromic
           substring has been found, so increase the counter. The single character
-          at an odd centre counts as one as well. LC 5 and LC 647 are twins: the
+          at an odd center counts as one as well. LC 5 and LC 647 are twins: the
           same expansion, a different thing measured. One keeps the maximum, the
           other keeps a sum. It is worth noticing how often a DP or scanning
           template stays fixed while only the operator changes.
@@ -526,7 +526,7 @@ export const QUIZ: QuizItem[] = [
       en: [
         undefined,
         "This is the other way round. The contiguous one is the subarray. A subsequence is allowed to skip elements as long as the order is kept.",
-        "They differ, and the difference decides the state definition: a contiguous problem such as LC 718 resets to 0 on a mismatch, while LC 1143 keeps the larger of two neighbours.",
+        "They differ, and the difference decides the state definition: a contiguous problem such as LC 718 resets to 0 on a mismatch, while LC 1143 keeps the larger of two neighbors.",
         "There is no restriction on how many elements you take. The only difference is whether the elements have to be contiguous.",
       ],
       zh: [
@@ -537,7 +537,7 @@ export const QUIZ: QuizItem[] = [
       ],
     },
     why: {
-      en: "Whether the elements must be contiguous is the first fork in this chapter. It decides what happens in the mismatch case: reset to 0 for a subarray, or carry the larger neighbour forward for a subsequence. The lab in section 01 lets you try both.",
+      en: "Whether the elements must be contiguous is the first fork in this chapter. It decides what happens in the mismatch case: reset to 0 for a subarray, or carry the larger neighbor forward for a subsequence. The lab in section 01 lets you try both.",
       zh: "「是否要求连续」是本章的第一个分岔口:它决定了不匹配那一格该归零(子数组),还是继承较大的邻格(子序列)。§01 的实验室就是让你亲手感受这条界线。",
     },
   },
@@ -631,7 +631,7 @@ export const QUIZ: QuizItem[] = [
     wrong: {
       en: [
         undefined,
-        "Only LC 718 resets. LC 1143 asks for a subsequence, so the mismatching character can be skipped and the larger of the two neighbours is carried forward.",
+        "Only LC 718 resets. LC 1143 asks for a subsequence, so the mismatching character can be skipped and the larger of the two neighbors is carried forward.",
         "Only LC 1143 takes the max. LC 718 asks for a contiguous run, so one mismatch ends the run and the cell must go back to 0.",
         "This is the wrong way round. Resetting belongs to LC 718, which requires contiguity. Taking the max belongs to LC 1143, which does not.",
       ],
@@ -643,7 +643,7 @@ export const QUIZ: QuizItem[] = [
       ],
     },
     why: {
-      en: "One word in the problem statement, contiguous or not, turns the mismatch case from \"reset to 0\" into \"keep the larger neighbour\". In the match case the two are identical: both go to the diagonal, dp[i-1][j-1] + 1.",
+      en: "One word in the problem statement, contiguous or not, turns the mismatch case from \"reset to 0\" into \"keep the larger neighbor\". In the match case the two are identical: both go to the diagonal, dp[i-1][j-1] + 1.",
       zh: "题面上「连续」这两个字,把不匹配那一格从「归零」变成了「保留较大的邻格」。而匹配时两者完全一样,都走对角线 dp[i-1][j-1] + 1。",
     },
   },
@@ -669,7 +669,7 @@ export const QUIZ: QuizItem[] = [
     },
     correct: [0, 1, 2],
     missHint: {
-      en: "The three parts are: the diagonal on a match, the larger of the two neighbours on a mismatch, and 0 along the empty-string row and column. Check which one you left out.",
+      en: "The three parts are: the diagonal on a match, the larger of the two neighbors on a mismatch, and 0 along the empty-string row and column. Check which one you left out.",
       zh: "三件套是:匹配走对角线、不匹配取两个邻格里较大的、空串那一行一列是 0。看看漏了哪一条。",
     },
     extraHint: {
@@ -677,7 +677,7 @@ export const QUIZ: QuizItem[] = [
       zh: "有一个选项是 LC 718 的规则。归零是「要求连续」的题才会做的事,最长公共子序列任何时候都不清零。",
     },
     why: {
-      en: "The diagonal handles a matched pair, the two neighbours handle \"drop one character and keep looking\", and the empty-string row and column are the base cases. Because nothing ever resets, the answer is always the bottom-right cell.",
+      en: "The diagonal handles a matched pair, the two neighbors handle \"drop one character and keep looking\", and the empty-string row and column are the base cases. Because nothing ever resets, the answer is always the bottom-right cell.",
       zh: "对角线负责「配对成功」,两个邻格负责「放弃一个字符继续找」,空串行和空串列是初始值。正因为任何时候都不清零,答案总是落在右下角。",
     },
   },

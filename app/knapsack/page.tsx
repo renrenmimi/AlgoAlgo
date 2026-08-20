@@ -716,7 +716,7 @@ export default function KnapsackChapter() {
               problems are this problem in another form: splitting an array,
               making change, cutting a sentence into words, rolling dice. This
               chapter turns the take-or-skip decision from Chapter 7 into a fixed
-              modelling procedure, and explains the one line that is most often
+              modeling procedure, and explains the one line that is most often
               written the wrong way round:{" "}
               <strong>
                 in the one-dimensional form, does the capacity loop run down or
@@ -1874,7 +1874,7 @@ export default function KnapsackChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="How to recognise it" zh="怎么识别" />
+              <T en="How to recognize it" zh="怎么识别" />
             </div>
             <div className="card-title">
               <T en="Signals for a fill-exactly problem" zh="装满型的信号" />
@@ -3328,7 +3328,7 @@ var combinationSum4 = function (nums, target) {
               problem easy — it is still NP-hard.
             </>,
             <>
-              Four modelling questions: <b>what is an item · what is the capacity ·
+              Four modeling questions: <b>what is an item · what is the capacity ·
               how many times may one item be used · what is being asked</b>. Answer
               them and the code is nearly determined.
             </>,

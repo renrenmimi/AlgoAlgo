@@ -355,7 +355,7 @@ const F_ROB: DPFrame[] = [
         en={
           <>
             State: <b>dp[i] is the largest amount you can take from houses 0
-            through i without taking two neighbours</b>. Read the wording
+            through i without taking two neighbors</b>. Read the wording
             carefully — it is &quot;from houses 0 through i&quot;, <b>not</b>{" "}
             &quot;house i must be taken&quot;. That difference decides how the
             transition is written.
@@ -377,7 +377,7 @@ const F_ROB: DPFrame[] = [
       <T
         en={
           <>
-            dp[0]: only one house exists, so there is no neighbour to trigger the
+            dp[0]: only one house exists, so there is no neighbor to trigger the
             alarm. Take it. dp[0] = <b>2</b>.
           </>
         }
@@ -395,7 +395,7 @@ const F_ROB: DPFrame[] = [
       <T
         en={
           <>
-            dp[1]: the two houses are neighbours, so at most one can be taken.
+            dp[1]: the two houses are neighbors, so at most one can be taken.
             max(2, 7) = <b>7</b>.
           </>
         }
@@ -435,7 +435,7 @@ const F_ROB: DPFrame[] = [
           <>
             dp[3]: take house 3 (worth 3) gives dp[1] + 3 = 10; skip it gives
             dp[2] = 11. max = <b>11</b>. Here skipping wins — 3 is not worth
-            giving up the neighbour that holds 9.
+            giving up the neighbor that holds 9.
           </>
         }
         zh={
@@ -2055,7 +2055,7 @@ export default function DPChapter() {
               en={
                 <>
                   <b>The problem:</b> a row of houses each hold some cash, and{" "}
-                  <strong>taking two neighbouring houses sets off the alarm</strong>.
+                  <strong>taking two neighboring houses sets off the alarm</strong>.
                   Find the largest amount you can take without setting it off.
                   Before reading the solution, click through it yourself and see
                   how unintuitive &quot;best under a constraint&quot; is:
@@ -2549,7 +2549,7 @@ export default function DPChapter() {
                   is the standard shape of an <b>unbounded knapsack</b>. Chapter 08
                   models LC 322 again from that angle: why can the inner and outer
                   loops be swapped there? And why does replacing min with a count
-                  turn it into LC 518? Modelling the same problem twice is
+                  turn it into LC 518? Modeling the same problem twice is
                   deliberate.
                 </>
               }

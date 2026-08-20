@@ -49,7 +49,7 @@ function bubbleFrames(): BarFrame[] {
       en={
         <>
           Bubble sort. Each round scans from left to right and swaps any two
-          neighbours that are in the wrong order, so the largest remaining value
+          neighbors that are in the wrong order, so the largest remaining value
           is carried to the right end. Green marks values that are already in
           their <b>final position</b>.
         </>

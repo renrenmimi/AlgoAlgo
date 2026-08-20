@@ -292,7 +292,7 @@ export default function SortingChapter() {
                   <>
                     <b>Invariant:</b> after round i, the <b>rightmost i values</b>{" "}
                     are the i largest, and they are in their final positions.
-                    Each round compares neighbours and swaps them when they are
+                    Each round compares neighbors and swaps them when they are
                     out of order. Add a flag: if a round performs{" "}
                     <b>zero swaps</b>, the array is already sorted and the
                     algorithm stops. Best <b>O(n)</b> (sorted input), average and
@@ -1301,7 +1301,7 @@ class Solution:
                   Destructuring, <code>[a, b] = [b, a]</code>, is a readable way
                   to swap, but it allocates an array on each call, so it is
                   slightly slower than a temporary variable inside a hot loop.
-                  The behaviour is identical.
+                  The behavior is identical.
                 </>
               ),
               zh: (
@@ -1974,7 +1974,7 @@ class Solution:
                 <td><b><T en="Bubble" zh="冒泡" /></b></td>
                 <td><BigO o="n" /></td><td><BigO o="n2" /></td><td><BigO o="n2" /></td>
                 <td><BigO o="1" /></td><td>✅</td>
-                <td><T en="Swaps neighbours only, so it is stable; the early-exit flag gives the O(n) best case" zh="只交换相邻元素,所以稳定;靠提前退出的标志位拿到 O(n) 最好情况" /></td>
+                <td><T en="Swaps neighbors only, so it is stable; the early-exit flag gives the O(n) best case" zh="只交换相邻元素,所以稳定;靠提前退出的标志位拿到 O(n) 最好情况" /></td>
               </tr>
               <tr>
                 <td><b><T en="Insertion" zh="插入" /></b></td>
@@ -2888,7 +2888,7 @@ class Solution:
                   almost always{" "}
                   <b>sort by the left endpoint or by the right endpoint</b>. That
                   turns a question about <b>any two intervals</b> into a question
-                  about <b>two neighbouring intervals</b>, which one pass can
+                  about <b>two neighboring intervals</b>, which one pass can
                   answer. The same pattern, sorting as preparation and scanning to
                   decide, is used throughout chapter 6 on greedy algorithms, where
                   sorting is also the first step of most solutions.

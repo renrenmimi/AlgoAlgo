@@ -133,13 +133,13 @@ export const PROBLEMS: Problem[] = [
       en: (
         <>
           Split the array into maximal runs that go only up or only down, and
-          ignore equal neighbours. Keeping the endpoint of every run and dropping
+          ignore equal neighbors. Keeping the endpoint of every run and dropping
           everything inside it does not shorten the wiggle, so if there are k
           runs the answer is k + 1. In code this becomes two counters:{" "}
           <code>up</code> is the length of the longest wiggle subsequence that
           ends with a rise, <code>down</code> the longest that ends with a fall.
           A rise sets <code>up = down + 1</code>, a fall sets{" "}
-          <code>down = up + 1</code>, and equal neighbours change nothing. O(n).
+          <code>down = up + 1</code>, and equal neighbors change nothing. O(n).
         </>
       ),
       zh: (
@@ -581,7 +581,7 @@ export const PROBLEMS: Problem[] = [
     d: "hard",
     tags: { en: ["two passes", "constraints"], zh: ["模拟", "两次遍历"] },
     hint: {
-      en: "Each child is constrained by the left neighbour and by the right neighbour. Handle one direction per pass.",
+      en: "Each child is constrained by the left neighbor and by the right neighbor. Handle one direction per pass.",
       zh: "每个孩子同时被左邻和右邻约束 —— 一次遍历只处理一个方向。",
     },
     key: {

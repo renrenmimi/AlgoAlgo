@@ -1954,7 +1954,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
                   <b>Edge case:</b> if the whole array is decreasing, it is already the
                   largest permutation, and step 1 walks i down to −1. The swap is
                   skipped and the entire array is reversed, giving the smallest
-                  permutation. That is exactly the wrap-around behaviour the problem
+                  permutation. That is exactly the wrap-around behavior the problem
                   asks for.
                 </>
               ),

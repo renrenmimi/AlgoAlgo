@@ -938,7 +938,7 @@ export default function DPProChapter() {
                     that set. Signal: n is surprisingly small (about 20 or less)
                     and the state has to remember a set. The groundwork is bit
                     manipulation in Chapter 04. Examples: Beautiful Arrangement,
-                    the travelling salesman problem.
+                    the traveling salesman problem.
                   </>
                 }
                 zh={
@@ -1557,8 +1557,8 @@ export default function DPProChapter() {
                   <b>Problem (LC 312):</b> a row of balloons each holds a number.
                   Bursting balloon i gives{" "}
                   <code>left × nums[i] × right</code> coins, where left and right
-                  are its current immediate neighbours. After a balloon bursts, its
-                  two neighbours become adjacent. Find the largest number of coins
+                  are its current immediate neighbors. After a balloon bursts, its
+                  two neighbors become adjacent. Find the largest number of coins
                   from bursting every balloon.
                 </>
               }
@@ -1600,7 +1600,7 @@ export default function DPProChapter() {
                   <b>Reasoning backwards:</b> enumerate the balloon k that is burst{" "}
                   <strong>last</strong> instead. When k is burst, every other
                   balloon in the interval (i, j) is already gone, so k&apos;s
-                  neighbours are <strong>exactly the endpoints i and j</strong>,
+                  neighbors are <strong>exactly the endpoints i and j</strong>,
                   which gives <code>arr[i] × arr[k] × arr[j]</code>. Everything to
                   the left of k, and everything to the right of k, was burst
                   earlier and never interacted, so (i, k) and (k, j) are
@@ -1719,7 +1719,7 @@ export default function DPProChapter() {
                   the last one keeps the two sides independent; going forward makes
                   the intervals merge. This is the heart of the problem, so answer
                   it. (2) &quot;What are the padded balloons for?&quot; They make
-                  the neighbours of the edge balloons always exist, with value 1,
+                  the neighbors of the edge balloons always exist, with value 1,
                   which removes a lot of boundary handling. (3) &quot;Can it be
                   memoised instead?&quot; Yes: top-down dfs(i, j) with a memo table
                   has the same complexity and is often easier to write.
@@ -1837,7 +1837,7 @@ export default function DPProChapter() {
         <Callout
           tone="deep"
           title={{
-            en: "The ceiling of bitmask DP: the travelling salesman problem",
+            en: "The ceiling of bitmask DP: the traveling salesman problem",
             zh: "状压的天花板:旅行商问题(TSP)",
           }}
         >
@@ -1846,7 +1846,7 @@ export default function DPProChapter() {
               en={
                 <>
                   The best known use of bitmask DP is the{" "}
-                  <b>travelling salesman problem</b>: visit n cities once each,
+                  <b>traveling salesman problem</b>: visit n cities once each,
                   along the shortest route. The state is{" "}
                   <code>dp[mask][i]</code> = the shortest distance for a route that
                   has visited exactly the cities in mask and currently stops at
@@ -1929,7 +1929,7 @@ export default function DPProChapter() {
                 <>
                   Two more areas of DP are worth naming. Both follow fixed patterns
                   but need more background than this chapter assumes. For now it is
-                  enough to <strong>know they exist and recognise the signal</strong>
+                  enough to <strong>know they exist and recognize the signal</strong>
                   , and to read more when you actually meet one.
                 </>
               }
@@ -2035,7 +2035,7 @@ export default function DPProChapter() {
                   From the one-line idea in Chapter 07 — store a result so you can
                   reuse it — through the linear table, the knapsack capacity table,
                   and the two-sequence table, to the state machine, tree, interval,
-                  and set of this chapter, you now have a full routine: recognise
+                  and set of this chapter, you now have a full routine: recognize
                   the shape of the state, then apply the five steps. Digit DP and
                   probability DP are two smaller areas at the edge.{" "}
                   <b>

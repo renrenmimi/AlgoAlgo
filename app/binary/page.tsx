@@ -1538,13 +1538,13 @@ export default function BinaryChapter() {
                 <>
                   <b>LC 162, find a peak:</b> return the index of{" "}
                   <strong>any</strong> element larger than both of its
-                  neighbours. Neighbouring values are never equal, and positions
+                  neighbors. Neighboring values are never equal, and positions
                   outside the array count as −∞. The array has no order at all,
                   yet the <strong>direction of the slope</strong> gives the
                   split. If <code>nums[mid] &lt; nums[mid+1]</code>, the values
                   are rising at mid, and a peak <strong>must</strong> exist in
                   [mid+1, hi]: either they keep rising all the way to hi, which
-                  is then a peak because its right neighbour is −∞, or they stop
+                  is then a peak because its right neighbor is −∞, or they stop
                   rising at some index, which is then a peak. Otherwise a peak
                   exists in [lo, mid]. So you can halve the range by always
                   walking uphill:
@@ -2700,7 +2700,7 @@ export default function BinaryChapter() {
                   Replace &quot;D days&quot; with &quot;m subarrays&quot; and
                   &quot;capacity&quot; with &quot;upper limit on a subarray
                   sum&quot;, and the judge function does not change at all. LC
-                  410 is labelled hard mostly because of how it is worded.
+                  410 is labeled hard mostly because of how it is worded.
                 </>
               ),
               zh: (

@@ -338,7 +338,7 @@ export const PROBLEMS: Problem[] = [
       en: (
         <>
           State: dp[i] is the largest amount you can take from houses 0 through
-          i without taking two neighbours. Transition: dp[i] = max(dp[i-1],
+          i without taking two neighbors. Transition: dp[i] = max(dp[i-1],
           dp[i-2] + nums[i]). Note that the first term does not add nums[i]: dp
           means &quot;the best over houses 0 through i&quot;, not &quot;the best
           that must include house i&quot;, so the branch that skips house i
@@ -573,7 +573,7 @@ export const QUIZ: QuizItem[] = [
     opts: {
       en: [
         "Because dp[i-1] is the branch that skips house i. dp[i] means the best over houses 0 through i; it does not require taking house i",
-        "Because taking two neighbours triggers the alarm, so nums[i] has to be subtracted",
+        "Because taking two neighbors triggers the alarm, so nums[i] has to be subtracted",
         "It is a mistake in the solution; nums[i] should be added there too",
         "Because dp[i-1] already includes nums[i]",
       ],
