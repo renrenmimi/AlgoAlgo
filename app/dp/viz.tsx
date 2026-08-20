@@ -442,7 +442,7 @@ export function RobLab() {
     <div className="viz">
       <div className="viz-title">
         <T
-          en="House robber lab — click a house to take it or leave it (two neighbours set off the alarm)"
+          en="House robber lab — click a house to take it or leave it (two neighbors set off the alarm)"
           zh="打家劫舍实验室 —— 点房子决定偷不偷(相邻两间会触发警报)"
         />
       </div>
@@ -477,7 +477,7 @@ export function RobLab() {
           <T
             en={
               <>
-                🚨 <b>Alarm.</b> Two neighbouring houses are selected, so this
+                🚨 <b>Alarm.</b> Two neighboring houses are selected, so this
                 plan is not allowed. Deselect one of them.
               </>
             }
@@ -493,7 +493,7 @@ export function RobLab() {
               <>
                 🏆 <b>{sum}</b> — this is the best possible total (2 + 9 + 1).
                 Notice the cost: taking 9 forces you to give up 7, the second
-                largest amount. Every choice constrains its neighbours. You can
+                largest amount. Every choice constrains its neighbors. You can
                 work out 5 houses by hand. With 100 houses you cannot, and that
                 global trade-off is what DP handles.
               </>

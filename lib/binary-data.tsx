@@ -378,7 +378,7 @@ export const PROBLEMS: Problem[] = [
     key: {
       en: (
         <>
-          A peak is any index whose value is larger than both neighbours;
+          A peak is any index whose value is larger than both neighbors;
           positions outside the array count as negative infinity. while (lo &lt;
           hi): if nums[mid] &lt; nums[mid+1] the values rise at mid, so a peak
           must exist in [mid+1, hi] — either they keep rising up to hi, which is

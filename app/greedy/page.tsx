@@ -919,7 +919,7 @@ export default function GreedyChapter() {
         for (int i = 1; i < nums.length; i++) {
             if (nums[i] > nums[i - 1]) up = down + 1;      // a rise starts a new run
             else if (nums[i] < nums[i - 1]) down = up + 1; // a fall starts a new run
-            // equal neighbours: direction is unchanged, both stay as they are
+            // equal neighbors: direction is unchanged, both stay as they are
         }
         return Math.max(up, down);
     }
@@ -984,7 +984,7 @@ export default function GreedyChapter() {
             note: {
               en: (
                 <>
-                  There is deliberately no branch for equal neighbours. A flat
+                  There is deliberately no branch for equal neighbors. A flat
                   stretch produces no direction change, and forgetting that is
                   the most common mistake in this problem.
                 </>
@@ -1850,16 +1850,16 @@ export default function GreedyChapter() {
                 <>
                   <b>LC 135 Candy (hard, but the pattern is clear):</b> every
                   child has a rating, a child with a higher rating than a
-                  neighbour must get more candy than that neighbour, and everyone
+                  neighbor must get more candy than that neighbor, and everyone
                   gets at least one. Minimise the total. The difficulty is that{" "}
                   <strong>
                     each child is constrained from the left and from the right at
                     the same time
                   </strong>
                   . The fix is <strong>one direction per pass</strong>: going
-                  left to right, satisfy &quot;more than the left neighbour&quot;;
+                  left to right, satisfy &quot;more than the left neighbor&quot;;
                   going right to left, satisfy &quot;more than the right
-                  neighbour&quot;; take the maximum so both hold. Why the result
+                  neighbor&quot;; take the maximum so both hold. Why the result
                   is minimal: each pass produces the smallest values that satisfy
                   one side, so both are lower bounds for any valid answer, and so
                   is their maximum. That maximum is itself valid, so it is the
@@ -1894,9 +1894,9 @@ export default function GreedyChapter() {
         int n = ratings.length;
         int[] candy = new int[n];
         Arrays.fill(candy, 1);                 // everyone starts with one
-        for (int i = 1; i < n; i++)            // left to right: beat the left neighbour
+        for (int i = 1; i < n; i++)            // left to right: beat the left neighbor
             if (ratings[i] > ratings[i - 1]) candy[i] = candy[i - 1] + 1;
-        for (int i = n - 2; i >= 0; i--)       // right to left: beat the right neighbour
+        for (int i = n - 2; i >= 0; i--)       // right to left: beat the right neighbor
             if (ratings[i] > ratings[i + 1])
                 candy[i] = Math.max(candy[i], candy[i + 1] + 1);
         int sum = 0;

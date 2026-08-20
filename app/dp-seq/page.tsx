@@ -516,12 +516,12 @@ const F_CENTER: ArrayFrame[] = [
       v: c,
       state: i === 2 ? "lit" : undefined,
     })),
-    ptrs: [{ i: 2, label: { en: "centre", zh: "中心" } }],
+    ptrs: [{ i: 2, label: { en: "center", zh: "中心" } }],
     msg: (
       <T
         en={
           <>
-            An odd-length centre: start at index 2, the letter &quot;c&quot;. A
+            An odd-length center: start at index 2, the letter &quot;c&quot;. A
             single character is always a palindrome, so the length so far is 1.
           </>
         }
@@ -588,10 +588,10 @@ const F_CENTER: ArrayFrame[] = [
       <T
         en={
           <>
-            One more step would move l out of the array, so this centre is done.
+            One more step would move l out of the array, so this center is done.
             The longest palindrome centred at index 2 is the whole string, length
             5. Even-length palindromes such as &quot;bb&quot; start from the gap
-            between two characters instead, which is why there are 2n−1 centres to
+            between two characters instead, which is why there are 2n−1 centers to
             try in total.
           </>
         }
@@ -1885,7 +1885,7 @@ export default function DpSeqChapter() {
                 <>
                   <b>The only difference from LC 718 is this <code>else</code>:</b>{" "}
                   LC 718 resets to 0 implicitly, LCS keeps the larger of the two
-                  neighbours. Because nothing ever resets, the answer is always
+                  neighbors. Because nothing ever resets, the answer is always
                   the bottom-right cell, dp[m][n].
                 </>
               ),
@@ -2525,11 +2525,11 @@ export default function DpSeqChapter() {
           <div className="seq-duo">
             <div className="card">
               <div className="card-kicker">
-                <T en="View 1 · expand from a centre" zh="视角一 · 中心扩展(向外)" />
+                <T en="View 1 · expand from a center" zh="视角一 · 中心扩展(向外)" />
               </div>
               <div className="card-title">
                 <T
-                  en="Try every centre, move both ends outwards"
+                  en="Try every center, move both ends outwards"
                   zh="枚举中心,两端同时向外"
                 />
               </div>
@@ -2537,10 +2537,10 @@ export default function DpSeqChapter() {
                 <T
                   en={
                     <>
-                      A palindrome is symmetric about its centre, so try all{" "}
-                      <b>2n−1 centres</b>: n single characters for odd lengths and
-                      n−1 gaps between neighbouring characters for even lengths.
-                      From each centre, move outwards while the two ends match.
+                      A palindrome is symmetric about its center, so try all{" "}
+                      <b>2n−1 centers</b>: n single characters for odd lengths and
+                      n−1 gaps between neighboring characters for even lengths.
+                      From each center, move outwards while the two ends match.
                       O(n²) time, <b>O(1) extra space</b>. Best for{" "}
                       <b>substring</b> problems, which need contiguity: LC 5, LC
                       647.
@@ -2605,7 +2605,7 @@ export default function DpSeqChapter() {
             <T
               en={
                 <>
-                  Start with <strong>expanding from a centre</strong>, which LC 5
+                  Start with <strong>expanding from a center</strong>, which LC 5
                   (longest palindromic substring) and LC 647 (counting
                   palindromic substrings) both use:
                 </>
@@ -2621,7 +2621,7 @@ export default function DpSeqChapter() {
         </div>
         <ArrayStepper
           title={{
-            en: "Expanding from a centre (s = \"abcba\", odd centre at index 2)",
+            en: "Expanding from a center (s = \"abcba\", odd center at index 2)",
             zh: "回文中心扩展(s = 「abcba」,以下标 2 为奇数中心)",
           }}
           frames={F_CENTER}
@@ -2636,8 +2636,8 @@ export default function DpSeqChapter() {
     public String longestPalindrome(String s) {
         if (s.length() < 2) return s;
         for (int i = 0; i < s.length(); i++) {
-            expand(s, i, i);       // odd length: centre is one character
-            expand(s, i, i + 1);   // even length: centre is the gap
+            expand(s, i, i);       // odd length: center is one character
+            expand(s, i, i + 1);   // even length: center is the gap
         }
         return s.substring(start, start + maxLen);
     }
@@ -2675,7 +2675,7 @@ export default function DpSeqChapter() {
             note: {
               en: (
                 <>
-                  <b>Common mistake:</b> testing only odd centres. Also note that
+                  <b>Common mistake:</b> testing only odd centers. Also note that
                   when the loop exits, l and r have each moved one step too far,
                   so the palindrome is <code>[l+1, r-1]</code> and its length is{" "}
                   <code>r - l - 1</code>. That off-by-one is easy to get wrong.
@@ -2702,7 +2702,7 @@ export default function DpSeqChapter() {
                 r += 1
             return s[l + 1 : r]        # on exit [l+1, r-1] is the palindrome
         for i in range(len(s)):
-            for cand in (expand(i, i), expand(i, i + 1)):  # odd / even centre
+            for cand in (expand(i, i), expand(i, i + 1)):  # odd / even center
                 if len(cand) > len(res):
                     res = cand
         return res`,
@@ -2746,8 +2746,8 @@ export default function DpSeqChapter() {
     if (r - l - 1 > maxLen) { maxLen = r - l - 1; start = l + 1; }
   };
   for (let i = 0; i < s.length; i++) {
-    expand(i, i);       // odd centre
-    expand(i, i + 1);   // even centre
+    expand(i, i);       // odd center
+    expand(i, i + 1);   // even center
   }
   return s.substring(start, start + maxLen);
 };`,
@@ -3051,7 +3051,7 @@ export default function DpSeqChapter() {
               The first fork: <b>a subsequence may skip elements, a subarray or
               substring may not</b>. Decide which one the problem wants before
               defining the state, because it decides whether a mismatch{" "}
-              <b>resets the cell to 0</b> or <b>keeps the larger neighbour</b>.
+              <b>resets the cell to 0</b> or <b>keeps the larger neighbor</b>.
             </>,
             <>
               On a single sequence (LIS), <b>anchor the subproblem by its last
@@ -3081,7 +3081,7 @@ export default function DpSeqChapter() {
               one).
             </>,
             <>
-              Two views on palindromes: <b>expand from a centre</b> (outwards,
+              Two views on palindromes: <b>expand from a center</b> (outwards,
               O(1) extra space, for substrings — LC 5, LC 647) and{" "}
               <b>interval DP</b> (inwards, dp[i][j], for subsequences — LC 516).
               Also, <b>the longest palindromic subsequence of s is LCS(s,

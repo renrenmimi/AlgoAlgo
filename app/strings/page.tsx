@@ -991,7 +991,7 @@ function buildNext(p) {
             note: {
               en: (
                 <>
-                  The two <code>j = 0</code> lines initialise the construction and the matching
+                  The two <code>j = 0</code> lines initialize the construction and the matching
                   separately; do not forget to reset j before matching. A slice comparison{" "}
                   <code>haystack[i:i+m] == needle</code> also works, but it copies m characters
                   each time and degrades to O(n·m).
@@ -2134,7 +2134,7 @@ function buildNext(p) {
             <T
               en={
                 <>
-                  Expanding from neighbouring centers re-examines the same region many times.
+                  Expanding from neighboring centers re-examines the same region many times.
                   The insight in Manacher is this: if the current center lies inside a{" "}
                   <b>palindrome that is already known</b>, then its radius can be{" "}
                   <b>read off from the mirror position on the other side of that

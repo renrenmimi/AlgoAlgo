@@ -27,7 +27,7 @@ export const PROBLEMS: Problem[] = [
       en: (
         <>
           Two views of one answer. <b>Greedy:</b> take every rise between two
-          neighbouring days, ans = Σ max(0, price[i] − price[i−1]). This is
+          neighboring days, ans = Σ max(0, price[i] − price[i−1]). This is
           correct because the profit of any rising run equals the sum of its
           daily differences, so no profit is lost by splitting it up (Chapter 06
           proves it with an exchange argument). <b>State machine DP:</b> two
@@ -272,7 +272,7 @@ export const PROBLEMS: Problem[] = [
       zh: ["树形 DP", "贪心", "复盘"],
     },
     hint: {
-      en: "Each node is in one of three situations: it has a camera, it is watched by a neighbour, or it is not watched. Putting cameras on the parents of leaves uses the fewest.",
+      en: "Each node is in one of three situations: it has a camera, it is watched by a neighbor, or it is not watched. Putting cameras on the parents of leaves uses the fewest.",
       zh: "每个节点三种身份:装了摄像头 / 被邻居覆盖 / 没被覆盖 —— 让叶子的父亲去装最省。",
     },
     key: {
@@ -369,7 +369,7 @@ export const PROBLEMS: Problem[] = [
           [1, nums…, 1]. dp[i][j] = the largest number of coins from bursting
           every balloon strictly between i and j (an open interval). Enumerate
           the balloon k that is burst <b>last</b>, with i &lt; k &lt; j. At that
-          moment both sides are already empty, so k&apos;s neighbours are exactly
+          moment both sides are already empty, so k&apos;s neighbors are exactly
           i and j, giving arr[i]×arr[k]×arr[j], plus the two independent
           subproblems dp[i][k] and dp[k][j]. dp[i][j] = max over k of the sum.
           Each source interval is strictly shorter than (i, j), so you must fill
@@ -674,7 +674,7 @@ export const QUIZ: QuizItem[] = [
       ],
     },
     why: {
-      en: "Bursting a balloon makes its two neighbours become adjacent, so enumerating \"which one first\" keeps merging the remaining sequence and no independent subproblem is left. Fix k as the last one instead: when k is burst both sides are already empty, so its neighbours are exactly the endpoints i and j, and the two ranges (i, k) and (k, j) are solved separately. That is why the recurrence is dp[i][j] = max over k of dp[i][k] + arr[i]×arr[k]×arr[j] + dp[k][j].",
+      en: "Bursting a balloon makes its two neighbors become adjacent, so enumerating \"which one first\" keeps merging the remaining sequence and no independent subproblem is left. Fix k as the last one instead: when k is burst both sides are already empty, so its neighbors are exactly the endpoints i and j, and the two ranges (i, k) and (k, j) are solved separately. That is why the recurrence is dp[i][j] = max over k of dp[i][k] + arr[i]×arr[k]×arr[j] + dp[k][j].",
       zh: "戳破一个气球会让它左右的邻居贴到一起,所以枚举「先戳谁」会让剩下的序列不断合并,拆不出独立的子问题。反过来固定「k 最后戳」:戳 k 时左右已经空了,它的邻居恰好是端点 i 和 j,于是 (i, k) 与 (k, j) 两段各自独立求解。这就是转移写成 dp[i][j] = 对 k 取 max ( dp[i][k] + arr[i]×arr[k]×arr[j] + dp[k][j] ) 的原因。",
     },
   },
@@ -708,7 +708,7 @@ export const QUIZ: QuizItem[] = [
       zh: "「数组有序」是二分、双指针或贪心的信号,和状压无关。状压的触发点是状态本身就是一个集合。",
     },
     why: {
-      en: "Bitmask DP stores a set in the binary digits of one integer. It works only when the set is small, because the table has 2ⁿ entries, so n ≤ 20 is the practical limit. The cost is (number of subsets) × (work per transition). When a very small n and a set-shaped state appear together (LC 526, the travelling salesman problem), think bitmask. The groundwork is \"bits as a set\" from Chapter 04.",
+      en: "Bitmask DP stores a set in the binary digits of one integer. It works only when the set is small, because the table has 2ⁿ entries, so n ≤ 20 is the practical limit. The cost is (number of subsets) × (work per transition). When a very small n and a set-shaped state appear together (LC 526, the traveling salesman problem), think bitmask. The groundwork is \"bits as a set\" from Chapter 04.",
       zh: "状压 DP 把一个集合存进一个整数的二进制位。它成立的前提是集合小 —— 表有 2ⁿ 项,所以 n ≤ 20 是实际上限。代价 =(子集个数)×(每个转移的工作量)。当「极小的 n」和「状态是集合」同时出现(LC 526、旅行商问题)就该想状压。地基是第 4 章的「用 bit 表示集合」。",
     },
   },
@@ -720,7 +720,7 @@ export const QUIZ: QuizItem[] = [
     },
     opts: {
       en: [
-        "Both are correct and give the same result: the greedy takes every rise between neighbouring days, Σ max(0, p[i] − p[i−1]), and the DP moves between the hold and cash states",
+        "Both are correct and give the same result: the greedy takes every rise between neighboring days, Σ max(0, p[i] − p[i−1]), and the DP moves between the hold and cash states",
         "The greedy is wrong; only the DP gives the correct answer",
         "The DP is wrong; only the greedy is correct",
         "They give different answers, so you pick one based on the input size",

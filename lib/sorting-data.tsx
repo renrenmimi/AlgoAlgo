@@ -365,7 +365,7 @@ export const QUIZ: QuizItem[] = [
         undefined,
         "Using the cost of one particular algorithm as the lower bound is circular. A lower bound has to show that no comparison sort can be faster, and the argument for that is the height of the decision tree.",
         '"log n passes" is a rough description of how some algorithms behave. It is not a proof, and it does not explain why O(n) is impossible.',
-        "Again this takes one algorithm's performance as the bound. Quicksort is also O(n²) in the worst case, so its average behaviour cannot be used to argue about a worst-case lower bound.",
+        "Again this takes one algorithm's performance as the bound. Quicksort is also O(n²) in the worst case, so its average behavior cannot be used to argue about a worst-case lower bound.",
       ],
       zh: [
         undefined,
