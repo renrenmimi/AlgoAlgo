@@ -1,6 +1,17 @@
 /* 第 7 章 · 动态规划入门(data-ch="dp")专属样式。
    规则:全部包在 [data-ch="dp"] 下或带 dp- 前缀;颜色只用 CSS token。 */
 
+/* — 可视化标题:英文标题比中文长,常常折行。
+     让开头的小方块对齐第一行,而不是被垂直居中到两行中间。 — */
+
+[data-ch="dp"] .viz-title {
+  align-items: flex-start;
+}
+
+[data-ch="dp"] .viz-title::before {
+  margin-top: 6px;
+}
+
 /* — 五步法步骤卡 — */
 
 [data-ch="dp"] .dp-steps {

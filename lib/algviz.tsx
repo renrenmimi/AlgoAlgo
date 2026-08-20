@@ -261,7 +261,7 @@ export function TreePlayer({
           </span>
           <span className="viz-key">
             <i className="tp-sw" data-state="dead" />
-            <T en="Pruned" zh="死路/剪枝" />
+            <T en="Dead end / pruned" zh="死路 / 剪枝" />
           </span>
           <span className="viz-key">
             <i className="tp-sw" data-state="sol" />

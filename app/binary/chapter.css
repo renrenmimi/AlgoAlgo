@@ -101,3 +101,30 @@
 [data-ch="binary"] .bin-tri code {
   font-size: 12.5px;
 }
+
+/* — 模板速查表(§06):六列 + 英文更长,给它更大的最小宽度,
+     并让「区间 / 循环条件」两列不折行,读起来才成对。 — */
+
+[data-ch="binary"] .t-table {
+  min-width: 780px;
+}
+
+[data-ch="binary"] .t-table th:first-child,
+[data-ch="binary"] .t-table td:first-child {
+  min-width: 172px;
+}
+
+[data-ch="binary"] .t-table th:nth-child(2),
+[data-ch="binary"] .t-table td:nth-child(2),
+[data-ch="binary"] .t-table th:nth-child(3),
+[data-ch="binary"] .t-table td:nth-child(3) {
+  white-space: nowrap;
+}
+
+/* — 猜数字实验室:英文说明比中文长,给它一点行距,别挤成一坨 — */
+
+[data-ch="binary"] .bin-guess-sub {
+  line-height: 1.6;
+  max-width: 46ch;
+  margin-inline: auto;
+}

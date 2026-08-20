@@ -6,7 +6,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CHAPTERS } from "@/lib/curriculum";
+import { CHAPTERS, subLabel } from "@/lib/curriculum";
 import { useShell } from "./theme-provider";
 import { pick, useL, useLang } from "@/lib/i18n";
 
@@ -120,7 +120,9 @@ export default function CommandPalette() {
               <span className="side-num">{c.num}</span>
               <span style={{ flex: 1 }}>
                 {L(c.title)}
-                <span className="side-en">{L(c.alt)}</span>
+                {L(subLabel(c)) && (
+                    <span className="side-en">{L(subLabel(c))}</span>
+                  )}
               </span>
               <span className="dim" style={{ fontSize: 11 }}>
                 {pick(c.tags, lang).slice(0, 2).join(" · ")}

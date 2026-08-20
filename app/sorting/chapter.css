@@ -244,6 +244,20 @@
   color: var(--ok);
 }
 
+/* ============ 七列排序对照表 ============ */
+
+/* 英文表头比中文长(Best / Average / Worst / Aux space / Stable?),
+   七列在 560px 里会挤成一团 —— 给它更大的 min-width,由 .table-wrap 横向滚动。 */
+[data-ch="sorting"] .t-table.srt-cmp {
+  min-width: 860px;
+}
+[data-ch="sorting"] .t-table.srt-cmp td:nth-child(-n + 6) {
+  white-space: nowrap;
+}
+[data-ch="sorting"] .t-table.srt-cmp td:last-child {
+  min-width: 280px;
+}
+
 /* ============ 决策树下界示意 ============ */
 
 [data-ch="sorting"] .srt-lb {
