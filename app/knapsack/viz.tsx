@@ -713,15 +713,15 @@ const TS_FRAMES: TreeFrame[] = [
           <>
             Only <b>3</b> paths end at 1 ✓ (++−, +−+, −++), so the answer is{" "}
             <b>3</b>. But with 20 numbers this tree has 2²⁰ ≈ one million leaves.
-            So the tree gets <b>rewritten as a knapsack count</b>, which turns the
-            exponential into a polynomial.
+            So the tree gets <b>rewritten as a knapsack count</b>, which replaces
+            the 2ⁿ paths with a table of about n × P cells.
           </>
         }
         zh={
           <>
             只有 <b>3</b> 条路径的终点和 = 1 ✓(++−、+−+、−++),所以答案是 <b>3</b>。
             但 nums 有 20 个数时,这棵树有 2²⁰ ≈ 100 万片叶子。
-            于是我们把它<b>改写成背包计数</b>,指数就变成了多项式。
+            于是我们把它<b>改写成背包计数</b>,用一张约 n × P 格的表代替 2ⁿ 条路径。
           </>
         }
       />
