@@ -822,7 +822,9 @@ export default function SortingChapter() {
                     tmp.append(nums[j]); j += 1
             tmp.extend(nums[i:mid + 1])          # 左段剩下的
             tmp.extend(nums[j:hi + 1])           # 右段剩下的
-            nums[lo:hi + 1] = tmp                # 把合并好的一段写回`,
+            nums[lo:hi + 1] = tmp                # 把合并好的一段写回
+        merge_sort(0, len(nums) - 1)
+        return nums`,
             },
             hl: [11],
             note: {
