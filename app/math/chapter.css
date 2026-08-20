@@ -1,6 +1,7 @@
 /* 第 11 章 · 数学与数论(data-ch="math")专属样式。
    规则:自定义类名一律带 mth- 前缀,且整体裹在 [data-ch="math"] 作用域下,
-   避免全局泄漏;颜色只用 CSS token(var(--acc) 等),深浅主题自动适配,禁止写死。 */
+   避免全局泄漏;颜色只用 CSS token(var(--acc) 等),深浅主题自动适配,禁止写死。
+   双语:英文串比中文长,凡固定宽度 / 单行的元素都留了换行余地。 */
 
 /* ============ 埃氏筛网格 ============ */
 
@@ -89,6 +90,11 @@
   border-radius: 999px;
   border: 1px solid var(--acc-border);
   background: var(--acc-soft);
+  /* 英文状态串更长 —— 允许换行居中,而不是撑破 viz 舞台 */
+  max-width: 100%;
+  text-align: center;
+  line-height: 1.6;
+  text-wrap: balance;
 }
 [data-ch="math"] .mth-nim-status b { color: var(--acc-ink); }
 [data-ch="math"] .mth-nim-status[data-lose="true"] {
@@ -119,6 +125,20 @@
   );
   border: 1px solid var(--acc-border);
   box-shadow: var(--hi-soft), var(--glow-sm);
+}
+
+/* Nim 控制条右侧的策略提示 —— 英文更长,窄屏时换到下一行整行显示 */
+[data-ch="math"] .mth-nim-tip {
+  margin-left: auto;
+  font-size: 12px;
+  max-width: 100%;
+}
+
+@media (max-width: 620px) {
+  [data-ch="math"] .mth-nim-tip {
+    margin-left: 0;
+    flex: 1 0 100%;
+  }
 }
 
 /* ============ 通用编号步骤卡(找不变量三步法 / gcd 推导) ============ */

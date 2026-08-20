@@ -82,7 +82,8 @@
 }
 
 [data-ch="knapsack"] .kp-item {
-  width: 108px;
+  /* 118px 才放得下英文的「3 kg · value 4」一行不折 */
+  width: 118px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -211,6 +212,8 @@
      保证 dp[0] 与 dp[5] 都能被看到、不被裁切。两行同宽故始终对齐。 */
   width: max-content;
   margin-inline: auto;
+  /* 英文标签(write dp[5] / read: changed)比 48px 的列宽,两侧留白免得被裁 */
+  padding-inline: 24px;
   font-variant-numeric: tabular-nums;
 }
 
