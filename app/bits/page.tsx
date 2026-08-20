@@ -880,7 +880,7 @@ sub = mask
 while sub:
     ...                     # 处理 sub
     sub = (sub - 1) & mask`,
-            hl: [8, 9, 14, 15, 16, 17],
+            hl: [7, 8, 9, 12, 13, 15],
             note: (
               <>
                 Python 没有固定位宽,<code>1 &lt;&lt; i</code> 想开多大开多大,
