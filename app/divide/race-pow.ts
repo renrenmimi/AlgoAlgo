@@ -18,8 +18,8 @@ import type { Tracer } from "@/lib/race-core";
    alloc(1). This problem has no notion of an array write, so mov is never recorded
    and metrics shows only two entries. */
 
-const POW_MOD = 1_000_000_007n;
-const POW_BASE = 3n;
+export const POW_MOD = 1_000_000_007n;
+export const POW_BASE = 3n;
 
 /** The largest power of 2 that does not exceed n. Doubling is used instead of Math.log2 to avoid floating-point error. */
 export const pow2Floor = (n: number) => {
@@ -29,7 +29,7 @@ export const pow2Floor = (n: number) => {
 };
 
 /** Naive repeated multiplication: start from x and multiply one step at a time —— n − 1 multiplications. */
-function powNaive(n: number, t: Tracer) {
+export function powNaive(n: number, t: Tracer) {
   t.alloc(1); // one running-product variable
   if (n === 0) return 1n;
   let res = POW_BASE;
@@ -41,7 +41,7 @@ function powNaive(n: number, t: Tracer) {
 }
 
 /** Recursive fast exponentiation: x^n = (x^(n/2))². The base case sits at x¹, so reaching exponent 1 costs no multiplication. */
-function powRecursive(n: number, t: Tracer) {
+export function powRecursive(n: number, t: Tracer) {
   const go = (e: number): bigint => {
     t.enter(); // one level of recursion = one live stack frame
     let r: bigint;
@@ -63,7 +63,7 @@ function powRecursive(n: number, t: Tracer) {
 }
 
 /** Iterative fast exponentiation: the same chain of squarings, driven by the binary digits of n instead; the final round skips the squaring that would go unused. */
-function powIterative(n: number, t: Tracer) {
+export function powIterative(n: number, t: Tracer) {
   t.alloc(2); // two working variables: the result res and b, the base at the current rung
   let res = 1n;
   let b = POW_BASE;

@@ -16,7 +16,7 @@ import type { Tracer } from "@/lib/race-core";
 //   memoized: 2n-1 calls, n-1 additions, peak space 2n+1 (an (n+1)-cell memo table + n stack levels);
 //   bottom-up: 1 call, n-1 additions, peak space 4 (3 rolling variables + 1 stack frame).
 
-function fibNaive(n: number, t: Tracer): number {
+export function fibNaive(n: number, t: Tracer): number {
   const go = (k: number): number => {
     t.enter();
     t.cmp(); // one function call
@@ -32,7 +32,7 @@ function fibNaive(n: number, t: Tracer): number {
   return go(n);
 }
 
-function fibMemo(n: number, t: Tracer): number {
+export function fibMemo(n: number, t: Tracer): number {
   const memo = new Array<number>(n + 1).fill(-1);
   t.alloc(n + 1); // memo table: n+1 cells, -1 means "not computed yet"
   const go = (k: number): number => {
@@ -57,7 +57,7 @@ function fibMemo(n: number, t: Tracer): number {
   return out;
 }
 
-function fibLoop(n: number, t: Tracer): number {
+export function fibLoop(n: number, t: Tracer): number {
   t.enter(); // only this one stack frame, and it never grows
   t.cmp();
   t.alloc(3); // prev / cur / next - the count is independent of n

@@ -37,7 +37,7 @@ export const cloneHaystack = (h: Haystack): Haystack => ({
 });
 
 /** Linear scan: it does not require sorted input, which is also why it cannot skip any element */
-function linearFind({ a, target }: Haystack, t: Tracer): number {
+export function linearFind({ a, target }: Haystack, t: Tracer): number {
   t.alloc(1); // one index, i
   for (let i = 0; i < a.length; i++) {
     t.cmp();
@@ -47,7 +47,7 @@ function linearFind({ a, target }: Haystack, t: Tracer): number {
 }
 
 /** Iterative binary search over the closed interval [lo, hi] —— line for line the same as the §01 template */
-function binaryFind({ a, target }: Haystack, t: Tracer): number {
+export function binaryFind({ a, target }: Haystack, t: Tracer): number {
   t.alloc(2); // lo and hi
   let lo = 0;
   let hi = a.length - 1;
@@ -62,7 +62,7 @@ function binaryFind({ a, target }: Haystack, t: Tracer): number {
 }
 
 /** Recursive binary search: exactly the same number of probes as the iterative version, at the cost of one stack frame per level */
-function binaryFindRec({ a, target }: Haystack, t: Tracer): number {
+export function binaryFindRec({ a, target }: Haystack, t: Tracer): number {
   const go = (lo: number, hi: number): number => {
     t.enter();
     let r: number;
