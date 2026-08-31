@@ -25,16 +25,8 @@ import { Quiz } from "@/lib/quiz";
 import { T } from "@/lib/i18n";
 import { PROBLEMS, QUIZ } from "@/lib/dp-data";
 import { AlgoRace, type RaceMetric } from "@/lib/race";
-import {
-  FibNaiveTree,
-  FibMemoTree,
-  RobLab,
-  FIB_NAIVE,
-  FIB_MEMO,
-  FIB_LOOP,
-  FIB_INPUTS,
-  cloneN,
-} from "./viz";
+import { FibNaiveTree, FibMemoTree, RobLab } from "./viz";
+import { FIB_NAIVE, FIB_MEMO, FIB_LOOP, FIB_INPUTS, cloneN } from "./race-fib";
 
 /* ================= §02 Fibonacci race: relabeling the metrics ================= */
 

@@ -9,8 +9,8 @@
 // slipped in -- because "merge sort still pays full price on an already-sorted array" is
 // exactly the point this chapter makes (and exactly why Timsort adds run detection).
 
-import type { RaceAlgo, RaceInput, Tracer } from "@/lib/race";
-import { rng } from "@/lib/race";
+import type { RaceAlgo, RaceInput } from "@/lib/race";
+import { rng, type Tracer } from "@/lib/race-core";
 
 export type Arr = number[];
 
@@ -318,6 +318,10 @@ export const NEARLY = S(
   { en: "Nearly sorted", zh: "近乎有序" },
   (n, seed) => {
     const a = Array.from({ length: n }, (_, i) => i);
+    // Nothing to disturb below two elements. Without this guard the swap count is
+    // forced to at least one, and at n = 0 the partner index lands on -1, which
+    // writes past the start of the array and hands back a bogus [undefined].
+    if (n < 2) return a;
     const r = rng(seed * 40503);
     for (let k = 0; k < Math.max(1, Math.round(n * 0.05)); k++) {
       const i = Math.floor(r() * n);

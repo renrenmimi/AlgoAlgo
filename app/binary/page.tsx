@@ -33,15 +33,13 @@ import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
 import { T } from "@/lib/i18n";
 import { PROBLEMS, QUIZ } from "@/lib/binary-data";
+import { GuessLab, BoundaryStepper, RotatedStepper } from "./viz";
 import {
-  GuessLab,
-  BoundaryStepper,
-  RotatedStepper,
   cloneHaystack,
   SEARCH_ALGOS,
   SEARCH_SHAPES,
   SEARCH_METRICS,
-} from "./viz";
+} from "./race-search";
 
 /* ============ Deep dive C · LC 875 Koko eating bananas: shrinking frame by frame with RangeShrink ============ */
 // piles = [3,6,7,11], h = 8 → the minimum eating speed is k = 4. The value range is
