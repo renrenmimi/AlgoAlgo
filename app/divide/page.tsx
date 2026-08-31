@@ -2,7 +2,8 @@
 
 // 第 2 章 · 分治 Divide & Conquer。
 // 结构:分治三步(分/治/合)+ 通用模板 → 递归树与主定理直觉 →
-// 精讲 A 快速幂(LC 50,PowTree)→ 精讲 B 合并 K 链表(LC 23,分层合并图)→
+// 精讲 A 快速幂(LC 50,PowTree + 算法竞速:朴素连乘 / 递归 / 迭代)→
+// 精讲 B 合并 K 链表(LC 23,分层合并图)→
 // 精讲 C 最大子数组分治视角(LC 53,对比 07 章 Kadane)→ 逆序对 + Karatsuba →
 // 题单 → 测验 → 要点。招牌可视化:TreePlayer(快速幂)、自建分层合并图。
 //
@@ -10,6 +11,7 @@
 // CodeTabs 的 code 也给两份 —— 两份之间只有注释不同,可执行代码逐行一致(hl 行号才对得上)。
 
 import "./chapter.css";
+import type { ReactNode } from "react";
 import {
   Hero,
   Section,
@@ -21,8 +23,16 @@ import {
 import { CodeTabs } from "@/lib/code";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
-import { T } from "@/lib/i18n";
+import { T, type Loc } from "@/lib/i18n";
 import { PROBLEMS, QUIZ } from "@/lib/divide-data";
+import {
+  AlgoRace,
+  type LaneResult,
+  type RaceAlgo,
+  type RaceInput,
+  type RaceMetric,
+  type Tracer,
+} from "@/lib/race";
 import { PowTree, MergeSortLayers, MergeKLists, CrossMidLab, InversionLab } from "./viz";
 
 const CHIPS = [
@@ -35,6 +45,255 @@ const CHIPS = [
   { id: "problems", n: "07", label: { en: "Problem set", zh: "高频题单" } },
   { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
 ];
+
+/* ================= §03 快速幂竞速:选手、输入形状、判读 =================
+   同一个指数交给三份实现,量两项账:乘法次数、峰值空间。
+   算的是 3^n mod (10^9+7) —— 浮点的 x^10000 早就溢出,而「每乘一次就取模」
+   本来就是模幂的标准做法,这样三者的结果才能逐位核对。
+   记账口径:一次乘法记一次 t.cmp();递归帧由 enter/exit 各记 1;
+   工作变量用 alloc(1) 记。这道题没有「数组写入」这回事,所以 mov 一次不记,
+   metrics 里也只显示两项。 */
+
+const POW_MOD = 1_000_000_007n;
+const POW_BASE = 3n;
+
+/** 不超过 n 的最大 2 的幂。用倍增而不是 Math.log2,避免浮点误差。 */
+const pow2Floor = (n: number) => {
+  let p = 1;
+  while (p * 2 <= n) p *= 2;
+  return p;
+};
+
+/** 朴素连乘:从 x 起步,一次一次乘上去 —— n − 1 次乘法。 */
+function powNaive(n: number, t: Tracer) {
+  t.alloc(1); // 一个累乘变量
+  if (n === 0) return 1n;
+  let res = POW_BASE;
+  for (let i = 1; i < n; i++) {
+    res = (res * POW_BASE) % POW_MOD;
+    t.cmp();
+  }
+  return res;
+}
+
+/** 递归快速幂:x^n =(x^(n/2))²。基准情形取在 x¹,所以走到指数 1 不花乘法。 */
+function powRecursive(n: number, t: Tracer) {
+  const go = (e: number): bigint => {
+    t.enter(); // 一层递归 = 一个活着的栈帧
+    let r: bigint;
+    if (e <= 1) {
+      r = e === 1 ? POW_BASE : 1n;
+    } else {
+      const half = go(e >> 1);
+      r = (half * half) % POW_MOD;
+      t.cmp(); // 平方
+      if (e & 1) {
+        r = (r * POW_BASE) % POW_MOD;
+        t.cmp(); // 奇数补乘
+      }
+    }
+    t.exit();
+    return r;
+  };
+  return go(n);
+}
+
+/** 迭代快速幂:同一串平方,改由 n 的二进制位驱动;最后一轮不做用不上的平方。 */
+function powIterative(n: number, t: Tracer) {
+  t.alloc(2); // 两个工作变量:结果 res、当前这一档的底数 b
+  let res = 1n;
+  let b = POW_BASE;
+  let e = n;
+  while (e > 0) {
+    if (e & 1) {
+      res = (res * b) % POW_MOD;
+      t.cmp();
+    }
+    e >>= 1;
+    if (e > 0) {
+      b = (b * b) % POW_MOD;
+      t.cmp();
+    }
+  }
+  return res;
+}
+
+const POW_ALGOS: RaceAlgo<number>[] = [
+  {
+    id: "pow-naive",
+    name: { en: "Naive chaining", zh: "朴素连乘" },
+    time: "n",
+    space: { en: "O(1)", zh: "O(1)" },
+    note: {
+      en: "Multiplies x into an accumulator one step at a time: n − 1 multiplications, one variable.",
+      zh: "把 x 一次一次乘进累乘变量:n − 1 次乘法,一个变量。",
+    },
+    run: powNaive,
+  },
+  {
+    id: "pow-rec",
+    name: { en: "Fast power · recursive", zh: "递归快速幂" },
+    time: "logn",
+    space: { en: "O(log n)", zh: "O(log n)" },
+    note: {
+      en: "One squaring per level, and the chain has ⌊log₂n⌋ + 1 levels — every level a live stack frame.",
+      zh: "每层一次平方,而这条链有 ⌊log₂n⌋ + 1 层 —— 每一层都是一个活着的栈帧。",
+    },
+    run: powRecursive,
+  },
+  {
+    id: "pow-iter",
+    name: { en: "Fast power · iterative", zh: "迭代快速幂" },
+    time: "logn",
+    space: { en: "O(1)", zh: "O(1)" },
+    note: {
+      en: "The same squarings, driven by the bits of n in a loop: two variables, no stack. It skips the final squaring the textbook loop computes and never uses.",
+      zh: "同样的平方序列,改由 n 的二进制位在循环里驱动:两个变量,没有栈。它省掉了教科书循环里最后那次算完就用不上的平方。",
+    },
+    run: powIterative,
+  },
+];
+
+const POW_SHAPES: RaceInput<number>[] = [
+  {
+    id: "general",
+    label: { en: "General exponent", zh: "一般指数" },
+    make: (n) => n,
+    hint: {
+      en: "The exponent is exactly the size you pick — nothing here is random, so Reroll changes nothing. Note 31 = (11111)₂: every bit is 1, the most expensive exponent of its bit-length.",
+      zh: "指数就是所选的规模,这里没有随机成分,「换一组」不会改变结果。留意 31 =(11111)₂:每一位都是 1,是同位长里最费的指数。",
+    },
+  },
+  {
+    id: "pow2",
+    label: { en: "Power of two", zh: "2 的幂" },
+    make: (n) => pow2Floor(n),
+    hint: {
+      en: "Rounded down to the nearest power of two (10000 → 8192). Only one bit is set, so fast power does nothing but square — the cheapest exponent of its bit-length.",
+      zh: "向下取到最近的 2 的幂(10000 → 8192)。二进制只有一个 1,快速幂只需连续平方 —— 同位长里最省的指数。",
+    },
+  },
+];
+
+const POW_METRICS: RaceMetric[] = [
+  {
+    key: "cmp",
+    label: { en: "Multiplications", zh: "乘法次数" },
+    tip: {
+      en: "One multiplication of two numbers; a squaring and an extra multiply for a 1 bit each count as one.",
+      zh: "两个数之间的一次乘法;一次平方、一次为 1 的二进制位补乘,都各记一次。",
+    },
+  },
+  {
+    key: "space",
+    label: { en: "Peak space (stack)", zh: "峰值空间(栈)" },
+    tip: {
+      en: "Peak units held at the same time: one per live recursion frame, one per working variable. The exponent itself is not counted.",
+      zh: "同时占用的峰值单元:每个活着的递归栈帧记 1,每个工作变量记 1,不含指数本身。",
+    },
+  },
+];
+
+function powVerdict(
+  r: LaneResult[],
+  { size, inputId }: { size: number; inputId: string },
+): Loc<ReactNode> {
+  const g = (id: string) => r.find((x) => x.id === id)!.counts;
+  const nv = g("pow-naive");
+  const rc = g("pow-rec");
+  const it = g("pow-iter");
+  const e = inputId === "pow2" ? pow2Floor(size) : size;
+  const bin = e.toString(2);
+  const lg = bin.length - 1; // ⌊log₂n⌋
+  const ones = bin.split("").filter((c) => c === "1").length; // popcount(n)
+  const ratio = Math.round(nv.cmp / Math.max(1, rc.cmp));
+
+  const spaceEn = (
+    <>
+      {" "}
+      The two fast versions do the same amount of arithmetic — {rc.cmp} against{" "}
+      {it.cmp} multiplications, the iterative one behind by exactly one because its
+      result starts at 1, so its first multiplication is 1 × x. Ignore that. The bar
+      to read is the second one: the recursive version holds <b>{rc.space} units</b>{" "}
+      at the peak and every one of them is a live stack frame (⌊log₂n⌋ + 1 ={" "}
+      {lg + 1}), while the iterative version holds <b>{it.space}</b> no matter how
+      large n grows. Naive chaining is in fact the most frugal on space, with{" "}
+      {nv.space} variable, and it buys nothing — it already lost on the axis that
+      decides this problem. The engineering reading: when a recursion is a straight
+      chain with nothing left to combine on the way back, write the loop. Same
+      complexity, and no stack that can overflow.
+    </>
+  );
+  const spaceZh = (
+    <>
+      {" "}
+      两个快速幂版本做的算术量一样 —— {rc.cmp} 对 {it.cmp} 次乘法,迭代版只多 1 次,
+      原因很小:它的结果从 1 起步,第一次乘的是 1 × x。这 1 次可以不看。
+      要看的是第二根条:递归版峰值占用 <b>{rc.space} 个单元</b>,
+      而且每一个都是活着的栈帧(⌊log₂n⌋ + 1 = {lg + 1});
+      迭代版无论 n 多大都只占 <b>{it.space}</b> 个。
+      朴素连乘反而是空间上最省的({nv.space} 个变量),但这点节省什么也换不到 ——
+      它在决定这道题的那根轴上已经输了。工程上的读法:
+      当递归是一条直链、回来的路上没有东西要合并时,就把它写成循环 ——
+      复杂度一样,而且没有可以溢出的栈。
+    </>
+  );
+
+  if (inputId === "pow2")
+    return {
+      en: (
+        <>
+          Exponent n = {e} = 2^{lg}, a single 1 bit. Fast power then does nothing but
+          square: <b>{rc.cmp} multiplications</b>, exactly log₂n, and no sequence of
+          squarings can reach this exponent in fewer steps. Naive chaining still pays{" "}
+          <b>{nv.cmp}</b>. Now switch the shape back to General and pick 31 =
+          (11111)₂ — the same bit-length, but each remaining 1 bit adds one multiply,
+          taking it from 4 up to 8. That is what ⌊log₂n⌋ + popcount(n) − 1 means in
+          practice: the squarings are fixed by the bit-length, the 1 bits are the
+          surcharge.
+          {spaceEn}
+        </>
+      ),
+      zh: (
+        <>
+          指数 n = {e} = 2^{lg},二进制只有一个 1。此时快速幂只做平方:
+          <b>{rc.cmp} 次乘法</b>,正好是 log₂n,而且没有任何平方序列能更快到达这个指数;
+          朴素连乘仍要付 <b>{nv.cmp}</b> 次。
+          现在把形状切回「一般指数」并选 31 =(11111)₂ —— 同样的位长,
+          但每一个剩下的 1 都要补乘一次,于是从 4 次涨到 8 次。
+          这就是 ⌊log₂n⌋ + popcount(n) − 1 的现实含义:
+          平方次数由位长决定,二进制里的 1 是附加费。
+          {spaceZh}
+        </>
+      ),
+    };
+
+  return {
+    en: (
+      <>
+        Exponent n = {e} = ({bin})₂. Naive chaining pays <b>{nv.cmp}</b>{" "}
+        multiplications — exactly n − 1, one per loop step. Fast power pays{" "}
+        <b>{rc.cmp}</b>, and the number splits cleanly: ⌊log₂n⌋ = {lg} squarings to
+        build x², x⁴, x⁸ … plus popcount(n) − 1 = {ones - 1} extra multiplications,
+        one for each remaining 1 bit. That is a factor of {ratio}, and it is not a
+        fixed factor: doubling n adds {e} steps on the left and one step on the
+        right.
+        {spaceEn}
+      </>
+    ),
+    zh: (
+      <>
+        指数 n = {e} =({bin})₂。朴素连乘付 <b>{nv.cmp}</b> 次乘法 —— 正好是 n − 1,
+        循环每走一步一次。快速幂付 <b>{rc.cmp}</b> 次,而这个数字拆得很干净:
+        ⌊log₂n⌋ = {lg} 次平方,用来造出 x²、x⁴、x⁸…… 外加 popcount(n) − 1 ={" "}
+        {ones - 1} 次补乘,对应二进制里剩下的每一个 1。
+        差距是 {ratio} 倍,而且这个倍数不是固定的:把 n 翻一倍,
+        左边多 {e} 步,右边只多 1 步。
+        {spaceZh}
+      </>
+    ),
+  };
+}
 
 export default function DivideChapter() {
   return (
@@ -1276,6 +1535,87 @@ function merge(x, y) {
             />
           </p>
         </Callout>
+        <div className="prose">
+          <p>
+            <T
+              en={
+                <>
+                  The paragraph above quotes two numbers — about 2^2048 multiplications
+                  against about 2048 squarings — and numbers like that deserve to be
+                  checked rather than believed. So let us check them. Below, the same
+                  exponent goes to three implementations at once and{" "}
+                  <b>every multiplication is counted</b>: naive chaining, the recursive
+                  version, and the iterative version. All three compute{" "}
+                  <code>3^n mod (10⁹+7)</code>, because a floating-point x^10000
+                  overflows long before the count becomes interesting, and taking the
+                  modulus after each multiplication is the standard practice for modular
+                  exponentiation anyway.
+                </>
+              }
+              zh={
+                <>
+                  上面这段引了两个数字 —— 约 2^2048 次乘法对约 2048 次平方 ——
+                  这类数字应该核对,而不是相信。那就核对一下。
+                  下面把同一个指数同时交给三份实现,<b>每一次乘法都记账</b>:
+                  朴素连乘、递归版、迭代版。三者算的都是 <code>3^n mod (10⁹+7)</code>,
+                  因为浮点的 x^10000 早在次数变得有意思之前就溢出了,
+                  而每乘一次就取模,本来也是模幂的标准做法。
+                </>
+              }
+            />
+          </p>
+        </div>
+
+        <AlgoRace
+          title={{
+            en: "Race · The bill for one exponent: n multiplications versus log n",
+            zh: "竞速 · 同一个指数的账单:乘 n 次,还是乘 log n 次",
+          }}
+          algos={POW_ALGOS}
+          inputs={POW_SHAPES}
+          sizes={[10, 31, 100, 1000, 10000]}
+          defaultSize={1000}
+          clone={(v) => v}
+          metrics={POW_METRICS}
+          unitLabel={{ en: "Exponent n", zh: "指数 n" }}
+          verdict={powVerdict}
+        />
+
+        <div className="prose">
+          <p>
+            <T
+              en={
+                <>
+                  Two things are worth carrying out of that table. First,{" "}
+                  ⌊log₂n⌋ + popcount(n) − 1 is not the theoretical minimum for every
+                  exponent: fast power spends 6 multiplications on x¹⁵, while computing
+                  x³ once and reusing it needs only 5 (x², x³, x⁶, x¹², x¹⁵). Finding
+                  the shortest such sequence — the shortest{" "}
+                  <b>addition chain</b> — is a genuinely hard problem, and fast power is
+                  the version that is always simple and always close enough. Second, the
+                  recursion here has <b>nothing to combine on the way back</b>; it only
+                  hands a value up the chain. That is exactly the situation in which a
+                  loop replaces the recursion for free. §04 is the opposite case: merging
+                  k lists really does have work to do on the way back up, and there the
+                  recursion stays.
+                </>
+              }
+              zh={
+                <>
+                  这张表有两点值得带走。第一,⌊log₂n⌋ + popcount(n) − 1
+                  并不是每个指数的理论最小值:快速幂算 x¹⁵ 要 6 次乘法,
+                  而先算出 x³ 再复用只要 5 次(x²、x³、x⁶、x¹²、x¹⁵)。
+                  找出最短的这种序列 —— 最短<b>加法链(addition chain)</b> ——
+                  是一个真正困难的问题,而快速幂是那个「永远简单、永远够好」的版本。
+                  第二,这里的递归<b>在回来的路上没有东西要合并</b>,
+                  它只是把一个值顺着链交上去 —— 而这正是「循环可以白拿地替掉递归」的场合。
+                  §04 是反面例子:合并 K 个链表在回来的路上确实有活要干,
+                  那里的递归就留着。
+                </>
+              }
+            />
+          </p>
+        </div>
       </Section>
 
       {/* ================= §04 精讲 B · 合并 K 链表 LC 23 ================= */}

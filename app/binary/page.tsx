@@ -22,11 +22,20 @@ import {
 } from "@/lib/kit";
 import { CodeTabs } from "@/lib/code";
 import { RangeShrink, type RangeFrame } from "@/lib/algviz";
+import { AlgoRace } from "@/lib/race";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
 import { T } from "@/lib/i18n";
 import { PROBLEMS, QUIZ } from "@/lib/binary-data";
-import { GuessLab, BoundaryStepper, RotatedStepper } from "./viz";
+import {
+  GuessLab,
+  BoundaryStepper,
+  RotatedStepper,
+  cloneHaystack,
+  SEARCH_ALGOS,
+  SEARCH_SHAPES,
+  SEARCH_METRICS,
+} from "./viz";
 
 /* ============ 精讲 C · LC 875 吃香蕉:RangeShrink 逐帧收窄 ============ */
 // piles = [3,6,7,11], h = 8 → 最小吃速 k = 4。值域 [1,11],宽度 11 ≤ 20,可读。
@@ -720,6 +729,201 @@ export default function BinaryChapter() {
             />
           </p>
         </Callout>
+
+        {/* ---- 查找竞速:把「砍半」的威力变成数字(选手与形状见 ./viz)---- */}
+        <div className="prose" style={{ marginTop: 18 }}>
+          <p>
+            <T
+              en={
+                <>
+                  The boundaries are settled. That leaves the claim this section
+                  opened with — halving beats scanning — and a claim like that is
+                  better measured than repeated. Below, the same sorted array and
+                  the same target go to a linear scan and to both binary searches,
+                  with a counter on every comparison. Two meters only,{" "}
+                  <b>comparisons</b> and <b>extra space</b>: a search writes
+                  nothing back into the array, so there is no move count to
+                  report.
+                </>
+              }
+              zh={
+                <>
+                  边界的事说清了,剩下的是本节开头那句断言 —— 砍半比逐个看快。
+                  这种断言值得量一次,而不是再重复一遍。
+                  下面把同一个有序数组、同一个目标,同时交给线性扫描和两种二分写法,
+                  每一次比较都记账。只有两个计数器:<b>比较次数</b>与<b>额外空间</b> ——
+                  查找不往数组里写任何东西,所以没有「移动次数」可报。
+                </>
+              }
+            />
+          </p>
+        </div>
+
+        <AlgoRace
+          title={{
+            en: "Race · scanning versus halving, on the same sorted array",
+            zh: "竞速 · 同一个有序数组上,逐个看 对 砍半",
+          }}
+          algos={SEARCH_ALGOS}
+          inputs={SEARCH_SHAPES}
+          metrics={SEARCH_METRICS}
+          sizes={[16, 64, 256, 1024, 4096]}
+          defaultSize={1024}
+          defaultInput={1}
+          clone={cloneHaystack}
+          unitLabel={{ en: "Array length n", zh: "数组长度 n" }}
+          verdict={(r, { size, inputId }) => {
+            const g = (id: string) => r.find((x) => x.id === id)!.counts;
+            const lin = g("linear");
+            const bin = g("binary");
+            const rec = g("binary-rec");
+            const cap = Math.floor(Math.log2(size)) + 1; // 闭区间二分的探测上界
+            if (inputId === "first")
+              return {
+                en: (
+                  <>
+                    This is the one shape where the scan wins, and it is worth
+                    stating plainly: the target sits at index 0, so linear search
+                    answers after <b>{lin.cmp} comparison</b> while binary search
+                    still walks in from the middle and spends {bin.cmp}. Binary
+                    search never promised to be faster on every input. What it
+                    sells is a <b>ceiling</b>: at n = {size} it never exceeds
+                    ⌊log₂{size}⌋ + 1 = <b>{cap}</b> probes — wherever the target
+                    is, and even when it is not there at all. The scan has no
+                    ceiling below n, and systems are sized by their ceiling, not
+                    by their luckiest input.
+                  </>
+                ),
+                zh: (
+                  <>
+                    这是线性扫描唯一赢的形状,值得如实说明:目标就在下标 0,
+                    扫描 <b>{lin.cmp} 次比较</b>就回答完了,
+                    而二分仍要从正中间一路走进来,花了 {bin.cmp} 次。
+                    二分从未承诺「在每一份输入上都更快」,它卖的是一个<b>上界</b>:
+                    n = {size} 时,无论目标在哪、甚至根本不在,它都不会超过
+                    ⌊log₂{size}⌋ + 1 = <b>{cap}</b> 次探测。
+                    而扫描在 n 以下没有任何上界 —— 系统容量是按上界规划的,
+                    不是按最幸运的那一份输入。
+                  </>
+                ),
+              };
+            if (inputId === "absent")
+              return {
+                en: (
+                  <>
+                    Luck is out of the picture here, because the target is not in
+                    the array. The scan must examine all <b>{lin.cmp}</b> elements
+                    before it is entitled to answer &ldquo;not present&rdquo;: any
+                    element it has not looked at could still be the match. Binary
+                    search reaches the same conclusion in <b>{bin.cmp}</b> probes,
+                    and never needs more than ⌊log₂{size}⌋ + 1 = {cap}, because
+                    each probe rules out an entire half using a fact it already
+                    has — the array is sorted — instead of looking. That gap,{" "}
+                    {lin.cmp} against {bin.cmp}, is the whole value of the word{" "}
+                    <b>sorted</b>.
+                  </>
+                ),
+                zh: (
+                  <>
+                    这一栏没有运气可讲:目标不在数组里。扫描必须把 <b>{lin.cmp}</b>{" "}
+                    个元素全部看过,才有资格回答「不存在」——
+                    只要还有一个没看,那一个就可能是答案。二分用 <b>{bin.cmp}</b>{" "}
+                    次探测得到同一结论,且永远不超过 ⌊log₂{size}⌋ + 1 = {cap} 次,
+                    因为它每次排除的是一整个半区,靠的是一条已知事实 ——「数组有序」——
+                    而不是逐个去看。{lin.cmp} 对 {bin.cmp} 这个差距,
+                    就是<b>有序</b>这两个字的全部价值。
+                  </>
+                ),
+              };
+            if (inputId === "mid")
+              return {
+                en: (
+                  <>
+                    The target happens to be the element binary search probes
+                    first, so it finishes after <b>{bin.cmp} comparison</b>, its
+                    best case, while the scan still walks half the array for{" "}
+                    {lin.cmp}. One caution about the space column, which is easy
+                    to misread: the scan holds a single index, the loop holds lo
+                    and hi, and the recursion bottoms out at {rec.space} frame
+                    here only because it never goes a level deeper. A
+                    one-variable difference is not a result — at this shape all
+                    three are O(1). Pick any other shape and watch the recursive
+                    lane climb towards log₂n frames.
+                  </>
+                ),
+                zh: (
+                  <>
+                    目标恰好就是二分第一次探测的那个元素,所以它 <b>{bin.cmp} 次比较</b>
+                    就结束了 —— 这是它的最好情况;而扫描仍要走半个数组,花 {lin.cmp} 次。
+                    额外空间那一栏容易被误读,提醒一句:扫描持有一个下标,
+                    迭代二分持有 lo 和 hi,而递归在这里只用了 {rec.space} 个栈帧 ——
+                    只是因为它一层都不必往下走。差一个变量说明不了任何问题,
+                    这个形状下三者都是 O(1)。换到任何别的形状,
+                    就能看见递归那一条爬向 log₂n 个栈帧。
+                  </>
+                ),
+              };
+            return {
+              en: (
+                <>
+                  The target is the last element, so the scan has to examine all{" "}
+                  <b>{lin.cmp}</b> of them, while binary search finds it in{" "}
+                  <b>{bin.cmp}</b> probes. The ratio is not the interesting part;
+                  the growth is. Double n and the worst case of the scan doubles
+                  with it, whereas binary search gains exactly <b>one</b>{" "}
+                  comparison — one extra cut is all it takes to halve a range of
+                  twice the length. Click the sizes up, 16 → 64 → 256 → 1024 →
+                  4096, and 4096 comparisons turn into 13. Read the space column
+                  as well: the loop holds two numbers at every n, and the
+                  recursive version holds <b>{rec.space}</b> stack frames — that
+                  is the O(log n) price of the tidier code, and at a large enough
+                  n it is where a stack overflow comes from.
+                </>
+              ),
+              zh: (
+                <>
+                  目标是最后一个元素,扫描只能把 <b>{lin.cmp}</b> 个元素全看一遍,
+                  而二分 <b>{bin.cmp}</b> 次探测就找到了。倍数不是重点,增长方式才是:
+                  n 翻一倍,扫描的最坏情况跟着翻一倍,而二分只多 <b>1</b> 次比较 ——
+                  长度翻倍,多砍一刀就砍回来了。把规模一路点上去,
+                  16 → 64 → 256 → 1024 → 4096,4096 次比较变成 13 次。
+                  也请一并看额外空间:迭代版在任何 n 下都只持有两个数,
+                  递归版持有 <b>{rec.space}</b> 个栈帧 ——
+                  这就是「代码更整洁」要付的 O(log n),n 足够大时,栈溢出就是从这里来的。
+                </>
+              ),
+            };
+          }}
+        />
+
+        <div className="prose" style={{ marginTop: 16 }}>
+          <p>
+            <T
+              en={
+                <>
+                  Two habits are worth taking from these numbers. First, name the
+                  input shape before quoting a complexity: O(log n) is a claim
+                  about the worst case, and capacity is planned on worst cases.
+                  Second, a sorted array is not free — someone paid O(n log n) to
+                  sort it. One lookup does not repay that; a million lookups on
+                  the same array repay it easily. That arithmetic is the entire
+                  argument for building a database index. The rest of this chapter
+                  works on arrays whose order is less obvious than the one above.
+                </>
+              }
+              zh={
+                <>
+                  从这些数字里带走两个习惯。第一,引用复杂度之前先说清输入形状:
+                  O(log n) 说的是最坏情况,而容量是按最坏情况规划的。
+                  第二,有序数组不是白来的 —— 总得有人先付一次 O(n log n) 把它排好;
+                  查一次收不回这笔钱,在同一个数组上查一百万次就轻松回本。
+                  这道算式就是「为什么要建数据库索引」的全部理由。
+                  而本章接下来要处理的,是那些「有序」远没有上面这么显然的数组。
+                </>
+              }
+            />
+          </p>
+        </div>
       </Section>
 
       {/* ================= §02 找边界 + 精讲 A ================= */}

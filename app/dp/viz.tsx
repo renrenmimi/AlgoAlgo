@@ -5,12 +5,15 @@
 //  - FibMemoTree:同一棵树加上备忘录 —— 查表命中的子树根本不用长出来。
 //    两者都复用 lib/algviz 的 TreePlayer,只是帧数据不同。
 //  - RobLab:打家劫舍实验室 —— 亲手选房子,体会「相邻约束下的最优」有多难靠直觉。
+// 另外提供 §02 那场斐波那契竞速的三名选手(FIB_NAIVE / FIB_MEMO / FIB_LOOP),
+// 供 lib/race.tsx 的 <AlgoRace> 使用。
 //
 // 双语:帧旁白直接写成 <T en zh />(元素只在 Provider 内渲染,写在模块级常量里没问题);
 // 组件内部的 aria-label / 按钮文案用 useL() 解析。
 
 import { useMemo, useState } from "react";
 import { TreePlayer, type TreeNodeSpec, type TreeFrame, type TreeNodeState } from "@/lib/algviz";
+import type { RaceAlgo, RaceInput, Tracer } from "@/lib/race";
 import { T, useL } from "@/lib/i18n";
 
 /* ---------------- 斐波那契递归树(共用结构) ---------------- */
@@ -561,3 +564,137 @@ export function RobLab() {
     </div>
   );
 }
+
+/* ---------------- 斐波那契竞速:三名选手 ---------------- */
+// 计数在本章被重新贴了标签(标签与说明见 app/dp/page.tsx 的 FIB_METRICS):
+//   cmp = 进入函数一次(基准情形与命中备忘录的调用也算);
+//   mov = 执行一次 f(i−1)+f(i−2) 的加法;
+//   space = 存活栈帧 + 备忘表格子 + 滚动变量的峰值(由 alloc/free 与 enter/exit 自动取峰)。
+// 三个实现都保持教科书原样,不做任何额外优化 —— 账目要能被手算复核:
+//   朴素:调用 2·fib(n+1)−1 次、加法 fib(n+1)−1 次、峰值空间 n(递归深度);
+//   记忆化:调用 2n−1 次、加法 n−1 次、峰值空间 2n+1((n+1) 格备忘表 + n 层栈);
+//   递推:调用 1 次、加法 n−1 次、峰值空间 4(3 个滚动变量 + 1 层栈帧)。
+
+function fibNaive(n: number, t: Tracer): number {
+  const go = (k: number): number => {
+    t.enter();
+    t.cmp(); // 一次函数调用
+    if (k < 2) {
+      t.exit();
+      return k;
+    }
+    const v = go(k - 1) + go(k - 2);
+    t.mov(); // 一次加法
+    t.exit();
+    return v;
+  };
+  return go(n);
+}
+
+function fibMemo(n: number, t: Tracer): number {
+  const memo = new Array<number>(n + 1).fill(-1);
+  t.alloc(n + 1); // 备忘表:n+1 格,−1 代表「还没算过」
+  const go = (k: number): number => {
+    t.enter();
+    t.cmp();
+    if (k < 2) {
+      t.exit();
+      return k;
+    }
+    if (memo[k] >= 0) {
+      t.exit();
+      return memo[k]; // 命中备忘录:子树根本不用长出来
+    }
+    const v = go(k - 1) + go(k - 2);
+    t.mov();
+    memo[k] = v;
+    t.exit();
+    return v;
+  };
+  const out = go(n);
+  t.free(n + 1);
+  return out;
+}
+
+function fibLoop(n: number, t: Tracer): number {
+  t.enter(); // 只有这一层栈帧,而且不再长
+  t.cmp();
+  t.alloc(3); // prev / cur / next,数量与 n 无关
+  if (n < 2) {
+    t.free(3);
+    t.exit();
+    return n;
+  }
+  let prev = 0;
+  let cur = 1;
+  for (let i = 2; i <= n; i++) {
+    const next = prev + cur;
+    t.mov();
+    prev = cur;
+    cur = next;
+  }
+  t.free(3);
+  t.exit();
+  return cur;
+}
+
+export const FIB_NAIVE: RaceAlgo<number> = {
+  id: "fib-naive",
+  name: { en: "Naive recursion", zh: "朴素递归" },
+  time: "2n",
+  space: { en: "O(n) stack", zh: "O(n) 栈" },
+  note: {
+    en: "Recomputes every overlapping subproblem. The call count is exactly 2·fib(n+1)−1, so raising n by 1 multiplies the work by about 1.618.",
+    zh: "每个重叠子问题都重算一遍。调用次数恰好是 2·fib(n+1)−1,n 每加 1,工作量就乘以约 1.618。",
+  },
+  run: (n, t) => {
+    fibNaive(n, t);
+  },
+};
+
+export const FIB_MEMO: RaceAlgo<number> = {
+  id: "fib-memo",
+  name: { en: "Memoized recursion (top-down)", zh: "记忆化递归(自顶向下)" },
+  time: "n",
+  space: { en: "O(n) stack + O(n) memo", zh: "O(n) 栈 + O(n) 备忘表" },
+  note: {
+    en: "The same recursion plus a table. Each of the n−1 real subproblems is computed once; every later request for it is one lookup.",
+    zh: "同一份递归,外加一张表。n−1 个真正的子问题各算一次,之后对它的每次请求都只是一次查表。",
+  },
+  run: (n, t) => {
+    fibMemo(n, t);
+  },
+};
+
+export const FIB_LOOP: RaceAlgo<number> = {
+  id: "fib-iter",
+  name: {
+    en: "Tabulation, two rolling values (bottom-up)",
+    zh: "递推 · 两个滚动变量(自底向上)",
+  },
+  time: "n",
+  space: { en: "O(1)", zh: "O(1)" },
+  note: {
+    en: "Fills 0, 1, 2, … in order, so the two values it needs are always already in hand: no stack, no table.",
+    zh: "按 0、1、2… 的顺序往上填,需要的两个值永远已经在手边:不要栈,也不要表。",
+  },
+  run: (n, t) => {
+    fibLoop(n, t);
+  },
+};
+
+/** 斐波那契只有一个参数,所以「输入形状」只有一种:n 本身。 */
+export const FIB_INPUTS: RaceInput<number>[] = [
+  {
+    id: "n",
+    label: { en: "fib(n)", zh: "fib(n)" },
+    make: (n) => n,
+    hint: {
+      en: "Fibonacci takes a single argument, so there is only one shape to feed: the value of n itself. Raise n and watch the three bills part ways.",
+      zh: "斐波那契只有一个参数,所以能喂进去的「形状」只有一种:n 本身。把 n 调大,三张账单就会分道扬镳。",
+    },
+  },
+];
+
+/** 输入是一个数字,不存在需要深拷的内部结构。 */
+export const cloneN = (v: number): number => v;

@@ -1,9 +1,11 @@
 "use client";
 
-// 第 3 章 · 二分进阶的三个专属可视化:
+// 第 3 章 · 二分进阶的专属可视化:
 //  - GuessLab:猜数字实验室 —— 你想一个数,机器用二分来猜,亲手体会「砍半」有多快。
 //  - BoundaryStepper:LC 34 找左右边界 —— lower_bound / upper_bound 逐帧,ArrayStepper。
 //  - RotatedStepper:LC 33 旋转数组搜索 —— 每一步判断「哪半有序」,ArrayStepper 自建帧。
+//  - 查找竞速的选手与输入形状(SEARCH_ALGOS / SEARCH_SHAPES / SEARCH_METRICS)——
+//    供 §01 的 <AlgoRace> 使用,判读文案写在 page.tsx。
 // 二分答案(875 吃香蕉)用的是共享库 lib/algviz 的 RangeShrink,帧数据写在 page.tsx。
 //
 // 双语:旁白用 <T en zh />;组件的文案型 props 传 { en, zh }。
@@ -12,6 +14,7 @@
 import { useState } from "react";
 import { ArrayStepper, type ArrayFrame, type ArrayCell } from "@/lib/stepper";
 import { T } from "@/lib/i18n";
+import type { RaceAlgo, RaceInput, RaceMetric, Tracer } from "@/lib/race";
 
 /* ============================================================
    GuessLab —— 猜数字实验室(交互:你出数,机器二分猜)
@@ -583,3 +586,221 @@ export function RotatedStepper() {
     />
   );
 }
+
+/* ============================================================
+   查找竞速 —— 线性扫描 vs 二分(迭代 / 递归),供 <AlgoRace> 使用
+   ============================================================
+
+   记账口径(界面上也写着,不许含糊):
+     · 比较 = 把一个元素与目标比较一次。线性扫描每看一个元素记一次;
+       二分每探测一次 mid 记一次(源码里对 mid 写了 == 与 <,但那是同一次探测,
+       口径统一为「一次三路比较」,两位选手才可比)。
+     · 额外空间 = 峰值时持有的变量与栈帧个数,不含输入本身:
+       线性扫描 1 个下标;迭代二分 lo 与 hi 两个;递归二分每层一个栈帧。
+     · 查找不写数组,所以 mov 恒为 0 —— 页面上只展示两项指标。
+
+   三个实现都在 scratchpad 用 node 枚举过边界(n = 0/1/2/3/17/1000,
+   目标覆盖每个下标 + 三类不存在),返回下标完全一致。 */
+
+export type Haystack = { a: number[]; target: number };
+
+/** 浅拷:数组 slice 一份,target 是数字直接带走 */
+export const cloneHaystack = (h: Haystack): Haystack => ({
+  a: h.a.slice(),
+  target: h.target,
+});
+
+/** 线性扫描:不要求有序,所以也没法跳过任何元素 */
+function linearFind({ a, target }: Haystack, t: Tracer): number {
+  t.alloc(1); // 一个下标 i
+  for (let i = 0; i < a.length; i++) {
+    t.cmp();
+    if (a[i] === target) return i;
+  }
+  return -1;
+}
+
+/** 迭代二分,闭区间 [lo, hi] —— 与 §01 模板逐行一致 */
+function binaryFind({ a, target }: Haystack, t: Tracer): number {
+  t.alloc(2); // lo 与 hi
+  let lo = 0;
+  let hi = a.length - 1;
+  while (lo <= hi) {
+    const mid = lo + Math.floor((hi - lo) / 2);
+    t.cmp();
+    if (a[mid] === target) return mid;
+    if (a[mid] < target) lo = mid + 1;
+    else hi = mid - 1;
+  }
+  return -1; // 区间空了 = 不存在
+}
+
+/** 递归二分:探测次数与迭代版完全相同,代价是每层一个栈帧 */
+function binaryFindRec({ a, target }: Haystack, t: Tracer): number {
+  const go = (lo: number, hi: number): number => {
+    t.enter();
+    let r: number;
+    if (lo > hi) r = -1;
+    else {
+      const mid = lo + Math.floor((hi - lo) / 2);
+      t.cmp();
+      if (a[mid] === target) r = mid;
+      else if (a[mid] < target) r = go(mid + 1, hi);
+      else r = go(lo, mid - 1);
+    }
+    t.exit();
+    return r;
+  };
+  return go(0, a.length - 1);
+}
+
+export const SEARCH_ALGOS: RaceAlgo<Haystack>[] = [
+  {
+    id: "linear",
+    name: { en: "Linear scan", zh: "线性扫描" },
+    time: "n",
+    space: { en: "O(1)", zh: "O(1)" },
+    note: {
+      en: (
+        <>
+          Looks at one element after another and stops at the first match. It
+          asks nothing of the input — and for exactly that reason it can never
+          skip anything either.
+        </>
+      ),
+      zh: (
+        <>
+          一个接一个地看,撞上就停。它对输入不提任何要求 ——
+          也正因为如此,它永远没有资格跳过任何元素。
+        </>
+      ),
+    },
+    run: (input, t) => {
+      linearFind(input, t);
+    },
+  },
+  {
+    id: "binary",
+    name: { en: "Binary search (iterative)", zh: "二分查找(迭代)" },
+    time: "logn",
+    space: { en: "O(1)", zh: "O(1)" },
+    note: {
+      en: (
+        <>
+          Probes the middle and discards half of the remaining candidates every
+          time. It buys that on credit: the array must already be sorted.
+        </>
+      ),
+      zh: (
+        <>
+          探测正中间,每次丢掉一半候选。这份便宜是赊来的:数组必须事先有序。
+        </>
+      ),
+    },
+    run: (input, t) => {
+      binaryFind(input, t);
+    },
+  },
+  {
+    id: "binary-rec",
+    name: { en: "Binary search (recursive)", zh: "二分查找(递归)" },
+    time: "logn",
+    space: { en: "O(log n)", zh: "O(log n)" },
+    note: {
+      en: (
+        <>
+          The same probes as the loop, written as recursion. The space column is
+          its stack: one frame per level of halving.
+        </>
+      ),
+      zh: (
+        <>
+          和迭代版探测同样的位置,只是写成了递归。额外空间那一栏就是它的调用栈:
+          每砍一刀多一个栈帧。
+        </>
+      ),
+    },
+    run: (input, t) => {
+      binaryFindRec(input, t);
+    },
+  },
+];
+
+/** 严格递增的等差数组。全部元素同奇偶,所以「奇偶相反的值」一定不在数组里。 */
+const ladder = (n: number, seed: number): number[] => {
+  const base = seed % 5; // 换一组:整体平移,形状不变
+  return Array.from({ length: n }, (_, i) => base + 2 * i);
+};
+
+const H = (
+  id: string,
+  label: { en: string; zh: string },
+  pick: (a: number[], n: number) => number,
+  hint: { en: string; zh: string },
+): RaceInput<Haystack> => ({
+  id,
+  label,
+  make: (n, seed) => {
+    const a = ladder(n, seed);
+    return { a, target: n === 0 ? 0 : pick(a, n) };
+  },
+  hint,
+});
+
+export const SEARCH_SHAPES: RaceInput<Haystack>[] = [
+  H(
+    "mid",
+    { en: "Target in the middle", zh: "目标在正中间" },
+    (a, n) => a[Math.floor((n - 1) / 2)],
+    {
+      en: "Binary search probes the middle first, so this is its best case: one comparison. The scan still has to walk half the array.",
+      zh: "二分第一次探测的就是正中间,所以这是它的最好情况:一次比较。而扫描仍要走完半个数组。",
+    },
+  ),
+  H(
+    "last",
+    { en: "Target at the last position", zh: "目标在最后一个" },
+    (a, n) => a[n - 1],
+    {
+      en: "The worst case for a scan: it must examine all n elements. Binary search does not care where the target sits.",
+      zh: "扫描的最坏情况:n 个元素一个都躲不掉。而目标在哪里,二分并不在意。",
+    },
+  ),
+  H(
+    "absent",
+    { en: "Target not present", zh: "目标不存在" },
+    (a, n) => a[Math.floor(n * 0.6)] + 1,
+    {
+      en: "The target falls in a gap between two elements. Worst case against worst case: the scan must check everything before it may say no.",
+      zh: "目标落在两个元素之间的空隙里。最坏情况对最坏情况:扫描必须全部看过,才有资格说「没有」。",
+    },
+  ),
+  H(
+    "first",
+    { en: "Target at the very front", zh: "目标在最前面" },
+    (a) => a[0],
+    {
+      en: "The one shape where the scan wins: it answers after a single comparison, while binary search still has to walk in from the middle.",
+      zh: "扫描唯一赢的形状:它一次比较就能回答,而二分还得从正中间一路走进来。",
+    },
+  ),
+];
+
+export const SEARCH_METRICS: RaceMetric[] = [
+  {
+    key: "cmp",
+    label: { en: "Comparisons", zh: "比较次数" },
+    tip: {
+      en: "One comparison of one element against the target: the scan counts one per element it examines, binary search one per probe of the middle.",
+      zh: "把一个元素与目标比较一次:扫描每看一个元素记一次,二分每探测一次 mid 记一次。",
+    },
+  },
+  {
+    key: "space",
+    label: { en: "Extra space", zh: "额外空间" },
+    tip: {
+      en: "Peak number of variables and stack frames held, input excluded: one index for the scan, lo and hi for the loop, one frame per level for the recursion.",
+      zh: "峰值时持有的变量与栈帧个数,不含输入本身:扫描 1 个下标,迭代二分 lo 与 hi 两个,递归二分每层一个栈帧。",
+    },
+  },
+];
