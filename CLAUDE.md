@@ -48,10 +48,11 @@ DP 四章承接「回溯太慢、贪心失灵」(322 硬币 [1,3,4] 是贯穿的
 ## 文件布局与所有权
 
 ```
-app/globals.css        全站设计系统(含 10.5 节 algviz 样式)—— 章节作者【禁止改】
+app/globals.css        全站设计系统(含 §10.5 algviz、§10.6 竞速样式)—— 章节作者【禁止改】
 app/layout.tsx         外壳(sidebar/toolbar/cmdk/aurora)—— 禁止改
 lib/kit.tsx lib/code.tsx lib/quiz.tsx lib/problems.tsx lib/stepper.tsx
-lib/highlight.tsx lib/progress.tsx lib/algviz.tsx lib/curriculum.ts  共享库 —— 禁止改
+lib/highlight.tsx lib/progress.tsx lib/algviz.tsx lib/curriculum.ts
+lib/race.tsx lib/race-sorts.tsx lib/i18n.tsx                     共享库 —— 禁止改
 app/<ch>/page.tsx      章节主页面("use client",数据+组合)
 app/<ch>/viz.tsx       本章专属可视化组件
 app/<ch>/chapter.css   本章专属样式(page.tsx 里【必须】import "./chapter.css",
@@ -96,6 +97,27 @@ lib/<ch>-data.tsx      本章题单 PROBLEMS + 测验 QUIZ 数据
 - **RangeShrink**(候选区间收缩器,二分答案/贪心排除):
   `RangeFrame = { lo, hi, probe?, verdict?: "ok"|"no", answer?, msg }`
   `<RangeShrink title min max frames unit? cellW? />`(值域宽度 ≤ 20 保证可读)。
+
+### lib/race.tsx + lib/race-sorts.tsx(算法竞速 —— 把大 O 落成真实账单)
+
+同一份输入喂给 2~3 个算法,量出**比较次数 / 移动次数 / 额外空间**并排对比,
+条形按行归一化、每行标出「最少」、并列行转中性灰(避免被读成爆表),
+底部给可交互的动态判读文案。这是全站唯一「用数字反驳直觉」的组件。
+
+- `<AlgoRace title algos inputs sizes clone metrics? defaultInput? defaultSize? opCap? verdict? unitLabel? />`
+- `RaceAlgo<I> = { id, name, note?, time(BigO 档位), space, run(input, t: Tracer) }`
+- `RaceInput<I> = { id, label, make(n, seed), hint? }` —— seed 相同则输入完全相同,结果可复现
+- `Tracer`:`t.cmp()` 比较、`t.mov(n)` 写入(交换记 2)、`t.alloc/free(n)` 辅助单元、
+  `t.enter/exit()` 递归栈;`space` 自动取「辅助单元 + 栈帧」的峰值
+- `verdict: (results, {size, inputId}) => Loc<ReactNode>` —— **判读必须用真实数字讲为什么**
+- 非排序题目请用 `metrics` 重贴标签(如 cmp → 「函数调用次数」/「乘法次数」),
+  没有诚实含义的指标就别显示(metrics 是数组,给 2 项也行)
+- 排序选手与输入形状在 `lib/race-sorts.tsx`:
+  `BUBBLE / SELECTION / INSERTION / MERGE / QUICK_LAST / QUICK_RANDOM`、
+  `SHAPES`(随机/近乎有序/已排序/逆序/大量重复)、`cloneArr`
+- **新写「带计数器的算法」必须先用 node 验证正确性与计数**(抽出实现剥掉 TS 类型跑断言),
+  数字是这个组件的立身之本;实现刻意保持教科书原样,不偷加自适应优化。
+- 样式在 globals.css §10.6,类名 `.race-*`;组件外壳复用 `.viz`。
 
 ### lib/quiz.tsx
 - `<Quiz ch="dp" items={QuizItem[]} />`;题型 choice / multi / fill(契约同 DataData);

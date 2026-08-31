@@ -23,6 +23,20 @@ import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
 import { T } from "@/lib/i18n";
 import { PROBLEMS, QUIZ } from "@/lib/sorting-data";
+import { AlgoRace } from "@/lib/race";
+import {
+  BUBBLE,
+  SELECTION,
+  INSERTION,
+  MERGE,
+  QUICK_LAST,
+  QUICK_RANDOM,
+  SHAPES,
+  SORTED,
+  RANDOM,
+  REVERSED,
+  cloneArr,
+} from "@/lib/race-sorts";
 import {
   SortLab,
   PartitionDemo,
@@ -39,12 +53,13 @@ const CHIPS = [
   { id: "n2", n: "02", label: { en: "Three O(n²) sorts", zh: "O(n²) 三兄弟" } },
   { id: "merge", n: "03", label: { en: "Merge sort", zh: "归并 · 分治首秀" } },
   { id: "quick", n: "04", label: { en: "Quicksort · partition", zh: "快排 · partition" } },
-  { id: "linear", n: "05", label: { en: "Sorting without comparing", zh: "突破比较下界" } },
-  { id: "stable", n: "06", label: { en: "Stability & built-in sort", zh: "稳定性 & 内置 sort" } },
-  { id: "select", n: "07", label: { en: "Kth largest", zh: "第 K 大" } },
-  { id: "intervals", n: "08", label: { en: "Merge intervals", zh: "合并区间" } },
-  { id: "problems", n: "09", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "10", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "race", n: "05", label: { en: "Algorithm race", zh: "算法竞速" } },
+  { id: "linear", n: "06", label: { en: "Sorting without comparing", zh: "突破比较下界" } },
+  { id: "stable", n: "07", label: { en: "Stability & built-in sort", zh: "稳定性 & 内置 sort" } },
+  { id: "select", n: "08", label: { en: "Kth largest", zh: "第 K 大" } },
+  { id: "intervals", n: "09", label: { en: "Merge intervals", zh: "合并区间" } },
+  { id: "problems", n: "10", label: { en: "Problem set", zh: "高频题单" } },
+  { id: "quiz", n: "11", label: { en: "Quiz", zh: "通关测验" } },
 ];
 
 export default function SortingChapter() {
@@ -362,8 +377,9 @@ export default function SortingChapter() {
                     take the next card and slide it into the right place among
                     the cards already in your hand. Best <b>O(n)</b> (sorted
                     input), average and worst <b>O(n²)</b>, O(1) auxiliary space,
-                    stable. It is the fastest of the three on nearly sorted data,
-                    and you will meet it again in section 06.
+                    stable. It is the fastest of the three on nearly sorted data —
+                    section 05 puts actual numbers on that claim — and you will
+                    meet it again in section 07.
                   </>
                 }
                 zh={
@@ -371,8 +387,8 @@ export default function SortingChapter() {
                     <b>不变量:</b>第 i 轮后,<b>前 i 个</b>元素<b>彼此之间</b>已有序,
                     但不一定在最终位置。像理扑克:摸起一张新牌,插进左手已排好的牌里。
                     最好 <b>O(n)</b>(输入已有序),平均与最坏 <b>O(n²)</b>,
-                    辅助空间 O(1),稳定。它是三者中在「近乎有序」数据上最快的一个,
-                    §06 还会再遇见它。
+                    辅助空间 O(1),稳定。它是三者中在「近乎有序」数据上最快的一个 ——
+                    §05 的竞速会给这句话一个具体数字 —— §07 还会再遇见它。
                   </>
                 }
               />
@@ -1065,7 +1081,7 @@ export default function SortingChapter() {
               en={
                 <>
                   That one sentence is all of quicksort, and all of quickselect
-                  in section 07 as well. Play through one partition using the
+                  in section 08 as well. Play through one partition using the
                   Lomuto scheme. Watch the two pointers: <b>i</b> marks the right
                   edge of the &quot;smaller than pivot&quot; region, and{" "}
                   <b>j</b> scans from left to right. Then watch how the pivot
@@ -1074,7 +1090,7 @@ export default function SortingChapter() {
               }
               zh={
                 <>
-                  这一句话就是快排的全部,也是 §07 快速选择的全部。
+                  这一句话就是快排的全部,也是 §08 快速选择的全部。
                   逐帧看一次 Lomuto 方案的 partition,盯住两个指针:
                   <b>i</b> 标记「小于基准」那一段的右边界,<b>j</b> 从左往右扫。
                   再看最后一步基准是怎么归位的:
@@ -1442,10 +1458,347 @@ class Solution:
         </Callout>
       </Section>
 
-      {/* ================= §05 突破比较下界 ================= */}
+      {/* ================= §05 算法竞速 ================= */}
+      <Section
+        id="race"
+        index="05"
+        title={{
+          en: "Algorithm race: the bill on one identical input",
+          zh: "算法竞速:同一份输入上的真实账单",
+        }}
+        desc={{
+          en: "Big-O gives you the trend. Here are the actual comparisons, moves and extra space.",
+          zh: "大 O 只给趋势 —— 这里给出比较、移动、额外空间的实际次数",
+        }}
+        badge={
+          <span className="chip">
+            <T en="interactive" zh="可交互" />
+          </span>
+        }
+      >
+        <div className="prose">
+          <p>
+            <T
+              en={
+                <>
+                  Everything so far has been argued with Big-O. But Big-O deliberately
+                  throws away constants and only keeps the growth trend, which means it
+                  cannot answer the question an engineer actually asks:{" "}
+                  <b>on this input, right here, how much work does each one do?</b> So
+                  let us stop arguing and start counting. Feed the same array to two or
+                  three sorts, and put a meter on every operation.
+                </>
+              }
+              zh={
+                <>
+                  前面所有比较都是用大 O 说的。但大 O 刻意丢掉了常数、只留增长趋势,
+                  这意味着它回答不了工程上真正要问的那句话:
+                  <b>就这一份输入,它们各自到底干了多少活?</b>
+                  那就别再讲道理,直接记账 —— 同一个数组喂给两三种排序,给每一次操作都装上计数器。
+                </>
+              }
+            />
+          </p>
+          <p>
+            <T
+              en={
+                <>
+                  Three meters, and the wording matters: a <b>comparison</b> is one size
+                  test between two elements; a <b>move</b> is one write into an array slot
+                  (a swap is therefore 2); <b>extra space</b> is the peak number of
+                  auxiliary cells plus recursion frames, not counting the input itself.
+                  What follows is an operation bill, not a stopwatch — wall-clock time
+                  depends on the machine, the cache and the language, while these counts
+                  are properties of the algorithm.
+                </>
+              }
+              zh={
+                <>
+                  三个计数器,口径必须说清楚:<b>比较</b>是两个元素之间的一次大小判断;
+                  <b>移动</b>是一次写入数组槽位(所以一次交换记 2 次);
+                  <b>额外空间</b>是辅助单元加递归栈帧的峰值,不含输入本身。
+                  下面给的是一张操作账单,不是秒表 —— 墙上时间取决于机器、缓存和语言,
+                  而这些次数是算法本身的性质。
+                </>
+              }
+            />
+          </p>
+        </div>
+
+        <AlgoRace
+          title={{
+            en: "Race 1 · The three O(n²) siblings on the same array",
+            zh: "第一场 · O(n²) 三兄弟,同一个数组",
+          }}
+          algos={[INSERTION, BUBBLE, SELECTION]}
+          inputs={SHAPES}
+          sizes={[8, 16, 32, 64]}
+          defaultSize={32}
+          clone={cloneArr}
+          verdict={(r, { inputId }) => {
+            const g = (id: string) => r.find((x) => x.id === id)!.counts;
+            const ins = g("insertion");
+            const sel = g("selection");
+            if (inputId === "sorted" || inputId === "nearly")
+              return {
+                en: (
+                  <>
+                    Look at selection sort: <b>{sel.cmp} comparisons</b> — exactly the same
+                    number it spends on every other shape. It cannot do better, because to
+                    name the minimum it must scan all the remaining elements, every single
+                    round. Insertion sort needs only {ins.cmp} and writes {ins.mov} times.
+                    That gap is what the word <b>adaptive</b> is worth: an algorithm that
+                    notices the input is already in order.
+                  </>
+                ),
+                zh: (
+                  <>
+                    看选择排序:<b>{sel.cmp} 次比较</b> —— 和它在任何别的形状上花的次数一模一样。
+                    它没法更少,因为要说出「谁是最小的」,就必须每轮把剩下的元素全扫一遍。
+                    插入排序只要 {ins.cmp} 次比较、写 {ins.mov} 次。
+                    这个差距就是<b>自适应(adaptive)</b>这个词的含金量:
+                    一个算法能察觉「输入本来就有序」。
+                  </>
+                ),
+              };
+            if (inputId === "reversed")
+              return {
+                en: (
+                  <>
+                    Reversed input is insertion sort&apos;s true worst case: every element
+                    has to be shifted all the way to the front, so it writes {ins.mov} times
+                    against selection sort&apos;s {sel.mov}. This is the one shape where
+                    selection sort looks good — it always swaps at most once per round.
+                    Which is exactly when you would pick it: when a write is far more
+                    expensive than a comparison.
+                  </>
+                ),
+                zh: (
+                  <>
+                    逆序是插入排序真正的最坏情况:每个元素都得一路挪到最前面,
+                    于是它写了 {ins.mov} 次,而选择排序只写 {sel.mov} 次。
+                    这是选择排序唯一好看的形状 —— 它每轮最多只交换一次。
+                    这也正是你会选它的场合:当一次写入远比一次比较昂贵的时候。
+                  </>
+                ),
+              };
+            return {
+              en: (
+                <>
+                  On unordered data all three stay in the n² family, but the constants
+                  differ: insertion sort compares {ins.cmp} times, roughly half of bubble
+                  sort, because it stops the moment it finds the right slot instead of
+                  sweeping to the end. Selection sort remains pinned at {sel.cmp}{" "}
+                  comparisons — and still writes the fewest.
+                </>
+              ),
+              zh: (
+                <>
+                  在无序数据上三者都还在 n² 这个量级里,但常数不同:
+                  插入排序比较 {ins.cmp} 次,大约是冒泡的一半 ——
+                  因为它一找到该待的位置就停,不像冒泡非要扫到底。
+                  选择排序则依旧钉在 {sel.cmp} 次比较上,而写入仍然最少。
+                </>
+              ),
+            };
+          }}
+        />
+
+        <Callout
+          tone="idea"
+          title={{ en: "Three counter-intuitive readings", zh: "三条反直觉的读数" }}
+        >
+          <p>
+            <T
+              en={
+                <>
+                  <b>1.</b> Selection sort&apos;s comparison count never changes — not on
+                  sorted input, not on reversed input. No early exit exists for it.{" "}
+                  <b>2.</b> Bubble sort, usually treated as the worst of the three, costs
+                  exactly n−1 comparisons and zero moves on a sorted array, thanks to the
+                  one <code>swapped</code> flag. <b>3.</b> &ldquo;Fewest comparisons&rdquo;
+                  and &ldquo;fewest moves&rdquo; are different championships, and they are
+                  rarely won by the same algorithm.
+                </>
+              }
+              zh={
+                <>
+                  <b>1.</b> 选择排序的比较次数从不改变 —— 已排序不减,逆序不增,它没有提前退出的余地。
+                  <b>2.</b> 冒泡通常被当成三者里最差的,但在已排序数组上它只花 n−1 次比较、
+                  零次移动,靠的就是那一个 <code>swapped</code> 标志位。
+                  <b>3.</b>「比较最少」和「移动最少」是两个不同的冠军,而且很少由同一个算法拿下。
+                </>
+              }
+            />
+          </p>
+        </Callout>
+
+        <AlgoRace
+          title={{
+            en: "Race 2 · Across families: O(n²) versus O(n log n)",
+            zh: "第二场 · 跨家族:O(n²) 对 O(n log n)",
+          }}
+          algos={[INSERTION, MERGE, QUICK_RANDOM]}
+          inputs={SHAPES}
+          sizes={[8, 16, 32, 64, 128]}
+          defaultSize={32}
+          defaultInput={1}
+          clone={cloneArr}
+          verdict={(r, { inputId, size }) => {
+            const g = (id: string) => r.find((x) => x.id === id)!.counts;
+            const ins = g("insertion");
+            const mer = g("merge");
+            if (inputId === "sorted" || inputId === "nearly")
+              return {
+                en: (
+                  <>
+                    Here is the headline: the O(n²) algorithm beats the O(n log n) one.
+                    Insertion sort spends {ins.cmp} comparisons and {ins.mov} moves; merge
+                    sort spends {mer.cmp} comparisons, <b>{mer.mov} moves and {mer.space}{" "}
+                    cells of extra space</b> — and it will spend the same {mer.mov} moves on
+                    every other shape, because textbook merge sort is not adaptive: it
+                    splits and merges regardless of what the data already looks like. Big-O
+                    was never wrong; it just describes n → ∞, and n = {size} is not
+                    infinity. This is precisely why Timsort — the real sort in Python and
+                    Java — first scans for existing sorted runs and hands short pieces to
+                    insertion sort.
+                  </>
+                ),
+                zh: (
+                  <>
+                    这就是本场的头条:O(n²) 的算法打赢了 O(n log n) 的。
+                    插入排序花 {ins.cmp} 次比较、{ins.mov} 次移动;归并排序花 {mer.cmp} 次比较、
+                    <b>{mer.mov} 次移动、{mer.space} 个额外单元</b> ——
+                    而且它在任何别的形状上都会花同样的 {mer.mov} 次移动,
+                    因为教科书版归并不自适应:不管数据长什么样,照拆照并。
+                    大 O 从没说错,它描述的是 n → ∞,而 n = {size} 不是无穷。
+                    这也正是 Timsort(Python 与 Java 里真正在跑的那个排序)
+                    要先扫描已有的有序段、并把短片段交给插入排序的原因。
+                  </>
+                ),
+              };
+            return {
+              en: (
+                <>
+                  Now the asymptotics assert themselves: insertion sort pays {ins.cmp}{" "}
+                  comparisons against merge sort&apos;s {mer.cmp}, and the gap widens as you
+                  raise n — try 128. Note the price of that speed, though: merge sort rents{" "}
+                  <b>{mer.space} cells</b> of extra space, while randomised quicksort keeps
+                  its footprint to the recursion stack alone. Sorting in place or sorting
+                  fast is a trade you make on purpose.
+                </>
+              ),
+              zh: (
+                <>
+                  这下渐进复杂度开始说话了:插入排序付 {ins.cmp} 次比较,归并只付 {mer.cmp} 次,
+                  而且你把 n 调大差距会拉得更开 —— 试试 128。
+                  但也请注意这份速度的代价:归并借走了 <b>{mer.space} 个额外单元</b>,
+                  而随机快排的占用只有递归栈本身。
+                  「原地排序」还是「排得更快」,是一个要你自己拿主意的取舍。
+                </>
+              ),
+            };
+          }}
+        />
+
+        <AlgoRace
+          title={{
+            en: "Race 3 · What one line of randomisation buys you",
+            zh: "第三场 · 一行随机化到底买到了什么",
+          }}
+          algos={[QUICK_LAST, QUICK_RANDOM]}
+          inputs={[SORTED, RANDOM, REVERSED]}
+          sizes={[16, 32, 64, 128]}
+          defaultSize={64}
+          clone={cloneArr}
+          verdict={(r, { inputId, size }) => {
+            const fixed = r.find((x) => x.id === "quick-last")!.counts;
+            const rand = r.find((x) => x.id === "quick-rand")!.counts;
+            if (inputId === "random")
+              return {
+                en: (
+                  <>
+                    On random data the two are neck and neck ({fixed.cmp} versus {rand.cmp}{" "}
+                    comparisons) — randomisation costs a few extra swaps and buys nothing
+                    visible. Switch the shape to <b>Already sorted</b> to see what it was
+                    actually insurance against.
+                  </>
+                ),
+                zh: (
+                  <>
+                    在随机数据上两者几乎不分上下({fixed.cmp} 对 {rand.cmp} 次比较)——
+                    随机化只多花了几次交换,看不出任何好处。
+                    把形状切到<b>已排序</b>,就能看见它到底是给什么买的保险。
+                  </>
+                ),
+              };
+            return {
+              en: (
+                <>
+                  Sorted input is the fixed-pivot version&apos;s nightmare: the pivot is
+                  always the largest element left, so every partition splits 1 : n−1 and it
+                  degenerates to <b>{fixed.cmp} comparisons</b> with a recursion depth of{" "}
+                  <b>{fixed.space}</b> — at n = {size} that is a stack proportional to n,
+                  which is how real services meet a stack overflow. Randomising the pivot
+                  brings the same input down to {rand.cmp} comparisons and depth{" "}
+                  {rand.space}. Nothing about the input changed; what changed is that an
+                  adversary can no longer aim at you.
+                </>
+              ),
+              zh: (
+                <>
+                  已排序输入是固定轴版本的噩梦:轴永远是剩下元素里最大的那个,
+                  于是每次划分都是 1 : n−1,直接退化成 <b>{fixed.cmp} 次比较</b>、
+                  递归深度 <b>{fixed.space}</b> —— 在 n = {size} 时这就是一个与 n 同阶的栈,
+                  真实服务里的栈溢出就是这么来的。
+                  把轴随机化,同一份输入降到 {rand.cmp} 次比较、深度 {rand.space}。
+                  输入没有任何变化,变的是「对手再也没法瞄准你」。
+                </>
+              ),
+            };
+          }}
+        />
+
+        <Callout
+          tone="deep"
+          title={{ en: "On the job: why libraries are hybrids", zh: "工程现场:标准库为什么都是混血" }}
+        >
+          <p>
+            <T
+              en={
+                <>
+                  Every number above is a reason no production sort is a single textbook
+                  algorithm. Python and Java&apos;s <code>sort</code> for objects use
+                  Timsort: find existing sorted runs, insertion-sort the short ones, merge
+                  the rest — it is built to win Race 2&apos;s nearly-sorted column. Java&apos;s
+                  primitive <code>sort</code> uses a dual-pivot quicksort with randomised
+                  and introspective safeguards, so it never loses Race 3. When you next
+                  choose a sort, do not ask which one is fastest; ask{" "}
+                  <b>what shape is my data, and which resource is scarce — comparisons,
+                  writes, or memory?</b>
+                </>
+              }
+              zh={
+                <>
+                  上面每一个数字,都是「生产环境的排序从不是单一教科书算法」的理由。
+                  Python 和 Java 对象版的 <code>sort</code> 用的是 Timsort:
+                  先找已有的有序段、短片段交给插入排序、其余归并 ——
+                  它就是为了赢下第二场里「近乎有序」那一栏而设计的。
+                  Java 基本类型的 <code>sort</code> 用双轴快排,配随机化与内省式兜底,
+                  所以它不会输掉第三场。
+                  下次选排序,别问哪个最快,问:
+                  <b>我的数据是什么形状,以及哪种资源更紧张 —— 比较、写入,还是内存?</b>
+                </>
+              }
+            />
+          </p>
+        </Callout>
+      </Section>
+
+      {/* ================= §06 突破比较下界 ================= */}
       <Section
         id="linear"
-        index="05"
+        index="06"
         title={{
           en: "Below the comparison bound: count instead of compare",
           zh: "突破比较排序的下界:不比较,只数数",
@@ -1878,10 +2231,10 @@ class Solution:
         </Callout>
       </Section>
 
-      {/* ================= §06 稳定性 + 内置 sort 真身 ================= */}
+      {/* ================= §07 稳定性 + 内置 sort 真身 ================= */}
       <Section
         id="stable"
-        index="06"
+        index="07"
         title={{
           en: "Stability, and what the built-in sort really is",
           zh: "稳定性,以及内置 sort 到底是什么",
@@ -2266,10 +2619,10 @@ arr.sort((x, y) => x.k - y.k);  // "a" 仍然排在 "b" 前面`,
         </Callout>
       </Section>
 
-      {/* ================= §07 精讲 B · LC 215 ================= */}
+      {/* ================= §08 精讲 B · LC 215 ================= */}
       <Section
         id="select"
-        index="07"
+        index="08"
         title={{
           en: "Worked example B · kth largest: you do not need a full sort",
           zh: "精讲 B · 第 K 大:不必全排",
@@ -2631,10 +2984,10 @@ class Solution:
         </Callout>
       </Section>
 
-      {/* ================= §08 精讲 C · LC 56 ================= */}
+      {/* ================= §09 精讲 C · LC 56 ================= */}
       <Section
         id="intervals"
-        index="08"
+        index="09"
         title={{
           en: "Worked example C · merge intervals: sorting turns the problem around",
           zh: "精讲 C · 合并区间:排序把问题换了个样子",
@@ -2910,10 +3263,10 @@ class Solution:
         </Callout>
       </Section>
 
-      {/* ================= §09 题单 ================= */}
+      {/* ================= §10 题单 ================= */}
       <Section
         id="problems"
-        index="09"
+        index="10"
         title={{
           en: "Problem set: nine sorting problems",
           zh: "高频题单:排序 9 题",
@@ -2927,10 +3280,10 @@ class Solution:
         <ProblemSet ch="sorting" items={PROBLEMS} />
       </Section>
 
-      {/* ================= §10 Quiz ================= */}
+      {/* ================= §11 Quiz ================= */}
       <Section
         id="quiz"
-        index="10"
+        index="11"
         title={{ en: "Quiz", zh: "通关测验" }}
         desc={{
           en: "Answer all 8 correctly to mark this chapter as complete.",

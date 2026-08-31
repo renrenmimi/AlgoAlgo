@@ -24,7 +24,63 @@ import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
 import { T } from "@/lib/i18n";
 import { PROBLEMS, QUIZ } from "@/lib/dp-data";
-import { FibNaiveTree, FibMemoTree, RobLab } from "./viz";
+import { AlgoRace, type RaceMetric } from "@/lib/race";
+import {
+  FibNaiveTree,
+  FibMemoTree,
+  RobLab,
+  FIB_NAIVE,
+  FIB_MEMO,
+  FIB_LOOP,
+  FIB_INPUTS,
+  cloneN,
+} from "./viz";
+
+/* ================= §02 斐波那契竞速:指标重贴标签 ================= */
+
+// 竞速引擎的三个计数器本来是给排序用的(比较 / 移动 / 空间)。
+// 这里跑的是递归,字面含义不适用,于是重贴标签 —— 计数口径见 app/dp/viz.tsx。
+const FIB_METRICS: RaceMetric[] = [
+  {
+    key: "cmp",
+    label: { en: "Function calls", zh: "函数调用次数" },
+    tip: {
+      en: "One entry into the function; base cases and calls that only hit the memo are counted too.",
+      zh: "进入函数一次记一次;基准情形、以及只命中备忘录就返回的调用也都算。",
+    },
+  },
+  {
+    key: "mov",
+    label: { en: "Additions", zh: "加法次数" },
+    tip: {
+      en: "One evaluation of f(i−1) + f(i−2) — the only real arithmetic any of the three performs.",
+      zh: "执行一次 f(i−1) + f(i−2) 的加法 —— 三者真正的运算只有这一项。",
+    },
+  },
+  {
+    key: "space",
+    label: { en: "Peak space (stack + memo)", zh: "峰值空间(栈 + 备忘表)" },
+    tip: {
+      en: "Peak of live stack frames plus memo cells and rolling variables; the returned answer is not counted.",
+      zh: "同时存活的栈帧数,加上备忘表格子与滚动变量,取峰值;返回的答案本身不计。",
+    },
+  },
+];
+
+/** 标准斐波那契(fib(0)=0, fib(1)=1)—— 判读里用它复核「调用数 = 2·fib(n+1)−1」。 */
+function fibOf(n: number): number {
+  if (n < 2) return n;
+  let a = 0;
+  let b = 1;
+  for (let i = 2; i <= n; i++) {
+    const c = a + b;
+    a = b;
+    b = c;
+  }
+  return b;
+}
+
+const num = (n: number) => n.toLocaleString("en-US");
 
 /* ================= 精讲 A · LC 70 爬楼梯:一维表逐格填充 ================= */
 
@@ -1147,6 +1203,150 @@ export default function DPChapter() {
             },
           }}
         />
+
+        <div className="prose">
+          <p>
+            <T
+              en={
+                <>
+                  The tree makes the argument at n = 5. Numbers make the same
+                  argument at a scale no picture reaches. Below, one value of{" "}
+                  <code>fib(n)</code> is answered by three implementations at
+                  once — the plain recursion from §01, the memoized version just
+                  written, and the bottom-up loop §03 will derive — with a
+                  counter on every function call, every addition, and every cell
+                  of live memory. Raise n and read the three columns.
+                </>
+              }
+              zh={
+                <>
+                  递归树是在 n = 5 上讲道理,数字则能在图画到不了的规模上讲同一件事。
+                  下面用同一个 <code>fib(n)</code> 同时喂给三份实现 ——
+                  §01 的朴素递归、刚写完的记忆化版本,以及 §03 将要推导的自底向上循环 ——
+                  每一次函数调用、每一次加法、每一格存活内存都装上计数器。
+                  把 n 调大,然后读那三栏。
+                </>
+              }
+            />
+          </p>
+        </div>
+
+        <AlgoRace
+          title={{
+            en: "Race · The same fib(n), three implementations, one bill",
+            zh: "竞速 · 同一个 fib(n),三份实现,一张账单",
+          }}
+          algos={[FIB_NAIVE, FIB_MEMO, FIB_LOOP]}
+          inputs={FIB_INPUTS}
+          sizes={[10, 15, 20, 25, 30]}
+          defaultSize={20}
+          clone={cloneN}
+          metrics={FIB_METRICS}
+          unitLabel={{ en: "n", zh: "n" }}
+          verdict={(r, { size }) => {
+            const lane = (id: string) => r.find((x) => x.id === id)!;
+            const naive = lane("fib-naive");
+            const memo = lane("fib-memo").counts;
+            const loop = lane("fib-iter").counts;
+            const calls = 2 * fibOf(size + 1) - 1; // 朴素递归的调用次数,可手算复核
+            const adds = fibOf(size + 1) - 1;
+            if (naive.aborted)
+              return {
+                en: (
+                  <>
+                    At n = {size} the naive lane crossed the operation cap and was
+                    aborted. The abort is the lesson, not a defect of the widget:
+                    answering fib({size}) by plain recursion takes 2·fib({size + 1}
+                    )−1 = <b>{num(calls)} calls</b> and {num(adds)} additions, and
+                    every further +1 in n multiplies that by about 1.618. The
+                    memoized version answers the very same question in{" "}
+                    <b>{memo.cmp} calls</b> and {memo.mov} additions, that is 2n−1
+                    and n−1. Tabulation does the same {loop.mov} additions and
+                    holds its space at {loop.space} cells, against {memo.space} for
+                    the memo. Two extra lines turned {num(calls)} into {memo.cmp};
+                    that ratio is what &ldquo;O(2ⁿ) collapses to O(n)&rdquo;
+                    literally means.
+                  </>
+                ),
+                zh: (
+                  <>
+                    n = {size} 时朴素递归那条赛道超过操作上限、被中止了。
+                    这次中止本身就是结论,不是组件的毛病:用朴素递归回答 fib({size}),
+                    需要 2·fib({size + 1})−1 = <b>{num(calls)} 次调用</b>和 {num(adds)}{" "}
+                    次加法,而 n 再加 1,这个数还要乘以约 1.618。
+                    记忆化版本回答的是同一个问题,只花 <b>{memo.cmp} 次调用</b>、
+                    {memo.mov} 次加法,也就是 2n−1 与 n−1。
+                    递推做同样的 {loop.mov} 次加法,空间则钉在 {loop.space} 格,
+                    而记忆化要占 {memo.space} 格。
+                    多写两行,{num(calls)} 变成了 {memo.cmp} ——
+                    这个比值就是「O(2ⁿ) 塌缩成 O(n)」的字面意思。
+                  </>
+                ),
+              };
+            return {
+              en: (
+                <>
+                  The naive recursion needed <b>{num(naive.counts.cmp)} calls</b>{" "}
+                  to answer fib({size}) — exactly 2·fib({size + 1})−1 ={" "}
+                  {num(calls)}, because its call tree has fib({size + 1}) ={" "}
+                  {num(fibOf(size + 1))} leaves and one internal node per
+                  addition. Memoization needs <b>{memo.cmp} calls</b>, which is
+                  2n−1: the n−1 genuine subproblems are each computed once, and
+                  every remaining call returns straight from the table. The
+                  middle column is the honest one — both DP forms perform exactly{" "}
+                  {memo.mov} = n−1 additions, while the naive version performs{" "}
+                  {num(naive.counts.mov)}, and everything past n−1 is
+                  recomputation. The last column belongs to tabulation:{" "}
+                  <b>{loop.space} cells</b> however large n gets, against{" "}
+                  {memo.space} for the memoized version, which must carry an n+1
+                  cell table and an n deep stack at the same time. Now set n to 30.
+                </>
+              ),
+              zh: (
+                <>
+                  朴素递归为了回答 fib({size}) 用了 <b>{num(naive.counts.cmp)} 次调用</b>
+                  {" "}—— 正好是 2·fib({size + 1})−1 = {num(calls)},
+                  因为它的调用树有 fib({size + 1}) = {num(fibOf(size + 1))} 个叶子,
+                  每个内部节点对应一次加法。
+                  记忆化只需 <b>{memo.cmp} 次调用</b>,也就是 2n−1:
+                  n−1 个真正的子问题各算一次,余下的调用全都直接从表里返回。
+                  中间那一栏最诚实 —— 两种 DP 形态都恰好做 {memo.mov} = n−1 次加法,
+                  而朴素递归做了 {num(naive.counts.mov)} 次,超出 n−1 的部分全是重算。
+                  最后一栏属于递推:不管 n 多大都只有 <b>{loop.space} 格</b>,
+                  而记忆化要 {memo.space} 格 —— 它得同时背着 n+1 格的表和 n 层深的栈。
+                  现在把 n 调到 30。
+                </>
+              ),
+            };
+          }}
+        />
+
+        <div className="prose" style={{ marginTop: 16 }}>
+          <p>
+            <T
+              en={
+                <>
+                  Two readings worth carrying forward. First, memoization does not
+                  make the arithmetic cheaper: the n−1 additions are the
+                  irreducible work, and the whole contribution of the memo is
+                  deleting the repeats. Second, that deletion is bought with
+                  space — a table of n+1 cells sitting under a stack n frames
+                  deep. §03 keeps the n−1 additions and gives the space back.
+                </>
+              }
+              zh={
+                <>
+                  两条读数值得带走。其一,记忆化并没有让运算变便宜:
+                  n−1 次加法是不可再省的本分工作,备忘录的全部贡献就是删掉重复。
+                  其二,这份「删掉」是用空间买来的 ——
+                  一张 n+1 格的表,底下还压着 n 层深的栈。
+                  §03 会保留那 n−1 次加法,同时把空间还回来。
+                </>
+              }
+            />
+          </p>
+        </div>
+
         <Callout
           tone="win"
           title={{ en: "How to say this in an interview", zh: "面试可以直接这么说" }}
