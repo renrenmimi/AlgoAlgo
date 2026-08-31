@@ -9,8 +9,8 @@
 // slipped in -- because "merge sort still pays full price on an already-sorted array" is
 // exactly the point this chapter makes (and exactly why Timsort adds run detection).
 
-import type { RaceAlgo, RaceInput, Tracer } from "@/lib/race";
-import { rng } from "@/lib/race";
+import type { RaceAlgo, RaceInput } from "@/lib/race";
+import { rng, type Tracer } from "@/lib/race-core";
 
 export type Arr = number[];
 
