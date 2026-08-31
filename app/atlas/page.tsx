@@ -1,9 +1,9 @@
 "use client";
 
-// 终章 · 范式地图 —— 全书的收束:
-// ① 范式选型向导(交互决策树);② 全书题单总表(进度全站互通);
-// ③ 20 周学习计划;④ 模拟面试指南(六标准 + D+1/D+7/D+21);
-// ⑤ DataData × AlgoAlgo 全景图;⑥ 终极测验(跨章选型)。
+// Final chapter - the paradigm atlas, where the whole course comes together:
+// (1) the paradigm selection wizard (an interactive decision tree); (2) the master problem table for the whole course (progress is shared site-wide);
+// (3) the 20-week study plan; (4) the mock interview guide (six criteria + D+1/D+7/D+21);
+// (5) the DataData x AlgoAlgo panorama; (6) the final quiz (cross-chapter paradigm selection).
 
 import Link from "next/link";
 import type { CSSProperties } from "react";
@@ -23,7 +23,7 @@ import { CHAPTERS, type ChapterId } from "@/lib/curriculum";
 import { T, useL } from "@/lib/i18n";
 import { DecisionLab } from "./viz";
 
-// 12 章各自的 PROBLEMS 直接复用,保证与各章一字不差、进度互通。
+// The PROBLEMS of all 12 chapters are reused directly, so they match each chapter word for word and share progress.
 import { PROBLEMS as P_SORTING } from "@/lib/sorting-data";
 import { PROBLEMS as P_DIVIDE } from "@/lib/divide-data";
 import { PROBLEMS as P_BINARY } from "@/lib/binary-data";
@@ -46,7 +46,7 @@ import {
   QUIZ,
 } from "@/lib/atlas-data";
 
-/* ---------- 全书题单分组(pid = `<ch>/<lc>`,与各章一致) ---------- */
+/* ---------- Course-wide problem groups (pid = `<ch>/<lc>`, same as in each chapter) ---------- */
 
 const GROUPS: { ch: ChapterId; problems: Problem[] }[] = [
   { ch: "sorting", problems: P_SORTING },
@@ -82,7 +82,7 @@ export default function AtlasChapter() {
   const { data, ready } = useProgress();
   const L = useL();
 
-  // 只统计「本课 12 章」范围内已勾选的题,避免受其他键干扰。
+  // Count only the checked problems inside this course's 12 chapters, so other keys cannot interfere.
   const chSet = new Set<string>(GROUPS.map((g) => g.ch));
   const done = ready
     ? Object.keys(data.problems).filter((k) => chSet.has(k.split("/")[0]))
@@ -131,7 +131,7 @@ export default function AtlasChapter() {
         chips={CHIPS}
       />
 
-      {/* §01 选型向导 */}
+      {/* §01 Selection wizard */}
       <Section
         id="decision"
         index="01"
@@ -177,7 +177,7 @@ export default function AtlasChapter() {
         </Callout>
       </Section>
 
-      {/* §02 全书题单总表 */}
+      {/* §02 Master problem table */}
       <Section
         id="problems"
         index="02"
@@ -262,7 +262,7 @@ export default function AtlasChapter() {
         })}
       </Section>
 
-      {/* §03 20 周学习计划 */}
+      {/* §03 20-week study plan */}
       <Section
         id="plan"
         index="03"
@@ -375,7 +375,7 @@ export default function AtlasChapter() {
         </Callout>
       </Section>
 
-      {/* §04 模拟面试指南 */}
+      {/* §04 Mock interview guide */}
       <Section
         id="interview"
         index="04"
@@ -444,7 +444,7 @@ export default function AtlasChapter() {
         </Callout>
       </Section>
 
-      {/* §05 全景图 */}
+      {/* §05 Panorama */}
       <Section
         id="panorama"
         index="05"
@@ -519,7 +519,7 @@ export default function AtlasChapter() {
         </Callout>
       </Section>
 
-      {/* §06 终极测验 */}
+      {/* §06 Final quiz */}
       <Section
         id="quiz"
         index="06"

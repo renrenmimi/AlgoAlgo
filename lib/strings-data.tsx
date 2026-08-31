@@ -1,9 +1,13 @@
-// 第 12 章 · 字符串算法 —— 题单与测验数据。
-// 题单按「暴力 → KMP → 前缀函数应用 → 回文 → 解析类」由易到难铺开;
-// hint 只给方向不剧透,key 用一段话把最优解讲透。
-// 全章统一 next/π 约定:next[i] = 子串 s[0..i] 的「最长相等真前后缀」长度,next[0]=0。
+// Chapter 12 - String Algorithms: problem set and quiz data.
+// The problem set runs easy to hard along "brute force -> KMP -> applications of the prefix
+// function -> palindromes -> parsing";
+// hint only points at a direction without spoiling, key explains the optimal solution in one
+// paragraph.
+// The whole chapter uses one next/pi convention: next[i] = the length of the longest proper
+// prefix of the substring s[0..i] that is also a suffix of it, with next[0] = 0.
 //
-// 双语:title / tags 传 { en, zh };hint / key / 测验文案直接写 <T en zh />。
+// Bilingual: title / tags are passed as { en, zh }; hint / key / quiz copy are written
+// inline with <T en zh />.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

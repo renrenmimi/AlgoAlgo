@@ -1,8 +1,9 @@
-/* 第 3 章 · 二分进阶(data-ch="binary")专属样式。
-   规则:自定义类名一律带 bin- 前缀或整体包在 [data-ch="binary"] 下;
-   颜色只用 CSS token(var(--acc) 等),深浅主题自动适配,禁止写死颜色。 */
+/* Chapter 3 · Binary search, advanced (data-ch="binary") specific styles.
+   Rule: every custom class name is bin- prefixed or nested under [data-ch="binary"];
+   colors come only from CSS tokens (var(--acc) and friends) so light and dark
+   themes adapt automatically. Never hard-code a color. */
 
-/* — 两列对比卡(74 vs 240、暴力 vs 二分之类) — */
+/* — Two-column comparison cards (74 vs 240, brute force vs binary search, and the like) — */
 
 [data-ch="binary"] .bin-duel {
   display: grid;
@@ -21,7 +22,7 @@
   }
 }
 
-/* — 猜数字实验室:巨型当前猜测数 — */
+/* — Guessing-game lab: the oversized current guess — */
 
 [data-ch="binary"] .bin-guess-big {
   font-family: var(--font-display);
@@ -46,7 +47,7 @@
   color: var(--acc-ink);
 }
 
-/* — 谓词单调线:F…F | T…T,把「答案有单调性」画出来 — */
+/* — Predicate monotonicity line: F…F | T…T, drawing out the fact that the answer is monotone — */
 
 [data-ch="binary"] .bin-ft {
   display: flex;
@@ -96,14 +97,15 @@
   opacity: 0.9;
 }
 
-/* — 模板速查小卡的等宽强调 — */
+/* — Monospace emphasis inside the template quick-reference cards — */
 
 [data-ch="binary"] .bin-tri code {
   font-size: 12.5px;
 }
 
-/* — 模板速查表(§06):六列 + 英文更长,给它更大的最小宽度,
-     并让「区间 / 循环条件」两列不折行,读起来才成对。 — */
+/* — Template quick-reference table (§06): six columns, and English runs longer,
+     so give it a larger minimum width and keep the interval / loop-condition
+     columns on one line each so the pair reads together. — */
 
 [data-ch="binary"] .t-table {
   min-width: 780px;
@@ -121,7 +123,7 @@
   white-space: nowrap;
 }
 
-/* — 猜数字实验室:英文说明比中文长,给它一点行距,别挤成一坨 — */
+/* — Guessing-game lab: the English caption runs longer than the Chinese, so add some line spacing instead of letting it bunch up — */
 
 [data-ch="binary"] .bin-guess-sub {
   line-height: 1.6;

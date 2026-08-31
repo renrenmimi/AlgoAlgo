@@ -1,11 +1,13 @@
 "use client";
 
-// 站点语言层 —— English 为默认,中文可切换。
-//  - Loc<T>:一个「可能按语言给两份」的值。普通值原样透传。
-//  - langScript:首帧前执行,避免语言闪烁。
-//  - <T en zh />:JSX 里的行内切换,可以写在模块级常量数组里(元素只在 Provider 内渲染)。
-//  - useL():把 Loc<T> 解析成当前语言的 T,用于 props(标题、标签、aria-label…)。
-// localStorage 键:algo-lang。
+// Site language layer -- English is the default, Chinese can be switched on.
+//  - Loc<T>: a value that may come in two language variants. A plain value passes through as-is.
+//  - langScript: runs before the first paint so the language never flashes.
+//  - <T en zh />: inline switching inside JSX. Safe to place in module-level constant arrays
+//    (the elements are only rendered inside the Provider).
+//  - useL(): resolves a Loc<T> to the T for the current language; use it for props
+//    (titles, labels, aria-label, ...).
+// localStorage key: algo-lang.
 
 import {
   createContext,

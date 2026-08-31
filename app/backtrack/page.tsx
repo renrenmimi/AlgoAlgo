@@ -1,14 +1,14 @@
 "use client";
 
-// 第 5 章 · 回溯 backtrack —— 全书精讲最多(4 道)、可视化最重的一章。
-// 结构:走迷宫建立决策树心智模型 → 模板三问(路径/选择/结束)+ 三部曲 →
-// 精讲 A 组合 77(剪枝前后两棵树)→ 组合家族 → 分割家族 →
-// 精讲 B 子集 78 → 精讲 C 排列 46(used 数组现场)→ 去重两板斧(树层 vs 树枝)→
-// 精讲 D N 皇后 51(自建棋盘)+ 数独 37 提位运算 → 题单 → 测验。
-// 决策树统一用 lib/algviz 的 TreePlayer;used 数组与棋盘见 ./viz。
+// Chapter 5 - Backtracking: the chapter with the most deep dives (4) and the heaviest visualizations.
+// Structure: a maze walk builds the decision-tree mental model -> the template's three questions (path / choices / stop) + the three-step routine ->
+// Deep dive A combinations 77 (two trees, before and after pruning) -> the combination family -> the partition family ->
+// Deep dive B subsets 78 -> Deep dive C permutations 46 (the used array in action) -> the two deduplication tools (across a level vs. along a branch) ->
+// Deep dive D N-Queens 51 (custom board) + Sudoku 37 with a nod to bit tricks -> problem set -> quiz.
+// Every decision tree uses TreePlayer from lib/algviz; the used array and the board live in ./viz.
 //
-// 双语:正文用 <T en zh />;组件的文案型 props 传 { en, zh }。
-// CodeTabs 的 code 也给两份 —— 两份之间只有注释不同,可执行代码逐行一致(hl 行号才对得上)。
+// Bilingual: body text uses <T en zh />; copy-style props on components take { en, zh }.
+// CodeTabs code is supplied twice as well - the two versions differ only in their comments, while the executable code matches line for line (so the hl line numbers stay correct).
 
 import "./chapter.css";
 import {
@@ -93,7 +93,7 @@ export default function BacktrackChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 为什么回溯 ================= */}
+      {/* ================= §01 Why backtracking ================= */}
       <Section
         id="why"
         index="01"
@@ -329,7 +329,7 @@ export default function BacktrackChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §02 模板三问 ================= */}
+      {/* ================= §02 The template's three questions ================= */}
       <Section
         id="template"
         index="02"
@@ -712,7 +712,7 @@ function backtrack(n, k, start) {
         </Callout>
       </Section>
 
-      {/* ================= §03 精讲 A · LC 77 组合 + 剪枝 ================= */}
+      {/* ================= §03 Deep dive A - LC 77 combinations + pruning ================= */}
       <Section
         id="combine"
         index="03"
@@ -1118,7 +1118,7 @@ function backtrack(n, k, start) {
         </Callout>
       </Section>
 
-      {/* ================= §04 组合家族 ================= */}
+      {/* ================= §04 The combination family ================= */}
       <Section
         id="family"
         index="04"
@@ -1325,7 +1325,7 @@ function backtrack(n, k, start) {
         </div>
       </Section>
 
-      {/* ================= §05 分割家族 ================= */}
+      {/* ================= §05 The partition family ================= */}
       <Section
         id="split"
         index="05"
@@ -1474,7 +1474,7 @@ function backtrack(n, k, start) {
         </Callout>
       </Section>
 
-      {/* ================= §06 精讲 B · LC 78 子集 ================= */}
+      {/* ================= §06 Deep dive B - LC 78 subsets ================= */}
       <Section
         id="subset"
         index="06"
@@ -1723,7 +1723,7 @@ function backtrack(n, k, start) {
         </Callout>
       </Section>
 
-      {/* ================= §07 精讲 C · LC 46 全排列 ================= */}
+      {/* ================= §07 Deep dive C - LC 46 permutations ================= */}
       <Section
         id="permute"
         index="07"
@@ -2060,7 +2060,7 @@ function backtrack(n, k, start) {
         </Callout>
       </Section>
 
-      {/* ================= §08 去重两板斧 ================= */}
+      {/* ================= §08 The two deduplication tools ================= */}
       <Section
         id="dedup"
         index="08"
@@ -2501,7 +2501,7 @@ function backtrack(start) {
         </Callout>
       </Section>
 
-      {/* ================= §09 精讲 D · LC 51 N 皇后 ================= */}
+      {/* ================= §09 Deep dive D - LC 51 N-Queens ================= */}
       <Section
         id="board"
         index="09"
@@ -2984,7 +2984,7 @@ function backtrack(start) {
         </Callout>
       </Section>
 
-      {/* ================= §10 题单 ================= */}
+      {/* ================= §10 Problem set ================= */}
       <Section
         id="problems"
         index="10"

@@ -1,7 +1,9 @@
 "use client";
 
-// 顶部工具条:侧栏开关 + 面包屑 + 界面语言(EN / 中文)+ 偏好代码语言 + ⌘K + 主题切换。
-// 偏好语言(Java/Python/JS)是全站联动的,这里给一个全局入口。
+// Top toolbar: sidebar toggle + breadcrumb + UI language (English / Chinese) + preferred
+// code language + ⌘K + theme switch.
+// The preferred code language (Java/Python/JS) is linked across the whole site; this is the
+// global entry point for changing it.
 
 import { usePathname } from "next/navigation";
 import { chapterByPath } from "@/lib/curriculum";

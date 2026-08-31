@@ -1,10 +1,11 @@
-/* 第 12 章 · 字符串算法(data-ch="strings")专属样式。
-   规则:自定义类名一律带 .str- 前缀,或整体包在 [data-ch="strings"] 下;
-   颜色只用 CSS token(var(--acc) 等),深浅主题自动适配,禁止写死。 */
+/* Chapter 12 · String algorithms (data-ch="strings") specific styles.
+   Rule: every custom class name is .str- prefixed, or nested under [data-ch="strings"];
+   colors come only from CSS tokens (var(--acc) and friends) so light and dark
+   themes adapt automatically. Never hard-code a color. */
 
-/* ── 可视化里的自定义单元格状态(复用全局 .cell,只补两种状态) ── */
+/* ── Custom cell states used by the visualizations (reusing the global .cell and adding just two states) ── */
 
-/* src:next 构建时「当前拿来对比的前缀字符 pattern[j]」—— 蓝实线 */
+/* src: while building next, the prefix character currently being compared, pattern[j] —— solid blue */
 [data-ch="strings"] .cell.src {
   border-color: var(--info);
   background: var(--info-bg);
@@ -12,14 +13,14 @@
   box-shadow: 0 0 14px color-mix(in oklab, var(--info) 26%, transparent);
 }
 
-/* pref:已经匹配上的前缀段 —— 蓝虚线,弱于 src */
+/* pref: the prefix segment already matched —— dashed blue, weaker than src */
 [data-ch="strings"] .cell.pref {
   border-color: color-mix(in oklab, var(--info) 55%, var(--border-strong));
   border-style: dashed;
   color: var(--info);
 }
 
-/* ── 可视化行:左侧「文本 / 模式」标签 + 右侧字符网格 ── */
+/* ── Visualization row: a text / pattern label on the left plus the character grid on the right ── */
 
 [data-ch="strings"] .str-tagrow {
   display: flex;
@@ -38,7 +39,7 @@
   letter-spacing: 0.02em;
 }
 
-/* ── 两列对比卡(暴力 vs KMP 世界观) ── */
+/* ── Two-column comparison cards (the brute-force vs KMP worldview) ── */
 
 [data-ch="strings"] .str-cmp {
   display: grid;
@@ -53,7 +54,7 @@
   }
 }
 
-/* ── 正文里的要点小列表 ── */
+/* ── Inline key-point lists in the body text ── */
 
 [data-ch="strings"] .str-list {
   margin: 10px 0 0;
@@ -72,7 +73,7 @@
   color: var(--text);
 }
 
-/* ── 滚动哈希:哈希值读数条 ── */
+/* ── Rolling hash: the hash-value readout bar ── */
 
 [data-ch="strings"] .str-hashbar {
   display: flex;

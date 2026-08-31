@@ -1,13 +1,13 @@
 "use client";
 
-// 第 10 章 · DP 进阶 —— DP 四章收官。四大高级 DP 类型各成一节:
-// §02 状态机 DP(股票族谱,精讲 309)→ §03 树形 DP(精讲 337)→
-// §04 区间 DP(精讲 312)→ §05 状压 DP(526 入门)→ §06 数位/概率 一句话地图。
-// 招牌可视化:自建 SVG 状态转移图(StockFSM)、TreePlayer(RobTreeDP)、
-// DPTable 斜着填(BalloonInterval)、交互式 bit 集合(MaskLab)—— 均在 ./viz。
+// Chapter 10 - Advanced DP: the finale of the four DP chapters. Each advanced DP type gets its own section:
+// §02 state-machine DP (the stock-trading family, Deep dive 309) -> §03 tree DP (Deep dive 337) ->
+// §04 interval DP (Deep dive 312) -> §05 bitmask DP (526 as the entry point) -> §06 a one-line map of digit DP and probability DP.
+// Signature visualizations: a custom SVG state-transition diagram (StockFSM), TreePlayer (RobTreeDP),
+// a diagonally filled DPTable (BalloonInterval) and an interactive bit set (MaskLab) - all in ./viz.
 //
-// 双语:正文用 <T en zh />;组件的文案型 props 传 { en, zh }。
-// CodeTabs 的 code 也给两份 —— 两份之间只有注释不同,可执行代码逐行一致(hl 行号才对得上)。
+// Bilingual: body text uses <T en zh />; copy-style props on components take { en, zh }.
+// CodeTabs code is supplied twice as well - the two versions differ only in their comments, while the executable code matches line for line (so the hl line numbers stay correct).
 
 import "./chapter.css";
 import { Hero, Section, Callout, BigO, KeyPoints, ChapterFooter } from "@/lib/kit";
@@ -29,7 +29,7 @@ const CHIPS = [
   { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
 ];
 
-/* ================= 精讲代码(两份只差注释,可执行行逐行一致) ================= */
+/* ================= Deep-dive code (the two versions differ only in comments; executable lines match line for line) ================= */
 
 const STOCK_122 = {
   java: {
@@ -786,7 +786,7 @@ export default function DPProChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 四张高级地图 ================= */}
+      {/* ================= §01 Four advanced maps ================= */}
       <Section
         id="why"
         index="01"
@@ -993,7 +993,7 @@ export default function DPProChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §02 状态机 DP · 股票族谱 ================= */}
+      {/* ================= §02 State-machine DP - the stock-trading family ================= */}
       <Section
         id="fsm"
         index="02"
@@ -1351,7 +1351,7 @@ export default function DPProChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §03 树形 DP ================= */}
+      {/* ================= §03 Tree DP ================= */}
       <Section
         id="tree"
         index="03"
@@ -1535,7 +1535,7 @@ export default function DPProChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §04 区间 DP · 戳气球 ================= */}
+      {/* ================= §04 Interval DP - Burst Balloons ================= */}
       <Section
         id="interval"
         index="04"
@@ -1743,7 +1743,7 @@ export default function DPProChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §05 状压 DP ================= */}
+      {/* ================= §05 Bitmask DP ================= */}
       <Section
         id="bitmask"
         index="05"
@@ -1909,7 +1909,7 @@ export default function DPProChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §06 数位/概率 一句话地图 ================= */}
+      {/* ================= §06 A one-line map of digit DP and probability DP ================= */}
       <Section
         id="map"
         index="06"
@@ -2059,7 +2059,7 @@ export default function DPProChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §07 题单 ================= */}
+      {/* ================= §07 Problem set ================= */}
       <Section
         id="problems"
         index="07"

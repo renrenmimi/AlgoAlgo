@@ -12,8 +12,9 @@ import Toolbar from "@/app/toolbar";
 import CommandPalette from "@/app/command-palette";
 import { LangProvider, langScript } from "@/lib/i18n";
 
-// 三套字体:Syne(超大展示字,几何感强)、Space Grotesk(界面/标题)、
-// JetBrains Mono(代码/数字)。中文回落到 PingFang SC / 苹方,globals.css 里拼接。
+// Three typefaces: Syne (oversized display type, strongly geometric), Space Grotesk (UI and
+// headings) and JetBrains Mono (code and numbers). Chinese falls back to PingFang SC;
+// the font stacks are assembled in globals.css.
 const syne = Syne({
   subsets: ["latin"],
   weight: ["600", "700", "800"],

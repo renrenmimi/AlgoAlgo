@@ -1,22 +1,22 @@
 "use client";
 
-// 第 7 章 · DP 入门的三个专属可视化:
-//  - FibNaiveTree:朴素递归 f(5) 的完整递归树 —— 亲眼看重复子问题有多铺张。
-//  - FibMemoTree:同一棵树加上备忘录 —— 查表命中的子树根本不用长出来。
-//    两者都复用 lib/algviz 的 TreePlayer,只是帧数据不同。
-//  - RobLab:打家劫舍实验室 —— 亲手选房子,体会「相邻约束下的最优」有多难靠直觉。
-// 另外提供 §02 那场斐波那契竞速的三名选手(FIB_NAIVE / FIB_MEMO / FIB_LOOP),
-// 供 lib/race.tsx 的 <AlgoRace> 使用。
+// Chapter 7 - the three visualizations that belong to the DP introduction:
+//  - FibNaiveTree: the full recursion tree of naive f(5) - see just how wasteful the repeated subproblems are.
+//  - FibMemoTree: the same tree with a memo - subtrees that hit the table never have to grow at all.
+//    Both reuse TreePlayer from lib/algviz; only the frame data differs.
+//  - RobLab: the House Robber lab - pick houses by hand and feel how hard "optimal under an adjacency constraint" is to guess.
+// It also exports the three contenders for the Fibonacci race in §02 (FIB_NAIVE / FIB_MEMO / FIB_LOOP),
+// for use by <AlgoRace> from lib/race.tsx.
 //
-// 双语:帧旁白直接写成 <T en zh />(元素只在 Provider 内渲染,写在模块级常量里没问题);
-// 组件内部的 aria-label / 按钮文案用 useL() 解析。
+// Bilingual: frame narration is written inline as <T en zh /> (the elements only render inside the Provider, so module-level constants are fine);
+// aria-labels and button copy inside components are resolved with useL().
 
 import { useMemo, useState } from "react";
 import { TreePlayer, type TreeNodeSpec, type TreeFrame, type TreeNodeState } from "@/lib/algviz";
 import type { RaceAlgo, RaceInput, Tracer } from "@/lib/race";
 import { T, useL } from "@/lib/i18n";
 
-/* ---------------- 斐波那契递归树(共用结构) ---------------- */
+/* ---------------- Fibonacci recursion tree (shared structure) ---------------- */
 
 interface FibNode {
   id: string;
@@ -41,14 +41,14 @@ const TREE_SPEC: TreeNodeSpec[] = FIB_NODES.map((f) => ({
   parent: f.parent,
 }));
 
-/** id → 祖先 id 链(不含自己) */
+/** id -> chain of ancestor ids (excluding itself) */
 function ancestors(id: string): string[] {
   const out: string[] = [];
   for (let i = id.length - 1; i >= 1; i--) out.push(id.slice(0, i));
   return out;
 }
 
-/* ---------------- FibNaiveTree:朴素递归 ---------------- */
+/* ---------------- FibNaiveTree: naive recursion ---------------- */
 
 function buildNaiveFrames(): TreeFrame[] {
   const frames: TreeFrame[] = [
@@ -74,12 +74,12 @@ function buildNaiveFrames(): TreeFrame[] {
     },
   ];
 
-  const seen = new Map<number, number>(); // n → 已出现次数
-  const order = FIB_NODES; // buildFib 本身就是先序(DFS)顺序
+  const seen = new Map<number, number>(); // n -> number of times seen so far
+  const order = FIB_NODES; // buildFib already emits preorder (DFS) order
 
   order.forEach((node, i) => {
     const states: Record<string, TreeNodeState> = {};
-    // 之前进入过的节点:在当前路径上的是 path,其余算完了标 done
+    // nodes entered earlier: those on the current path are path, the rest are finished and marked done
     const anc = new Set(ancestors(node.id));
     for (let j = 0; j < i; j++) {
       const prev = order[j];
@@ -157,7 +157,7 @@ function buildNaiveFrames(): TreeFrame[] {
     frames.push({ states, msg });
   });
 
-  // 收尾帧:第一次出现的问题标 done,重复出现的全部标 dead
+  // closing frame: subproblems seen for the first time are done, every repeat is dead
   const firstSeen = new Set<number>();
   const finale: Record<string, TreeNodeState> = {};
   for (const node of order) {
@@ -212,9 +212,9 @@ export function FibNaiveTree() {
   );
 }
 
-/* ---------------- FibMemoTree:记忆化 ---------------- */
+/* ---------------- FibMemoTree: memoization ---------------- */
 
-// 手工脚本:备忘录版只真正展开左侧一条链,命中缓存的子树保持幽灵态。
+// Hand-written script: the memoized version really expands only the leftmost chain; subtrees that hit the cache stay ghosts.
 const MEMO_FRAMES: TreeFrame[] = [
   {
     states: { r: "cur" },
@@ -408,10 +408,10 @@ export function FibMemoTree() {
   );
 }
 
-/* ---------------- RobLab:打家劫舍实验室 ---------------- */
+/* ---------------- RobLab: the House Robber lab ---------------- */
 
 const HOUSES = [2, 7, 9, 3, 1];
-const BEST = 12; // 2 + 9 + 1(下标 0、2、4)—— 与精讲 C 的 DP 表一致
+const BEST = 12; // 2 + 9 + 1 (indices 0, 2, 4) - matches the DP table in Deep dive C
 
 export function RobLab() {
   const L = useL();
@@ -565,26 +565,26 @@ export function RobLab() {
   );
 }
 
-/* ---------------- 斐波那契竞速:三名选手 ---------------- */
-// 计数在本章被重新贴了标签(标签与说明见 app/dp/page.tsx 的 FIB_METRICS):
-//   cmp = 进入函数一次(基准情形与命中备忘录的调用也算);
-//   mov = 执行一次 f(i−1)+f(i−2) 的加法;
-//   space = 存活栈帧 + 备忘表格子 + 滚动变量的峰值(由 alloc/free 与 enter/exit 自动取峰)。
-// 三个实现都保持教科书原样,不做任何额外优化 —— 账目要能被手算复核:
-//   朴素:调用 2·fib(n+1)−1 次、加法 fib(n+1)−1 次、峰值空间 n(递归深度);
-//   记忆化:调用 2n−1 次、加法 n−1 次、峰值空间 2n+1((n+1) 格备忘表 + n 层栈);
-//   递推:调用 1 次、加法 n−1 次、峰值空间 4(3 个滚动变量 + 1 层栈帧)。
+/* ---------------- Fibonacci race: the three contenders ---------------- */
+// The counters are relabeled in this chapter (see FIB_METRICS in app/dp/page.tsx for the labels and their explanations):
+//   cmp = one function entry (base cases and memo hits count too);
+//   mov = one execution of the addition f(i-1)+f(i-2);
+//   space = peak of live stack frames + memo table cells + rolling variables (the peak is taken automatically from alloc/free and enter/exit).
+// All three implementations stay textbook-plain with no extra optimizations - the numbers have to be verifiable by hand:
+//   naive: 2*fib(n+1)-1 calls, fib(n+1)-1 additions, peak space n (the recursion depth);
+//   memoized: 2n-1 calls, n-1 additions, peak space 2n+1 (an (n+1)-cell memo table + n stack levels);
+//   bottom-up: 1 call, n-1 additions, peak space 4 (3 rolling variables + 1 stack frame).
 
 function fibNaive(n: number, t: Tracer): number {
   const go = (k: number): number => {
     t.enter();
-    t.cmp(); // 一次函数调用
+    t.cmp(); // one function call
     if (k < 2) {
       t.exit();
       return k;
     }
     const v = go(k - 1) + go(k - 2);
-    t.mov(); // 一次加法
+    t.mov(); // one addition
     t.exit();
     return v;
   };
@@ -593,7 +593,7 @@ function fibNaive(n: number, t: Tracer): number {
 
 function fibMemo(n: number, t: Tracer): number {
   const memo = new Array<number>(n + 1).fill(-1);
-  t.alloc(n + 1); // 备忘表:n+1 格,−1 代表「还没算过」
+  t.alloc(n + 1); // memo table: n+1 cells, -1 means "not computed yet"
   const go = (k: number): number => {
     t.enter();
     t.cmp();
@@ -603,7 +603,7 @@ function fibMemo(n: number, t: Tracer): number {
     }
     if (memo[k] >= 0) {
       t.exit();
-      return memo[k]; // 命中备忘录:子树根本不用长出来
+      return memo[k]; // memo hit: the subtree never has to grow
     }
     const v = go(k - 1) + go(k - 2);
     t.mov();
@@ -617,9 +617,9 @@ function fibMemo(n: number, t: Tracer): number {
 }
 
 function fibLoop(n: number, t: Tracer): number {
-  t.enter(); // 只有这一层栈帧,而且不再长
+  t.enter(); // only this one stack frame, and it never grows
   t.cmp();
-  t.alloc(3); // prev / cur / next,数量与 n 无关
+  t.alloc(3); // prev / cur / next - the count is independent of n
   if (n < 2) {
     t.free(3);
     t.exit();
@@ -683,7 +683,7 @@ export const FIB_LOOP: RaceAlgo<number> = {
   },
 };
 
-/** 斐波那契只有一个参数,所以「输入形状」只有一种:n 本身。 */
+/** Fibonacci takes a single parameter, so there is only one input shape: n itself. */
 export const FIB_INPUTS: RaceInput<number>[] = [
   {
     id: "n",
@@ -696,5 +696,5 @@ export const FIB_INPUTS: RaceInput<number>[] = [
   },
 ];
 
-/** 输入是一个数字,不存在需要深拷的内部结构。 */
+/** The input is a number; there is no internal structure to deep-copy. */
 export const cloneN = (v: number): number => v;

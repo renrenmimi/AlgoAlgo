@@ -1,14 +1,14 @@
 "use client";
 
-// 第 6 章 · 贪心的专属可视化:
-//  - CookieMatch:LC 455 分发饼干 —— 双行(孩子 / 饼干)双指针匹配逐帧,
-//    亲眼看「小饼干配小胃口、喂不动就换大的」这条贪心规则如何展开。
-//  - JumpReach:LC 55 跳跃游戏 —— 覆盖范围 ArrayStepper,演示「够不够得着终点」。
-//  - JumpMin:LC 45 跳跃游戏 II —— 覆盖范围 + 跳跃边界 ArrayStepper,数最少步数。
-//  - IntervalTimeline:LC 435 无重叠区间 —— 自建时间轴,按右端排序后逐个「选 / 弃」。
-//  - CoinGreedyLab:硬币 [1,3,4] 凑 6 的贪心反例实验室(§07,预告第 7 章)。
+// Chapter 6 - the visualizations that belong to the greedy chapter:
+//  - CookieMatch: LC 455 Assign Cookies - two rows (children / cookies) matched frame by frame with two pointers,
+//    showing how the greedy rule "smallest cookie to the smallest appetite, move up when it does not fit" plays out.
+//  - JumpReach: LC 55 Jump Game - a reachable-range ArrayStepper showing whether the end is within reach.
+//  - JumpMin: LC 45 Jump Game II - reachable range + jump boundary in an ArrayStepper, counting the fewest steps.
+//  - IntervalTimeline: LC 435 Non-overlapping Intervals - a custom timeline that sorts by right end, then keeps or drops each interval.
+//  - CoinGreedyLab: the greedy counterexample lab for making 6 out of coins [1,3,4] (§07, a preview of Chapter 7).
 //
-// 双语:帧旁白直接写 <T en zh />;ArrayStepper 的 title / ptr label 传 { en, zh }。
+// Bilingual: frame narration is written inline as <T en zh />; the title and ptr labels of ArrayStepper take { en, zh }.
 
 import { useMemo, useState, type ReactNode } from "react";
 import { T, useL } from "@/lib/i18n";
@@ -20,11 +20,11 @@ import {
 } from "@/lib/stepper";
 
 /* ================================================================
-   CookieMatch —— LC 455 分发饼干:双行双指针匹配
+   CookieMatch - LC 455 Assign Cookies: two rows matched with two pointers
    ================================================================ */
 
-const G = [2, 3, 5]; // 孩子胃口(已排序)
-const S = [1, 2, 4, 4]; // 饼干尺寸(已排序)
+const G = [2, 3, 5]; // children's appetites (sorted)
+const S = [1, 2, 4, 4]; // cookie sizes (sorted)
 
 type ChildSt = "pending" | "cur" | "ok" | "miss";
 type CookieSt = "pending" | "cur" | "used" | "dropped";
@@ -229,10 +229,10 @@ export function CookieMatch() {
 }
 
 /* ================================================================
-   JumpReach —— LC 55 跳跃游戏:覆盖范围能否盖到终点
+   JumpReach - LC 55 Jump Game: can the reachable range cover the end?
    ================================================================ */
 
-// nums = [3, 2, 1, 0, 4] —— 经典「差一步够不着」的反例:答案 false。
+// nums = [3, 2, 1, 0, 4] - the classic "one step short" counterexample: the answer is false.
 const R_NUMS = [3, 2, 1, 0, 4];
 
 const REACH_FRAMES: ArrayFrame[] = [
@@ -388,10 +388,10 @@ export function JumpReach() {
 }
 
 /* ================================================================
-   JumpMin —— LC 45 跳跃游戏 II:最少跳几次
+   JumpMin - LC 45 Jump Game II: the fewest jumps
    ================================================================ */
 
-// nums = [2, 3, 1, 1, 4] —— 最少 2 跳(0 →1 →4)。
+// nums = [2, 3, 1, 1, 4] - 2 jumps at minimum (0 ->1 ->4).
 const M_NUMS = [2, 3, 1, 1, 4];
 
 const MIN_FRAMES: ArrayFrame[] = [
@@ -534,11 +534,11 @@ export function JumpMin() {
 }
 
 /* ================================================================
-   IntervalTimeline —— LC 435 无重叠区间:时间轴逐个选 / 弃
+   IntervalTimeline - LC 435 Non-overlapping Intervals: keep or drop along the timeline
    ================================================================ */
 
 const AXIS_MAX = 10;
-// 已按右端升序排好:结束越早越靠前。
+// Already sorted by right end ascending: the earlier an interval finishes, the earlier it appears.
 const IVS: [number, number][] = [
   [2, 3],
   [1, 4],
@@ -758,14 +758,14 @@ export function IntervalTimeline() {
               </div>
             </div>
           ))}
-          {/* lastEnd 竖线 */}
+          {/* lastEnd vertical line */}
           {f.lastEnd !== null && (
             <div className="grd-marker" style={{ left: `${pct(f.lastEnd)}%` }}>
               <span className="grd-marker-lab">lastEnd={f.lastEnd}</span>
             </div>
           )}
         </div>
-        {/* 坐标轴 */}
+        {/* axis */}
         <div className="grd-axis">
           {ticks.map((t) => (
             <span key={t} className="grd-tick" style={{ left: `${pct(t)}%` }}>
@@ -787,7 +787,7 @@ export function IntervalTimeline() {
 }
 
 /* ================================================================
-   CoinGreedyLab —— 硬币 [1,3,4] 凑 6 的贪心反例(§07)
+   CoinGreedyLab - the greedy counterexample for making 6 out of coins [1,3,4] (§07)
    ================================================================ */
 
 const COINS = [1, 3, 4];
@@ -801,8 +801,8 @@ export function CoinGreedyLab() {
 
   const add = (c: number) => setPicks((p) => [...p, c]);
   const clear = () => setPicks([]);
-  const showGreedy = () => setPicks([4, 1, 1]); // 贪心:每步拿能用的最大面额
-  const showOpt = () => setPicks([3, 3]); // 最优
+  const showGreedy = () => setPicks([4, 1, 1]); // greedy: take the largest usable denomination at every step
+  const showOpt = () => setPicks([3, 3]); // optimal
 
   let msg: ReactNode;
   if (sum === 0) {

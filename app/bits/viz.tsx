@@ -1,19 +1,19 @@
 "use client";
 
-// 第 4 章 · 位运算的三个专属交互实验室:
-//  - BitLamps:招牌「32 盏位灯」。点任意一盏翻转该位,十进制/十六进制实时更新,
-//    翻最高位(符号位)会亲眼看到数字掉进负数 —— 补码不再是抽象规则。
-//  - OpLab:六大运算符游乐场。A、B 两排灯可点,选运算符看结果灯怎么亮
-//    (& | ^ 双目,~ 单目,<< >> 带位移量)。
-//  - SubsetLab:位运算表示集合。整数当集合,逐位表示元素在/不在,
-//    一键遍历全部 2ⁿ 个子集 —— 这是第 10 章状压 DP 的地基。
+// Chapter 4 - the three interactive labs that belong to the bit-manipulation chapter:
+//  - BitLamps: the signature "32 bit lamps". Click any lamp to flip that bit; decimal and hex update live,
+//    and flipping the top bit (the sign bit) shows the number drop below zero - two's complement stops being an abstract rule.
+//  - OpLab: a playground for the six operators. Both rows of lamps (A and B) are clickable; pick an operator and watch the result lamps
+//    (& | ^ are binary, ~ is unary, << >> take a shift amount).
+//  - SubsetLab: representing sets with bits. An integer is a set, each bit says whether an element is in or out,
+//    and one click enumerates all 2^n subsets - the foundation for bitmask DP in Chapter 10.
 //
-// 双语:JSX 旁白直接写 <T en zh />;字符串型标签用 useL() 解析 Loc<string>。
+// Bilingual: JSX narration is written inline as <T en zh />; string labels are resolved from Loc<string> with useL().
 
 import { useMemo, useState } from "react";
 import { T, useL, type Loc } from "@/lib/i18n";
 
-/* ---------------- 通用:一盏灯 + 一排灯 ---------------- */
+/* ---------------- Shared: one lamp + a row of lamps ---------------- */
 
 type LampKind = "sign" | "res";
 
@@ -59,7 +59,7 @@ function Lamp({
   );
 }
 
-/** bits[0] 是最高位(MSB);按 4 位一组(nibble)分块渲染,便于读十六进制。 */
+/** bits[0] is the most significant bit (MSB); rendered in groups of 4 bits (nibbles) so hex is easy to read. */
 function LampBank({
   bits,
   onToggle,
@@ -105,19 +105,19 @@ function LampBank({
   );
 }
 
-/** 取 v 的低 W 位,返回「最高位在前」的 0/1 数组。 */
+/** Take the low W bits of v and return a 0/1 array with the most significant bit first. */
 function bitsOf(v: number, W: number): number[] {
   return Array.from({ length: W }, (_, i) => (v >> (W - 1 - i)) & 1);
 }
 
-/** 32 位二进制字符串(按 nibble 加空格),v 按无符号看待。 */
+/** 32-bit binary string (spaced by nibble); v is treated as unsigned. */
 function bin32(v: number): string {
   const u = v >>> 0;
   const s = u.toString(2).padStart(32, "0");
   return s.replace(/(.{4})(?=.)/g, "$1 ");
 }
 
-/* ---------------- BitLamps:32 盏位灯 ---------------- */
+/* ---------------- BitLamps: 32 bit lamps ---------------- */
 
 const PRESETS: { label: string; v: number }[] = [
   { label: "0", v: 0 },
@@ -246,7 +246,7 @@ export function BitLamps() {
   );
 }
 
-/* ---------------- OpLab:六大运算符游乐场 ---------------- */
+/* ---------------- OpLab: playground for the six operators ---------------- */
 
 type Op = "&" | "|" | "^" | "~" | "<<" | ">>";
 
@@ -426,9 +426,9 @@ export function OpLab() {
   );
 }
 
-/* ---------------- SubsetLab:位运算表示集合 ---------------- */
+/* ---------------- SubsetLab: representing sets with bits ---------------- */
 
-const ELEMS = ["🍎", "🍌", "🍇", "🍑"]; // 4 个元素 → 16 个子集
+const ELEMS = ["🍎", "🍌", "🍇", "🍑"]; // 4 elements -> 16 subsets
 
 export function SubsetLab() {
   const [mask, setMask] = useState(0b0101);

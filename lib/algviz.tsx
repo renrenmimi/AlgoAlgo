@@ -1,24 +1,29 @@
 "use client";
 
-// 算法专属可视化基建 —— 数据结构画「形状」,算法画「决策与状态的演进」。
-// 三件套(全站复用,样式在 globals.css 的「10.5 算法可视化」段):
+// Visualization infrastructure specific to algorithms. Data structures draw shapes;
+// algorithms draw how decisions and state evolve.
+// Three components, reused site-wide (styles live in the "10.5 algorithm visualization"
+// section of globals.css):
 //
-//  - DPTable:DP 表格填充器。一维/二维表逐格填充,每帧高亮「当前格」(cur)
-//    与「它从哪些子问题转移来」(src)。帧 = 整表快照,和 ArrayStepper 同哲学。
-//  - TreePlayer:递归/回溯决策树播放器。节点静态注册(id/label/parent),
-//    帧只改各节点状态:cur(正在访问)/ path(当前递归路径)/ done(访问完)/
-//    dead(死路,剪枝回退变灰)/ sol(找到解)/ memo(命中记忆化缓存)。
-//  - RangeShrink:候选区间收缩器。把「答案的候选范围」画成一排数字,
-//    二分答案 / 贪心排除的每一步,都表现为区间收窄 + 试探点判定。
+//  - DPTable: a DP table filler. Fills a one- or two-dimensional table cell by cell; each
+//    frame highlights the current cell (cur) and the subproblems it transitions from (src).
+//    A frame is a snapshot of the whole table -- the same philosophy as ArrayStepper.
+//  - TreePlayer: a player for recursion / backtracking decision trees. Nodes are registered
+//    statically (id/label/parent) and a frame only changes node states: cur (being visited) /
+//    path (on the current recursion path) / done (finished) / dead (a dead end, grayed out on
+//    a pruned backtrack) / sol (a solution was found) / memo (a memoization cache hit).
+//  - RangeShrink: a candidate-interval shrinker. It draws the range of candidate answers as a
+//    row of numbers, so every step of binary search on the answer -- or of greedy elimination
+//    -- shows up as the interval narrowing plus a verdict on the probe.
 //
-// 播放控制统一复用 lib/stepper 的 useStepper + StepControls。
+// Playback control is shared: useStepper + StepControls from lib/stepper.
 
 import { useMemo, type ReactNode } from "react";
 import { useStepper, StepControls, useEdgeFade } from "@/lib/stepper";
 import { T, useL, type Loc } from "@/lib/i18n";
 
 /* ================================================================
-   DPTable —— DP 表格填充器
+   DPTable -- the DP table filler
    ================================================================ */
 
 export type DPCellState = "cur" | "src" | "done" | "ghost" | "ok" | "bad";
@@ -29,9 +34,9 @@ export interface DPCell {
 }
 
 export interface DPFrame {
-  /** 整表快照:rows × cols。一维表就传一行。 */
+  /** A snapshot of the whole table: rows x cols. For a one-dimensional table, pass one row. */
   cells: DPCell[][];
-  /** 本帧旁白 —— 直接写 JSX 并在里面用 <T en zh />,或传 { en, zh } */
+  /** Narration for this frame -- write JSX and use <T en zh /> inside it, or pass { en, zh } */
   msg: Loc<ReactNode>;
 }
 
@@ -45,11 +50,11 @@ export function DPTable({
 }: {
   title: Loc<ReactNode>;
   frames: DPFrame[];
-  /** 顶部表头(列),如物品容量 0..W 或字符串的每个字符 */
+  /** Header row (columns), e.g. capacities 0..W or each character of a string */
   colLabels?: Loc<ReactNode[]>;
-  /** 左侧表头(行),如物品名或另一个字符串的字符 */
+  /** Header column (rows), e.g. item names or the characters of the other string */
   rowLabels?: Loc<ReactNode[]>;
-  /** 左上角标注,如 "dp" */
+  /** The label in the top-left corner, e.g. "dp" */
   cornerLabel?: Loc<ReactNode>;
   cellW?: number;
 }) {
@@ -139,28 +144,30 @@ function FragmentRow({
 }
 
 /* ================================================================
-   TreePlayer —— 递归 / 回溯决策树播放器
+   TreePlayer -- the recursion / backtracking decision-tree player
    ================================================================ */
 
 export interface TreeNodeSpec {
   id: string;
-  /** 节点标签。文字标签在 SVG 里没有换行,英文比中文长,必要时用 w 加宽。 */
+  /** Node label. Text labels do not wrap inside SVG, and English runs longer than Chinese,
+   *  so widen the node with w when necessary. */
   label: Loc<ReactNode>;
-  /** 不填 = 根节点 */
+  /** Omit for the root node */
   parent?: string;
-  /** 节点宽度覆盖(标签较长时用) */
+  /** Overrides the node width (use it for longer labels) */
   w?: number;
 }
 
 export type TreeNodeState = "cur" | "path" | "done" | "dead" | "sol" | "memo";
 
-/** 语言解析后的节点(内部用):label 已是当前语言的 ReactNode */
+/** A node after language resolution (internal): label is already the ReactNode for the
+ *  current language. */
 type ResolvedNode = Omit<TreeNodeSpec, "label"> & { label: ReactNode };
 
 export interface TreeFrame {
-  /** 只列出「非默认态」的节点;未列出的节点为幽灵态(尚未访问) */
+  /** Only list nodes in a non-default state; any node not listed is a ghost (not yet visited) */
   states: Record<string, TreeNodeState>;
-  /** 本帧旁白 —— 直接写 JSX 并在里面用 <T en zh />,或传 { en, zh } */
+  /** Narration for this frame -- write JSX and use <T en zh /> inside it, or pass { en, zh } */
   msg: Loc<ReactNode>;
 }
 
@@ -181,7 +188,7 @@ export function TreePlayer({
   nodeW?: number;
   gapX?: number;
   gapY?: number;
-  /** 是否显示状态图例 */
+  /** Whether to show the state legend */
   legend?: boolean;
 }) {
   const L = useL();
@@ -190,18 +197,21 @@ export function TreePlayer({
   const edge = useEdgeFade<HTMLDivElement>();
   const rtitle = L(title);
 
-  // 先把标签解析成当前语言,再排版 —— 中英标签宽度不同,切语言要重排。
+  // Resolve the labels to the current language before laying out -- Chinese and English
+  // labels have different widths, so switching language must re-run the layout.
   const rnodes = useMemo<ResolvedNode[]>(
     () => nodes.map((n) => ({ ...n, label: L(n.label) })),
     [nodes, L],
   );
 
-  // 按标签长度自动估宽:纯字符串标签超出默认宽度时加宽,消除长标签溢出节点框
+  // Estimate the width from the label length: widen plain-string labels that exceed the
+  // default width, so long labels no longer overflow the node box.
   const widthOf = (n: ResolvedNode): number => {
     if (n.w) return n.w;
     if (typeof n.label === "string" || typeof n.label === "number") {
       const s = String(n.label);
-      // 中文按 ~13px/字、其余按 ~8px/字 粗估,两侧各留 11px 内衬
+      // Rough estimate: ~13px per Chinese character, ~8px otherwise, plus 11px of padding
+      // on each side.
       let units = 0;
       for (const ch of s) units += /[一-鿿＀-￯]/.test(ch) ? 1.55 : 1;
       return Math.max(nodeW, Math.ceil(units * 8.2 + 22));
@@ -281,7 +291,7 @@ export function TreePlayer({
           role="img"
           aria-label={typeof rtitle === "string" ? rtitle : undefined}
         >
-          {/* 边:父底 → 子顶,状态跟随子节点 */}
+          {/* Edges: parent bottom -> child top; the edge state follows the child node */}
           {rnodes.map((n) => {
             if (!n.parent) return null;
             const p = layout.pos.get(n.parent)!;
@@ -299,7 +309,7 @@ export function TreePlayer({
               />
             );
           })}
-          {/* 节点 */}
+          {/* Nodes */}
           {rnodes.map((n) => {
             const c = layout.pos.get(n.id)!;
             const st = f.states[n.id];
@@ -330,20 +340,22 @@ export function TreePlayer({
 }
 
 /* ================================================================
-   RangeShrink —— 候选区间收缩器(二分答案 / 贪心排除)
+   RangeShrink -- the candidate-interval shrinker
+   (binary search on the answer / greedy elimination)
    ================================================================ */
 
 export interface RangeFrame {
-  /** 仍然存活的候选区间(闭区间 [lo, hi],按值而非下标) */
+  /** The candidate interval that is still alive (the closed interval [lo, hi], by value
+   *  rather than by index) */
   lo: number;
   hi: number;
-  /** 本轮试探的候选值(如二分的 mid) */
+  /** The candidate value probed this round (e.g. binary search's mid) */
   probe?: number;
-  /** 试探判定:ok = probe 可行,no = probe 不可行 */
+  /** The verdict on the probe: ok = feasible, no = infeasible */
   verdict?: "ok" | "no";
-  /** 已锁定的最终答案 */
+  /** The final answer, once it is locked in */
   answer?: number;
-  /** 本帧旁白 —— 直接写 JSX 并在里面用 <T en zh />,或传 { en, zh } */
+  /** Narration for this frame -- write JSX and use <T en zh /> inside it, or pass { en, zh } */
   msg: Loc<ReactNode>;
 }
 
@@ -356,11 +368,12 @@ export function RangeShrink({
   cellW = 44,
 }: {
   title: Loc<ReactNode>;
-  /** 候选值域(含端点),建议宽度 ≤ 20 保证可读 */
+  /** The candidate value range (inclusive of both endpoints); keep the width at 20 or fewer
+   *  to stay readable */
   min: number;
   max: number;
   frames: RangeFrame[];
-  /** 数值的单位标注,如「bananas per hour」 */
+  /** The unit label for the values, e.g. "bananas per hour" */
   unit?: Loc<string>;
   cellW?: number;
 }) {

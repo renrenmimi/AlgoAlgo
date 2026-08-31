@@ -1,13 +1,13 @@
 "use client";
 
-// 第 11 章 · 数学与数论。
-// 灵魂:数学题不考数学,考的是能不能找到那个「不变量 / 规律」。
-// 结构:找不变量 + 溢出取模 → gcd → 精讲 A 埃氏筛(204)→ 快速幂(盘)→
-//   精讲 B 摩尔投票(169)→ 下一个排列(31)→ 精讲 C Nim 博弈(292)→ 快乐数(202)→
-//   题单 → 测验。三大自建 viz(埃氏筛网格 / Nim 交互 / 摩尔投票 ArrayStepper)在 ./viz。
+// Chapter 11 - Math and number theory.
+// The heart of it: math problems do not test math, they test whether you can find the invariant or the pattern.
+// Structure: finding invariants + overflow and modulo -> gcd -> Deep dive A the sieve of Eratosthenes (204) -> fast exponentiation (review) ->
+//   Deep dive B the Boyer-Moore majority vote (169) -> Next Permutation (31) -> Deep dive C the game of Nim (292) -> Happy Number (202) ->
+//   problem set -> quiz. The three custom visualizations (sieve grid / interactive Nim / Boyer-Moore ArrayStepper) live in ./viz.
 //
-// 双语:正文用 <T en zh />;组件的文案型 props 传 { en, zh }。
-// CodeTabs 的 code 也给两份 —— 两份之间只有注释不同,可执行代码逐行一致(hl 行号才对得上)。
+// Bilingual: body text uses <T en zh />; copy-style props on components take { en, zh }.
+// CodeTabs code is supplied twice as well - the two versions differ only in their comments, while the executable code matches line for line (so the hl line numbers stay correct).
 
 import "./chapter.css";
 import {
@@ -26,7 +26,7 @@ import { T } from "@/lib/i18n";
 import { PROBLEMS, QUIZ } from "@/lib/math-data";
 import { SieveGrid, NimGame, MooreVote } from "./viz";
 
-/* ============ §06 下一个排列:逐帧 ArrayStepper 帧 ============ */
+/* ============ §06 Next Permutation: ArrayStepper frames ============ */
 
 function npRow(arr: number[], marks: Record<number, "lit" | "ok">): ArrayCell[] {
   return arr.map((v, j) => (marks[j] ? { v, state: marks[j] } : { v }));
@@ -165,7 +165,7 @@ const NP_FRAMES: ArrayFrame[] = [
   },
 ];
 
-/* ============ 页面 ============ */
+/* ============ Page ============ */
 
 const CHIPS = [
   { id: "why", n: "01", label: { en: "Invariants & modulo", zh: "找不变量 · 取模" } },
@@ -226,7 +226,7 @@ export default function MathChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 找不变量 + 溢出取模 ================= */}
+      {/* ================= §01 Finding invariants + overflow and modulo ================= */}
       <Section
         id="why"
         index="01"
@@ -953,7 +953,7 @@ const lcm = (a, b) => (a / gcd(a, b)) * b;   // 先除后乘`,
         </Callout>
       </Section>
 
-      {/* ================= §03 精讲 A · 204 埃氏筛 ================= */}
+      {/* ================= §03 Deep dive A - 204 the sieve of Eratosthenes ================= */}
       <Section
         id="sieve"
         index="03"
@@ -1285,7 +1285,7 @@ const lcm = (a, b) => (a / gcd(a, b)) * b;   // 先除后乘`,
         </Callout>
       </Section>
 
-      {/* ================= §04 快速幂(盘) ================= */}
+      {/* ================= §04 Fast exponentiation (review) ================= */}
       <Section
         id="qpow"
         index="04"
@@ -1576,7 +1576,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
         </Callout>
       </Section>
 
-      {/* ================= §05 精讲 B · 169 摩尔投票 ================= */}
+      {/* ================= §05 Deep dive B - 169 Boyer-Moore majority vote ================= */}
       <Section
         id="moore"
         index="05"
@@ -1836,7 +1836,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
         </Callout>
       </Section>
 
-      {/* ================= §06 下一个排列 31 ================= */}
+      {/* ================= §06 Next Permutation 31 ================= */}
       <Section
         id="perm"
         index="06"
@@ -2099,7 +2099,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
         </Callout>
       </Section>
 
-      {/* ================= §07 精讲 C · 292 Nim 博弈 ================= */}
+      {/* ================= §07 Deep dive C - 292 the game of Nim ================= */}
       <Section
         id="nim"
         index="07"
@@ -2411,7 +2411,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
         </Callout>
       </Section>
 
-      {/* ================= §08 快乐数 202 ================= */}
+      {/* ================= §08 Happy Number 202 ================= */}
       <Section
         id="happy"
         index="08"
@@ -2747,7 +2747,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
         </Callout>
       </Section>
 
-      {/* ================= §09 题单 ================= */}
+      {/* ================= §09 Problem set ================= */}
       <Section
         id="problems"
         index="09"

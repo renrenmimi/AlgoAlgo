@@ -1,7 +1,8 @@
-/* 第 1 章 · 排序(data-ch="sorting")专属样式。
-   规则:全部带 srt- 前缀或包在 [data-ch="sorting"] 下;颜色只用 CSS token。 */
+/* Chapter 1 · Sorting (data-ch="sorting") specific styles.
+   Rule: everything is either srt- prefixed or nested under [data-ch="sorting"];
+   colors come only from CSS tokens. */
 
-/* ============ 条形图排序实验室 ============ */
+/* ============ Bar-chart sorting lab ============ */
 
 [data-ch="sorting"] .srt-algo-tabs {
   display: flex;
@@ -101,7 +102,7 @@
 }
 [data-ch="sorting"] .srt-bar[data-state="min"] .srt-bar-v { color: var(--warn); }
 
-/* ============ 归并 / 计数 的多行单元格布局 ============ */
+/* ============ Multi-line cell layout for merge / counting ============ */
 
 [data-ch="sorting"] .srt-rows {
   display: flex;
@@ -134,7 +135,7 @@
   justify-content: center;
 }
 
-/* 计数排序的桶:数字标签在下 */
+/* Counting-sort buckets: the numeric label sits underneath */
 [data-ch="sorting"] .srt-bucket {
   display: flex;
   flex-direction: column;
@@ -149,7 +150,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* ============ 稳定性演示 ============ */
+/* ============ Stability demo ============ */
 
 [data-ch="sorting"] .srt-stab {
   display: flex;
@@ -184,7 +185,7 @@
   font-family: var(--font-mono);
   color: var(--text-3);
 }
-/* 同一 key 用同一色相区分,方便肉眼追踪原始顺序 */
+/* Cards sharing a key share a hue, which makes the original order easy to track by eye */
 [data-ch="sorting"] .srt-chip[data-hue="a"] { border-color: var(--acc-border); background: var(--acc-soft); }
 [data-ch="sorting"] .srt-chip[data-hue="a"] .k { color: var(--acc-ink); }
 [data-ch="sorting"] .srt-chip[data-hue="b"] { border-color: color-mix(in oklab, var(--info) 45%, transparent); background: var(--info-bg); }
@@ -200,7 +201,7 @@
   min-height: 20px;
 }
 
-/* ============ 合并区间数轴 ============ */
+/* ============ Merge-intervals number line ============ */
 
 [data-ch="sorting"] .srt-track {
   position: relative;
@@ -244,10 +245,11 @@
   color: var(--ok);
 }
 
-/* ============ 七列排序对照表 ============ */
+/* ============ Seven-column sorting comparison table ============ */
 
-/* 英文表头比中文长(Best / Average / Worst / Aux space / Stable?),
-   七列在 560px 里会挤成一团 —— 给它更大的 min-width,由 .table-wrap 横向滚动。 */
+/* The English headers are longer than the Chinese ones (Best / Average / Worst /
+   Aux space / Stable?), and seven columns crammed into 560px turn into a jumble ——
+   give the table a larger min-width and let .table-wrap scroll it horizontally. */
 [data-ch="sorting"] .t-table.srt-cmp {
   min-width: 860px;
 }
@@ -258,7 +260,7 @@
   min-width: 280px;
 }
 
-/* ============ 决策树下界示意 ============ */
+/* ============ Decision-tree lower-bound illustration ============ */
 
 [data-ch="sorting"] .srt-lb {
   display: grid;

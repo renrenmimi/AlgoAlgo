@@ -1,15 +1,15 @@
 "use client";
 
-// 第 8 章 · 背包问题的三个专属可视化:
-//  - KnapSackLab:0-1 背包实验室 —— 亲手往容量有限的书包里塞物品,
-//    体会「选 / 不选」在容量约束下有多不直观(承接第 7 章打家劫舍实验室)。
-//  - RollingCompare:本章最重要的可视化 —— 一维滚动数组的【正序 vs 倒序】对比。
-//    同一件物品扫一遍,倒序读到的是「处理本物品之前的值」(物品只用一次),
-//    正序读到的是「本轮刚更新过的值」(同一件物品被重复计入)。
-//  - TargetSumTree:LC 494 目标和的 ± 决策树(回溯视角),配合正文的「回溯 vs 背包」。
+// Chapter 8 - the three visualizations that belong to the knapsack chapter:
+//  - KnapSackLab: the 0-1 knapsack lab - pack items into a bag of limited capacity by hand
+//    and feel how unintuitive "take or skip" becomes under a capacity constraint (a follow-on to the House Robber lab in Chapter 7).
+//  - RollingCompare: the most important visualization in this chapter - forwards vs. backwards for the rolling 1-D array.
+//    Scanning the same item once, going backwards reads "the value from before this item was processed" (each item used once),
+//    while going forwards reads "the value just updated in this pass" (the same item gets counted more than once).
+//  - TargetSumTree: the +/- decision tree of LC 494 Target Sum (the backtracking view), paired with "backtracking vs. knapsack" in the body text.
 //
-// 双语:文案一律用 <T en zh />;组件的文案型 props 传 { en, zh };
-// 需要纯字符串的地方(aria-label)用 useL() 解析。
+// Bilingual: all copy uses <T en zh />; copy-style props on components take { en, zh };
+// where a plain string is required (aria-label), resolve it with useL().
 
 import { useMemo, useState, type ReactNode } from "react";
 import { useStepper, StepControls } from "@/lib/stepper";
@@ -22,7 +22,7 @@ import {
 import { T, useL } from "@/lib/i18n";
 
 /* ============================================================
-   KnapSackLab —— 0-1 背包实验室
+   KnapSackLab - the 0-1 knapsack lab
    ============================================================ */
 
 interface Item {
@@ -39,7 +39,7 @@ const LAB_ITEMS: Item[] = [
   { w: 5, v: 7, emoji: "📷", name: { en: "Camera", zh: "相机" } },
 ];
 const CAP = 7;
-const BEST_V = 9; // 词典 + 笔记本(w3+w4=7,v4+5=9)
+const BEST_V = 9; // dictionary + notebook (w3+w4=7, v4+5=9)
 const BEST_SET = [1, 2];
 
 export function KnapSackLab() {
@@ -257,24 +257,24 @@ export function KnapSackLab() {
 }
 
 /* ============================================================
-   RollingCompare —— 一维滚动:正序 vs 倒序(本章招牌)
+   RollingCompare - rolling 1-D array: forwards vs. backwards (this chapter's signature)
    ============================================================ */
 
 interface RollFrame {
   dp: number[];
-  write?: number; // 正在写入的格子 j
-  read?: number; // 转移读取的格子 j - w
-  dirty?: boolean; // read 格子是否「本轮已被更新」
+  write?: number; // the cell j currently being written
+  read?: number; // the cell j - w read by the transition
+  dirty?: boolean; // whether the cell being read was already updated in this pass
   msg: ReactNode;
-  done?: boolean; // 收尾帧:无 bad 时全部标绿(ok);有 bad 时只标出算错的格子
-  bad?: number[]; // 收尾帧里因重复计入而算错的格子(正序演示专用)
+  done?: boolean; // closing frame: with no bad cells, mark everything green (ok); otherwise mark only the miscomputed cells
+  bad?: number[]; // cells miscomputed by double counting in the closing frame (used only by the forwards demo)
 }
 
-const RW = 2; // 物品重量
-const RV = 3; // 物品价值
-const RN = 6; // dp 数组长度(容量 0..5)
+const RW = 2; // item weight
+const RV = 3; // item value
+const RN = 6; // dp array length (capacities 0..5)
 
-// 倒序(正确):j 从大到小,读到的永远是「处理本物品之前」的值
+// backwards (correct): j runs from high to low, so the value read always predates the processing of this item
 function buildBack(): RollFrame[] {
   const dp = Array(RN).fill(0);
   const frames: RollFrame[] = [
@@ -365,7 +365,7 @@ function buildBack(): RollFrame[] {
   return frames;
 }
 
-// 正序(错误):j 从小到大,读到的可能是本轮刚更新过的值 → 物品被重复使用
+// forwards (wrong): j runs from low to high, so the value read may be one just updated in this pass -> the item gets reused
 function buildFwd(): RollFrame[] {
   const dp = Array(RN).fill(0);
   const updated = new Set<number>();
@@ -445,7 +445,7 @@ function buildFwd(): RollFrame[] {
   frames.push({
     dp: [...dp],
     done: true,
-    bad: [4, 5], // 红色标出被重复计入而算错的格子(应为 3,却成了 6)
+    bad: [4, 5], // red marks the cells miscomputed by double counting (should be 3, came out 6)
     msg: (
       <T
         en={
@@ -483,7 +483,7 @@ function RollPlayer({ frames }: { frames: RollFrame[] }) {
         className="viz-stage"
         style={{ flexDirection: "column", gap: 6, overflowX: "auto" }}
       >
-        {/* 标签行:写 / 读 + 「旧值 / 已改过」标记 */}
+        {/* label row: write / read + the "old value / already changed" markers */}
         <div className="kp-roll-row">
           {f.dp.map((_, i) => (
             <div key={i} className="kp-roll-tagcell">
@@ -504,12 +504,12 @@ function RollPlayer({ frames }: { frames: RollFrame[] }) {
             </div>
           ))}
         </div>
-        {/* dp 单元格行 */}
+        {/* dp cell row */}
         <div className="kp-roll-row" style={{ paddingBottom: 26 }}>
           {f.dp.map((v, i) => {
             let cls = "cell";
             if (f.done) {
-              // 收尾帧:正序演示用 bad 标出算错的格子,其余保持中性;倒序正解全部标绿
+              // closing frame: the forwards demo marks miscomputed cells bad and leaves the rest neutral; the correct backwards run turns everything green
               if (f.bad?.includes(i)) cls += " bad";
               else if (!f.bad) cls += " ok";
             } else if (f.write === i) cls += " lit";
@@ -575,7 +575,7 @@ export function RollingCompare() {
           <T en="→ Upward (wrong answer)" zh="→ 正序(会出错)" />
         </button>
       </div>
-      {/* key 切换时重挂载,播放进度归零 */}
+      {/* remount when key changes so playback resets to the start */}
       <RollPlayer
         key={order}
         frames={order === "back" ? BACK_FRAMES : FWD_FRAMES}
@@ -585,10 +585,10 @@ export function RollingCompare() {
 }
 
 /* ============================================================
-   TargetSumTree —— LC 494 目标和的 ± 决策树(回溯视角)
+   TargetSumTree - the +/- decision tree of LC 494 Target Sum (the backtracking view)
    ============================================================ */
 
-// 三个 1,给每个挑 + 或 −;左枝 = +,右枝 = −。节点标签 = 当前累计和。
+// Three 1s; pick + or - for each. Left branch = +, right branch = -. A node's label is the running sum.
 const TS_NODES: TreeNodeSpec[] = [
   { id: "r", label: "0" },
   { id: "rp", label: "1", parent: "r" },
@@ -617,7 +617,7 @@ const LEAVES = [
   "rmmp",
   "rmmm",
 ];
-const SOL_LEAVES = ["rppm", "rpmp", "rmpp"]; // 累计和 == target(1)
+const SOL_LEAVES = ["rppm", "rpmp", "rmpp"]; // running sum == target (1)
 const INNER = ["r", "rp", "rpp", "rpm", "rm", "rmp", "rmm"];
 
 const TS_FRAMES: TreeFrame[] = [

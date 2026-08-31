@@ -1,8 +1,10 @@
 "use client";
 
-// ⌘K 命令面板:模糊搜索章节(中英标题 / 英文名 / 标签),回车跳转。
-// 全局键盘监听挂在这里;Esc 关闭,↑↓ 选择。
-// 搜索键两种语言都收进去,所以在英文界面下也能用中文关键词搜到章节。
+// The ⌘K command palette: fuzzy-search chapters (Chinese and English titles / English name /
+// tags) and press Enter to jump.
+// The global keyboard listener lives here; Esc closes, up/down arrows move the selection.
+// Search keys from both languages are indexed, so Chinese keywords still find a chapter while
+// the UI is in English.
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -36,7 +38,7 @@ export default function CommandPalette() {
     if (cmdkOpen) {
       setQuery("");
       setSel(0);
-      // 等 overlay 渲染完再聚焦
+      // Wait until the overlay has rendered before focusing
       requestAnimationFrame(() => inputRef.current?.focus());
     }
   }, [cmdkOpen]);

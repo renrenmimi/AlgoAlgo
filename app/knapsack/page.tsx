@@ -1,16 +1,16 @@
 "use client";
 
-// 第 8 章 · 背包问题 —— DP 系列第二章,承接第 7 章「选 / 不选」模型与 322 零钱。
-// 十段式结构:为什么是背包 → 0/1 二维表 → 一维滚动(为什么倒序,正序 vs 倒序对比)→
-// 装满型(416 精讲)→ 计数型(494 精讲,回溯 vs 背包)→ 二维费用(474)→
-// 完全背包(为什么正序,322 复盘)→ 排列 vs 组合(518 vs 377 精讲)→ 题单 → 测验。
-// DPTable 是本章主场;一维滚动正序/倒序对比动画在 ./viz(RollingCompare)。
+// Chapter 8 - Knapsack problems: the second DP chapter, building on the "take or skip" model of Chapter 7 and on Coin Change 322.
+// Ten-section structure: why knapsack -> the 0/1 two-dimensional table -> the rolling one-dimensional array (why it goes backwards; forwards vs. backwards) ->
+// the fill-exactly type (Deep dive 416) -> the counting type (Deep dive 494, backtracking vs. knapsack) -> two-dimensional cost (474) ->
+// unbounded knapsack (why it goes forwards; 322 revisited) -> permutations vs. combinations (Deep dive 518 vs. 377) -> problem set -> quiz.
+// DPTable carries this chapter; the forwards/backwards rolling-array comparison lives in ./viz (RollingCompare).
 //
-// 双语:文案一律用 <T en zh />;组件的文案型 props 传 { en, zh };
-// 代码块的 code 传 { en, zh },两半只有注释不同,可执行行逐字节相同(hl 才对得上行号)。
-// 术语约定(与 lib/knapsack-data.tsx 一致):
-//   0-1 背包 = 0/1 knapsack;完全背包 = unbounded knapsack;
-//   多重背包 = bounded knapsack;分组背包 = grouped knapsack。
+// Bilingual: all copy uses <T en zh />; copy-style props on components take { en, zh };
+// code blocks pass { en, zh } for code, and the two halves differ only in comments, with byte-identical executable lines (so hl line numbers match).
+// Terminology (consistent with lib/knapsack-data.tsx):
+//   "0-1 knapsack" when each item may be taken once; "unbounded knapsack" when items may repeat;
+//   "bounded knapsack" for limited counts; "grouped knapsack" for items split into groups.
 
 import "./chapter.css";
 import { Hero, Section, Callout, KeyPoints, ChapterFooter } from "@/lib/kit";
@@ -22,7 +22,7 @@ import { T } from "@/lib/i18n";
 import { PROBLEMS, QUIZ } from "@/lib/knapsack-data";
 import { KnapSackLab, RollingCompare, TargetSumTree } from "./viz";
 
-/* ============ 通用一维行帧生成器 ============ */
+/* ============ Shared 1-D row frame generator ============ */
 
 function row1D(
   vals: (number | string)[],
@@ -41,8 +41,8 @@ function row1D(
   ];
 }
 
-/* ============ 精讲基座 · 0-1 背包二维表 ============ */
-/* 物品 w=[1,3,4] v=[15,20,30],容量 W=4;答案 dp[3][4]=35(物品①+②) */
+/* ============ Deep-dive base - the 0-1 knapsack 2-D table ============ */
+/* items w=[1,3,4] v=[15,20,30], capacity W=4; answer dp[3][4]=35 (items 1 and 2) */
 
 const DP2 = [
   [0, 0, 0, 0, 0],
@@ -205,7 +205,7 @@ const F_2D: DPFrame[] = [
   },
 ];
 
-/* ============ §03 · 一维滚动:与二维每一行对齐 ============ */
+/* ============ §03 - rolling 1-D array: aligned with each row of the 2-D table ============ */
 
 const F_ROLL: DPFrame[] = [
   {
@@ -291,8 +291,8 @@ const F_ROLL: DPFrame[] = [
   },
 ];
 
-/* ============ 精讲 A · LC 416 分割等和子集(布尔装满型) ============ */
-/* nums=[1,5,11,5] sum=22 target=11;子集 {1,5,5}=11 ⇒ 可等分 */
+/* ============ Deep dive A - LC 416 Partition Equal Subset Sum (boolean fill-exactly) ============ */
+/* nums=[1,5,11,5] sum=22 target=11; the subset {1,5,5}=11, so an equal split exists */
 
 function boolRow(
   reach: Set<number>,
@@ -409,8 +409,8 @@ const F_416: DPFrame[] = [
   },
 ];
 
-/* ============ 精讲 B · LC 494 目标和(计数型) ============ */
-/* 与上方决策树同一实例:nums=[1,1,1] target=1 → P=(3+1)/2=2;凑 2 的子集数 = C(3,2)=3 */
+/* ============ Deep dive B - LC 494 Target Sum (counting type) ============ */
+/* Same instance as the decision tree above: nums=[1,1,1] target=1 -> P=(3+1)/2=2; subsets summing to 2 = C(3,2)=3 */
 
 const F_494: DPFrame[] = [
   {
@@ -489,8 +489,8 @@ const F_494: DPFrame[] = [
   },
 ];
 
-/* ============ §07 · 完全背包重建模 322(硬币逐枚正序) ============ */
-/* coins=[1,3,4] amount=6;dp[6]=2(3+3),与第 7 章 min-DP 结论一致 */
+/* ============ §07 - remodeling 322 as an unbounded knapsack (coins one at a time, forwards) ============ */
+/* coins=[1,3,4] amount=6; dp[6]=2 (3+3), matching the min-DP result from Chapter 7 */
 
 const INF = "∞";
 const F_322: DPFrame[] = [
@@ -588,8 +588,8 @@ const F_322: DPFrame[] = [
   },
 ];
 
-/* ============ 精讲 C · LC 518 组合数(外硬币内容量) ============ */
-/* coins=[1,2,5] amount=5 → 4 种组合 */
+/* ============ Deep dive C - LC 518 counting combinations (coins outer, capacity inner) ============ */
+/* coins=[1,2,5] amount=5 -> 4 combinations */
 
 const F_518: DPFrame[] = [
   {
@@ -675,7 +675,7 @@ const F_518: DPFrame[] = [
   },
 ];
 
-/* ================= 页面 ================= */
+/* ================= Page ================= */
 
 const CHIPS = [
   { id: "why", n: "01", label: { en: "Why a knapsack", zh: "为什么是背包" } },
@@ -739,7 +739,7 @@ export default function KnapsackChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 为什么是背包 ================= */}
+      {/* ================= §01 Why knapsack ================= */}
       <Section
         id="why"
         index="01"
@@ -977,7 +977,7 @@ export default function KnapsackChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §02 0-1 背包二维表 ================= */}
+      {/* ================= §02 The 0-1 knapsack 2-D table ================= */}
       <Section
         id="table2d"
         index="02"
@@ -1288,7 +1288,7 @@ export default function KnapsackChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §03 一维滚动 · 为什么倒序 ================= */}
+      {/* ================= §03 Rolling 1-D array - why backwards ================= */}
       <Section
         id="rolling"
         index="03"
@@ -1587,7 +1587,7 @@ export default function KnapsackChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §04 装满型 · 416 ================= */}
+      {/* ================= §04 The fill-exactly type - 416 ================= */}
       <Section
         id="subset"
         index="04"
@@ -1903,7 +1903,7 @@ export default function KnapsackChapter() {
         </div>
       </Section>
 
-      {/* ================= §05 计数型 · 494 ================= */}
+      {/* ================= §05 The counting type - 494 ================= */}
       <Section
         id="count"
         index="05"
@@ -2197,7 +2197,7 @@ export default function KnapsackChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §06 二维费用 · 474 ================= */}
+      {/* ================= §06 Two-dimensional cost - 474 ================= */}
       <Section
         id="twocost"
         index="06"
@@ -2458,7 +2458,7 @@ export default function KnapsackChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §07 完全背包 · 为什么正序 ================= */}
+      {/* ================= §07 Unbounded knapsack - why forwards ================= */}
       <Section
         id="complete"
         index="07"
@@ -2866,7 +2866,7 @@ export default function KnapsackChapter() {
         </div>
       </Section>
 
-      {/* ================= §08 排列 vs 组合 ================= */}
+      {/* ================= §08 Permutations vs. combinations ================= */}
       <Section
         id="permcomb"
         index="08"
@@ -3240,7 +3240,7 @@ var combinationSum4 = function (nums, target) {
         </Callout>
       </Section>
 
-      {/* ================= §09 题单 ================= */}
+      {/* ================= §09 Problem set ================= */}
       <Section
         id="problems"
         index="09"

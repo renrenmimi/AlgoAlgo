@@ -1,21 +1,25 @@
 "use client";
 
-// 第 2 章 · 分治的专属可视化:
-//  - PowTree:快速幂 3¹³ 的分解「树」(其实是一条链)—— 复用 lib/algviz 的 TreePlayer,
-//    亲眼看指数每次对半砍,只有 log n 层。
-//  - LayeredMerge:自建的「分层合并图」(useStepper + StepControls)。
-//    两处复用:归并排序的逐层合并(讲 O(n log n) 由来)、LC 23 的两两归并链表。
-//  - CrossMidLab:LC 53 分治视角的「跨中点最大和」扫描(复用 ArrayStepper)。
-//  - InversionLab:归并统计逆序对(复用 ArrayStepper)。
+// Chapter 2 · Divide-and-conquer-specific visualizations:
+//  - PowTree: the decomposition "tree" of 3¹³ under fast exponentiation (really a
+//    chain) —— reuses TreePlayer from lib/algviz, so you can watch the exponent get
+//    halved each time and see that there are only log n levels.
+//  - LayeredMerge: a hand-built layered merge diagram (useStepper + StepControls).
+//    Reused in two places: the level-by-level merging of merge sort (which explains
+//    where O(n log n) comes from) and the pairwise merging of lists in LC 23.
+//  - CrossMidLab: the cross-midpoint maximum-sum scan from the divide-and-conquer
+//    view of LC 53 (reuses ArrayStepper).
+//  - InversionLab: counting inversions during a merge (reuses ArrayStepper).
 //
-// 双语:帧旁白直接写 <T en zh />;title / 指针标签传 { en, zh }。
+// Bilingual: frame narration is written inline as <T en zh />; title and pointer
+// labels take { en, zh }.
 
 import { type ReactNode } from "react";
 import { T, useL, type Loc } from "@/lib/i18n";
 import { TreePlayer, type TreeNodeSpec, type TreeFrame, type TreeNodeState } from "@/lib/algviz";
 import { ArrayStepper, useStepper, StepControls, type ArrayFrame, type ArrayCell } from "@/lib/stepper";
 
-/* ================= PowTree:快速幂 3¹³ 分解链(TreePlayer) ================= */
+/* ================= PowTree: the 3¹³ fast-exponentiation decomposition chain (TreePlayer) ================= */
 
 const POW_NODES: TreeNodeSpec[] = [
   { id: "e13", label: "3¹³", w: 56 },
@@ -154,7 +158,7 @@ export function PowTree() {
   );
 }
 
-/* ================= LayeredMerge:分层合并图(自建) ================= */
+/* ================= LayeredMerge: the layered merge diagram (hand-built) ================= */
 
 type Bucket = (number | string)[];
 type Layer = Bucket[];
@@ -171,10 +175,10 @@ function LayeredMerge({
   linked = false,
 }: {
   title: Loc<ReactNode>;
-  /** 从最细粒度(L0)到最终合成的各层快照 */
+  /** Snapshots of each level, from the finest granularity (L0) up to the final combined result */
   layers: Layer[];
   frames: LayerFrame[];
-  /** 桶内元素之间画「→」,用于示意链表 */
+  /** Draw a "→" between elements inside a bucket, to suggest a linked list */
   linked?: boolean;
 }) {
   const L = useL();
@@ -214,7 +218,7 @@ function LayeredMerge({
   );
 }
 
-/* — 归并排序的逐层合并(§02 复杂度) — */
+/* — Level-by-level merging in merge sort (§02, complexity) — */
 
 const MS_LAYERS: Layer[] = [
   [[5], [2], [8], [1], [9], [3], [7], [4]],
@@ -326,7 +330,7 @@ export function MergeSortLayers() {
   );
 }
 
-/* — LC 23 两两归并 K 条链表(§04) — */
+/* — LC 23, merging K linked lists pairwise (§04) — */
 
 const MK_LAYERS: Layer[] = [
   [
@@ -417,7 +421,7 @@ export function MergeKLists() {
   );
 }
 
-/* ================= CrossMidLab:LC 53 跨中点最大和(ArrayStepper) ================= */
+/* ================= CrossMidLab: LC 53 cross-midpoint maximum sum (ArrayStepper) ================= */
 
 const XA = [-2, 1, -3, 4, -1, 2, 1, -5, 4];
 
@@ -622,7 +626,7 @@ export function CrossMidLab() {
   );
 }
 
-/* ================= InversionLab:归并统计逆序对(ArrayStepper) ================= */
+/* ================= InversionLab: counting inversions during a merge (ArrayStepper) ================= */
 
 const ILAB = [3, 5, 2, 4];
 

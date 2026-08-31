@@ -1,22 +1,23 @@
 /* ============================================================
-   AlgoAlgo · 看得见的算法 —— 设计系统(与姊妹篇 DataData 同源)
+   AlgoAlgo · Algorithms Made Visible —— design system
+   (shared lineage with the sister site DataData)
    ------------------------------------------------------------
-   1. 设计 token(深色默认 / 浅色)
-   2. 章节主题色系统:[data-ch] 用 --hue 驱动整章配色
-   3. 基础与排版
-   4. 极光背景
-   5. 工作台外壳(侧栏 / 工具条 / 内容区)
-   6. 命令面板
-   7. 页面原语:hero / 章节段 / 卡片 / 提示框 / 表格 / 徽章
-   8. 代码窗口(三语言 Tabs + 语法高亮 token)
-   9. Quiz / 题单
-   10. 可视化通用(舞台 / 单元格 / 节点 / 指针 / 控制条)
-   10.6 算法竞速(同一输入下的操作账单)
-   11. 要点卡 / 章节页脚
-   12. 动效与响应式
+   1. Design tokens (dark by default / light)
+   2. Chapter theme-color system: [data-ch] drives the whole chapter via --hue
+   3. Base and typography
+   4. Aurora background
+   5. Workbench shell (sidebar / toolbar / content area)
+   6. Command palette
+   7. Page primitives: hero / section / card / callout / table / badge
+   8. Code window (three-language tabs + syntax-highlight tokens)
+   9. Quiz / problem set
+   10. Shared visualization pieces (stage / cell / node / pointer / control bar)
+   10.6 Algorithm race (the operation bill under one shared input)
+   11. Key-points card / chapter footer
+   12. Motion and responsive rules
    ============================================================ */
 
-/* ---------- 1. 设计 token ---------- */
+/* ---------- 1. Design tokens ---------- */
 
 :root,
 [data-theme="dark"] {
@@ -38,7 +39,7 @@
     0 16px 48px rgba(0, 0, 0, 0.42);
   --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.3);
 
-  /* 三级阴影标尺(纵深) */
+  /* Three-step shadow scale (depth) */
   --shadow-1: 0 2px 10px rgba(0, 0, 0, 0.34);
   --shadow-2:
     0 1px 2px rgba(0, 0, 0, 0.4),
@@ -46,19 +47,19 @@
   --shadow-3:
     0 2px 4px rgba(0, 0, 0, 0.5),
     0 30px 70px rgba(0, 0, 0, 0.55);
-  /* 玻璃顶部内高光 + 底部内暗线(材质感) */
+  /* Glass inner highlight on top + inner dark line on the bottom (material feel) */
   --hi: inset 0 1px 0 rgba(255, 255, 255, 0.07),
     inset 0 -1px 0 rgba(0, 0, 0, 0.28);
   --hi-soft: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
-  /* 圆角标尺(全站统一) */
+  /* Corner-radius scale (uniform across the site) */
   --r-xs: 7px;
   --r-sm: 10px;
   --r-md: 14px;
   --r-lg: 18px;
   --r-xl: 24px;
 
-  /* 章节色的明度/彩度参数(深色下更亮更荧光) */
+  /* Lightness/chroma parameters for the chapter color (brighter, more neon in dark mode) */
   --acc-l: 76%;
   --acc-c: 0.15;
   --acc-strong-l: 68%;
@@ -73,14 +74,14 @@
   --info: #7ab5f5;
   --info-bg: rgba(122, 181, 245, 0.1);
 
-  /* 代码窗口(两种主题都保持深色终端感) */
+  /* Code window (both themes keep the dark-terminal look) */
   --code-bg: #0a0d16;
   --code-bar: #0e1220;
   --code-text: #dde3f2;
   --code-ln: rgba(220, 226, 244, 0.22);
   --code-hl: rgba(255, 255, 255, 0.05);
 
-  /* 语法高亮 */
+  /* Syntax highlighting */
   --tk-kw: #c792ea;
   --tk-str: #a8d98a;
   --tk-num: #f2a76f;
@@ -157,12 +158,13 @@
   --grid-o: 0.5;
 }
 
-/* ---------- 2. 章节主题色 ----------
-   每个章节页的 <main data-ch> 或任何容器设置 --hue,
-   下面的派生色让整章的按钮/徽章/发光/图形全部换色。 */
+/* ---------- 2. Chapter theme color ----------
+   Every chapter page's <main data-ch>, or any container, sets --hue,
+   and the derived colors below recolor the whole chapter's buttons,
+   badges, glows and graphics. */
 
 :root {
-  --hue: 62; /* 默认品牌琥珀金(区别于 DataData 的紫) */
+  --hue: 62; /* Default brand amber-gold (distinct from DataData's purple) */
   --hue2: 30;
 }
 
@@ -183,11 +185,12 @@
     oklch(var(--acc-l) var(--acc-c) var(--hue2) / 0.05) 65%,
     transparent
   );
-  /* 发光标尺(跟随章节主色) */
+  /* Glow scale (follows the chapter accent color) */
   --glow-sm: 0 0 14px var(--acc-glow);
   --glow-md: 0 6px 22px var(--acc-glow);
   --glow-lg: 0 12px 40px var(--acc-glow);
-  /* 玻璃描边:上缘亮、下缘暗,配合 --hi 造出「打光」质感 */
+  /* Glass edge stroke: bright at the top, dark at the bottom; together with
+     --hi it produces a lit-from-above look */
   --edge: linear-gradient(
     180deg,
     oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.28),
@@ -200,7 +203,7 @@
   --acc-ink: oklch(from var(--acc) calc(l - 0.06) c h);
 }
 
-/* 章节色相注册表(与 lib/curriculum.ts 的 hue 一致) */
+/* Chapter hue registry (kept in sync with the hue values in lib/curriculum.ts) */
 [data-ch="home"]      { --hue: 62;  --hue2: 30; }
 [data-ch="sorting"]   { --hue: 200; --hue2: 250; }
 [data-ch="divide"]    { --hue: 260; --hue2: 300; }
@@ -216,7 +219,7 @@
 [data-ch="strings"]   { --hue: 152; --hue2: 200; }
 [data-ch="atlas"]     { --hue: 62;  --hue2: 160; }
 
-/* ---------- 3. 基础与排版 ---------- */
+/* ---------- 3. Base and typography ---------- */
 
 * {
   box-sizing: border-box;
@@ -254,7 +257,8 @@ body {
   font-feature-settings: "ss01", "cv01";
 }
 
-/* 全局细颗粒噪点 —— 消除纯色塑料感,几乎不可见但去数码味 */
+/* Global fine-grain noise —— removes the flat-plastic look of solid fills;
+   almost invisible, but it takes the digital edge off */
 body::after {
   content: "";
   position: fixed;
@@ -270,7 +274,7 @@ body::after {
   --noise-o: 0.02;
 }
 
-/* 内容层浮在噪点之上 */
+/* The content layer floats above the noise layer */
 .shell {
   position: relative;
   z-index: 1;
@@ -317,7 +321,7 @@ button {
   border-radius: 4px;
 }
 
-/* 交互元素统一柔和聚焦环 */
+/* One soft focus ring for every interactive element */
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
@@ -333,7 +337,7 @@ input:focus-visible,
   font-variant-numeric: tabular-nums;
 }
 
-/* 度量数字统一等宽对齐 */
+/* Metric numbers all use tabular (monospaced) alignment */
 .hero-title,
 .big-o,
 .dpt-cell,
@@ -347,7 +351,7 @@ input:focus-visible,
   color: var(--text-2);
 }
 
-/* ---------- 4. 极光背景 ---------- */
+/* ---------- 4. Aurora background ---------- */
 
 .aurora {
   position: fixed;
@@ -357,7 +361,7 @@ input:focus-visible,
   pointer-events: none;
 }
 
-/* 超缓慢旋转的锥形光环 —— 给背景加一层若有若无的流动 */
+/* A very slowly rotating conic halo —— adds a barely-there drift to the background */
 .aurora::before {
   content: "";
   position: absolute;
@@ -436,14 +440,14 @@ input:focus-visible,
   to   { transform: translate3d(8vmax, -6vmax, 0) scale(1.1); }
 }
 
-/* ---------- 5. 工作台外壳 ---------- */
+/* ---------- 5. Workbench shell ---------- */
 
 .shell {
   display: flex;
   min-height: 100dvh;
 }
 
-/* — 侧栏 — */
+/* — Sidebar — */
 
 .sidebar {
   position: sticky;
@@ -562,7 +566,7 @@ html[data-sidebar="collapsed"] .sidebar {
   box-shadow: var(--hi-soft), 0 4px 16px oklch(var(--acc-l) var(--acc-c) var(--hue) / 0.14);
 }
 
-/* active 项左侧竖光条 */
+/* Vertical light bar on the left of the active item */
 .side-link.active::before {
   content: "";
   position: absolute;
@@ -669,7 +673,7 @@ html[data-sidebar="collapsed"] .sidebar {
   filter: blur(2px);
 }
 
-/* — 主区 — */
+/* — Main area — */
 
 .shell-main {
   flex: 1;
@@ -754,7 +758,7 @@ html[data-sidebar="collapsed"] .sidebar {
   display: none;
 }
 
-/* ---------- 6. 命令面板 ---------- */
+/* ---------- 6. Command palette ---------- */
 
 .cmdk-overlay {
   position: fixed;
@@ -831,14 +835,14 @@ html[data-sidebar="collapsed"] .sidebar {
   font-size: 13.5px;
 }
 
-/* ---------- 7. 页面原语 ---------- */
+/* ---------- 7. Page primitives ---------- */
 
 .page {
   max-width: 1020px;
   margin: 0 auto;
 }
 
-/* — 章节 hero — */
+/* — Chapter hero — */
 
 .hero {
   position: relative;
@@ -910,7 +914,7 @@ html[data-sidebar="collapsed"] .sidebar {
   font-weight: 600;
 }
 
-/* 巨型章节编号水印 */
+/* Oversized chapter-number watermark */
 .hero-watermark {
   position: absolute;
   top: -14px;
@@ -943,7 +947,7 @@ html[data-sidebar="collapsed"] .sidebar {
   }
 }
 
-/* hero 内导航 chips */
+/* In-hero navigation chips */
 .hero-nav {
   display: flex;
   flex-wrap: wrap;
@@ -978,7 +982,7 @@ html[data-sidebar="collapsed"] .sidebar {
   box-shadow: 0 4px 16px var(--acc-glow);
 }
 
-/* — 章节段 — */
+/* — Chapter section — */
 
 .sec {
   margin: 64px 0;
@@ -1058,7 +1062,7 @@ li code {
   overflow-wrap: anywhere;
 }
 
-/* — 卡片与网格 — */
+/* — Cards and grids — */
 
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
@@ -1114,7 +1118,7 @@ li code {
   margin-top: 8px;
 }
 
-/* — 提示框 — */
+/* — Callouts — */
 
 .callout {
   display: grid;
@@ -1172,7 +1176,7 @@ li code {
   );
 }
 
-/* — 表格 — */
+/* — Tables — */
 
 .table-wrap {
   border-radius: 16px;
@@ -1228,7 +1232,7 @@ li code {
   color: var(--text);
 }
 
-/* — 徽章与 chips — */
+/* — Badges and chips — */
 
 .chip {
   display: inline-flex;
@@ -1282,7 +1286,7 @@ li code {
 .lc-badge[data-d="medium"] { color: var(--warn); background: var(--warn-bg); border: 1px solid color-mix(in oklab, var(--warn) 35%, transparent); }
 .lc-badge[data-d="hard"]   { color: var(--risk); background: var(--risk-bg); border: 1px solid color-mix(in oklab, var(--risk) 35%, transparent); }
 
-/* — 按钮 — */
+/* — Buttons — */
 
 .btn {
   display: inline-flex;
@@ -1331,7 +1335,7 @@ li code {
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.18);
 }
 
-/* 主按钮顶部高光条 */
+/* Highlight strip along the top of the primary button */
 .btn-primary::before {
   content: "";
   position: absolute;
@@ -1365,7 +1369,7 @@ li code {
   border-radius: 10px;
 }
 
-/* 分段控制器 */
+/* Segmented control */
 .seg {
   display: inline-flex;
   padding: 3px;
@@ -1398,7 +1402,7 @@ li code {
   box-shadow: inset 0 0 0 1px var(--acc-border);
 }
 
-/* ---------- 8. 代码窗口 ---------- */
+/* ---------- 8. Code window ---------- */
 
 .codewin {
   border-radius: var(--r-md);
@@ -1522,7 +1526,7 @@ li code {
 
 .codewin-note b { color: rgba(240, 244, 255, 0.9); }
 
-/* 语法 token */
+/* Syntax tokens */
 .tk-kw   { color: var(--tk-kw); }
 .tk-str  { color: var(--tk-str); }
 .tk-num  { color: var(--tk-num); }
@@ -1531,7 +1535,7 @@ li code {
 .tk-type { color: var(--tk-type); }
 .tk-op   { color: var(--tk-op); }
 
-/* ---------- 9. Quiz / 题单 ---------- */
+/* ---------- 9. Quiz / problem set ---------- */
 
 .quiz {
   display: flex;
@@ -1723,7 +1727,7 @@ li code {
   -webkit-text-fill-color: transparent;
 }
 
-/* — 题单 — */
+/* — Problem set — */
 
 .plist {
   display: flex;
@@ -1860,7 +1864,7 @@ li code {
   margin-top: 12px;
 }
 
-/* ---------- 10. 可视化通用 ---------- */
+/* ---------- 10. Shared visualization pieces ---------- */
 
 .viz {
   border-radius: var(--r-xl);
@@ -1880,7 +1884,7 @@ li code {
   box-shadow: var(--hi-soft), var(--shadow-2);
 }
 
-/* viz 顶部一条主色光缝 */
+/* A thin accent-colored light seam across the top of a viz */
 .viz::before {
   content: "";
   position: absolute;
@@ -1920,15 +1924,17 @@ li code {
 .viz-stage {
   min-height: 120px;
   display: flex;
-  /* safe:放得下时居中,放不下时退回起始对齐 —— 避免居中把溢出内容推到
-     scrollLeft:0 也够不着的负区(窄屏下 DP 表/决策树左侧列会被永久裁掉) */
+  /* safe: center when it fits, fall back to start alignment when it does not ——
+     this keeps centering from pushing overflowing content into the negative
+     region that scrollLeft:0 can never reach (on narrow screens the left-hand
+     columns of a DP table or decision tree would be clipped for good) */
   align-items: safe center;
   justify-content: safe center;
   padding: 14px 2px;
   scrollbar-width: thin;
 }
 
-/* 可横向滚动的舞台:细主题滚动条,让「还能滑」这件事被看见 */
+/* Horizontally scrollable stage: a thin themed scrollbar so that "there is more to scroll" stays visible */
 .viz-stage::-webkit-scrollbar {
   height: 7px;
 }
@@ -1940,9 +1946,12 @@ li code {
   background: var(--acc);
 }
 
-/* 边缘渐隐:内容在「还能滑」的那一侧柔和淡出成「→ 还有更多」的暗示,
-   由 lib/stepper.tsx 的 useEdgeFade 在真正溢出时设 data-fade,滚到头自动消失。
-   用 mask 淡到透明 → 与背景无关,深浅主题通用。 */
+/* Edge fade: on whichever side still has room to scroll, the content softly
+   fades out as a hint that there is more. useEdgeFade in lib/stepper.tsx sets
+   data-fade only when the stage actually overflows, and the fade disappears
+   once you scroll to that end.
+   The mask fades to transparent → independent of the backdrop, so it works in
+   both light and dark themes. */
 .viz-stage {
   transition: mask-image 0.25s ease;
 }
@@ -1979,7 +1988,7 @@ li code {
 
 .viz-msg b { color: var(--acc-ink); }
 
-/* 数组单元格 / 通用节点 */
+/* Array cells / generic nodes */
 .cell {
   width: 52px;
   height: 52px;
@@ -2030,7 +2039,7 @@ li code {
   font-family: var(--font-mono);
 }
 
-/* 圆形节点(链表/树/图) */
+/* Circular nodes (linked list / tree / graph) */
 .nodec {
   width: 48px;
   height: 48px;
@@ -2052,7 +2061,7 @@ li code {
   box-shadow: 0 0 16px var(--acc-glow);
 }
 
-/* 指针标签(i / j / slow / fast) */
+/* Pointer labels (i / j / slow / fast) */
 .ptr {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -2069,7 +2078,7 @@ li code {
   font-size: 8px;
 }
 
-/* SVG 里的动画描边(流动的边) */
+/* Animated strokes inside SVG (flowing edges) */
 .flow-edge {
   stroke-dasharray: 6 6;
   animation: dash-flow 0.9s linear infinite;
@@ -2079,9 +2088,9 @@ li code {
   to { stroke-dashoffset: -12; }
 }
 
-/* ---------- 10.5 算法可视化(lib/algviz.tsx 三件套) ---------- */
+/* ---------- 10.5 Algorithm visualizations (the three components in lib/algviz.tsx) ---------- */
 
-/* — DPTable:DP 表格填充器 — */
+/* — DPTable: the DP-table filler — */
 
 .dpt {
   display: grid;
@@ -2160,7 +2169,7 @@ li code {
   color: var(--risk);
 }
 
-/* — TreePlayer:递归 / 回溯决策树 — */
+/* — TreePlayer: recursion / backtracking decision tree — */
 
 .tp-svg {
   height: auto;
@@ -2246,7 +2255,7 @@ li code {
 .tp-edge[data-state="sol"] { stroke: var(--ok); stroke-width: 2; }
 .tp-edge[data-state="memo"] { stroke: var(--info); }
 
-/* 图例 */
+/* Legend */
 .viz-legend {
   display: flex;
   flex-wrap: wrap;
@@ -2278,7 +2287,7 @@ li code {
 .tp-sw[data-state="sol"] { background: var(--ok-bg); border-color: var(--ok); }
 .tp-sw[data-state="memo"] { background: var(--info-bg); border-color: var(--info); }
 
-/* — RangeShrink:候选区间收缩器 — */
+/* — RangeShrink: the candidate-range shrinker — */
 
 .rs-cell {
   display: grid;
@@ -2349,9 +2358,9 @@ li code {
   transition: left 0.4s cubic-bezier(0.22, 1, 0.36, 1), width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ---------- 10.6 算法竞速(lib/race.tsx) ---------- */
+/* ---------- 10.6 Algorithm race (lib/race.tsx) ---------- */
 
-/* 三条赛道各有自己的主色:0 用本章主色,1 用副色,2 用信息蓝 */
+/* Each of the three lanes gets its own color: 0 uses the chapter accent, 1 the secondary accent, 2 the info blue */
 .race-lane { --lane: var(--acc); }
 .race-lane[data-rank="1"] { --lane: var(--warn); }
 .race-lane[data-rank="2"] { --lane: var(--info); }
@@ -2374,7 +2383,7 @@ li code {
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.1em;
-  /* 不做大写变换:标签里带数学变量(「规模 n」「指数 n」),n 必须保持小写 */
+  /* No uppercase transform: the labels carry math variables ("size n", "exponent n"), and n must stay lowercase */
   color: var(--text-3);
   flex: 0 0 auto;
   min-width: 74px;
@@ -2437,7 +2446,7 @@ li code {
   color: var(--text);
 }
 
-/* 空间复杂度徽章 —— 和 BigO 并排,但语义是「空间」 */
+/* Space-complexity badge —— sits next to BigO, but means space rather than time */
 .race-space-o {
   font-size: 11px;
   font-weight: 700;
@@ -2463,7 +2472,7 @@ li code {
   gap: 7px;
 }
 
-/* 标签 | 轨道 | 数值 | 胜标 */
+/* label | track | value | winner marker */
 .race-bar {
   display: grid;
   grid-template-columns: 122px 1fr 74px 42px;
@@ -2474,8 +2483,9 @@ li code {
 .race-bar-lab {
   font-size: 11.5px;
   color: var(--text-3);
-  /* 指标名是说明文字:宁可折行也不许省略号截断(「峰值空间(栈 + 备忘表)」这种长标签
-     被切掉后读者就不知道这一行在数什么了) */
+  /* The metric name is explanatory text: wrap it rather than truncate it with an
+     ellipsis. Once a long label like "peak space (stack + memo table)" gets cut
+     off, the reader no longer knows what the row is counting. */
   white-space: normal;
   line-height: 1.25;
   overflow-wrap: anywhere;
@@ -2519,7 +2529,7 @@ li code {
   white-space: nowrap;
 }
 
-/* 该项最少 = 赢家:轨道发光 + 数值提亮 */
+/* Lowest value for this metric = the winner: the track glows and the number brightens */
 .race-bar.win .race-bar-fill {
   background: linear-gradient(
     90deg,
@@ -2534,7 +2544,7 @@ li code {
   color: var(--ok);
 }
 
-/* 并列:这一项所有选手同分,条形转中性 —— 不该被读成「爆表」 */
+/* Tie: every contender scores the same on this metric, so the bars turn neutral —— they should not read as off the charts */
 .race-bar.tie .race-bar-fill {
   background: var(--border-strong);
   box-shadow: none;
@@ -2605,7 +2615,7 @@ li code {
   }
 }
 
-/* ---------- 11. 要点卡 / 章节页脚 ---------- */
+/* ---------- 11. Key-points card / chapter footer ---------- */
 
 .kp {
   position: relative;
@@ -2727,7 +2737,7 @@ li code {
   margin: 0 6px;
 }
 
-/* ---------- 12. 动效与响应式 ---------- */
+/* ---------- 12. Motion and responsive rules ---------- */
 
 .reveal {
   opacity: 0;
@@ -2776,7 +2786,7 @@ li code {
   50% { box-shadow: 0 0 26px var(--acc-glow); }
 }
 
-/* 边框流光(克制使用:首页 CTA / KeyPoints) */
+/* Traveling border light (use sparingly: home-page CTA / KeyPoints) */
 @keyframes edge-shimmer {
   to { background-position: 200% center; }
 }
@@ -2786,13 +2796,13 @@ li code {
 }
 
 @media (max-width: 760px) {
-  /* 窄屏:面包屑只留章节名,语言切换收纳进内容页顶栏空间 */
+  /* Narrow screens: the breadcrumb keeps only the chapter name, freeing toolbar space for the language switch */
   .tb-crumb > span:first-child,
   .tb-crumb .sep {
     display: none;
   }
 
-  /* 只收起「偏好代码语言」,界面语言开关必须一直可用 */
+  /* Only the preferred-code-language control is hidden; the UI language switch must stay reachable at all times */
   .toolbar .seg-code {
     display: none;
   }

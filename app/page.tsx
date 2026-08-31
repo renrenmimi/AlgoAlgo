@@ -1,15 +1,19 @@
 "use client";
 
-// 序章 · 算法地图 —— 全书入口。
-// 四件事:① 建立「算法 = 把问题变成一串决策」的第一直觉(高斯求和);
-// ② 划清与姊妹篇 DataData 的分工边界;③ 递归 —— 全书的地基(调用栈实验室);
-// ④ 四大范式鸟瞰 + 13 章世界地图 + 怎么用这套课。
+// The opening chapter - Algorithm Atlas: the entry point to the whole course.
+// It does four things: (1) builds the first intuition that "an algorithm turns a problem into
+// a sequence of decisions" (Gauss's summation); (2) draws the boundary with the sister course
+// DataData; (3) teaches recursion, the foundation of everything that follows (the call-stack
+// laboratory); (4) gives a bird's-eye view of the four paradigms + the 13-chapter world map +
+// how to use this course.
 //
-// 数字口径(改文案前先核对):
-//   章节 13 = CHAPTERS 去掉序章(01–12 + 终章),与世界地图的卡片数一致;
-//   题目 147 = lib/*-data.tsx 里 lc: 条目总数(其中 131 个不同的 LeetCode 题号);
-//   语言 3 = CodeTabs 的 Java / Python / JavaScript;
-//   范式 4 = 回溯 / 分治 / 贪心 / DP。
+// Where the numbers come from (check this before editing the copy):
+//   13 chapters = CHAPTERS minus the opening chapter (01-12 plus the finale), which matches
+//     the number of cards on the world map;
+//   147 problems = the total number of lc: entries across lib/*-data.tsx (covering 131
+//     distinct LeetCode problem numbers);
+//   3 languages = CodeTabs' Java / Python / JavaScript;
+//   4 paradigms = backtracking / divide and conquer / greedy / DP.
 
 import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
@@ -28,10 +32,11 @@ import { Quiz, type QuizItem } from "@/lib/quiz";
 import { CodeTabs } from "@/lib/code";
 import { HeroDecision, RecursionLab } from "./home-viz";
 
-/* ---------- 与 DataData 的分工表 ---------- */
+/* ---------- The division of labor with DataData ---------- */
 
-// 跨课引用已按 DataData/lib/curriculum.ts 的编号核对:
-// 01 数组 · 04 栈 · 05 队列 · 07 二叉树 · 09 堆 · 11 并查集 · 12 图。
+// The cross-course references have been checked against the numbering in
+// DataData/lib/curriculum.ts: 01 Array · 04 Stack · 05 Queue · 07 Binary Tree · 09 Heap ·
+// 11 Union-Find · 12 Graph.
 const BOUNDARY: { id: string; topic: ReactNode; where: ReactNode; note: ReactNode }[] = [
   {
     id: "two-pointers",
@@ -106,7 +111,8 @@ const BOUNDARY: { id: string; topic: ReactNode; where: ReactNode; note: ReactNod
   },
 ];
 
-/* ---------- 复杂度六档速览(完整课在 DataData 序章) ---------- */
+/* ---------- The six complexity tiers at a glance (the full lesson is in DataData's
+            opening chapter) ---------- */
 
 const TIERS: { o: string; name: ReactNode; meet: ReactNode }[] = [
   {
@@ -171,7 +177,7 @@ const TIERS: { o: string; name: ReactNode; meet: ReactNode }[] = [
   },
 ];
 
-/* ---------- 序章 Quiz ---------- */
+/* ---------- Quiz for the opening chapter ---------- */
 
 const QUIZ: QuizItem[] = [
   {
@@ -433,9 +439,10 @@ const QUIZ: QuizItem[] = [
   },
 ];
 
-/* ---------- 首屏统计 ---------- */
+/* ---------- Above-the-fold statistics ---------- */
 
-// 数字全部按仓库实际内容核对过,见文件顶部的「数字口径」。
+// Every number has been checked against what is actually in the repository; see "where the
+// numbers come from" at the top of this file.
 const STATS: { id: string; to: number; suffix?: string; label: Loc<string> }[] = [
   {
     id: "chapters",
@@ -462,7 +469,8 @@ const STATS: { id: string; to: number; suffix?: string; label: Loc<string> }[] =
   },
 ];
 
-// 进场时数字从 0 滚到目标值(easeOutCubic);尊重「减弱动态」时直接落定。
+// On entry the number rolls from 0 up to its target (easeOutCubic); under
+// prefers-reduced-motion it simply lands on the final value.
 function CountStat({
   to,
   suffix = "",
@@ -476,9 +484,10 @@ function CountStat({
   const [n, setN] = useState(0);
 
   useEffect(() => {
-    // 不要加「只跑一次」的 ref 守卫:StrictMode 会「挂载 → 清理 → 再挂载」,
-    // 守卫会让第二次直接 return、不再排 rAF,数字永远停在 0。
-    // 本 effect 自带 cancelAnimationFrame 清理,重复执行是安全的。
+    // Do not add a "run only once" ref guard: StrictMode mounts, cleans up and mounts again,
+    // and the guard would make the second run return immediately without scheduling a rAF,
+    // leaving the number stuck at 0 forever.
+    // This effect already cleans up with cancelAnimationFrame, so running it twice is safe.
     const reduce =
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -510,7 +519,7 @@ function CountStat({
   );
 }
 
-/* ---------- 页面 ---------- */
+/* ---------- Page ---------- */
 
 export default function Home() {
   const L = useL();
@@ -584,7 +593,7 @@ export default function Home() {
         </Reveal>
       </header>
 
-      {/* §01 算法是什么 */}
+      {/* §01 What an algorithm is */}
       <Section
         id="what"
         index="01"
@@ -776,7 +785,7 @@ export default function Home() {
         </Callout>
       </Section>
 
-      {/* §02 与 DataData 的分工 */}
+      {/* §02 The division of labor with DataData */}
       <Section
         id="boundary"
         index="02"
@@ -888,7 +897,7 @@ export default function Home() {
         </Callout>
       </Section>
 
-      {/* §03 递归 */}
+      {/* §03 Recursion */}
       <Section
         id="recursion"
         index="03"
@@ -1025,7 +1034,8 @@ export default function Home() {
         <CodeTabs
           title="factorial"
           java={{
-            // 两种语言的代码行数与可执行部分必须逐字相同,只有注释不同(hl 靠行号对齐)。
+            // The two language variants must have the same number of lines and identical
+            // executable code -- only the comments differ (hl aligns by line number).
             code: {
               en: `// Factorial: the hello world of recursion
 public long fact(int n) {
@@ -1160,7 +1170,7 @@ function fact(n) {
         </Callout>
       </Section>
 
-      {/* §04 四大范式 */}
+      {/* §04 The four paradigms */}
       <Section
         id="paradigms"
         index="04"
@@ -1346,7 +1356,7 @@ function fact(n) {
         </Callout>
       </Section>
 
-      {/* §05 复杂度速查 */}
+      {/* §05 Complexity quick reference */}
       <Section
         id="bigo"
         index="05"
@@ -1417,7 +1427,7 @@ function fact(n) {
         </Callout>
       </Section>
 
-      {/* §06 世界地图 */}
+      {/* §06 World map */}
       <Section
         id="map"
         index="06"
@@ -1444,7 +1454,7 @@ function fact(n) {
                 <div className="map-head">
                   <span className="map-num">{c.num}</span>
                   <span className="map-title">{L(c.title)}</span>
-                  {/* 英文界面下标题本身就是英文,再挂一行英文名只是重复 */}
+                  {/* In English the title is already English; a second line would repeat it */}
                   <T
                     en={null}
                     zh={
@@ -1516,7 +1526,7 @@ function fact(n) {
         </Callout>
       </Section>
 
-      {/* §07 怎么用 */}
+      {/* §07 How to use this course */}
       <Section
         id="howto"
         index="07"

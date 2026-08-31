@@ -1,12 +1,12 @@
 "use client";
 
-// 第 10 章 · DP 进阶的四个专属可视化,对应四大高级 DP 类型:
-//  - StockFSM   :自建 SVG 状态转移图 —— 精讲 309 含冷冻期,三状态逐日流动。
-//  - RobTreeDP  :TreePlayer 演示 337 打家劫舍 III 的后序遍历、自底向上汇报 [rob, skip]。
-//  - BalloonInterval:DPTable 演示 312 戳气球「按区间长度从小到大、斜着填」。
-//  - MaskLab    :交互式「用一个整数的二进制位表示集合」—— 状压 DP(526)的地基。
+// Chapter 10 - the four visualizations for advanced DP, one per advanced DP type:
+//  - StockFSM   : a custom SVG state-transition diagram - Deep dive 309 with a cooldown, three states flowing day by day.
+//  - RobTreeDP  : TreePlayer showing the postorder traversal of 337 House Robber III, reporting [rob, skip] bottom-up.
+//  - BalloonInterval: DPTable showing 312 Burst Balloons filled diagonally, by increasing interval length.
+//  - MaskLab    : an interactive "use the bits of one integer to represent a set" - the foundation of bitmask DP (526).
 //
-// 双语:帧旁白直接写 <T en zh />;title / 状态名 / 边标签传 { en, zh },组件内用 useL() 解析。
+// Bilingual: frame narration is written inline as <T en zh />; titles, state names and edge labels take { en, zh } and are resolved with useL().
 
 import { useMemo, useState, type ReactNode } from "react";
 import { useStepper, StepControls } from "@/lib/stepper";
@@ -22,7 +22,7 @@ import {
 } from "@/lib/algviz";
 
 /* ================================================================
-   StockFSM —— 股票状态机转移图(精讲 LC 309 含冷冻期)
+   StockFSM - the stock state-machine diagram (Deep dive LC 309, with cooldown)
    ================================================================ */
 
 type St = "hold" | "rest" | "sold";
@@ -38,8 +38,8 @@ interface FsmFrame {
 
 const Q = "?";
 
-// prices = [1, 2, 3, 0, 2] —— LC 309 官方样例,最优利润 3。
-// 每一帧的三个数字与 §02 的 Java/Python/JS 代码逐日结果完全一致。
+// prices = [1, 2, 3, 0, 2] - the official LC 309 example; the best profit is 3.
+// The three numbers in every frame match the day-by-day results of the Java/Python/JS code in §02 exactly.
 const FSM_FRAMES: FsmFrame[] = [
   {
     vals: { hold: Q, rest: Q, sold: Q },
@@ -220,7 +220,7 @@ const POS: Record<St, { x: number; y: number }> = {
   sold: { x: 380, y: 215 },
 };
 
-// 状态名要放进 150px 宽的方框里,英文比中文长 —— 保持在 16 个字符以内。
+// State names have to fit a 150px-wide box, and English runs longer than Chinese - keep them under 16 characters.
 const ST_NAME: Record<St, Loc<string>> = {
   hold: { en: "hold (own share)", zh: "持有 hold" },
   rest: { en: "rest (may buy)", zh: "空仓 rest" },
@@ -300,7 +300,7 @@ export function StockFSM() {
             </marker>
           </defs>
 
-          {/* 边(路径 + 箭头),状态跟随 onEdge */}
+          {/* edges (path + arrowhead); their state follows onEdge */}
           <path className={`pro-fsm-edge${onE("buy")}`} d="M150,218 L214,104" markerEnd="url(#pro-fsm-arrow)" />
           <path className={`pro-fsm-edge${onE("sell")}`} d="M346,104 L410,218" markerEnd="url(#pro-fsm-arrow)" />
           <path className={`pro-fsm-edge${onE("thaw")}`} d="M378,258 L184,258" markerEnd="url(#pro-fsm-arrow)" />
@@ -317,7 +317,7 @@ export function StockFSM() {
             markerEnd="url(#pro-fsm-arrow)"
           />
 
-          {/* 边标签 */}
+          {/* edge labels */}
           <text className="pro-fsm-lab" x={160} y={156} textAnchor="middle">{L(EDGE_LAB.buy)}</text>
           <text className="pro-fsm-lab" x={402} y={156} textAnchor="middle">{L(EDGE_LAB.sell)}</text>
           <text className="pro-fsm-lab" x={280} y={250} textAnchor="middle">{L(EDGE_LAB.thaw)}</text>
@@ -345,8 +345,8 @@ export function StockFSM() {
 }
 
 /* ================================================================
-   RobTreeDP —— 树形 DP 后序遍历(精讲 LC 337 打家劫舍 III)
-   树:[3, 4, 5, 1, 3, null, 1] —— 答案 9(不偷根反而更优)。
+   RobTreeDP - postorder traversal for tree DP (Deep dive LC 337 House Robber III)
+   Tree: [3, 4, 5, 1, 3, null, 1] - the answer is 9 (skipping the root turns out better).
    ================================================================ */
 
 const TREE_NODES: TreeNodeSpec[] = [
@@ -540,12 +540,12 @@ export function RobTreeDP() {
 }
 
 /* ================================================================
-   BalloonInterval —— 区间 DP 按长度斜着填(精讲 LC 312 戳气球)
-   nums = [3, 1, 5, 8] → 两端补 1 → arr = [1, 3, 1, 5, 8, 1]。答案 167。
+   BalloonInterval - interval DP filled diagonally by length (Deep dive LC 312 Burst Balloons)
+   nums = [3, 1, 5, 8] -> pad both ends with 1 -> arr = [1, 3, 1, 5, 8, 1]. The answer is 167.
    ================================================================ */
 
 const ARR = [1, 3, 1, 5, 8, 1];
-// DP[i][j] = 开区间 (i,j) 内戳完的最大硬币;i>j 无效(null);j−i<2 为基例 0。
+// DP[i][j] = the most coins obtainable inside the open interval (i,j); i>j is invalid (null); j-i<2 is the base case 0.
 const DP: (number | null)[][] = [
   [0, 0, 3, 30, 159, 167],
   [null, 0, 0, 15, 135, 159],
@@ -574,7 +574,7 @@ function ivCells(opts: {
       if (ok && eq(ok, [i, j])) return { v, state: "ok" as const };
       if (cur.some((c) => eq(c, [i, j]))) return { v, state: "cur" as const };
       if (src.some((c) => eq(c, [i, j]))) return { v, state: "src" as const };
-      if (span < 2) return { v, state: "done" as const }; // 基例始终可见
+      if (span < 2) return { v, state: "done" as const }; // base cases stay visible
       if (span <= spanMax) return { v, state: "done" as const };
       return { v: "?", state: "ghost" as const };
     }),
@@ -733,10 +733,10 @@ export function BalloonInterval() {
 }
 
 /* ================================================================
-   MaskLab —— 交互式「用一个整数的二进制位表示集合」(状压 DP · LC 526)
+   MaskLab - interactive "use the bits of one integer to represent a set" (bitmask DP - LC 526)
    ================================================================ */
 
-const NUMS = [1, 2, 3]; // n = 3,数字 1..3
+const NUMS = [1, 2, 3]; // n = 3, the numbers 1..3
 
 export function MaskLab() {
   const L = useL();
@@ -746,7 +746,7 @@ export function MaskLab() {
     () => used.reduce((m, on, i) => (on ? m | (1 << i) : m), 0),
     [used],
   );
-  const pos = used.filter(Boolean).length; // popcount = 已填位置数
+  const pos = used.filter(Boolean).length; // popcount = how many positions are filled
   const nextPos = pos + 1;
   const full = pos === NUMS.length;
 
@@ -758,7 +758,7 @@ export function MaskLab() {
     [used, nextPos],
   );
 
-  const bin = used.map((on) => (on ? "1" : "0")).reverse().join(""); // 高位在前
+  const bin = used.map((on) => (on ? "1" : "0")).reverse().join(""); // most significant bit first
 
   const toggle = (i: number) => setUsed((u) => u.map((v, j) => (j === i ? !v : v)));
 

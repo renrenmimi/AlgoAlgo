@@ -1,11 +1,15 @@
 "use client";
 
-// Quiz 引擎 —— 三种题型:
-//  - choice:单选,点击即判,答错给「针对性纠错」(每个错误选项一条,禁止通用文案),
-//    同时点亮正确项;计分按第一次点击。
-//  - multi:多选,勾选后「检查」;漏选/错选分别提示。
-//  - fill:填空,回车或按钮判定;可反复尝试,答对为止(计分按最终是否答对)。
-// 全部答完 → 结算面板,成绩写入进度系统(取历史最好成绩,决定章节「通关」状态)。
+// The quiz engine -- three question types:
+//  - choice: single choice, judged on click. A wrong answer gets a correction written for
+//    that specific option (one per wrong option; generic copy is not acceptable) and the
+//    correct option lights up. Scoring uses the first click.
+//  - multi: multiple choice, checked after the reader presses "check"; missing selections and
+//    extra selections get separate hints.
+//  - fill: fill in the blank, judged on Enter or the button; the reader can retry until it is
+//    right (scoring uses whether they got there in the end).
+// Once every question is answered -> a results panel, and the score is written to the progress
+// system (the best historical score wins, and it decides the chapter's "cleared" state).
 
 import { useMemo, useState, type ReactNode } from "react";
 import { useProgress } from "@/lib/progress";
@@ -18,7 +22,7 @@ export type QuizItem =
       q: Loc<ReactNode>;
       opts: Loc<ReactNode[]>;
       correct: number;
-      /** 每个选项的针对性纠错(正确项可留 undefined) */
+      /** A correction written for each individual option (leave the correct one undefined) */
       wrong?: Loc<(ReactNode | undefined)[]>;
       why: Loc<ReactNode>;
     }
@@ -35,8 +39,9 @@ export type QuizItem =
       type: "fill";
       q: Loc<ReactNode>;
       placeholder?: Loc<string>;
-      /** 允许的答案(不区分大小写、去空格后比较)。
-       *  纯技术词就把中英两种写法都放进同一个数组;只有当答案本身按语言不同时才用 { en, zh }。 */
+      /** Accepted answers (compared case-insensitively and with whitespace trimmed).
+       *  For a purely technical term, put both the English and Chinese spellings in the same
+       *  array; only use { en, zh } when the answer itself genuinely differs by language. */
       answers: Loc<string[]>;
       hint: Loc<ReactNode>;
       why: Loc<ReactNode>;
@@ -84,10 +89,12 @@ export function Quiz({ ch, items }: { ch: ChapterId; items: QuizItem[] }) {
   );
 
   const setState = (i: number, st: ItemState) => {
-    // 先在渲染外算好新数组,再分别提交状态与结算。
-    // (旧写法把 finish 塞进 setStates 的 updater 里 —— updater 必须是纯函数,
-    //  在里面调用 reportQuiz 会在 Quiz 渲染期间更新 ProgressProvider,
-    //  React 会告警,且 StrictMode 下 updater 被调两次会重复上报。)
+    // Compute the new array outside of rendering first, then commit the state and the score
+    // separately.
+    // (The old code passed finish into the setStates updater -- an updater must be a pure
+    //  function, and calling reportQuiz inside it updates ProgressProvider while Quiz is
+    //  rendering, which React warns about; under StrictMode the updater runs twice, so the
+    //  score would also be reported twice.)
     const next = [...states];
     next[i] = st;
     setStates(next);

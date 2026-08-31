@@ -1,7 +1,8 @@
-/* 终章 · 范式地图 专属样式(全部 .atl- 前缀并裹在 [data-ch="atlas"] 作用域下,
-   避免全局泄漏;颜色只用 token,深浅主题自动适配)。 */
+/* Finale · Paradigm atlas, specific styles (everything is .atl- prefixed and scoped
+   under [data-ch="atlas"] to prevent leaking globally; colors come only from tokens,
+   so light and dark themes adapt automatically). */
 
-/* ---------- 决策树向导 ---------- */
+/* ---------- Decision-tree wizard ---------- */
 [data-ch="atlas"] .atl-decision {
   min-height: 340px;
 }
@@ -127,7 +128,7 @@
   flex-wrap: wrap;
 }
 
-/* ---------- 总进度横幅 ---------- */
+/* ---------- Overall progress banner ---------- */
 [data-ch="atlas"] .atl-banner {
   display: flex;
   align-items: center;
@@ -168,7 +169,7 @@
   overflow: hidden;
 }
 
-/* ---------- 全书题单分组 ---------- */
+/* ---------- Groupings for the whole-course problem set ---------- */
 [data-ch="atlas"] .atl-group {
   margin: 26px 0;
 }
@@ -186,8 +187,9 @@
   font-weight: 800;
   font-size: 15px;
   font-variant-numeric: tabular-nums;
-  /* 按分组所属章节的色相着色(--gh 由 page.tsx 逐组注入),
-     无法用固定章节 token 表达,故保留 oklch(主色派生,回退到品牌琥珀 62)。 */
+  /* Colored by the hue of the chapter a group belongs to (--gh is injected per
+     group by page.tsx). This cannot be expressed with a fixed chapter token, so
+     oklch is kept here (derived from the accent, falling back to brand amber 62). */
   color: oklch(var(--acc-l) var(--acc-c) var(--gh, 62));
 }
 
@@ -205,7 +207,7 @@
   color: var(--text-3);
 }
 
-/* ---------- 20 周计划表 ---------- */
+/* ---------- The 20-week plan table ---------- */
 [data-ch="atlas"] .atl-plan .t-table td,
 [data-ch="atlas"] .atl-plan .t-table th {
   vertical-align: top;
@@ -264,7 +266,7 @@
   font-weight: 700;
 }
 
-/* ---------- 面试标准 + 复习节奏 ---------- */
+/* ---------- Interview standards + review cadence ---------- */
 [data-ch="atlas"] .atl-std {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -339,7 +341,7 @@
   line-height: 1.6;
 }
 
-/* ---------- 全景图 ---------- */
+/* ---------- Panorama ---------- */
 [data-ch="atlas"] .atl-pano {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -428,7 +430,7 @@
   color: var(--text-3);
   font-weight: 600;
   text-align: center;
-  /* 英文比中文长,给足宽度免得挤成一列单词 */
+  /* English runs longer than Chinese, so allow enough width to avoid a single column of stacked words */
   max-width: 132px;
   line-height: 1.45;
 }

@@ -1,13 +1,16 @@
-// 第 10 章 · DP 进阶(dp-pro)—— 题单与测验数据。
-// 四大高级 DP 类型:状态机(股票族谱)/ 树形 / 区间 / 状压 + 选做。
-// hint 只给方向不剧透;key 用一段话把最优解讲透;测验每个错误选项针对性纠错。
-// 双语:所有文案都是 Loc<…>,英文为默认。题名用 LeetCode 官方中英标题。
+// Chapter 10 - Advanced DP (dp-pro): problem set and quiz data.
+// The four advanced DP families: state machine (the stock-trading family tree) / tree DP /
+// interval DP / bitmask DP, plus optional problems.
+// hint only points at a direction without spoiling; key explains the optimal solution in one
+// paragraph; every wrong quiz option gets a correction specific to that option.
+// Bilingual: all copy is Loc<...> with English as the default. Titles use LeetCode's official
+// English and Chinese names.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";
 
 export const PROBLEMS: Problem[] = [
-  /* ---------------- 状态机 DP · 股票族谱 ---------------- */
+  /* ---------------- State-machine DP: the stock-trading family tree ---------------- */
   {
     lc: 122,
     title: {
@@ -182,7 +185,7 @@ export const PROBLEMS: Problem[] = [
       ),
     },
   },
-  /* ---------------- 树形 DP ---------------- */
+  /* ---------------- Tree DP ---------------- */
   {
     lc: 337,
     title: { en: "House Robber III", zh: "打家劫舍 III" },
@@ -306,7 +309,7 @@ export const PROBLEMS: Problem[] = [
       ),
     },
   },
-  /* ---------------- 区间 DP ---------------- */
+  /* ---------------- Interval DP ---------------- */
   {
     lc: 516,
     title: {
@@ -390,7 +393,7 @@ export const PROBLEMS: Problem[] = [
       ),
     },
   },
-  /* ---------------- 状压 DP ---------------- */
+  /* ---------------- Bitmask DP ---------------- */
   {
     lc: 526,
     title: { en: "Beautiful Arrangement", zh: "优美的排列" },
@@ -434,7 +437,7 @@ export const PROBLEMS: Problem[] = [
       ),
     },
   },
-  /* ---------------- 选做 ---------------- */
+  /* ---------------- Optional ---------------- */
   {
     lc: 264,
     title: { en: "Ugly Number II", zh: "丑数 II" },

@@ -1,17 +1,21 @@
-// 课程注册表 —— 全站唯一的章节清单。
-// 侧栏、命令面板、章节页脚(上一章/下一章)、进度系统都从这里取数据。
-// 新增章节:在 CHAPTERS 里插入一条,并保证 app/<id>/page.tsx 存在。
+// Curriculum registry -- the single source of truth for the chapter list.
+// The sidebar, command palette, chapter footer (prev/next) and progress system all read from here.
+// To add a chapter: insert an entry into CHAPTERS and make sure app/<id>/page.tsx exists.
 //
-// 路线设计依据(详见 CLAUDE.md「课程结构与依据」):
-//   排序/分治先立「递归 + 分而治之」的地基 → 二分进阶练「用单调性砍半」 →
-//   位运算做轻量工具箱(为状压 DP 铺路)→ 回溯把递归树画出来 →
-//   贪心学「敢贪的证明」→ DP 四章(入门→背包→子序列→进阶)承接
-//   「回溯的树 + 贪心的反例」→ 数学/字符串收尾 → 终章选型地图。
-// 依附于数据结构的套路(双指针/滑窗/BFS/DFS/单调栈/Dijkstra/拓扑排序)
-// 由姊妹篇 DataData 负责,本课在相应位置给出链接。
+// Rationale for the ordering (see "Curriculum structure and rationale" in CLAUDE.md):
+//   Sorting/divide-and-conquer lay the "recursion + split the problem" foundation -> advanced
+//   binary search drills "halve it using monotonicity" -> bit manipulation is a lightweight
+//   toolbox (and paves the way for bitmask DP) -> backtracking draws the recursion tree ->
+//   greedy teaches "the proof that lets you dare to be greedy" -> the four DP chapters
+//   (intro -> knapsack -> subsequence -> advanced) pick up "backtracking's tree + greedy's
+//   counterexample" -> math/strings wrap up -> the finale is a paradigm-selection map.
+// Techniques that are tied to a specific data structure (two pointers / sliding window /
+// BFS / DFS / monotonic stack / Dijkstra / topological sort) belong to the sister course
+// DataData; this course links across to it where relevant.
 //
-// 本文件同时被 server 与 client 文件 import,所以保持为纯数据模块(无 "use client"):
-// title / alt / essence / tags 是 Loc<…>,由「消费方」用 useL() 解析成当前语言。
+// This file is imported from both server and client files, so it stays a pure data module
+// (no "use client"): title / alt / essence / tags are Loc<...>, and the consumer resolves
+// them to the current language with useL().
 
 import type { Loc } from "@/lib/i18n";
 
@@ -34,19 +38,20 @@ export type ChapterId =
 export interface Chapter {
   id: ChapterId;
   href: string;
-  /** 章节编号展示:00–12,终章用 ✦ */
+  /** Display number for the chapter: 00-12; the finale uses ✦ */
   num: string;
-  /** 章节名(当前语言) */
+  /** Chapter name (in the current language) */
   title: Loc<string>;
-  /** 英文名 —— hero 眉题固定用它,同时是命令面板的搜索键(两种语言都可搜) */
+  /** English name -- always used for the hero eyebrow, and also a command-palette search key
+   *  (so the chapter is findable in either language) */
   en: string;
-  /** 一句话本质 */
+  /** One-sentence essence */
   essence: Loc<string>;
-  /** oklch 色相角,决定整章主题色 */
+  /** oklch hue angle; determines the accent color of the whole chapter */
   hue: number;
-  /** 难度 1–5,世界地图与侧栏展示 */
+  /** Difficulty 1-5, shown on the world map and in the sidebar */
   level: 1 | 2 | 3 | 4 | 5;
-  /** LeetCode 出现频率 1–5(5 = 顶级高频) */
+  /** LeetCode frequency 1-5 (5 = extremely common) */
   freq: 1 | 2 | 3 | 4 | 5;
   tags: Loc<string[]>;
 }
@@ -319,9 +324,9 @@ export function chapterByPath(path: string): Chapter {
   return hit ?? CHAPTERS[0];
 }
 
-/** 侧栏 / 命令面板的副标。
- *  中文界面下显示章节的英文名,作为术语对照;
- *  英文界面下标题本身就是英文,再显示一遍只是重复,所以留空。 */
+/** Subtitle for the sidebar / command palette.
+ *  In the Chinese UI it shows the chapter's English name as a terminology cross-reference;
+ *  in the English UI the title is already English, so repeating it adds nothing -- leave it empty. */
 export function subLabel(c: Chapter): Loc<string> {
   return { en: "", zh: c.en };
 }

@@ -1,11 +1,11 @@
 "use client";
 
-// 第 11 章 · 数学与数论的三个专属可视化:
-//  - SieveGrid:埃氏筛网格动画 —— 逐个质数把倍数划掉,亲眼看「为什么从 i² 开始」。
-//  - NimGame:Nim 博弈交互 —— 亲手拿石子,对手按最优策略应对,体会 n%4 必胜 / 必败态。
-//  - MooreVote:摩尔投票 —— 复用 lib/stepper 的 ArrayStepper,把「抵消论证」逐帧放慢。
+// Chapter 11 - the three visualizations that belong to the math and number theory chapter:
+//  - SieveGrid: the sieve of Eratosthenes grid animation - cross off multiples one prime at a time and see why crossing starts at i squared.
+//  - NimGame: the interactive game of Nim - take stones yourself while the opponent plays optimally, and feel the n%4 winning and losing positions.
+//  - MooreVote: the Boyer-Moore majority vote - reusing ArrayStepper from lib/stepper to slow the cancellation argument down frame by frame.
 //
-// 双语:帧旁白直接写 <T en zh />;title / 指针标签传 { en, zh }。
+// Bilingual: frame narration is written inline as <T en zh />; titles and pointer labels take { en, zh }.
 
 import { useState, type ReactNode } from "react";
 import { T, useL } from "@/lib/i18n";
@@ -17,7 +17,7 @@ import {
 } from "@/lib/stepper";
 
 /* ================================================================
-   SieveGrid —— 埃氏筛网格动画(1..30)
+   SieveGrid - the sieve of Eratosthenes grid animation (1..30)
    ================================================================ */
 
 type SvState = "one" | "prime" | "cross" | "cur" | "hit";
@@ -56,7 +56,7 @@ function buildSieveFrames(): SvFrame[] {
     ),
   });
 
-  // ---- 质数 2 ----
+  // ---- prime 2 ----
   s[2] = "cur";
   frames.push({
     states: snap(),
@@ -102,7 +102,7 @@ function buildSieveFrames(): SvFrame[] {
   });
   for (let m = 4; m <= SIEVE_N; m += 2) s[m] = "cross";
 
-  // ---- 质数 3 ----
+  // ---- prime 3 ----
   s[3] = "cur";
   frames.push({
     states: snap(),
@@ -150,7 +150,7 @@ function buildSieveFrames(): SvFrame[] {
   });
   for (let m = 9; m <= SIEVE_N; m += 3) if (s[m] === "hit") s[m] = "cross";
 
-  // ---- 质数 5 ----
+  // ---- prime 5 ----
   s[5] = "cur";
   frames.push({
     states: snap(),
@@ -194,7 +194,7 @@ function buildSieveFrames(): SvFrame[] {
   });
   for (let m = 25; m <= SIEVE_N; m += 5) if (s[m] === "hit") s[m] = "cross";
 
-  // ---- 收尾:剩下没划掉的都是质数 ----
+  // ---- closing: everything still uncrossed is prime ----
   for (let k = 2; k <= SIEVE_N; k++) if (s[k] !== "cross") s[k] = "prime";
   frames.push({
     states: snap(),
@@ -273,7 +273,7 @@ export function SieveGrid() {
 }
 
 /* ================================================================
-   NimGame —— Nim 博弈交互(拿 1~3 颗,拿到最后一颗者胜)
+   NimGame - the interactive game of Nim (take 1 to 3 stones; whoever takes the last one wins)
    ================================================================ */
 
 const NIM_PRESETS = [8, 12, 13, 15];
@@ -362,7 +362,7 @@ export function NimGame() {
       );
       return;
     }
-    // 对手最优:把局面补回 4 的倍数;若已是 4 的倍数(对手自己必败)则只能随便拿 1 颗。
+    // Optimal opponent: bring the pile back to a multiple of 4; if it already is one (the opponent is in a losing position) it just takes 1 stone.
     const restore = afterYou % 4 !== 0;
     const aiTake = restore ? afterYou % 4 : 1;
     const afterAi = afterYou - aiTake;
@@ -517,10 +517,10 @@ export function NimGame() {
 }
 
 /* ================================================================
-   MooreVote —— 摩尔投票(ArrayStepper 逐帧)
+   MooreVote - the Boyer-Moore majority vote (frame by frame with ArrayStepper)
    ================================================================ */
 
-const MOORE_NUMS = [2, 2, 1, 3, 2, 2, 2]; // 多数元素 = 2(出现 5 次 > 7/2)
+const MOORE_NUMS = [2, 2, 1, 3, 2, 2, 2]; // majority element = 2 (appears 5 times > 7/2)
 
 function mooreFrames(nums: number[]): ArrayFrame[] {
   const frames: ArrayFrame[] = [];

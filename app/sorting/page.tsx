@@ -1,13 +1,18 @@
 "use client";
 
-// 第 1 章 · 排序 —— 算法设计思想的展览馆。
-// 结构:为什么学排序 → O(n²) 三兄弟(不变量) → 归并(分治首秀 + 912 归并解) →
-// 快排(partition 逐帧 + 随机化 + 912 快排解) → 突破比较下界(计数/桶/基数) →
-// 稳定性 + 内置 sort 真身 → 精讲 215(Quickselect vs 堆) → 精讲 56(排序+扫描) →
-// 题单 → 测验 → 要点。
-// 招牌可视化:自建条形图排序 stepper(SortLab)、partition ArrayStepper(PartitionDemo)。
-// 双语:文案型 props 传 { en, zh },段落内用 <T en zh />;代码窗的注释也给两份,
-// 两份的可执行行完全一致、行数相同(hl 才不会指错行)。
+// Chapter 1 · Sorting —— a gallery of algorithm design ideas.
+// Structure: why study sorting → the three O(n²) siblings (invariants) → merge sort
+// (the debut of divide and conquer + the merge solution to 912) → quicksort
+// (partition frame by frame + randomization + the quicksort solution to 912) →
+// breaking the comparison lower bound (counting / bucket / radix) → stability +
+// what the built-in sorts really are → deep dive 215 (Quickselect vs heap) →
+// deep dive 56 (sort + scan) → problem set → quiz → key points.
+// Signature visualizations: a hand-built bar-chart sorting stepper (SortLab) and a
+// partition ArrayStepper (PartitionDemo).
+// Bilingual: copy-style props take { en, zh }, and inline prose uses <T en zh />.
+// Code windows also carry two versions of the comments; the two versions have
+// identical executable lines and identical line counts, so hl never points at the
+// wrong line.
 
 import "./chapter.css";
 import {
@@ -46,7 +51,7 @@ import {
   IntervalsDemo,
 } from "./viz";
 
-/* ================= 页面 ================= */
+/* ================= Page ================= */
 
 const CHIPS = [
   { id: "why", n: "01", label: { en: "Why sorting", zh: "为什么学排序" } },
@@ -104,7 +109,7 @@ export default function SortingChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 为什么学排序 ================= */}
+      {/* ================= §01 Why study sorting ================= */}
       <Section
         id="why"
         index="01"
@@ -257,7 +262,7 @@ export default function SortingChapter() {
         <SortLab />
       </Section>
 
-      {/* ================= §02 O(n²) 三兄弟 ================= */}
+      {/* ================= §02 The three O(n²) siblings ================= */}
       <Section
         id="n2"
         index="02"
@@ -629,7 +634,7 @@ export default function SortingChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §03 归并排序(分治首秀 + 912 归并解) ================= */}
+      {/* ================= §03 Merge sort (divide and conquer's debut + the merge solution to 912) ================= */}
       <Section
         id="merge"
         index="03"
@@ -1022,7 +1027,7 @@ export default function SortingChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §04 快速排序(partition + 912 快排解) ================= */}
+      {/* ================= §04 Quicksort (partition + the quicksort solution to 912) ================= */}
       <Section
         id="quick"
         index="04"
@@ -1458,7 +1463,7 @@ class Solution:
         </Callout>
       </Section>
 
-      {/* ================= §05 算法竞速 ================= */}
+      {/* ================= §05 Algorithm race ================= */}
       <Section
         id="race"
         index="05"
@@ -1795,7 +1800,7 @@ class Solution:
         </Callout>
       </Section>
 
-      {/* ================= §06 突破比较下界 ================= */}
+      {/* ================= §06 Breaking the comparison lower bound ================= */}
       <Section
         id="linear"
         index="06"
@@ -2231,7 +2236,7 @@ class Solution:
         </Callout>
       </Section>
 
-      {/* ================= §07 稳定性 + 内置 sort 真身 ================= */}
+      {/* ================= §07 Stability + what the built-in sorts really are ================= */}
       <Section
         id="stable"
         index="07"
@@ -2619,7 +2624,7 @@ arr.sort((x, y) => x.k - y.k);  // "a" 仍然排在 "b" 前面`,
         </Callout>
       </Section>
 
-      {/* ================= §08 精讲 B · LC 215 ================= */}
+      {/* ================= §08 Deep dive B · LC 215 ================= */}
       <Section
         id="select"
         index="08"
@@ -2984,7 +2989,7 @@ class Solution:
         </Callout>
       </Section>
 
-      {/* ================= §09 精讲 C · LC 56 ================= */}
+      {/* ================= §09 Deep dive C · LC 56 ================= */}
       <Section
         id="intervals"
         index="09"
@@ -3263,7 +3268,7 @@ class Solution:
         </Callout>
       </Section>
 
-      {/* ================= §10 题单 ================= */}
+      {/* ================= §10 Problem set ================= */}
       <Section
         id="problems"
         index="10"

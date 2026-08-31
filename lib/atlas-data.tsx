@@ -1,9 +1,11 @@
-// 终章 · 范式地图 —— 20 周计划 + 面试标准 + 复习节奏 + 全景图 + 终极测验。
+// The finale - Paradigm Atlas: the 20-week plan + interview standards + review cadence +
+// the panorama + the final quiz.
 //
-// 全书题单总表不在这里:page.tsx 直接 import 12 章各自的 PROBLEMS,
-// 保证与各章一字不差、进度互通(pid 一律是 `<ch>/<lc>`)。
+// The master table of every problem in the course is not here: page.tsx imports the PROBLEMS
+// of all 12 chapters directly, which guarantees it matches each chapter word for word and
+// shares progress with them (pid is always `<ch>/<lc>`).
 //
-// 双语:prose 用 <T en zh />,需要纯字符串的地方用 Loc<string>。
+// Bilingual: prose uses <T en zh />; wherever a plain string is required, use Loc<string>.
 
 import type { QuizItem } from "@/lib/quiz";
 import type { ChapterId } from "@/lib/curriculum";
@@ -11,11 +13,14 @@ import type { ReactNode } from "react";
 import { T, type Loc } from "@/lib/i18n";
 
 /* ===================================================================== *
- * 20 周学习计划(内容映射到本课章节 / 姊妹篇 DataData 结构篇)             *
+ * The 20-week study plan (mapped onto this course's chapters and the    *
+ * sister course DataData)                                               *
  * ===================================================================== */
 
-/** 归属:algo = 本课(算法篇),ds = DataData(结构篇),both = 两篇合流。
- *  这是稳定 id,同时作为 CSS 的 [data-t] 选择器,不随语言变化。 */
+/** Which track a week belongs to: algo = this course (algorithms), ds = DataData
+ *  (data structures), both = the two tracks converge.
+ *  This is a stable id and doubles as the CSS [data-t] selector, so it never changes with
+ *  the language. */
 export type Track = "algo" | "ds" | "both";
 
 export const TRACK_LABEL: Record<Track, Loc<string>> = {
@@ -25,13 +30,13 @@ export const TRACK_LABEL: Record<Track, Loc<string>> = {
 };
 
 export interface WeekRow {
-  /** React key,与语言无关 */
+  /** React key -- independent of the language */
   id: string;
   wk: Loc<string>;
   topic: Loc<string>;
   goal: Loc<string>;
   track: Track;
-  /** 命中本课(算法篇)章节时给出路由,渲染成站内链接 */
+  /** Set when the week maps to a chapter of this course, so it renders as an internal link */
   ch?: ChapterId;
   href?: string;
 }
@@ -319,8 +324,10 @@ export const WEEKS: WeekRow[] = [
   },
 ];
 
-/** 20 周表未单列、可随时插入的「工具 / 补漏」章。
- *  note 只写章名之后的说明,页面会把章名单独渲染成链接。 */
+/** Tool and gap-filling chapters that the 20-week table does not list separately; slot them
+ *  in whenever you like.
+ *  note holds only the text that follows the chapter name -- the page renders the chapter
+ *  name itself as a link. */
 export const SIDE_CHAPTERS: { ch: ChapterId; href: string; note: Loc<string> }[] =
   [
     {
@@ -366,7 +373,7 @@ export const SIDE_CHAPTERS: { ch: ChapterId; href: string; note: Loc<string> }[]
   ];
 
 /* ===================================================================== *
- * 面试级完成标准 + 复习节奏                                               *
+ * Interview-level completion standards + review cadence                 *
  * ===================================================================== */
 
 export const STANDARDS: { icon: string; text: ReactNode }[] = [
@@ -572,10 +579,11 @@ export const REVIEW: {
 ];
 
 /* ===================================================================== *
- * DataData × AlgoAlgo 全景图                                             *
+ * DataData x AlgoAlgo panorama                                          *
  * ===================================================================== */
 
-/** side 是稳定 id(同时是 CSS 的 [data-side] 选择器):ds = 结构篇,algo = 算法篇。 */
+/** side is a stable id (and doubles as the CSS [data-side] selector):
+ *  ds = data structures, algo = algorithms. */
 export const PANORAMA: {
   side: "ds" | "algo";
   sideLabel: Loc<string>;
@@ -668,7 +676,8 @@ export const PANORAMA: {
 ];
 
 /* ===================================================================== *
- * 终极测验 —— 不考定义,只考「看到题选哪个范式」                          *
+ * The final quiz -- it does not test definitions, only "given this      *
+ * problem, which paradigm do you reach for?"                            *
  * ===================================================================== */
 
 export const QUIZ: QuizItem[] = [

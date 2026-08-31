@@ -1,8 +1,9 @@
-/* 第 8 章 · 背包问题(data-ch="knapsack")专属样式。
-   规则:自定义类名一律带 kp- 前缀,或整体包在 [data-ch="knapsack"] 下;
-   颜色只用 CSS token(var(--acc)/--info/--ok/--risk 等),深浅主题自动适配。 */
+/* Chapter 8 · Knapsack problems (data-ch="knapsack") specific styles.
+   Rule: every custom class name is kp- prefixed, or nested under [data-ch="knapsack"];
+   colors come only from CSS tokens (var(--acc)/--info/--ok/--risk and the like) so
+   light and dark themes adapt automatically. */
 
-/* ---------- 背包问题定义卡 ---------- */
+/* ---------- Knapsack problem definition cards ---------- */
 
 [data-ch="knapsack"] .kp-def {
   display: grid;
@@ -27,7 +28,7 @@
   color: var(--text-2);
 }
 
-/* ---------- 转移方程高亮盒 ---------- */
+/* ---------- Transition-equation highlight box ---------- */
 
 [data-ch="knapsack"] .kp-formula {
   font-family: var(--font-mono);
@@ -53,7 +54,7 @@
   font-size: 12px;
 }
 
-/* ---------- 两列对比(正序/倒序、回溯/背包、组合/排列) ---------- */
+/* ---------- Two-column comparisons (forward/backward iteration, backtracking/knapsack, combinations/permutations) ---------- */
 
 [data-ch="knapsack"] .kp-duel {
   display: grid;
@@ -72,7 +73,7 @@
   }
 }
 
-/* ---------- KnapSackLab:0-1 背包实验室 ---------- */
+/* ---------- KnapSackLab: the 0-1 knapsack lab ---------- */
 
 [data-ch="knapsack"] .kp-lab-grid {
   display: flex;
@@ -82,7 +83,7 @@
 }
 
 [data-ch="knapsack"] .kp-item {
-  /* 118px 才放得下英文的「3 kg · value 4」一行不折 */
+  /* 118px is the minimum that fits the English "3 kg · value 4" on one line */
   width: 118px;
   display: flex;
   flex-direction: column;
@@ -170,7 +171,7 @@
   font-weight: 700;
 }
 
-/* ---------- RollingCompare:正序/倒序切换 ---------- */
+/* ---------- RollingCompare: forward/backward iteration toggle ---------- */
 
 [data-ch="knapsack"] .kp-modebar {
   display: flex;
@@ -207,12 +208,14 @@
   display: grid;
   grid-template-columns: repeat(6, 48px);
   gap: 10px;
-  /* 固定 6 列约 338px:用自动外边距居中,窄屏时外边距归零、
-     配合外层 viz-stage 的 overflow-x:auto 从左侧起可横向滚动,
-     保证 dp[0] 与 dp[5] 都能被看到、不被裁切。两行同宽故始终对齐。 */
+  /* Six fixed columns come to about 338px: auto margins center the grid, and on
+     narrow screens those margins collapse to zero so the outer viz-stage's
+     overflow-x:auto can scroll horizontally from the left edge. That guarantees
+     both dp[0] and dp[5] stay visible rather than clipped. Both rows share the
+     same width, so they always line up. */
   width: max-content;
   margin-inline: auto;
-  /* 英文标签(write dp[5] / read: changed)比 48px 的列宽,两侧留白免得被裁 */
+  /* The English labels (write dp[5] / read: changed) are wider than the 48px column, so pad both sides to keep them from being clipped */
   padding-inline: 24px;
   font-variant-numeric: tabular-nums;
 }
@@ -255,7 +258,7 @@
   border-color: color-mix(in oklab, var(--risk) 40%, transparent);
 }
 
-/* 读取格子的描边(旧值 = 蓝,脏值 = 红) */
+/* Outline for the cell being read (old value = blue, dirty value = red) */
 [data-ch="knapsack"] .cell.kp-read {
   border-color: var(--info);
   border-style: dashed;
@@ -269,7 +272,7 @@
   color: var(--risk);
 }
 
-/* ---------- 背包家族速查表微调 ---------- */
+/* ---------- Tweaks for the knapsack-family quick-reference table ---------- */
 
 [data-ch="knapsack"] .kp-fam-note {
   font-size: 12.5px;

@@ -1,7 +1,9 @@
-// 第 7 章 · 动态规划入门 —— 题单与测验数据。
-// 题单覆盖 lc.md 主线的 DP 入门题(线性 / 网格 / 打家劫舍),由易到难;
-// hint 只给方向不剧透,key 用一段话把最优解讲透。
-// 双语:所有文案都是 Loc<…>,英文为默认。题名用 LeetCode 官方中英标题。
+// Chapter 7 - Dynamic Programming Basics: problem set and quiz data.
+// The problem set covers the introductory DP problems on lc.md's main track (linear / grid /
+// House Robber), ordered easy to hard; hint only points at a direction without spoiling,
+// key explains the optimal solution in one paragraph.
+// Bilingual: all copy is Loc<...> with English as the default. Titles use LeetCode's official
+// English and Chinese names.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

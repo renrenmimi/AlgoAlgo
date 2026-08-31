@@ -1,14 +1,14 @@
 "use client";
 
-// 第 12 章 · 字符串算法 —— 按样板章(第 7 章 DP)的九段式质量标准展开。
-// 灵魂:【把每一次失败,都变成下一次的情报】。
-// 结构:暴力为什么慢 → 前缀函数直觉 → next 构建(招牌动画)→ KMP 匹配 + 精讲 28 →
-//       Rabin-Karp 滚动哈希(28 第二解)→ 精讲 459 → 回文中心扩展 + 精讲 5 + Manacher 概念 →
-//       解析类 205/8 → 题单 → 测验 → 要点。
-// 可视化全部在 ./viz;题单与测验数据在 lib/strings-data。
+// Chapter 12 - String algorithms: laid out to the nine-section quality standard of the reference chapter (Chapter 7, DP).
+// The heart of it: turn every failure into intelligence for the next attempt.
+// Structure: why brute force is slow -> intuition for the prefix function -> building next (the signature animation) -> KMP matching + Deep dive 28 ->
+//       Rabin-Karp rolling hash (a second solution to 28) -> Deep dive 459 -> palindrome center expansion + Deep dive 5 + the idea behind Manacher ->
+//       parsing problems 205/8 -> problem set -> quiz -> key points.
+// All visualizations live in ./viz; the problem set and quiz data live in lib/strings-data.
 //
-// 双语:正文用 <T en zh />;组件的文案型 props 传 { en, zh }。
-// CodeTabs 的 code 也给两份 —— 两份之间只有注释不同,可执行代码逐行一致(hl 行号才对得上)。
+// Bilingual: body text uses <T en zh />; copy-style props on components take { en, zh }.
+// CodeTabs code is supplied twice as well - the two versions differ only in their comments, while the executable code matches line for line (so the hl line numbers stay correct).
 
 import "./chapter.css";
 import { Hero, Section, Callout, BigO, KeyPoints, ChapterFooter } from "@/lib/kit";
@@ -80,7 +80,7 @@ export default function StringsChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 暴力为什么慢 ================= */}
+      {/* ================= §01 Why brute force is slow ================= */}
       <Section
         id="why"
         index="01"
@@ -278,7 +278,7 @@ export default function StringsChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §02 前缀函数直觉 ================= */}
+      {/* ================= §02 Intuition for the prefix function ================= */}
       <Section
         id="prefix"
         index="02"
@@ -481,7 +481,7 @@ export default function StringsChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §03 next 数组构建(招牌) ================= */}
+      {/* ================= §03 Building the next array (the signature piece) ================= */}
       <Section
         id="next"
         index="03"
@@ -806,7 +806,7 @@ function buildNext(p) {
         </Callout>
       </Section>
 
-      {/* ================= §04 KMP 匹配 + 精讲 A(28) ================= */}
+      {/* ================= §04 KMP matching + Deep dive A (28) ================= */}
       <Section
         id="kmp"
         index="04"
@@ -1098,7 +1098,7 @@ function buildNext(p) {
         </Callout>
       </Section>
 
-      {/* ================= §05 Rabin-Karp 滚动哈希(28 第二解) ================= */}
+      {/* ================= §05 Rabin-Karp rolling hash (a second solution to 28) ================= */}
       <Section
         id="hash"
         index="05"
@@ -1568,7 +1568,7 @@ function buildNext(p) {
         </Callout>
       </Section>
 
-      {/* ================= §06 精讲 B(459) ================= */}
+      {/* ================= §06 Deep dive B (459) ================= */}
       <Section
         id="repeat"
         index="06"
@@ -1861,7 +1861,7 @@ function buildNext(p) {
         </Callout>
       </Section>
 
-      {/* ================= §07 回文中心扩展 + 精讲 C(5) ================= */}
+      {/* ================= §07 Palindrome center expansion + Deep dive C (5) ================= */}
       <Section
         id="palindrome"
         index="07"
@@ -2204,7 +2204,7 @@ function buildNext(p) {
         </Callout>
       </Section>
 
-      {/* ================= §08 解析类 205 / 8 ================= */}
+      {/* ================= §08 Parsing problems 205 / 8 ================= */}
       <Section
         id="parse"
         index="08"
@@ -2640,7 +2640,7 @@ function buildNext(p) {
         </Callout>
       </Section>
 
-      {/* ================= §09 题单 ================= */}
+      {/* ================= §09 Problem set ================= */}
       <Section
         id="problems"
         index="09"

@@ -1,17 +1,17 @@
 "use client";
 
-// 第 5 章 · 回溯的专属可视化。回溯的灵魂是「决策树上的 DFS」,所以本章
-// 主力是 lib/algviz 的 TreePlayer(决策树播放器),外加两个自建组件:
-//   - PermuteLab:全排列的 used 数组现场(绿=已用 / 黄=刚选 / 红=撞用过)。
-//   - NQueensBoard:N 皇后棋盘,逐行放置、冲突检测、走进死胡同就回退。
+// Chapter 5 - visualizations for backtracking. The heart of backtracking is "DFS over a decision tree", so this chapter
+// leans on TreePlayer from lib/algviz (the decision-tree player), plus two custom components:
+//   - PermuteLab: the used array of permutations in action (green = already used / yellow = just picked / red = hit a used slot).
+//   - NQueensBoard: the N-Queens board - place row by row, detect conflicts, back off at a dead end.
 //
-// TreePlayer 用法回顾:节点静态注册(id/label/parent),帧只给「非默认态」;
-// 未列出的节点是幽灵态(尚未访问)。cur=当前 / path=当前路径 / done=访问完 /
-// dead=剪枝或死路(灰+删除线) / sol=解 / memo=命中缓存。
+// TreePlayer recap: nodes are registered statically (id/label/parent) and frames carry only the non-default states;
+// nodes that are not listed are ghosts (not visited yet). cur = current / path = current path / done = fully visited /
+// dead = pruned or dead end (gray + strikethrough) / sol = solution / memo = memo hit.
 //
-// 双语:节点标签、播放器标题传 { en, zh };每帧旁白直接写 <T en zh />。
-// 节点标签不要写死 w —— TreePlayer 会按解析后的标签长度自动估宽,
-// 写死 w 反而会让较长的英文标签被切掉。
+// Bilingual: node labels and player titles take { en, zh }; per-frame narration is written inline as <T en zh />.
+// Do not hard-code w on node labels - TreePlayer estimates the width from the resolved label length,
+// and a hard-coded w would clip the longer English labels.
 
 import { useMemo, type ReactNode } from "react";
 import {
@@ -24,7 +24,7 @@ import { useStepper, StepControls } from "@/lib/stepper";
 import { T, useL } from "@/lib/i18n";
 
 /* ================================================================
-   通用:决策树 DFS 帧生成器
+   Shared: decision-tree DFS frame generator
    ================================================================ */
 
 function treeParent(nodes: TreeNodeSpec[]) {
@@ -43,9 +43,9 @@ function ancestorsOf(parent: Map<string, string | undefined>, id: string): strin
   return out;
 }
 
-/** 按给定的 DFS 访问顺序 order,逐帧点亮决策树。
- *  solutions:哪些节点是「解」(收集点),历史帧里标绿(sol)。
- *  dead:全程灰掉的节点(一步都没走的分支),每一帧都保持 dead。 */
+/** Light up the decision tree frame by frame, following the given DFS visit order.
+ *  solutions: which nodes are solutions (collection points); marked green (sol) in later frames.
+ *  dead: nodes grayed out throughout (branches never taken); they stay dead in every frame. */
 function walkFrames(
   nodes: TreeNodeSpec[],
   order: string[],
@@ -74,7 +74,7 @@ function walkFrames(
 }
 
 /* ================================================================
-   §01 MazeTree —— 走迷宫,死路就退回
+   §01 MazeTree - walk the maze, back off at a dead end
    ================================================================ */
 
 const MAZE_NODES: TreeNodeSpec[] = [
@@ -195,11 +195,11 @@ export function MazeTree() {
 }
 
 /* ================================================================
-   §03 精讲 A · LC 77 组合(n=4, k=2)
-   —— 全展开 vs 剪枝,两棵树对照
+   §03 Deep dive A - LC 77 combinations (n=4, k=2)
+   - full expansion vs. pruning, two trees side by side
    ================================================================ */
 
-// 组合树:startIndex 保证「只往后选」,避免 [1,2] 和 [2,1] 重复。
+// Combination tree: startIndex enforces picking forward only, so [1,2] and [2,1] never both appear.
 const COMB_NODES: TreeNodeSpec[] = [
   { id: "r", label: "∅" },
   { id: "n1", label: "1", parent: "r" },
@@ -320,7 +320,7 @@ export function CombTreeFull() {
   );
 }
 
-// 剪枝版:进入循环前就判断「剩下的数够不够凑满 k 个」,不够直接不进。
+// Pruned version: before entering the loop, check whether enough numbers remain to fill k slots; if not, do not enter at all.
 const COMB_PRUNED_ORDER = [
   "r", "n1", "n12", "n13", "n14", "n2", "n23", "n24", "n3", "n34",
 ];
@@ -409,8 +409,8 @@ export function CombTreePruned() {
 }
 
 /* ================================================================
-   §06 精讲 B · LC 78 子集([1,2,3])
-   —— 每个节点都是一个解(不只叶子)
+   §06 Deep dive B - LC 78 subsets ([1,2,3])
+   - every node is a solution, not just the leaves
    ================================================================ */
 
 const SUBSET_NODES: TreeNodeSpec[] = [
@@ -425,7 +425,7 @@ const SUBSET_NODES: TreeNodeSpec[] = [
 ];
 
 const SUBSET_ORDER = ["r", "a1", "a12", "a123", "a13", "a2", "a23", "a3"];
-const SUBSET_SOL = new Set(SUBSET_ORDER); // 每个节点都收
+const SUBSET_SOL = new Set(SUBSET_ORDER); // collect at every node
 
 const SUBSET_MSGS: ReactNode[] = [
   <T
@@ -505,11 +505,11 @@ export function SubsetTree() {
 }
 
 /* ================================================================
-   §08 去重两板斧 · 子集 II [1,1,2]
-   —— 不去重(冒出重复)vs 树层去重(剪掉重复分支)
+   §08 The two deduplication tools - Subsets II [1,1,2]
+   - no dedup (duplicates show up) vs. level-wise dedup (duplicate branches pruned)
    ================================================================ */
 
-// [1(下标0), 1(下标1), 2(下标2)]
+// [1 (index 0), 1 (index 1), 2 (index 2)]
 const DUP_NODES: TreeNodeSpec[] = [
   { id: "r", label: "∅" },
   { id: "a", label: "1", parent: "r" },
@@ -587,7 +587,7 @@ export function DupSubsetTree() {
   );
 }
 
-// 树层去重:排序后,同一个循环里遇到 i > start && nums[i] == nums[i-1] 就跳过。
+// Level-wise dedup: after sorting, skip inside the same loop whenever i > start && nums[i] == nums[i-1].
 const DEDUP_ORDER = ["r", "a", "aa", "aab", "ab", "c"];
 const DEDUP_SOL = new Set(DEDUP_ORDER);
 
@@ -718,7 +718,7 @@ export function DedupSubsetTree() {
 }
 
 /* ================================================================
-   §07 精讲 C · LC 46 全排列 —— used 数组现场
+   §07 Deep dive C - LC 46 permutations - the used array in action
    ================================================================ */
 
 type PermAction = "choose" | "skip" | "complete" | "back";
@@ -850,8 +850,8 @@ export function PermuteLab() {
 }
 
 /* ================================================================
-   §09 精讲 D · LC 51 N 皇后 —— 自建棋盘
-   逐行放置、冲突检测、走进死胡同就回退
+   §09 Deep dive D - LC 51 N-Queens - custom board
+   Place row by row, detect conflicts, back off at a dead end
    ================================================================ */
 
 interface QFrame {
@@ -932,7 +932,7 @@ function buildQueenFrames(n: number): QFrame[] {
       const atk = attackers(r, c);
       if (atk.length > 0) {
         const more = c + 1 < n;
-        // 旁白要和棋盘上被圈出的皇后一一对应 —— 有几个攻击者就报几个。
+        // The narration must line up with the queens circled on the board - report exactly as many attackers as there are.
         const listEn = atk.map(([ar, ac], k) => (
           <span key={k}>
             {k > 0 ? ", " : ""}row {ar} column {ac} (

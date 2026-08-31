@@ -1,7 +1,10 @@
-// 第 9 章 · 子序列 DP —— 题单与测验数据。
-// 题单按「子序列判定 → LIS → 连续型 → 双序列(LCS/编辑距离/删改) → 回文」由易到难;
-// hint 只给方向不剧透,key 用一段话把状态定义、转移、边界与答案位置讲透。
-// 双语:所有文案都是 Loc<…>,英文为默认。题名用 LeetCode 官方中英标题。
+// Chapter 9 - Subsequence DP: problem set and quiz data.
+// The problem set runs easy to hard along "subsequence checking -> LIS -> contiguous ->
+// two sequences (LCS / edit distance / deletions and edits) -> palindromes";
+// hint only points at a direction without spoiling, key explains the state definition, the
+// transition, the boundaries and where the answer lives in one paragraph.
+// Bilingual: all copy is Loc<...> with English as the default. Titles use LeetCode's official
+// English and Chinese names.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

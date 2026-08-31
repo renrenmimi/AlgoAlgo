@@ -1,8 +1,9 @@
-/* 第 4 章 · 位运算(data-ch="bits")专属样式。
-   规则:全部裹在 [data-ch="bits"] 作用域下,自定义类一律带 bit- 前缀;
-   颜色只用 CSS token,圆角/阴影/发光用设计系统标尺,深浅主题自动适配。 */
+/* Chapter 4 · Bit manipulation (data-ch="bits") specific styles.
+   Rule: everything is scoped under [data-ch="bits"] and every custom class is
+   bit- prefixed; colors come only from CSS tokens, radii/shadows/glows come from
+   the design-system scales, and light and dark themes adapt automatically. */
 
-/* ---------- 位灯:通用一盏灯 ---------- */
+/* ---------- Bit lamp: the generic single lamp ---------- */
 
 [data-ch="bits"] .bit-lamps {
   display: flex;
@@ -85,7 +86,7 @@
   cursor: default;
 }
 
-/* ---------- 位灯实验室读数 ---------- */
+/* ---------- Bit-lamp lab readout ---------- */
 
 [data-ch="bits"] .bit-readout {
   display: flex;
@@ -111,7 +112,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* ---------- 运算符游乐场 ---------- */
+/* ---------- Operator playground ---------- */
 
 [data-ch="bits"] .bit-op-row {
   display: flex;
@@ -192,7 +193,7 @@
   gap: 8px;
 }
 
-/* 实验室控制条右端的说明文字(英文比中文长,单行不换行) */
+/* Caption text at the right end of the lab control bar (English runs longer than Chinese; keep it on one line) */
 [data-ch="bits"] .bit-preset-lab,
 [data-ch="bits"] .bit-count-lab {
   margin-left: auto;
@@ -207,7 +208,7 @@
   }
 }
 
-/* ---------- 集合实验室 ---------- */
+/* ---------- Set lab ---------- */
 
 [data-ch="bits"] .bit-set-elems {
   display: flex;
@@ -297,7 +298,7 @@
   z-index: 3;
 }
 
-/* 自定义提示气泡:替代原生 title,悬停/聚焦显示该子集对应的集合内容 */
+/* Custom tooltip bubble: replaces the native title, showing the set that a subset corresponds to on hover or focus */
 [data-ch="bits"] .bit-subcell::after {
   content: attr(data-tip);
   position: absolute;
@@ -319,7 +320,7 @@
   transition: opacity 0.16s ease, transform 0.16s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* 气泡下方的小三角 */
+/* The small arrow under the bubble */
 [data-ch="bits"] .bit-subcell::before {
   content: "";
   position: absolute;
@@ -364,7 +365,7 @@
   }
 }
 
-/* ---------- 补码对照小卡(§01) ---------- */
+/* ---------- Two's-complement comparison card (§01) ---------- */
 
 [data-ch="bits"] .bit-twoc {
   display: grid;

@@ -1,7 +1,8 @@
-/* 第 2 章 · 分治(data-ch="divide")专属样式。
-   规则:全部包在 [data-ch="divide"] 下或带 dvd- 前缀;颜色只用 CSS token。 */
+/* Chapter 2 · Divide and conquer (data-ch="divide") specific styles.
+   Rule: everything is either nested under [data-ch="divide"] or dvd- prefixed;
+   colors come only from CSS tokens. */
 
-/* — 分治三步卡:分 / 治 / 合 — */
+/* — The three divide-and-conquer step cards: divide / conquer / combine — */
 
 [data-ch="divide"] .dvd-steps {
   display: grid;
@@ -56,7 +57,7 @@
   }
 }
 
-/* — LayeredMerge:分层合并图 — */
+/* — LayeredMerge: the layered merge diagram — */
 
 [data-ch="divide"] .dvd-layer {
   display: flex;
@@ -131,7 +132,7 @@
   margin: 0 2px;
 }
 
-/* — 分治 vs DP 两列对比(LC 53) — */
+/* — Divide and conquer vs DP, two-column comparison (LC 53) — */
 
 [data-ch="divide"] .dvd-duel {
   display: grid;
@@ -150,7 +151,7 @@
   }
 }
 
-/* — 居中的递推式 / 公式条 — */
+/* — Centered recurrence / formula bar — */
 
 [data-ch="divide"] .dvd-formula {
   text-align: center;

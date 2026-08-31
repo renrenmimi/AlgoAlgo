@@ -1,13 +1,16 @@
 "use client";
 
-// 序章专属可视化:
-//  - HeroDecision:hero 右侧的自动播放动画 —— 一棵决策树被逐步探索,
-//    死路变灰回退、正确路径亮绿,一眼看懂「算法 = 一串看得见的决策」。
-//    节点/边直接复用 globals.css 的 .tp-node / .tp-edge 状态样式。
-//  - RecursionLab:递归调用栈实验室 —— 逐帧看 factorial(3) 的栈帧
-//    怎么压进去、又怎么带着返回值弹出来。递归是全书的地基。
+// Visualizations specific to the opening chapter:
+//  - HeroDecision: the autoplaying animation to the right of the hero -- a decision tree is
+//    explored step by step, dead ends gray out on the backtrack and the correct path lights up
+//    green, so "an algorithm is a visible sequence of decisions" lands at a glance.
+//    Nodes and edges reuse the .tp-node / .tp-edge state styles from globals.css directly.
+//  - RecursionLab: the call-stack laboratory -- step through how the stack frames of
+//    factorial(3) are pushed and then popped carrying their return values. Recursion is the
+//    foundation the whole course is built on.
 //
-// 界面双语:所有可见文案走 <T en zh />;节点标签是符号,两种语言共用。
+// Bilingual UI: all visible copy goes through <T en zh />; node labels are symbols and are
+// shared by both languages.
 
 import { useEffect, useState } from "react";
 import { useStepper, StepControls } from "@/lib/stepper";
@@ -35,20 +38,23 @@ const H_NODES: HNode[] = [
   { id: "b2", x: 332, y: 168, label: "…", parent: "b" },
 ];
 
-// 每帧:各节点状态(未列出 = idle)。
-// 【首帧刻意做「富状态」】:根节点已点亮(cur)、两条主干已在候选路径上(path),
-// 一进首屏右侧就是「有内容、好看」的画面,而不是等动画跑几秒才浮现。
-// 之后逐帧展开探索:进 A 撞两次死路 → 回退 → 进 B 命中解;末帧短暂定格庆祝后循环。
+// One frame = the state of every node (nodes not listed are idle).
+// The first frame is deliberately state-rich: the root is already lit (cur) and both trunks
+// are already on the candidate path (path), so the right-hand side of the first screen looks
+// full and finished immediately instead of only filling in after a few seconds of animation.
+// From there the exploration unfolds frame by frame: descend into A, hit two dead ends,
+// backtrack, descend into B and find the solution; the last frame holds briefly before the
+// loop restarts.
 const H_FRAMES: Record<string, NState>[] = [
-  { r: "cur", a: "path", b: "path" }, // 首帧:根点亮 + 主干候选,一进来就满
-  { r: "path", a: "cur", b: "path" }, // 决定先探 A 分支
-  { r: "path", a: "path", a1: "cur", b: "path" }, // 试 a1
-  { r: "path", a: "path", a1: "dead", a2: "cur", b: "path" }, // a1 死路 → 试 a2
-  { r: "path", a: "dead", a1: "dead", a2: "dead", b: "path" }, // A 整枝无解 → 回退
-  { r: "path", a: "dead", a1: "dead", a2: "dead", b: "cur" }, // 转而探 B 分支
-  { r: "path", a: "dead", a1: "dead", a2: "dead", b: "path", b1: "cur" }, // 试 b1
-  { r: "sol", a: "dead", a1: "dead", a2: "dead", b: "sol", b1: "sol" }, // 命中!解路径亮绿
-  { r: "sol", a: "dead", a1: "dead", a2: "dead", b: "sol", b1: "sol" }, // 定格一拍再循环
+  { r: "cur", a: "path", b: "path" }, // First frame: root lit + trunks as candidates, full from the start
+  { r: "path", a: "cur", b: "path" }, // Decide to explore branch A first
+  { r: "path", a: "path", a1: "cur", b: "path" }, // Try a1
+  { r: "path", a: "path", a1: "dead", a2: "cur", b: "path" }, // a1 is a dead end, so try a2
+  { r: "path", a: "dead", a1: "dead", a2: "dead", b: "path" }, // Branch A has no solution, backtrack
+  { r: "path", a: "dead", a1: "dead", a2: "dead", b: "cur" }, // Turn to branch B instead
+  { r: "path", a: "dead", a1: "dead", a2: "dead", b: "path", b1: "cur" }, // Try b1
+  { r: "sol", a: "dead", a1: "dead", a2: "dead", b: "sol", b1: "sol" }, // Found it: the solution path turns green
+  { r: "sol", a: "dead", a1: "dead", a2: "dead", b: "sol", b1: "sol" }, // Hold for one beat, then loop
 ];
 
 export function HeroDecision() {
@@ -56,7 +62,8 @@ export function HeroDecision() {
   const [tick, setTick] = useState(0);
 
   useEffect(() => {
-    // 尊重「减弱动态」:直接停在首帧 —— 它已被设计成「富状态」,静态也好看。
+    // Respect prefers-reduced-motion: stay on the first frame -- it was designed to be
+    // state-rich, so it looks good even when static.
     const reduce =
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -109,7 +116,7 @@ export function HeroDecision() {
             zh={<>算法 = 一串看得见的决策</>}
           />
         </span>
-        {/* 英文模式下主文案已经是英文,不再重复一行全大写英文 */}
+        {/* In English the main caption is already English, so do not repeat it in all caps */}
         <T en={null} zh={<span className="hm-caption-en">VISIBLE DECISIONS</span>} />
       </div>
     </div>

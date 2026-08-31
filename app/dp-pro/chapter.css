@@ -1,8 +1,9 @@
-/* 第 10 章 · DP 进阶(data-ch="dp-pro")专属样式。
-   规则:自定义类名一律带 .pro- 前缀,或整体裹在 [data-ch="dp-pro"] 下;
-   颜色只用 CSS token(var(--acc) 等),深浅主题自动适配,禁止写死颜色。 */
+/* Chapter 10 · Advanced DP (data-ch="dp-pro") specific styles.
+   Rule: every custom class name is .pro- prefixed, or scoped under [data-ch="dp-pro"];
+   colors come only from CSS tokens (var(--acc) and friends) so light and dark
+   themes adapt automatically. Never hard-code a color. */
 
-/* ---------- 四大类型总览卡 ---------- */
+/* ---------- Overview cards for the four major types ---------- */
 
 [data-ch="dp-pro"] .pro-type-ico {
   font-size: 26px;
@@ -10,7 +11,7 @@
   margin-bottom: 8px;
 }
 
-/* ---------- 股票族谱阶梯 ---------- */
+/* ---------- The stock-problem family ladder ---------- */
 
 [data-ch="dp-pro"] .pro-ladder {
   display: grid;
@@ -68,7 +69,7 @@
   font-weight: 600;
 }
 
-/* ---------- 状态机转移图(SVG) ---------- */
+/* ---------- State-machine transition diagram (SVG) ---------- */
 
 [data-ch="dp-pro"] .pro-fsm-svg {
   display: block;
@@ -138,7 +139,7 @@
   font-weight: 600;
 }
 
-/* ---------- 区间 DP 气球值标注 ---------- */
+/* ---------- Balloon-value annotations for interval DP ---------- */
 
 [data-ch="dp-pro"] .pro-bval {
   color: var(--acc-ink);
@@ -146,7 +147,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* ---------- 状压 DP 实验室 ---------- */
+/* ---------- Bitmask DP lab ---------- */
 
 [data-ch="dp-pro"] .pro-lamp-row {
   display: flex;
@@ -222,7 +223,7 @@
   color: var(--acc-ink);
 }
 
-/* ---------- 数位/概率 DP 一句话地图 ---------- */
+/* ---------- One-line map of digit DP and probability DP ---------- */
 
 [data-ch="dp-pro"] .pro-mini {
   display: grid;

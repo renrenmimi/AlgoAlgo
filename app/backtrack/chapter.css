@@ -1,8 +1,9 @@
-/* 第 5 章 · 回溯(data-ch="backtrack")专属样式。
-   规则:自定义类名一律带 bt- 前缀,或整体包在 [data-ch="backtrack"] 下;
-   颜色只用 CSS token(var(--acc) / var(--risk) / var(--ok) 等),禁止写死。 */
+/* Chapter 5 · Backtracking (data-ch="backtrack") specific styles.
+   Rule: every custom class name is bt- prefixed, or nested under [data-ch="backtrack"];
+   colors come only from CSS tokens (var(--acc) / var(--risk) / var(--ok) and the
+   like). Never hard-code a color. */
 
-/* ---------- 全排列 used 数组实验室(PermuteLab) ---------- */
+/* ---------- Permutation used-array lab (PermuteLab) ---------- */
 
 [data-ch="backtrack"] .bt-perm-row {
   display: flex;
@@ -26,7 +27,7 @@
   padding-bottom: 18px;
 }
 
-/* ---------- N 皇后棋盘(NQueensBoard) ---------- */
+/* ---------- N-Queens board (NQueensBoard) ---------- */
 
 [data-ch="backtrack"] .bt-board {
   display: grid;
@@ -91,13 +92,13 @@
   box-shadow: 0 0 20px color-mix(in oklab, var(--ok) 40%, transparent);
 }
 
-/* ---------- 三部曲 / 家族卡片微调 ---------- */
+/* ---------- Tweaks for the trilogy / family cards ---------- */
 
 [data-ch="backtrack"] .bt-recipe .card-title .mono {
   color: var(--acc-ink);
 }
 
-/* 两列对比(去重规则 / 组合分割) */
+/* Two-column comparison (deduplication rules / combination and partition) */
 [data-ch="backtrack"] .bt-duo {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -111,7 +112,7 @@
   }
 }
 
-/* 窄屏:排列实验室的行标签放弃固定宽度,避免右对齐标签把单元格挤出容器 */
+/* Narrow screens: the permutation lab's row labels drop their fixed width so right-aligned labels cannot push the cells out of the container */
 @media (max-width: 480px) {
   [data-ch="backtrack"] .bt-perm-row {
     gap: 8px 12px;

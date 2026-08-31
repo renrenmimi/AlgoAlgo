@@ -1,8 +1,8 @@
 "use client";
 
-// 终章 · 范式选型向导 —— 交互式决策树。
-// 拿到一道题,依次问「求什么 → 贪心能否证明 → 子问题重不重叠 → 答案有无单调值域」,
-// 一步步走到推荐范式,并给出本课对应章节的站内链接。走过的路径留成面包屑,随时重来。
+// Final chapter - the paradigm selection wizard: an interactive decision tree.
+// Given a problem, ask in turn: what is being asked -> can a greedy choice be proved -> do subproblems overlap -> does the answer live in a monotonic range,
+// stepping toward a recommended paradigm with an in-site link to the matching chapter. The path taken is kept as breadcrumbs and can be restarted at any time.
 
 import { useState } from "react";
 import Link from "next/link";
@@ -18,7 +18,7 @@ interface RNode {
   kind: "r";
   paradigm: Loc<string>;
   href: string;
-  /** 章号 + 章名,拼进「去…章复习」按钮 */
+  /** chapter number + chapter name, spliced into the "review chapter ..." button */
   chLabel: Loc<string>;
   why: Loc<string>;
   runnerUp?: Loc<string>;
@@ -197,7 +197,7 @@ const TREE: Record<string, Node> = {
     ],
   },
 
-  /* ---------- 叶子:推荐范式 ---------- */
+  /* ---------- Leaf: the recommended paradigm ---------- */
   "r-greedy": {
     kind: "r",
     paradigm: { en: "Greedy", zh: "贪心 Greedy" },

@@ -1,9 +1,11 @@
 "use client";
 
-// LeetCode 题单组件。
-// 每道题:勾选框(写入全站进度)+ 题号 + 标题 + 难度徽章 + 标签;
-// 展开后是「提示」(先自己想)和「关键思路」(一段话讲透做法)。
-// pid = `${章节 id}/${题号}`,终章总表也用同一套 id,进度全站互通。
+// LeetCode problem-set component.
+// Each problem shows: a checkbox (writes to the site-wide progress) + problem number +
+// title + difficulty badge + tags; expanding it reveals the "hint" (think about it yourself
+// first) and the "key idea" (one paragraph that fully explains the approach).
+// pid = `${chapter id}/${problem number}`. The finale's master table uses the same ids,
+// so progress is shared across the whole site.
 
 import { useState, type ReactNode } from "react";
 import { useProgress } from "@/lib/progress";
@@ -12,13 +14,14 @@ import { useL, type Loc } from "@/lib/i18n";
 
 export interface Problem {
   lc: number;
-  /** 题名。英文界面用 LeetCode 官方英文题名,中文界面用官方中文题名。 */
+  /** Problem title. The English UI uses LeetCode's official English title, the Chinese UI
+   *  its official Chinese title. */
   title: Loc<string>;
   d: "easy" | "medium" | "hard";
   tags: Loc<string[]>;
-  /** 一句话提示 —— 不剧透完整解法 */
+  /** A one-sentence hint -- points at a direction without giving away the full solution */
   hint: Loc<ReactNode>;
-  /** 关键思路 —— 一段话讲透 */
+  /** The key idea -- one paragraph that explains the approach completely */
   key: Loc<ReactNode>;
 }
 

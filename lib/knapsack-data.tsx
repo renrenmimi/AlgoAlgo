@@ -1,9 +1,12 @@
-// 第 8 章 · 背包问题 —— 题单与测验数据。
-// 题单覆盖 lc.md 主线的背包题(0-1 / 完全 / 二维费用 / 计数 / 排列组合 / 分组),由易到难;
-// hint 只给方向不剧透,key 用一段话把最优解讲透。322 是第 7 章主讲、本章复盘。
-// 双语:所有文案都是 Loc<…>,英文为默认。题名用 LeetCode 官方中英标题。
-// 术语约定:0-1 背包 = 0/1 knapsack;完全背包 = unbounded knapsack;
-//          多重背包 = bounded knapsack;分组背包 = grouped knapsack。
+// Chapter 8 - Knapsack Problems: problem set and quiz data.
+// The problem set covers the knapsack problems on lc.md's main track (0/1 / unbounded /
+// two-dimensional cost / counting / permutations vs combinations / grouped), ordered easy to
+// hard; hint only points at a direction without spoiling, key explains the optimal solution
+// in one paragraph. 322 is taught in chapter 7 and revisited here.
+// Bilingual: all copy is Loc<...> with English as the default. Titles use LeetCode's official
+// English and Chinese names.
+// Terminology: 0-1 背包 = 0/1 knapsack; 完全背包 = unbounded knapsack;
+//              多重背包 = bounded knapsack; 分组背包 = grouped knapsack.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";
