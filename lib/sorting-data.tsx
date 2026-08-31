@@ -1,8 +1,11 @@
-// 第 1 章 · 排序 —— 题单与测验数据。
-// 题单覆盖 lc.md 排序主线(归并/快排双解、双指针合并、partition 变体、
-// 自定义比较器、计数),由易到难;hint 只给方向,key 一段话讲透。
-// 双语:title / tags / hint / key 与所有测验文案都是 { en, zh };
-// 英文题名用 LeetCode 官方英文标题,中文题名用官方中文标题。
+// Chapter 1 - Sorting: problem set and quiz data.
+// The problem set covers lc.md's sorting track (merge sort and quicksort as two solutions to
+// the same problem, two-pointer merging, partition variants, custom comparators, counting),
+// ordered easy to hard; hint only points at a direction, key explains it fully in one
+// paragraph.
+// Bilingual: title / tags / hint / key and all quiz copy are { en, zh };
+// English titles use LeetCode's official English names, Chinese titles its official Chinese
+// names.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

@@ -1,31 +1,31 @@
 "use client";
 
-// 第 12 章 · 字符串算法的专属可视化。全章招牌是「把失败变成情报」,所以:
-//   - BruteForceMatch:暴力匹配双行对齐 —— 亲眼看主串指针一次次被拽回去重来。
-//   - NextBuilder:★本章招牌★ next 数组构建(双行:上行 pattern 字符、下行 next 值),
-//     逐帧展示「模式串自我匹配」,含 while 回退链。
-//   - KMPMatch:KMP 匹配双行对齐 —— 主串指针 i 永不回退,模式串沿 next 向右滑。
-//   - RollingHash:Rabin-Karp 滚动哈希,窗口右移时 O(1) 更新哈希值。
-//   - CenterExpand:LC 5 回文中心扩展(奇/偶两种中心)。
+// Chapter 12 - visualizations for string algorithms. The signature idea of the chapter is "turn failure into intelligence", so:
+//   - BruteForceMatch: brute-force matching in two aligned rows - watch the text pointer get dragged back to start over, again and again.
+//   - NextBuilder: the signature piece of this chapter - building the next array (two rows: pattern characters on top, next values below),
+//     showing the pattern match against itself frame by frame, including the while fallback chain.
+//   - KMPMatch: KMP matching in two aligned rows - the text pointer i never backs up, the pattern slides right along next.
+//   - RollingHash: the Rabin-Karp rolling hash, updating the hash in O(1) as the window shifts right.
+//   - CenterExpand: LC 5 palindrome center expansion (both odd and even centers).
 //
-// 约定:next[i] = 子串 s[0..i] 的「最长相等真前后缀」长度,next[0]=0。
-// 自定义单元格状态 pref / src 的配色写在 chapter.css([data-ch="strings"] 下)。
+// Convention: next[i] = the length of the longest proper prefix of s[0..i] that is also a suffix; next[0]=0.
+// The colors of the custom cell states pref / src live in chapter.css (under [data-ch="strings"]).
 //
-// 双语:帧旁白直接写 <T en zh />;组件的文案型 props 传 { en, zh }。
-// 指针标签 i / j / l / r 是代码里的变量名,两种语言都不翻译。
+// Bilingual: frame narration is written inline as <T en zh />; copy-style props on components take { en, zh }.
+// The pointer labels i / j / l / r are variable names from the code and stay untranslated in both languages.
 
 import { type ReactNode } from "react";
 import { T, useL, type Loc } from "@/lib/i18n";
 import { useStepper, StepControls } from "@/lib/stepper";
 
 /* ================================================================
-   通用小工具:字符行 / 指针行
+   Shared helpers: character row / pointer row
    ================================================================ */
 
 interface Tok {
   v: string;
   state?: string;
-  /** 索引标签覆盖(模式行用模式相对下标) */
+  /** index label override (the pattern row uses indices relative to the pattern) */
   idx?: number;
 }
 
@@ -94,12 +94,12 @@ function PtrRow({
   );
 }
 
-/** 行首的「文本 / 模式」标签 —— 两种语言都短,52px 的槽位放得下。 */
+/** The "text / pattern" label at the start of a row - short in both languages, so the 52px slot fits. */
 const TAG_TEXT = <T en="text" zh="文本" />;
 const TAG_PATTERN = <T en="pattern" zh="模式" />;
 
 /* ================================================================
-   双行对齐播放器(暴力 / KMP 共用)
+   Two-row aligned player (shared by brute force and KMP)
    ================================================================ */
 
 interface AlignFrame {
@@ -160,7 +160,7 @@ function TwoRowMatch({
   );
 }
 
-/* ---- 前缀函数(全章统一实现) ---- */
+/* ---- prefix function (one implementation for the whole chapter) ---- */
 
 function prefixFunction(p: string): number[] {
   const n = p.length;
@@ -175,7 +175,7 @@ function prefixFunction(p: string): number[] {
 }
 
 /* ================================================================
-   BruteForceMatch —— 暴力匹配:失败就把 i 拽回去
+   BruteForceMatch - brute-force matching: on failure, drag i back
    ================================================================ */
 
 const BF_TEXT = "abaabab";
@@ -330,39 +330,39 @@ export function BruteForceMatch() {
 }
 
 /* ================================================================
-   NextBuilder —— ★招牌★ next 数组构建(双行:pattern / next)
+   NextBuilder - the signature piece - building the next array (two rows: pattern / next)
    ================================================================ */
 
 const NB_PAT = "abababca";
 
 interface NextFrame {
-  chars: Tok[]; // pattern 行(带 state)
-  next: (Tok | null)[]; // next 值行
+  chars: Tok[]; // pattern row (with state)
+  next: (Tok | null)[]; // next value row
   ptrs: { i: number; label: string }[];
   msg: ReactNode;
 }
 
 function buildNextFrames(p: string): NextFrame[] {
   const n = p.length;
-  const next = new Array(n).fill(-1); // -1 = 未算
+  const next = new Array(n).fill(-1); // -1 = not computed yet
   next[0] = 0;
 
   const frames: NextFrame[] = [];
 
-  // 渲染工具:根据当前 i / j / 高亮意图产出一帧
+  // rendering helper: produce one frame from the current i / j and the intended highlights
   const snap = (
     i: number,
     j: number,
-    curChar: string | undefined, // 'cur' 当前算的位置着 lit
-    cmpAgainst: number | undefined, // p[j],标 src
+    curChar: string | undefined, // 'cur' the position being computed, shown as lit
+    cmpAgainst: number | undefined, // p[j], marked src
     msg: ReactNode,
-    fillIdx?: number, // 本帧刚写入的 next 下标(标 cur)
+    fillIdx?: number, // the next index written in this frame (marked cur)
   ): NextFrame => {
     const chars: Tok[] = p.split("").map((ch, k) => {
       let st: string | undefined;
       if (curChar !== undefined && k === i) st = "lit";
       else if (cmpAgainst !== undefined && k === cmpAgainst) st = "src";
-      else if (j > 0 && k < j) st = "pref"; // 当前匹配上的前缀段
+      else if (j > 0 && k < j) st = "pref"; // the prefix segment matched so far
       return { v: ch, state: st, idx: k };
     });
     const nextRow: (Tok | null)[] = p.split("").map((_, k) => {
@@ -411,7 +411,7 @@ function buildNextFrames(p: string): NextFrame[] {
         i,
         j,
         p[i],
-        j, // 比较目标 p[j]
+        j, // comparison target p[j]
         <T
           en={
             <>
@@ -572,7 +572,7 @@ export function NextBuilder() {
 }
 
 /* ================================================================
-   KMPMatch —— 匹配时主串指针 i 永不回退
+   KMPMatch - while matching, the text pointer i never backs up
    ================================================================ */
 
 const KMP_TEXT = "abaabab";
@@ -607,7 +607,7 @@ function buildKmpFrames(t: string, p: string): AlignFrame[] {
   ];
 
   const frame = (i: number, j: number, kind: "ok" | "bad" | "slide", msg: ReactNode): AlignFrame => {
-    const offset = i - j; // pattern[0] 对齐到的文本位置
+    const offset = i - j; // the text position that pattern[0] is aligned to
     const text: Tok[] = t.split("").map((ch, k) => {
       let st: string | undefined;
       if (k >= offset && k < i) st = "ok";
@@ -771,7 +771,7 @@ export function KMPMatch() {
 }
 
 /* ================================================================
-   RollingHash —— Rabin-Karp 滚动哈希:窗口右移 O(1) 更新
+   RollingHash - Rabin-Karp rolling hash: O(1) update as the window shifts right
    ================================================================ */
 
 const RH_TEXT = "abcab";
@@ -781,7 +781,7 @@ const RH_BASE = 26;
 // a=1,b=2,c=3,…;target("cab")=36;base^(m-1) mod 101 = 70
 
 interface HashFrame {
-  start: number; // 窗口左端;-1 = 仅展示模式哈希
+  start: number; // left end of the window; -1 = show the pattern hash only
   hash: number;
   matched?: boolean;
   msg: ReactNode;
@@ -948,7 +948,7 @@ export function RollingHash() {
 }
 
 /* ================================================================
-   CenterExpand —— LC 5 回文中心扩展(奇 / 偶两种中心)
+   CenterExpand - LC 5 palindrome center expansion (odd and even centers)
    ================================================================ */
 
 interface CEFrame {

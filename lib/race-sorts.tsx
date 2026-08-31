@@ -1,12 +1,13 @@
 "use client";
 
-// 排序竞速的选手与输入形状 —— 供 <AlgoRace> 使用。
+// The contenders and input shapes for the sorting race -- consumed by <AlgoRace>.
 //
-// 每个实现都按统一口径记账(见 lib/race.tsx 顶部):
-//   比较 = 元素间一次大小比较;移动 = 一次数组写入(交换 = 2 次);
-//   空间 = 辅助单元 + 递归栈帧的峰值。
-// 实现刻意保持「教科书原样」,不偷偷加自适应优化 —— 因为「归并在已排序数组上
-// 照样付全价」正是本章要讲的事(也正是 Timsort 为什么要加 run 检测)。
+// Every implementation keeps its books by the same rules (see the top of lib/race.tsx):
+//   comparison = one size comparison between elements; move = one array write (a swap = 2);
+//   space = the peak of auxiliary cells + recursion stack frames.
+// The implementations are deliberately kept textbook-plain, with no adaptive optimizations
+// slipped in -- because "merge sort still pays full price on an already-sorted array" is
+// exactly the point this chapter makes (and exactly why Timsort adds run detection).
 
 import type { RaceAlgo, RaceInput, Tracer } from "@/lib/race";
 import { rng } from "@/lib/race";
@@ -15,10 +16,10 @@ export type Arr = number[];
 
 export const cloneArr = (a: Arr): Arr => a.slice();
 
-/* ---------------- 选手 ---------------- */
+/* ---------------- Contenders ---------------- */
 
 function bubble(a: Arr, t: Tracer) {
-  t.alloc(1); // 交换用的临时变量
+  t.alloc(1); // The temporary variable used for swapping
   const n = a.length;
   for (let i = 0; i < n - 1; i++) {
     let swapped = false;
@@ -32,7 +33,7 @@ function bubble(a: Arr, t: Tracer) {
         swapped = true;
       }
     }
-    if (!swapped) break; // 一整趟没换过 → 已经有序,提前收工
+    if (!swapped) break; // A full pass with no swap: already sorted, so stop early
   }
 }
 
@@ -55,7 +56,7 @@ function selection(a: Arr, t: Tracer) {
 }
 
 function insertion(a: Arr, t: Tracer) {
-  t.alloc(1); // 手里捏着的那张牌
+  t.alloc(1); // The card currently held in your hand
   const n = a.length;
   for (let i = 1; i < n; i++) {
     const x = a[i];
@@ -78,7 +79,7 @@ function insertion(a: Arr, t: Tracer) {
 function mergeSort(a: Arr, t: Tracer) {
   const n = a.length;
   const buf = new Array<number>(n);
-  t.alloc(n); // 归并必须借一块同样大的地
+  t.alloc(n); // Merging must borrow a scratch area of the same size
   const go = (lo: number, hi: number) => {
     t.enter();
     if (hi - lo > 1) {
@@ -112,7 +113,8 @@ function mergeSort(a: Arr, t: Tracer) {
   t.free(n);
 }
 
-/** Lomuto 划分,固定取末位当轴 —— 已排序输入会把它打回 O(n²) */
+/** Lomuto partition, always taking the last element as the pivot -- an already-sorted input
+ *  drags it back down to O(n^2). */
 function quickLast(a: Arr, t: Tracer) {
   t.alloc(1);
   const go = (lo: number, hi: number) => {
@@ -146,7 +148,7 @@ function quickLast(a: Arr, t: Tracer) {
   go(0, a.length - 1);
 }
 
-/** 随机化轴:先把随机一位换到末尾,再照常 Lomuto */
+/** Randomized pivot: swap a random element to the end first, then run Lomuto as usual. */
 function quickRandom(a: Arr, t: Tracer) {
   t.alloc(1);
   const rand = rng(20260716);
@@ -269,7 +271,7 @@ export const QUICK_RANDOM = A(
   quickRandom,
 );
 
-/* ---------------- 输入形状 ---------------- */
+/* ---------------- Input shapes ---------------- */
 
 const S = (
   id: string,

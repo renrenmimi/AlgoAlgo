@@ -1,9 +1,11 @@
-/* 第 11 章 · 数学与数论(data-ch="math")专属样式。
-   规则:自定义类名一律带 mth- 前缀,且整体裹在 [data-ch="math"] 作用域下,
-   避免全局泄漏;颜色只用 CSS token(var(--acc) 等),深浅主题自动适配,禁止写死。
-   双语:英文串比中文长,凡固定宽度 / 单行的元素都留了换行余地。 */
+/* Chapter 11 · Mathematics and number theory (data-ch="math") specific styles.
+   Rule: every custom class name is mth- prefixed and scoped under [data-ch="math"]
+   to prevent leaking globally; colors come only from CSS tokens (var(--acc) and
+   friends) so light and dark themes adapt automatically. Never hard-code a color.
+   Bilingual: English strings run longer than Chinese ones, so every fixed-width or
+   single-line element leaves room to wrap. */
 
-/* ============ 埃氏筛网格 ============ */
+/* ============ Sieve of Eratosthenes grid ============ */
 
 [data-ch="math"] .mth-sieve {
   display: grid;
@@ -64,7 +66,7 @@
   opacity: 0.55;
 }
 
-/* 图例小色块 */
+/* Legend swatch */
 [data-ch="math"] .mth-sv-sw {
   width: 14px;
   height: 14px;
@@ -79,7 +81,7 @@
 [data-ch="math"] .mth-sv-sw[data-s="hit"] { border-color: var(--risk); background: var(--risk-bg); }
 [data-ch="math"] .mth-sv-sw[data-s="cross"] { border-color: var(--border); background: transparent; }
 
-/* ============ Nim 博弈 ============ */
+/* ============ Nim game ============ */
 
 [data-ch="math"] .mth-nim-status {
   font-family: var(--font-mono);
@@ -90,7 +92,7 @@
   border-radius: 999px;
   border: 1px solid var(--acc-border);
   background: var(--acc-soft);
-  /* 英文状态串更长 —— 允许换行居中,而不是撑破 viz 舞台 */
+  /* The English status string is longer —— let it wrap and stay centered rather than blow out the viz stage */
   max-width: 100%;
   text-align: center;
   line-height: 1.6;
@@ -127,7 +129,7 @@
   box-shadow: var(--hi-soft), var(--glow-sm);
 }
 
-/* Nim 控制条右侧的策略提示 —— 英文更长,窄屏时换到下一行整行显示 */
+/* Strategy hint at the right of the Nim control bar —— English runs longer, so on narrow screens it moves to a full line of its own */
 [data-ch="math"] .mth-nim-tip {
   margin-left: auto;
   font-size: 12px;
@@ -141,7 +143,7 @@
   }
 }
 
-/* ============ 通用编号步骤卡(找不变量三步法 / gcd 推导) ============ */
+/* ============ Shared numbered step cards (the three-step method for finding an invariant / the gcd derivation) ============ */
 
 [data-ch="math"] .mth-steps {
   counter-reset: mthstep;
@@ -192,7 +194,7 @@
   color: var(--text-2);
 }
 
-/* ============ 两列对比(贪心 vs DP 式) ============ */
+/* ============ Two-column comparison (greedy vs DP style) ============ */
 
 [data-ch="math"] .mth-duel {
   display: grid;
@@ -202,7 +204,7 @@
 }
 [data-ch="math"] .mth-duel .card b.mono { font-size: 15px; }
 
-/* ============ 快乐数 next 链 ============ */
+/* ============ Happy-number next chain ============ */
 
 [data-ch="math"] .mth-chain {
   display: flex;
@@ -249,7 +251,7 @@
 }
 
 @media (max-width: 460px) {
-  /* 10 列 1fr 会自适应收窄不溢出,仅缩小间距/字号保可读 */
+  /* Ten 1fr columns shrink to fit without overflowing; only the gap and font size are reduced, to keep it readable */
   [data-ch="math"] .mth-sieve { gap: 5px; }
   [data-ch="math"] .mth-sv-cell { font-size: 12px; border-width: 1px; }
 }

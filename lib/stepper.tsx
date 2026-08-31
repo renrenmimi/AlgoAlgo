@@ -1,17 +1,21 @@
 "use client";
 
-// 通用「逐帧播放器」—— 算法慢动作的骨架。
-// ArrayStepper:一排单元格 + 指针标签 + 旁白,适合数组/字符串/栈/队列/
-// 双指针/滑动窗口类演示。每一帧是一张完整快照,组件负责播放控制
-// (上一步/下一步/自动播放/进度),帧数据由各章自己写。
-// 树/图等自由形态的动画请在章节内自建组件,但控制条样式(.viz-ctl)通用。
+// The generic frame-by-frame player -- the skeleton behind every algorithm slow-motion.
+// ArrayStepper: a row of cells + pointer labels + narration. Good for demos over arrays,
+// strings, stacks, queues, two pointers and sliding windows. Each frame is a complete
+// snapshot; the component owns playback control (prev / next / autoplay / progress) and each
+// chapter writes its own frame data.
+// For free-form animations such as trees and graphs, build a component inside the chapter --
+// but the control-bar styling (.viz-ctl) is shared.
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useL, type Loc } from "@/lib/i18n";
 
-// 让横向可滚动的舞台在「还能滑」的那一侧淡出边缘 —— 内容到边缘不是被切,
-// 而是柔和地渐隐成「→ 还有更多」的暗示。仅在真正溢出时出现,滚到头自动消失。
-// 返回 ref 挂到 .viz-stage,data 值挂到同一元素的 data-fade 上。
+// Fades the edge of a horizontally scrollable stage on whichever side can still be scrolled --
+// content at the edge should not look cut off, it should dissolve softly into a hint that
+// there is more to see. The fade only appears when the stage actually overflows, and
+// disappears once you scroll to the end.
+// Attach the returned ref to .viz-stage and the data value to data-fade on the same element.
 export function useEdgeFade<T extends HTMLElement = HTMLDivElement>() {
   const ref = useRef<T>(null);
   const [fade, setFade] = useState<"none" | "left" | "right" | "both">("none");
@@ -20,7 +24,7 @@ export function useEdgeFade<T extends HTMLElement = HTMLDivElement>() {
     if (!el) return;
     const update = () => {
       const maxScroll = el.scrollWidth - el.clientWidth;
-      if (maxScroll <= 2) return setFade("none"); // 放得下 → 不渐隐(顺带清掉 resize 后的残留)
+      if (maxScroll <= 2) return setFade("none"); // Fits: no fade (also clears leftovers after a resize)
       const canL = el.scrollLeft > 2;
       const canR = el.scrollLeft < maxScroll - 2;
       setFade(canL && canR ? "both" : canL ? "left" : canR ? "right" : "none");
@@ -46,9 +50,9 @@ export interface ArrayCell {
 
 export interface ArrayFrame {
   cells: ArrayCell[];
-  /** 指针标签,渲染在单元格上方,如 { i: 2, label: "slow" } */
+  /** Pointer labels, rendered above the cells, e.g. { i: 2, label: "slow" } */
   ptrs?: { i: number; label: Loc<string> }[];
-  /** 本帧旁白 —— 直接写 JSX 并在里面用 <T en zh />,或传 { en, zh } */
+  /** Narration for this frame -- write JSX and use <T en zh /> inside it, or pass { en, zh } */
   msg: Loc<ReactNode>;
 }
 
@@ -85,8 +89,10 @@ export function useStepper(total: number, intervalMs = 1100) {
       setStep((s) => Math.min(total - 1, s + 1));
     },
     toggle: () => {
-      // 暂停时绝不跳帧。只有「当前已停止 + 停在末帧」时按下按钮才是「重播」,回到第 0 帧。
-      // (旧写法无条件先 setStep(0),导致在最后一帧上点「暂停」会把进度弹回开头。)
+      // Never jump frames when pausing. Only when playback is already stopped AND parked on
+      // the last frame does pressing the button mean "replay", which returns to frame 0.
+      // (The old code called setStep(0) unconditionally, so hitting "pause" on the last frame
+      //  snapped the progress back to the beginning.)
       if (playing) {
         setPlaying(false);
         return;
@@ -154,7 +160,7 @@ export function ArrayStepper({
 }: {
   title: Loc<ReactNode>;
   frames: ArrayFrame[];
-  /** 单元格宽度(含间隙),用于指针定位 */
+  /** Cell width (including the gap); used to position the pointers */
   cellW?: number;
 }) {
   const L = useL();
@@ -174,11 +180,12 @@ export function ArrayStepper({
           flexDirection: "column",
           gap: 6,
           overflowX: "auto",
-          // safe center:窄屏数组超宽时靠左可滚,不把左侧格子推进够不着的负区
+          // safe center: on a narrow screen an over-wide array stays left-aligned and
+          // scrollable, instead of pushing the leftmost cells into unreachable negative space
           alignItems: "safe center",
         }}
       >
-        {/* 指针行 */}
+        {/* Pointer row */}
         <div
           style={{
             display: "grid",
@@ -208,7 +215,7 @@ export function ArrayStepper({
             );
           })}
         </div>
-        {/* 单元格行 */}
+        {/* Cell row */}
         <div
           style={{
             display: "grid",

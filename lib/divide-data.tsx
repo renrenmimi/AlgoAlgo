@@ -1,7 +1,10 @@
-// 第 2 章 · 分治 —— 题单与测验数据。
-// 题单覆盖 lc.md 蓝图分配的分治题(50 23 53 169 215盘 148盘 4选做),由易到难;
-// hint 只给方向不剧透,key 用一段话把最优解讲透。复盘题标 tag「复盘」。
-// 双语:所有文案都是 Loc<…>,英文为默认。题名用 LeetCode 官方中英标题。
+// Chapter 2 - Divide and Conquer: problem set and quiz data.
+// The problem set covers the divide-and-conquer problems assigned by the lc.md blueprint
+// (50, 23, 53, 169, 215 review, 148 review, 4 optional), ordered easy to hard;
+// hint only points at a direction without spoiling, key explains the optimal solution in one
+// paragraph. Review problems carry the "Review" tag.
+// Bilingual: all copy is Loc<...> with English as the default. Titles use LeetCode's official
+// English and Chinese names.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

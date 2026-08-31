@@ -1,15 +1,15 @@
 "use client";
 
-// 第 6 章 · 贪心 —— 承接回溯(把树画出来),预告 DP(贪心失效之地)。
-// 叙事主线:贪心难的不是贪,是证明贪完不后悔。
-//   §01 为什么贪心(直觉 + 快 + 危险)→ §02 交换论证 · 分发饼干(本章灵魂)→
-//   §03 序列贪心(376/53盘/122 贪心 vs DP 双视角)→ §04 跳跃游戏(55/45 覆盖范围)→
-//   §05 模拟贪心(860/134/135/406)→ §06 区间贪心(435/452/763/56盘,按左端还是右端)→
-//   §07 贪心失效之地(322 与 0/1 背包反例 + 贪心 vs DP 判据)→ 题单 → 测验。
-// 可视化在 ./viz:CookieMatch(455)、JumpReach(55)、JumpMin(45)、
-// IntervalTimeline(435 自建时间轴)、CoinGreedyLab(322 交互反例)。
-// 双语:文案型 props 传 { en, zh },段落内用 <T en zh />;代码窗的注释也给两份,
-// 两份的可执行行完全一致、行数相同(hl 才不会指错行)。
+// Chapter 6 - Greedy: follows backtracking (which drew the tree) and sets up DP (where greedy breaks down).
+// Narrative thread: the hard part of greedy is not being greedy, it is proving you will not regret it.
+//   §01 Why greedy (intuitive + fast + dangerous) -> §02 Exchange argument - Assign Cookies (the heart of this chapter) ->
+//   §03 Sequence greedy (376 / 53 review / 122 greedy vs. DP, both viewpoints) -> §04 Jump Game (55/45, reachable range) ->
+//   §05 Simulation greedy (860/134/135/406) -> §06 Interval greedy (435/452/763/56 review; sort by left end or right end) ->
+//   §07 Where greedy fails (the 322 and 0/1 knapsack counterexamples + how to tell greedy from DP) -> problem set -> quiz.
+// Visualizations live in ./viz: CookieMatch (455), JumpReach (55), JumpMin (45),
+// IntervalTimeline (435, custom timeline), CoinGreedyLab (322, interactive counterexample).
+// Bilingual: copy-style props take { en, zh } and body text uses <T en zh />; code panes carry two sets of comments too,
+// with identical executable lines and identical line counts (so hl never points at the wrong line).
 
 import "./chapter.css";
 import {
@@ -45,7 +45,7 @@ const CHIPS = [
   { id: "quiz", n: "09", label: { en: "Quiz", zh: "通关测验" } },
 ];
 
-// 摆动序列小图示:1,4,7,2,5 —— 只有端点与拐点(7、2)进入摆动子序列
+// Small wiggle-sequence diagram: 1,4,7,2,5 - only the endpoints and the turning points (7 and 2) join the wiggle subsequence
 const WIGGLE = [
   { v: 1, h: 32, peak: true },
   { v: 4, h: 68, peak: false },
@@ -95,7 +95,7 @@ export default function GreedyChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 为什么贪心 ================= */}
+      {/* ================= §01 Why greedy ================= */}
       <Section
         id="why"
         index="01"
@@ -365,7 +365,7 @@ export default function GreedyChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §02 交换论证 + 精讲 A ================= */}
+      {/* ================= §02 Exchange argument + Deep dive A ================= */}
       <Section
         id="proof"
         index="02"
@@ -793,7 +793,7 @@ export default function GreedyChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §03 序列贪心 ================= */}
+      {/* ================= §03 Sequence greedy ================= */}
       <Section
         id="seq"
         index="03"
@@ -1270,7 +1270,7 @@ export default function GreedyChapter() {
         />
       </Section>
 
-      {/* ================= §04 跳跃游戏 + 精讲 B ================= */}
+      {/* ================= §04 Jump Game + Deep dive B ================= */}
       <Section
         id="jump"
         index="04"
@@ -1588,7 +1588,7 @@ export default function GreedyChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §05 模拟贪心 ================= */}
+      {/* ================= §05 Simulation greedy ================= */}
       <Section
         id="sim"
         index="05"
@@ -2067,7 +2067,7 @@ export default function GreedyChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §06 区间贪心 + 精讲 C ================= */}
+      {/* ================= §06 Interval greedy + Deep dive C ================= */}
       <Section
         id="interval"
         index="06"
@@ -2534,7 +2534,7 @@ export default function GreedyChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §07 贪心失效之地 ================= */}
+      {/* ================= §07 Where greedy fails ================= */}
       <Section
         id="fail"
         index="07"
@@ -2854,7 +2854,7 @@ export default function GreedyChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §08 题单 ================= */}
+      {/* ================= §08 Problem set ================= */}
       <Section
         id="problems"
         index="08"

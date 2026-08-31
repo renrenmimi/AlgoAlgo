@@ -1,15 +1,22 @@
 "use client";
 
-// 第 3 章 · 二分进阶的专属可视化:
-//  - GuessLab:猜数字实验室 —— 你想一个数,机器用二分来猜,亲手体会「砍半」有多快。
-//  - BoundaryStepper:LC 34 找左右边界 —— lower_bound / upper_bound 逐帧,ArrayStepper。
-//  - RotatedStepper:LC 33 旋转数组搜索 —— 每一步判断「哪半有序」,ArrayStepper 自建帧。
-//  - 查找竞速的选手与输入形状(SEARCH_ALGOS / SEARCH_SHAPES / SEARCH_METRICS)——
-//    供 §01 的 <AlgoRace> 使用,判读文案写在 page.tsx。
-// 二分答案(875 吃香蕉)用的是共享库 lib/algviz 的 RangeShrink,帧数据写在 page.tsx。
+// Chapter 3 · Visualizations specific to advanced binary search:
+//  - GuessLab: the number-guessing lab —— you pick a number, the machine guesses it
+//    by binary search, and you feel first-hand how fast halving is.
+//  - BoundaryStepper: LC 34 finding the left and right boundaries —— lower_bound /
+//    upper_bound frame by frame, on ArrayStepper.
+//  - RotatedStepper: LC 33 searching a rotated array —— at each step it decides which
+//    half is sorted, using hand-built ArrayStepper frames.
+//  - The contenders and input shapes for the search race (SEARCH_ALGOS /
+//    SEARCH_SHAPES / SEARCH_METRICS) —— consumed by the <AlgoRace> in §01, with the
+//    verdict copy written in page.tsx.
+// Binary search on the answer (875, Koko eating bananas) uses RangeShrink from the
+// shared library lib/algviz, and its frame data lives in page.tsx.
 //
-// 双语:旁白用 <T en zh />;组件的文案型 props 传 { en, zh }。
-// 指针标签(lo / mid / hi)是代码标识符,两种语言相同,保持原样。
+// Bilingual: narration uses <T en zh />; a component's copy-style props take
+// { en, zh }.
+// The pointer labels (lo / mid / hi) are code identifiers, identical in both
+// languages, so they are left as they are.
 
 import { useState } from "react";
 import { ArrayStepper, type ArrayFrame, type ArrayCell } from "@/lib/stepper";
@@ -17,12 +24,13 @@ import { T } from "@/lib/i18n";
 import type { RaceAlgo, RaceInput, RaceMetric, Tracer } from "@/lib/race";
 
 /* ============================================================
-   GuessLab —— 猜数字实验室(交互:你出数,机器二分猜)
+   GuessLab —— the number-guessing lab (interactive: you pick, the machine
+   binary-searches for it)
    ============================================================ */
 
 const GUESS_LO = 1;
 const GUESS_HI = 100;
-// 100 个数,最多 ⌈log2(100)⌉ = 7 次一定能猜到。
+// 100 values, so ⌈log2(100)⌉ = 7 guesses always suffice.
 const GUESS_MAX = 7;
 
 export function GuessLab() {
@@ -189,12 +197,13 @@ export function GuessLab() {
 }
 
 /* ============================================================
-   BoundaryStepper —— LC 34 找左右边界(lower_bound / upper_bound)
+   BoundaryStepper —— LC 34, finding the left and right boundaries
+   (lower_bound / upper_bound)
    ============================================================ */
 
-const BND = [5, 7, 7, 8, 8, 8, 10]; // target = 8,答案区间 [3, 5]
+const BND = [5, 7, 7, 8, 8, 8, 10]; // target = 8, so the answer range is [3, 5]
 
-/** 按「存活区间 [lo,hi] + 当前 mid + 已锁定的 ok 下标」渲染一排单元格 */
+/** Render one row of cells from the surviving interval [lo,hi], the current mid, and the indices already locked in as ok */
 function bndCells(lo: number, hi: number, mid?: number, ok?: number[]): ArrayCell[] {
   return BND.map((v, i) => {
     if (ok?.includes(i)) return { v, state: "ok" as const };
@@ -440,10 +449,11 @@ export function BoundaryStepper() {
 }
 
 /* ============================================================
-   RotatedStepper —— LC 33 旋转数组搜索(每步判断哪半有序)
+   RotatedStepper —— LC 33, searching a rotated array (each step decides which half
+   is sorted)
    ============================================================ */
 
-const ROT = [4, 5, 6, 7, 0, 1, 2]; // 升序数组「转了一下」,target = 0,答案下标 4
+const ROT = [4, 5, 6, 7, 0, 1, 2]; // an ascending array that has been rotated once; target = 0, answer index 4
 
 function rotCells(lo: number, hi: number, mid?: number, ok?: number): ArrayCell[] {
   return ROT.map((v, i) => {
@@ -588,31 +598,37 @@ export function RotatedStepper() {
 }
 
 /* ============================================================
-   查找竞速 —— 线性扫描 vs 二分(迭代 / 递归),供 <AlgoRace> 使用
+   The search race —— linear scan vs binary search (iterative / recursive), consumed
+   by <AlgoRace>
    ============================================================
 
-   记账口径(界面上也写着,不许含糊):
-     · 比较 = 把一个元素与目标比较一次。线性扫描每看一个元素记一次;
-       二分每探测一次 mid 记一次(源码里对 mid 写了 == 与 <,但那是同一次探测,
-       口径统一为「一次三路比较」,两位选手才可比)。
-     · 额外空间 = 峰值时持有的变量与栈帧个数,不含输入本身:
-       线性扫描 1 个下标;迭代二分 lo 与 hi 两个;递归二分每层一个栈帧。
-     · 查找不写数组,所以 mov 恒为 0 —— 页面上只展示两项指标。
+   Accounting conventions (also stated in the UI; no hand-waving allowed):
+     · A comparison = comparing one element against the target once. A linear scan
+       records one per element it looks at; binary search records one per probe of
+       mid (the source writes both == and < against mid, but that is a single probe,
+       so the convention is one three-way comparison, which is what makes the two
+       contenders comparable).
+     · Extra space = the peak number of variables and stack frames held at once, not
+       counting the input itself: 1 index for the linear scan; lo and hi, so 2, for
+       iterative binary search; one stack frame per level for recursive binary search.
+     · Searching never writes to the array, so mov is always 0 —— the page shows only
+       two metrics.
 
-   三个实现都在 scratchpad 用 node 枚举过边界(n = 0/1/2/3/17/1000,
-   目标覆盖每个下标 + 三类不存在),返回下标完全一致。 */
+   All three implementations had their boundaries enumerated with node in the
+   scratchpad (n = 0/1/2/3/17/1000, with targets covering every index plus three
+   kinds of absent value), and they return identical indices. */
 
 export type Haystack = { a: number[]; target: number };
 
-/** 浅拷:数组 slice 一份,target 是数字直接带走 */
+/** Shallow copy: slice the array, and since target is a number it can be carried over as is */
 export const cloneHaystack = (h: Haystack): Haystack => ({
   a: h.a.slice(),
   target: h.target,
 });
 
-/** 线性扫描:不要求有序,所以也没法跳过任何元素 */
+/** Linear scan: it does not require sorted input, which is also why it cannot skip any element */
 function linearFind({ a, target }: Haystack, t: Tracer): number {
-  t.alloc(1); // 一个下标 i
+  t.alloc(1); // one index, i
   for (let i = 0; i < a.length; i++) {
     t.cmp();
     if (a[i] === target) return i;
@@ -620,9 +636,9 @@ function linearFind({ a, target }: Haystack, t: Tracer): number {
   return -1;
 }
 
-/** 迭代二分,闭区间 [lo, hi] —— 与 §01 模板逐行一致 */
+/** Iterative binary search over the closed interval [lo, hi] —— line for line the same as the §01 template */
 function binaryFind({ a, target }: Haystack, t: Tracer): number {
-  t.alloc(2); // lo 与 hi
+  t.alloc(2); // lo and hi
   let lo = 0;
   let hi = a.length - 1;
   while (lo <= hi) {
@@ -632,10 +648,10 @@ function binaryFind({ a, target }: Haystack, t: Tracer): number {
     if (a[mid] < target) lo = mid + 1;
     else hi = mid - 1;
   }
-  return -1; // 区间空了 = 不存在
+  return -1; // the interval is empty = the target is not present
 }
 
-/** 递归二分:探测次数与迭代版完全相同,代价是每层一个栈帧 */
+/** Recursive binary search: exactly the same number of probes as the iterative version, at the cost of one stack frame per level */
 function binaryFindRec({ a, target }: Haystack, t: Tracer): number {
   const go = (lo: number, hi: number): number => {
     t.enter();
@@ -726,9 +742,9 @@ export const SEARCH_ALGOS: RaceAlgo<Haystack>[] = [
   },
 ];
 
-/** 严格递增的等差数组。全部元素同奇偶,所以「奇偶相反的值」一定不在数组里。 */
+/** A strictly increasing arithmetic sequence. Every element shares the same parity, so a value of the opposite parity is guaranteed not to be in the array. */
 const ladder = (n: number, seed: number): number[] => {
-  const base = seed % 5; // 换一组:整体平移,形状不变
+  const base = seed % 5; // a different data set: the whole sequence shifts, the shape stays the same
   return Array.from({ length: n }, (_, i) => base + 2 * i);
 };
 

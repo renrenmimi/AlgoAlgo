@@ -1,8 +1,10 @@
-/* 第 7 章 · 动态规划入门(data-ch="dp")专属样式。
-   规则:全部包在 [data-ch="dp"] 下或带 dp- 前缀;颜色只用 CSS token。 */
+/* Chapter 7 · Introduction to dynamic programming (data-ch="dp") specific styles.
+   Rule: everything is either nested under [data-ch="dp"] or dp- prefixed;
+   colors come only from CSS tokens. */
 
-/* — 可视化标题:英文标题比中文长,常常折行。
-     让开头的小方块对齐第一行,而不是被垂直居中到两行中间。 — */
+/* — Visualization titles: the English title is longer than the Chinese one and
+     often wraps. Align the leading square with the first line instead of letting
+     it center vertically between two lines. — */
 
 [data-ch="dp"] .viz-title {
   align-items: flex-start;
@@ -12,7 +14,7 @@
   margin-top: 6px;
 }
 
-/* — 五步法步骤卡 — */
+/* — Five-step method step cards — */
 
 [data-ch="dp"] .dp-steps {
   counter-reset: dpstep;
@@ -67,7 +69,7 @@
   color: var(--text-2);
 }
 
-/* — 贪心反例的两列对比 — */
+/* — Two-column comparison for the greedy counterexample — */
 
 [data-ch="dp"] .dp-duel {
   display: grid;

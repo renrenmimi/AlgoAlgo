@@ -1,8 +1,11 @@
-// 第 11 章 · 数学与数论 —— 题单与测验数据。
-// 题单覆盖蓝图指定的 13 题(202 7 9 50 69 169 31 292 1025 319 204 43 67),由易到难;
-// hint 只给方向不剧透,key 用一段话把最优解 / 那个「不变量」讲透。
-// 灵魂:数学题不考数学,考的是能不能找到那个不变量 / 规律。
-// 双语:所有文案都是 Loc<…>,英文为默认。题名用 LeetCode 官方中英标题。
+// Chapter 11 - Math and Number Theory: problem set and quiz data.
+// The problem set covers the 13 problems named in the blueprint (202, 7, 9, 50, 69, 169, 31,
+// 292, 1025, 319, 204, 43, 67), ordered easy to hard; hint only points at a direction without
+// spoiling, key explains the optimal solution -- or the invariant behind it -- in one paragraph.
+// The point of the chapter: math problems do not test mathematics, they test whether you can
+// find the invariant or the pattern.
+// Bilingual: all copy is Loc<...> with English as the default. Titles use LeetCode's official
+// English and Chinese names.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

@@ -1,12 +1,12 @@
 "use client";
 
-// 第 4 章 · 位运算 —— 二进制/补码 → 六运算符 → 技巧表(n&(n-1)/lowbit/异或性质)
-// → 位运算表示集合(状压 DP 前置)→ 移位乘除。
-// 三个交互实验室在 ./viz(BitLamps 32 盏位灯 / OpLab 运算符 / SubsetLab 集合);
-// 异或抵消用 ArrayStepper,逐位统计用 DPTable,帧数据写在本文件顶部。
+// Chapter 4 - Bit manipulation: binary and two's complement -> the six operators -> the trick table (n&(n-1) / lowbit / XOR properties)
+// -> representing sets with bits (groundwork for bitmask DP) -> shifting as multiply and divide.
+// The three interactive labs live in ./viz (BitLamps: 32 bit lamps / OpLab: operators / SubsetLab: sets);
+// XOR cancellation uses ArrayStepper and per-bit counting uses DPTable; the frame data is defined at the top of this file.
 //
-// 双语:正文用 <T en zh />;组件的文案型 props 传 { en, zh }。
-// CodeTabs 的 code 也给两份 —— 两份之间只有注释不同,可执行代码逐行一致(hl 行号才对得上)。
+// Bilingual: body text uses <T en zh />; copy-style props on components take { en, zh }.
+// CodeTabs code is supplied twice as well - the two versions differ only in their comments, while the executable code matches line for line (so the hl line numbers stay correct).
 
 import "./chapter.css";
 import type { ReactNode } from "react";
@@ -20,7 +20,7 @@ import { T } from "@/lib/i18n";
 import { PROBLEMS, QUIZ } from "@/lib/bits-data";
 import { BitLamps, OpLab, SubsetLab } from "./viz";
 
-/* ================= 精讲 A · LC 136 全体异或(ArrayStepper) ================= */
+/* ================= Deep dive A - LC 136 XOR the whole array (ArrayStepper) ================= */
 
 type ACellState = "lit" | "ok" | "bad" | "ghost";
 function ac(v: ReactNode, state?: ACellState): ArrayCell {
@@ -168,8 +168,8 @@ const F_XOR: ArrayFrame[] = [
   },
 ];
 
-/* ================= 精讲 B · LC 191 n&(n-1) 消 1(ArrayStepper) ================= */
-// 左起为第 0 位(LSB 在左),cell 下方的下标正好是位号。
+/* ================= Deep dive B - LC 191 n&(n-1) clears one bit (ArrayStepper) ================= */
+// Bit 0 is on the left (LSB first), so the index under each cell is exactly the bit number.
 
 const P13 = [1, 0, 1, 1, 0, 0, 0, 0]; // 13 = 1101
 const P12 = [0, 0, 1, 1, 0, 0, 0, 0]; // 12 = 1100
@@ -291,8 +291,8 @@ const F_POP: ArrayFrame[] = [
   },
 ];
 
-/* ================= 精讲 C · LC 137 逐位统计(DPTable) ================= */
-// nums = [2, 2, 2, 7],每列一位,统计 1 的总数 % 3 = 落单数在该位的值。
+/* ================= Deep dive C - LC 137 per-bit counting (DPTable) ================= */
+// nums = [2, 2, 2, 7]; one bit per column. The count of 1s % 3 is the value the lone number has at that bit.
 
 const N137 = [
   { lab: "2", bits: [0, 1, 0] },
@@ -300,7 +300,7 @@ const N137 = [
   { lab: "2", bits: [0, 1, 0] },
   { lab: "7", bits: [1, 1, 1] },
 ];
-const SUM137 = [1, 4, 1]; // 每位 1 的总数
+const SUM137 = [1, 4, 1]; // total number of 1s at each bit
 const MOD137 = [1, 1, 1]; // % 3 → 111 = 7
 
 function cells137(upto: number, cur?: number, final = false): DPCell[][] {
@@ -425,7 +425,7 @@ const F_137: DPFrame[] = [
   },
 ];
 
-/* ================= 页面 ================= */
+/* ================= Page ================= */
 
 const CHIPS = [
   { id: "why", n: "01", label: { en: "Binary & two's complement", zh: "二进制与补码" } },
@@ -481,7 +481,7 @@ export default function BitsChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 二进制与补码 ================= */}
+      {/* ================= §01 Binary and two's complement ================= */}
       <Section
         id="why"
         index="01"
@@ -704,7 +704,7 @@ export default function BitsChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §02 六大运算符 ================= */}
+      {/* ================= §02 The six operators ================= */}
       <Section
         id="ops"
         index="02"
@@ -966,7 +966,7 @@ export default function BitsChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §03 异或找单身 + 精讲 A ================= */}
+      {/* ================= §03 XOR finds the loner + Deep dive A ================= */}
       <Section
         id="xor"
         index="03"
@@ -1297,7 +1297,7 @@ export default function BitsChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §04 技巧表 + 精讲 B ================= */}
+      {/* ================= §04 Trick table + Deep dive B ================= */}
       <Section
         id="tricks"
         index="04"
@@ -1738,7 +1738,7 @@ export default function BitsChapter() {
         </div>
       </Section>
 
-      {/* ================= §05 逐位统计 + 精讲 C ================= */}
+      {/* ================= §05 Per-bit counting + Deep dive C ================= */}
       <Section
         id="count"
         index="05"
@@ -2031,7 +2031,7 @@ export default function BitsChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §06 位运算表示集合 ================= */}
+      {/* ================= §06 Representing sets with bits ================= */}
       <Section
         id="set"
         index="06"
@@ -2336,7 +2336,7 @@ for (let sub = mask; sub > 0; sub = (sub - 1) & mask) {
         </Callout>
       </Section>
 
-      {/* ================= §07 移位乘除 ================= */}
+      {/* ================= §07 Shifting as multiply and divide ================= */}
       <Section
         id="shift"
         index="07"
@@ -2617,7 +2617,7 @@ let mid  = (lo + hi) >>> 1;  // 求中点,同时也是快速的向下取整除�
         />
       </Section>
 
-      {/* ================= §08 题单 ================= */}
+      {/* ================= §08 Problem set ================= */}
       <Section
         id="problems"
         index="08"

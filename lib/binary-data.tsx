@@ -1,7 +1,10 @@
-// 第 3 章 · 二分进阶 —— 题单与测验数据。
-// 题单覆盖 lc.md 主线的二分进阶题(找边界 / 二段性 / 二分答案),由易到难;
-// hint 只给方向不剧透,key 用一段话把最优解讲透。
-// 双语:所有文案都是 Loc<…>,英文为默认。题名用 LeetCode 官方中英标题。
+// Chapter 3 - Binary Search in Depth: problem set and quiz data.
+// The problem set covers the advanced binary-search problems on lc.md's main track (finding
+// boundaries / two-part monotonicity / binary search on the answer), ordered easy to hard;
+// hint only points at a direction without spoiling, key explains the optimal solution in one
+// paragraph.
+// Bilingual: all copy is Loc<...> with English as the default. Titles use LeetCode's official
+// English and Chinese names.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

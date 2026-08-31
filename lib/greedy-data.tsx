@@ -1,7 +1,9 @@
-// 第 6 章 · 贪心 —— 题单与测验数据。
-// 题单覆盖 lc.md 贪心主线(交换论证 / 序列 / 跳跃 / 模拟 / 区间),由易到难;
-// hint 只给方向不剧透,key 用一段话把最优解讲透。复盘题(在别章主讲)标 tag「复盘」。
-// 双语:title / tags / hint / key 都是 Loc<…>,直接写 { en, zh }。
+// Chapter 6 - Greedy: problem set and quiz data.
+// The problem set covers lc.md's greedy track (exchange argument / sequences / jumping /
+// simulation / intervals), ordered easy to hard; hint only points at a direction without
+// spoiling, key explains the optimal solution in one paragraph. Review problems (taught in
+// another chapter) carry the "Review" tag.
+// Bilingual: title / tags / hint / key are all Loc<...>, written inline as { en, zh }.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

@@ -1,14 +1,17 @@
 "use client";
 
-// 代码窗口组件。
-//  - CodeBlock:单语言代码窗(mac 三色点 + 文件名 + 行号 + 可高亮行 + 底部注释)。
-//  - CodeTabs:Java / Python / JS 三语言切换窗;切换会写回全站「偏好语言」,
-//    所以整个网站的所有代码窗口会跟着一起切 —— 这是三语言对照教学的核心机制。
+// Code window components.
+//  - CodeBlock: a single-language code window (mac traffic lights + file name + line numbers
+//    + highlightable lines + a footer note).
+//  - CodeTabs: a Java / Python / JS switcher; switching writes back to the site-wide
+//    "preferred language", so every code window on the site switches along with it --
+//    this is the core mechanism behind teaching all three languages side by side.
 //
-// 界面双语:title / note 是 Loc<…>。
-// code 也接受 Loc<string>,但默认写成一份「注释用英文」的字符串给两种语言共用 ——
-// 两份代码容易走样,而 hl 行号必须与代码逐行对齐。若确实要给两份,
-// 两份的行数必须完全一致,否则 hl 会指错行。
+// Bilingual UI: title / note are Loc<...>.
+// code also accepts Loc<string>, but by default write one string with English comments and
+// share it across both languages -- two copies drift apart easily, and the hl line numbers
+// have to stay aligned with the code line by line. If you really do supply two copies,
+// they must have exactly the same number of lines, otherwise hl will point at the wrong rows.
 
 import { useMemo, type ReactNode } from "react";
 import { highlight, type CodeLangId } from "@/lib/highlight";
@@ -96,9 +99,9 @@ export function CodeBlock({
 
 export interface LangSnippet {
   code: Loc<string>;
-  /** 本语言专属的一句点评(可选),显示在窗口底部 */
+  /** An optional one-line remark specific to this language, shown at the bottom of the window */
   note?: Loc<ReactNode>;
-  /** 高亮行号(1 起) */
+  /** Line numbers to highlight (1-based) */
   hl?: number[];
 }
 

@@ -1,14 +1,14 @@
 "use client";
 
-// 第 9 章 · 子序列 DP —— DP 系列第三章(承接 07 入门、08 背包)。
-// 结构:子序列 vs 子数组(定调)→ 精讲 A LIS 300(以 i 结尾 + 二分优化)→
-// 连续型 718(归零)→ 精讲 B LCS 1143(双序列二维表主场,对角线转移)→
-// 精讲 C 编辑距离 72(增删改三来源)→ 回文家族 5/516/647/132 → 题单 → 测验。
-// 二维表全部用 lib/algviz 的 DPTable;帧由本文件的 grid2D / seqFrames 生成
-// (参考样板章 app/dp 的 climbCells / pathCells)。
+// Chapter 9 - Subsequence DP: the third DP chapter (following 07 introduction and 08 knapsack).
+// Structure: subsequence vs. subarray (setting the tone) -> Deep dive A LIS 300 (ending at i + the binary-search optimization) ->
+// the contiguous type 718 (reset to zero) -> Deep dive B LCS 1143 (the two-sequence 2-D table showcase, diagonal transitions) ->
+// Deep dive C Edit Distance 72 (three sources: insert, delete, replace) -> the palindrome family 5/516/647/132 -> problem set -> quiz.
+// Every 2-D table uses DPTable from lib/algviz; the frames come from grid2D / seqFrames in this file
+// (modeled on climbCells / pathCells in the reference chapter app/dp).
 //
-// 双语:正文用 <T en zh />;组件的文案型 props 传 { en, zh }。
-// CodeTabs 的 code 也给两份 —— 两份之间只有注释不同,可执行代码逐行一致(hl 行号才对得上)。
+// Bilingual: body text uses <T en zh />; copy-style props on components take { en, zh }.
+// CodeTabs code is supplied twice as well - the two versions differ only in their comments, while the executable code matches line for line (so the hl line numbers stay correct).
 
 import "./chapter.css";
 import {
@@ -28,9 +28,9 @@ import { PROBLEMS, QUIZ } from "@/lib/dp-seq-data";
 import { SubseqLab, LisPlayer } from "./viz";
 import type { ReactNode } from "react";
 
-/* ================= 二维 DP 表帧生成器(全章共用) ================= */
+/* ================= 2-D DP table frame generator (shared across the chapter) ================= */
 
-/** 生成一帧整表快照:cur = 当前格,srcs = 转移来源格,ok = 已锁定答案格。 */
+/** Produce a whole-table snapshot for one frame: cur = the current cell, srcs = the transition sources, ok = cells whose answer is locked in. */
 function grid2D(
   DP: number[][],
   filled: (i: number, j: number) => boolean,
@@ -49,7 +49,7 @@ function grid2D(
   );
 }
 
-/** 按行优先逐格填内层,自动串成帧序列(开场 + 每个内层格 + 收尾)。 */
+/** Fill the inner cells row by row and chain them into a frame sequence (opening + one per inner cell + closing). */
 function seqFrames(
   DP: number[][],
   border: (i: number, j: number) => boolean,
@@ -84,7 +84,7 @@ function seqFrames(
 
 const border0 = (i: number, j: number) => i === 0 || j === 0;
 
-/* ---------- 精讲 A 附:LIS 二分优化(tails / 耐心排序)---------- */
+/* ---------- Deep dive A appendix: the LIS binary-search optimization (tails / patience sorting) ---------- */
 
 const F_TAILS: ArrayFrame[] = [
   {
@@ -195,10 +195,10 @@ const F_TAILS: ArrayFrame[] = [
   },
 ];
 
-/* ================= 精讲 B · LC 1143 最长公共子序列 ================= */
+/* ================= Deep dive B - LC 1143 Longest Common Subsequence ================= */
 
-const LCS_A = "abcde"; // 行(i = 1..5)
-const LCS_B = "ace"; // 列(j = 1..3)
+const LCS_A = "abcde"; // rows (i = 1..5)
+const LCS_B = "ace"; // columns (j = 1..3)
 const DP_LCS = [
   [0, 0, 0, 0],
   [0, 1, 1, 1],
@@ -305,7 +305,7 @@ const F_LCS = seqFrames(
   [5, 3],
 );
 
-/* ================= 连续型 · LC 718 最长重复子数组 ================= */
+/* ================= The contiguous type - LC 718 Maximum Length of Repeated Subarray ================= */
 
 const A718 = [1, 2, 3, 2, 1];
 const B718 = [3, 2, 1, 4, 7];
@@ -400,7 +400,7 @@ const F_718 = seqFrames(
   [5, 3],
 );
 
-/* ================= 精讲 C · LC 72 编辑距离 ================= */
+/* ================= Deep dive C - LC 72 Edit Distance ================= */
 
 const EDIT_A = "horse";
 const EDIT_B = "ros";
@@ -508,7 +508,7 @@ const F_72 = seqFrames(
   [5, 3],
 );
 
-/* ================= 回文家族 · 中心扩展 ================= */
+/* ================= The palindrome family - center expansion ================= */
 
 const F_CENTER: ArrayFrame[] = [
   {
@@ -608,7 +608,7 @@ const F_CENTER: ArrayFrame[] = [
   },
 ];
 
-/* ================= 精讲代码 ================= */
+/* ================= Deep-dive code ================= */
 
 const LIS_N2 = {
   java: {
@@ -897,7 +897,7 @@ class Solution:
   },
 };
 
-/* ================= 页面 ================= */
+/* ================= Page ================= */
 
 const CHIPS = [
   { id: "vs", n: "01", label: { en: "Subsequence vs subarray", zh: "子序列 vs 子数组" } },
@@ -953,7 +953,7 @@ export default function DpSeqChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 子序列 vs 子数组 ================= */}
+      {/* ================= §01 Subsequence vs. subarray ================= */}
       <Section
         id="vs"
         index="01"
@@ -1140,7 +1140,7 @@ export default function DpSeqChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §02 精讲 A · LIS 300 ================= */}
+      {/* ================= §02 Deep dive A - LIS 300 ================= */}
       <Section
         id="lis"
         index="02"
@@ -1473,7 +1473,7 @@ export default function DpSeqChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §03 连续型 · 718 ================= */}
+      {/* ================= §03 The contiguous type - 718 ================= */}
       <Section
         id="subarray"
         index="03"
@@ -1704,7 +1704,7 @@ export default function DpSeqChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §04 精讲 B · LCS 1143 ================= */}
+      {/* ================= §04 Deep dive B - LCS 1143 ================= */}
       <Section
         id="lcs"
         index="04"
@@ -2128,7 +2128,7 @@ export default function DpSeqChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §05 精讲 C · 编辑距离 72 ================= */}
+      {/* ================= §05 Deep dive C - Edit Distance 72 ================= */}
       <Section
         id="edit"
         index="05"
@@ -2490,7 +2490,7 @@ export default function DpSeqChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §06 回文家族 ================= */}
+      {/* ================= §06 The palindrome family ================= */}
       <Section
         id="palindrome"
         index="06"
@@ -3005,7 +3005,7 @@ export default function DpSeqChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §07 题单 ================= */}
+      {/* ================= §07 Problem set ================= */}
       <Section
         id="problems"
         index="07"

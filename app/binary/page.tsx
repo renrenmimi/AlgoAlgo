@@ -1,15 +1,21 @@
 "use client";
 
-// 第 3 章 · 二分进阶 —— 八段式结构:
-//  §01 模板复盘(区间约定 + 死循环三要素)→ §02 找边界 + 精讲 A(LC 34)→
-//  §03 二段性 · 旋转数组 + 精讲 B(LC 33)→ §04 峰值与矩阵(162/852/74/240)→
-//  §05 二分答案 + 精讲 C(LC 875 吃香蕉,RangeShrink)→ §06 答案二分续(1011/410/69/367)→
-//  §07 题单 → §08 通关测验 → 要点。
-// 二分答案主可视化用 lib/algviz 的 RangeShrink(帧写在本文件);
-// 找边界 / 旋转数组用 ArrayStepper 自建帧(见 ./viz)。
+// Chapter 3 · Binary search, advanced —— an eight-part structure:
+//  §01 template review (interval conventions + the three ingredients of an infinite
+//  loop) → §02 finding boundaries + deep dive A (LC 34) →
+//  §03 the two-segment property · rotated arrays + deep dive B (LC 33) →
+//  §04 peaks and matrices (162/852/74/240) →
+//  §05 binary search on the answer + deep dive C (LC 875, Koko eating bananas,
+//  RangeShrink) → §06 more answer-space binary search (1011/410/69/367) →
+//  §07 problem set → §08 quiz → key points.
+// The main visualization for binary search on the answer is RangeShrink from
+// lib/algviz (its frames live in this file);
+// boundary finding and rotated arrays use hand-built ArrayStepper frames (see ./viz).
 //
-// 双语:正文用 <T en zh />;组件的文案型 props 传 { en, zh }。
-// CodeTabs 的 code 也给两份 —— 两份之间只有注释不同,可执行代码逐行一致(hl 行号才对得上)。
+// Bilingual: prose uses <T en zh />; a component's copy-style props take { en, zh }.
+// The code passed to CodeTabs also comes in two versions —— they differ only in the
+// comments, and the executable code matches line for line, so the hl line numbers
+// stay correct.
 
 import "./chapter.css";
 import {
@@ -37,9 +43,10 @@ import {
   SEARCH_METRICS,
 } from "./viz";
 
-/* ============ 精讲 C · LC 875 吃香蕉:RangeShrink 逐帧收窄 ============ */
-// piles = [3,6,7,11], h = 8 → 最小吃速 k = 4。值域 [1,11],宽度 11 ≤ 20,可读。
-// hours(k) = ⌈3/k⌉+⌈6/k⌉+⌈7/k⌉+⌈11/k⌉。probe 依次为 6 → 3 → 4。
+/* ============ Deep dive C · LC 875 Koko eating bananas: shrinking frame by frame with RangeShrink ============ */
+// piles = [3,6,7,11], h = 8 → the minimum eating speed is k = 4. The value range is
+// [1,11], a width of 11 ≤ 20, so it stays readable.
+// hours(k) = ⌈3/k⌉+⌈6/k⌉+⌈7/k⌉+⌈11/k⌉. The probes are 6 → 3 → 4, in that order.
 
 const KOKO_FRAMES: RangeFrame[] = [
   {
@@ -167,7 +174,7 @@ const KOKO_FRAMES: RangeFrame[] = [
   },
 ];
 
-/* ============ 页面 ============ */
+/* ============ Page ============ */
 
 const CHIPS = [
   { id: "why", n: "01", label: { en: "One template", zh: "模板复盘" } },
@@ -228,7 +235,7 @@ export default function BinaryChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 模板复盘 ================= */}
+      {/* ================= §01 Template review ================= */}
       <Section
         id="why"
         index="01"
@@ -730,7 +737,7 @@ export default function BinaryChapter() {
           </p>
         </Callout>
 
-        {/* ---- 查找竞速:把「砍半」的威力变成数字(选手与形状见 ./viz)---- */}
+        {/* ---- The search race: turning the power of halving into numbers (contenders and input shapes live in ./viz) ---- */}
         <div className="prose" style={{ marginTop: 18 }}>
           <p>
             <T
@@ -777,7 +784,7 @@ export default function BinaryChapter() {
             const lin = g("linear");
             const bin = g("binary");
             const rec = g("binary-rec");
-            const cap = Math.floor(Math.log2(size)) + 1; // 闭区间二分的探测上界
+            const cap = Math.floor(Math.log2(size)) + 1; // upper bound on probes for closed-interval binary search
             if (inputId === "first")
               return {
                 en: (
@@ -926,7 +933,7 @@ export default function BinaryChapter() {
         </div>
       </Section>
 
-      {/* ================= §02 找边界 + 精讲 A ================= */}
+      {/* ================= §02 Finding boundaries + deep dive A ================= */}
       <Section
         id="bound"
         index="02"
@@ -1315,7 +1322,7 @@ export default function BinaryChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §03 二段性 · 旋转数组 + 精讲 B ================= */}
+      {/* ================= §03 The two-segment property · rotated arrays + deep dive B ================= */}
       <Section
         id="rotate"
         index="03"
@@ -1721,7 +1728,7 @@ export default function BinaryChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §04 峰值与矩阵 ================= */}
+      {/* ================= §04 Peaks and matrices ================= */}
       <Section
         id="peak"
         index="04"
@@ -2291,7 +2298,7 @@ export default function BinaryChapter() {
         />
       </Section>
 
-      {/* ================= §05 二分答案 + 精讲 C ================= */}
+      {/* ================= §05 Binary search on the answer + deep dive C ================= */}
       <Section
         id="answer"
         index="05"
@@ -2675,7 +2682,7 @@ export default function BinaryChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §06 答案二分续 ================= */}
+      {/* ================= §06 More answer-space binary search ================= */}
       <Section
         id="answer2"
         index="06"
@@ -3192,7 +3199,7 @@ export default function BinaryChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §07 题单 ================= */}
+      {/* ================= §07 Problem set ================= */}
       <Section
         id="problems"
         index="07"

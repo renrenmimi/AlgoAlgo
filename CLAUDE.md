@@ -1,270 +1,393 @@
-# CLAUDE.md — AlgoAlgo · 看得见的算法
+# CLAUDE.md — AlgoAlgo · Algorithms You Can See
 
-新会话先读完这份文件再动手。
+Read this file in full before touching anything in a new session.
 
-## 这是什么
+## Language policy
 
-**AlgoAlgo(看得见的算法)**:面向零基础学习者的交互式算法课程网站,
-**DataData(../DataData,看得见的数据结构)的姊妹篇** —— 同一套外壳与设计语言。
-承诺:**学完这一套课,不需要再从任何别的渠道学算法。**
-数据结构画「形状」,算法画「决策与状态的演进」:决策树逐步展开、DP 表逐格填充、
-候选区间逐步收窄。内容底料是根目录 `lc.md`(两套训练营合并后的 270 题分级清单,
-A 主线/B 进阶/C 选做),但学习路径按本文件「课程结构」执行。
+- **Repository artifacts are English**: commit messages, PR titles and bodies, branch
+  names, code comments, and this file.
+- **Site content is bilingual**: every user-facing string is `{ en, zh }` (see
+  `lib/i18n.tsx`). English is the default language; Chinese is a toggle.
+- **Conversation with the user is Chinese.** Do not let that leak into the repository.
 
-目标受众下限:**刚会写 hello world 的完全新手**(默认已学过 DataData 的基础结构章)。
-- 每个结论必须给「为什么」,不许只给结论;
-- 比喻先行,再上术语;术语第一次出现时中文+英文双写;
-- 递归是全书地基,序章 §03 专门教过(调用栈/基准情形/递归信任),后续章节可引用。
+## What this is
 
-## 课程结构(14 页,由易到难)与排序依据
+**AlgoAlgo** is an interactive algorithms course for complete beginners, and the sister
+site of **DataData** (`../DataData`, "data structures you can see") — same shell, same
+design language. The promise: **finish this course and you will not need another source
+to learn algorithms.**
 
-`lib/curriculum.ts` 是唯一的章节注册表(路由/编号/主题色相/难度/标签)。
+Data structures draw *shapes*; algorithms draw *how decisions and state evolve*: decision
+trees expanding step by step, DP tables filling cell by cell, candidate ranges narrowing.
+The raw source material is `lc.md` at the repo root (270 problems from two merged
+bootcamps, graded A / B / C), but the learning path follows the "Course structure"
+section below, not that file's ordering.
 
-序章(/)算法思维+递归+四大范式 → 01 排序 → 02 分治 → 03 二分进阶 →
-04 位运算 → 05 回溯 → 06 贪心 → 07 DP 入门 → 08 背包 → 09 子序列 DP →
-10 DP 进阶 → 11 数学与数论 → 12 字符串算法 → ✦ 终章 范式选型地图。
+Audience floor: **someone who has just written hello world** (and is assumed to have gone
+through DataData's basic-structures chapters).
 
-排序依据(综合 lc.md 20 周表、NeetCode Roadmap、LeetCode 官方 Study Plan、
-代码随想录主线):排序/分治先立「递归+分而治之」地基;二分练「单调性砍半」;
-位运算轻量工具课、为状压 DP 铺路;回溯把递归树画出来;贪心学「敢贪的证明」;
-DP 四章承接「回溯太慢、贪心失灵」(322 硬币 [1,3,4] 是贯穿的贪心反例);
-数学/字符串殿后查漏。**贪心紧贴在 DP 之前**是刻意设计:形成
-「贪心失效 ⇒ DP 兜底」的叙事,且 53/122/322 等题两种视角都讲(lc.md 规则 2)。
+- Every conclusion must come with a *why*; never state a result and move on.
+- Analogy first, terminology second. Give both Chinese and English on a term's first use.
+- Recursion is the foundation of the whole course. The introduction teaches it in §03
+  (call stack, base case, trusting the recursion); later chapters may simply refer back.
 
-**与 DataData 的边界**:双指针/滑窗(数组)、单调栈(栈)、树上 DFS/BFS(二叉树)、
-堆与 Top-K(堆)、拓扑排序/Dijkstra/并查集(图)归 DataData;本课只做
-「不依附特定结构的纯算法」。引用 DataData 时**只用纯文字**(如「DataData · 04 栈」),
-不做超链接(两站部署地址未定)。
+## Course structure (14 pages, easy to hard) and the reasoning behind the order
 
-## 技术栈与命令
+`lib/curriculum.ts` is the single registry of chapters (route, number, theme hue,
+difficulty, tags).
 
-- Next.js 15(App Router)+ React 19 + TypeScript,**纯 CSS 无 Tailwind**。
-- **本机默认 Node 16 跑不动**,一切命令加:
+Introduction (`/`) algorithmic thinking + recursion + the four paradigms → 01 sorting →
+02 divide and conquer → 03 binary search in depth → 04 bit manipulation → 05 backtracking
+→ 06 greedy → 07 DP basics → 08 knapsack → 09 subsequence DP → 10 advanced DP →
+11 maths and number theory → 12 string algorithms → ✦ finale: the paradigm atlas.
+
+Why this order (synthesised from lc.md's 20-week table, the NeetCode roadmap, LeetCode's
+official study plan, and the 代码随想录 syllabus): sorting and divide-and-conquer lay the
+"recursion + split the problem" foundation; binary search drills "halve it using
+monotonicity"; bit manipulation is a light toolbox chapter that also prepares bitmask DP;
+backtracking makes the recursion tree visible; greedy teaches how to *prove* a greedy
+choice is safe; the four DP chapters follow from "backtracking is too slow and greedy
+fails" (LC 322 with coins [1,3,4] is the counterexample running through the whole course);
+maths and strings close the gaps at the end.
+
+**Greedy sits immediately before DP on purpose**: it sets up the "greedy breaks ⇒ DP
+catches it" narrative, and problems such as 53 / 122 / 322 are taught from both angles
+(lc.md rule 2).
+
+**Boundary with DataData**: two pointers and sliding window (arrays), monotonic stack
+(stacks), DFS/BFS on trees (binary trees), heaps and top-K (heaps), topological sort,
+Dijkstra and union-find (graphs) all belong to DataData. This course covers only
+algorithms that do not depend on one particular data structure. Refer to DataData in
+**plain text only** (for example "DataData · 04 stacks") — no hyperlinks, since neither
+site has a fixed deployment URL yet.
+
+## Stack and commands
+
+- Next.js 15 (App Router) + React 19 + TypeScript, **plain CSS, no Tailwind**.
+- **The machine's default Node 16 cannot run this.** Prefix every command with:
   `export PATH="$HOME/.nvm/versions/node/v22.21.1/bin:$PATH"`
-- 构建验证:`npm run build`;并行写章节时**不要各自跑 build**(.next 冲突),
-  用 `npx tsc --noEmit --incremental false` 做类型检查。
-- 预览:`.claude/launch.json` 已配置(autoPort,基准端口 3200)。
+- Build check: `npm run build`. When several chapters are being written in parallel,
+  **do not each run a build** (they fight over `.next`) — use
+  `npx tsc --noEmit --incremental false` instead.
+- Preview: configured in `.claude/launch.json` (autoPort, base port 3200).
 
-## 文件布局与所有权
+## File layout and ownership
 
 ```
-app/globals.css        全站设计系统(含 §10.5 algviz、§10.6 竞速样式)—— 章节作者【禁止改】
-app/layout.tsx         外壳(sidebar/toolbar/cmdk/aurora)—— 禁止改
+app/globals.css        Site-wide design system (incl. §10.5 algviz, §10.6 race styles)
+                       — chapter authors MUST NOT edit
+app/layout.tsx         Shell (sidebar / toolbar / cmdk / aurora) — do not edit
 lib/kit.tsx lib/code.tsx lib/quiz.tsx lib/problems.tsx lib/stepper.tsx
 lib/highlight.tsx lib/progress.tsx lib/algviz.tsx lib/curriculum.ts
-lib/race.tsx lib/race-sorts.tsx lib/i18n.tsx                     共享库 —— 禁止改
-app/<ch>/page.tsx      章节主页面("use client",数据+组合)
-app/<ch>/viz.tsx       本章专属可视化组件
-app/<ch>/chapter.css   本章专属样式(page.tsx 里【必须】import "./chapter.css",
-                       漏了会导致整章样式静默失效、SVG 塌成 0 宽 —— DataData 踩过的坑)
-lib/<ch>-data.tsx      本章题单 PROBLEMS + 测验 QUIZ 数据
+lib/race.tsx lib/race-sorts.tsx lib/i18n.tsx           shared libraries — do not edit
+app/<ch>/page.tsx      Chapter page ("use client", data + composition)
+app/<ch>/viz.tsx       Visualisations specific to this chapter
+app/<ch>/chapter.css   Styles specific to this chapter. page.tsx MUST
+                       `import "./chapter.css"` — forgetting it silently kills the
+                       chapter's styling and collapses SVGs to zero width (a trap
+                       DataData already fell into)
+lib/<ch>-data.tsx      This chapter's PROBLEMS list + QUIZ data
 ```
 
-每章配色由 `<main className="page" data-ch="<章节id>">` 自动生效
-(色相注册在 globals.css 的 `[data-ch=…]` 段,已全部就位,勿动)。
-品牌主色为琥珀金(hue 62),区别于 DataData 的紫;localStorage 键前缀 `aa-`。
+Each chapter's palette comes from `<main className="page" data-ch="<chapter id>">`
+automatically; the hues are registered in the `[data-ch=…]` block of globals.css and are
+all in place — leave them alone. The brand colour is amber-gold (hue 62), distinct from
+DataData's purple. localStorage keys are prefixed `aa-`.
 
-## 组件契约(共享库 API,按此使用)
+## Component contracts (shared library API — use exactly this)
 
 ### lib/kit.tsx
-- `<Hero ch="dp" title={<>动态规划 <span className="grad">DP</span></>} essence={<>…</>} chips={[{id:"why",n:"01",label:"直觉"},…]} />`
-- `<Section id="ops" index="03" title="…" desc="…" badge={<span className="chip">…</span>}>{children}</Section>`(自带滚动淡入)
-- `<Callout tone="idea|warn|deep|story|win" title="…">{<p>…</p>}</Callout>`
-- `<BigO o="1|logn|n|nlogn|n2|2n" label="可选覆盖文字" />`
-- `<KeyPoints points={[<>…</>, …]} />`、`<ChapterFooter ch="dp" />`、`<Reveal delay={120}>…</Reveal>`
+- `<Hero ch="dp" title={…} essence={…} chips={[{id:"why",n:"01",label:…},…]} />`
+- `<Section id="ops" index="03" title=… desc=… badge={<span className="chip">…</span>}>`
+  (scroll fade-in is built in)
+- `<Callout tone="idea|warn|deep|story|win" title=…>{<p>…</p>}</Callout>`
+- `<BigO o="1|logn|n|nlogn|n2|2n" label="optional override" />`
+- `<KeyPoints points={[…]} />`, `<ChapterFooter ch="dp" />`, `<Reveal delay={120}>…</Reveal>`
+
+All text-bearing props take `Loc<T>` — pass `{ en, zh }`.
 
 ### lib/code.tsx
-- `<CodeBlock lang="java|python|js" code={string} title? hl?={[行号]} note?={ReactNode} />`
-- `<CodeTabs title="文件名不带后缀" java={{code, note?, hl?}} python={…} js={…} />`
-  —— 切 tab 联动全站偏好语言(顶栏也能切),**三个语言都必须写**。
+- `<CodeBlock lang="java|python|js" code={string} title? hl?={[line numbers]} note?={ReactNode} />`
+- `<CodeTabs title="filename without extension" java={{code, note?, hl?}} python={…} js={…} />`
+  — switching a tab updates the site-wide language preference (the toolbar can switch it
+  too). **All three languages are mandatory.**
 
-### lib/stepper.tsx(逐帧慢放)
+### lib/stepper.tsx (frame-by-frame playback)
 - `ArrayFrame = { cells: {v, state?: "lit"|"ok"|"bad"|"ghost"}[], ptrs?: {i,label}[], msg }`
-- `<ArrayStepper title frames cellW? />`;自由动画用 `useStepper(total, intervalMs?)` +
-  `<StepControls stepper={s} step={s.step} total={n} />` + `.viz/.viz-stage/.viz-msg/.viz-ctl`。
+- `<ArrayStepper title frames cellW? />`. For a custom animation use
+  `useStepper(total, intervalMs?)` + `<StepControls stepper={s} step={s.step} total={n} />`
+  + the `.viz` / `.viz-stage` / `.viz-msg` / `.viz-ctl` classes.
+- `useEdgeFade()` fades the edge of a horizontally scrollable stage so "there is more to
+  the right" is visible rather than looking like a hard cut.
 
-### lib/algviz.tsx(算法三件套 —— 本课的招牌,能用就用)
-- **DPTable**(DP 表格填充器):
-  `DPFrame = { cells: DPCell[][], msg }`,`DPCell = { v, state?: "cur"|"src"|"done"|"ghost"|"ok"|"bad" }`
+### lib/algviz.tsx (the three signature players — use them whenever they fit)
+- **DPTable** (DP table filler):
+  `DPFrame = { cells: DPCell[][], msg }`, `DPCell = { v, state?: "cur"|"src"|"done"|"ghost"|"ok"|"bad" }`
   `<DPTable title frames colLabels? rowLabels? cornerLabel? cellW? />`
-  帧 = 整表快照;当前格 `cur`(紫),**转移来源格 `src`(蓝虚线)必须标**,一维表传一行。
-  写帧生成函数(参考 app/dp/page.tsx 的 climbCells/pathCells),不要手抄几十个快照。
-- **TreePlayer**(递归/回溯决策树播放器):
-  节点静态注册 `TreeNodeSpec = { id, label, parent?, w? }`,
-  帧只给状态 `TreeFrame = { states: Record<id, "cur"|"path"|"done"|"dead"|"sol"|"memo">, msg }`
-  (未列出 = 幽灵未访问)。`<TreePlayer title nodes frames nodeW? gapX? gapY? legend? />`
-  布局自动(先序叶子定 x)。剪枝/回退用 `dead`(灰+删除线),命中缓存用 `memo`(蓝)。
-- **RangeShrink**(候选区间收缩器,二分答案/贪心排除):
-  `RangeFrame = { lo, hi, probe?, verdict?: "ok"|"no", answer?, msg }`
-  `<RangeShrink title min max frames unit? cellW? />`(值域宽度 ≤ 20 保证可读)。
+  A frame is a snapshot of the whole table. The current cell is `cur` (accent); the cell
+  the value came from **must** be marked `src` (blue dashed). A 1-D table is one row.
+  Write a frame generator (see `climbCells` / `pathCells` in app/dp/page.tsx) rather than
+  hand-copying dozens of snapshots.
+- **TreePlayer** (recursion / backtracking decision tree):
+  Nodes are declared once as `TreeNodeSpec = { id, label, parent?, w? }`; a frame only
+  carries state: `TreeFrame = { states: Record<id, "cur"|"path"|"done"|"dead"|"sol"|"memo">, msg }`
+  (anything not listed is a ghost node, not yet visited).
+  `<TreePlayer title nodes frames nodeW? gapX? gapY? legend? />`
+  Layout is automatic (leaves in pre-order fix the x positions) and node width is
+  estimated from the label, so long labels do not overflow their box. Use `dead` for
+  pruned or abandoned branches (grey, struck through) and `memo` for a cache hit (blue).
+- **RangeShrink** (candidate-range narrowing, for binary search on the answer and greedy
+  elimination): `RangeFrame = { lo, hi, probe?, verdict?: "ok"|"no", answer?, msg }`
+  `<RangeShrink title min max frames unit? cellW? />` (keep the value range ≤ 20 wide so
+  it stays readable).
 
-### lib/race.tsx + lib/race-sorts.tsx(算法竞速 —— 把大 O 落成真实账单)
+### lib/race.tsx + lib/race-sorts.tsx (algorithm race — turning Big-O into a real bill)
 
-同一份输入喂给 2~3 个算法,量出**比较次数 / 移动次数 / 额外空间**并排对比,
-条形按行归一化、每行标出「最少」、并列行转中性灰(避免被读成爆表),
-底部给可交互的动态判读文案。这是全站唯一「用数字反驳直觉」的组件。
+Feed one identical input to two or three algorithms and measure **comparisons, moves and
+extra space** side by side. Bars normalise per row, the best in each row is flagged, and a
+row where everyone ties turns neutral grey (so equal scores are not misread as maxed out).
+A verdict line underneath explains the numbers. This is the one component on the site that
+argues with data instead of intuition.
 
 - `<AlgoRace title algos inputs sizes clone metrics? defaultInput? defaultSize? opCap? verdict? unitLabel? />`
-- `RaceAlgo<I> = { id, name, note?, time(BigO 档位), space, run(input, t: Tracer) }`
-- `RaceInput<I> = { id, label, make(n, seed), hint? }` —— seed 相同则输入完全相同,结果可复现
-- `Tracer`:`t.cmp()` 比较、`t.mov(n)` 写入(交换记 2)、`t.alloc/free(n)` 辅助单元、
-  `t.enter/exit()` 递归栈;`space` 自动取「辅助单元 + 栈帧」的峰值
-- `verdict: (results, {size, inputId}) => Loc<ReactNode>` —— **判读必须用真实数字讲为什么**
-- 非排序题目请用 `metrics` 重贴标签(如 cmp → 「函数调用次数」/「乘法次数」),
-  没有诚实含义的指标就别显示(metrics 是数组,给 2 项也行)
-- 排序选手与输入形状在 `lib/race-sorts.tsx`:
-  `BUBBLE / SELECTION / INSERTION / MERGE / QUICK_LAST / QUICK_RANDOM`、
-  `SHAPES`(随机/近乎有序/已排序/逆序/大量重复)、`cloneArr`
-- **新写「带计数器的算法」必须先用 node 验证正确性与计数**(抽出实现剥掉 TS 类型跑断言),
-  数字是这个组件的立身之本;实现刻意保持教科书原样,不偷加自适应优化。
-- 样式在 globals.css §10.6,类名 `.race-*`;组件外壳复用 `.viz`。
+- `RaceAlgo<I> = { id, name, note?, time (a BigO tier), space, run(input, t: Tracer) }`
+- `RaceInput<I> = { id, label, make(n, seed), hint? }` — same seed gives exactly the same
+  input, so results are reproducible
+- `Tracer`: `t.cmp()` a comparison, `t.mov(n)` array writes (a swap counts as 2),
+  `t.alloc/free(n)` auxiliary cells, `t.enter/exit()` recursion frames. `space` is the
+  simultaneous peak of cells + frames.
+- `verdict: (results, {size, inputId}) => Loc<ReactNode>` — **the verdict must explain the
+  why using the measured numbers**, and must say plainly where the opponent wins.
+- For non-sorting problems relabel the metrics via `metrics` (cmp → "function calls" or
+  "multiplications"). **If a metric has no honest meaning, do not display it** — `metrics`
+  is an array, two entries is fine.
+- Sorting contenders and input shapes live in `lib/race-sorts.tsx`:
+  `BUBBLE / SELECTION / INSERTION / MERGE / QUICK_LAST / QUICK_RANDOM`, `SHAPES`
+  (random / nearly sorted / already sorted / reversed / many duplicates), `cloneArr`.
+- **A newly instrumented algorithm must be verified with node before it ships** (extract
+  the implementation, strip the TypeScript types, assert correctness and cross-check the
+  counts against closed-form formulas). The numbers are this component's whole reason to
+  exist. Implementations stay deliberately textbook-plain — no sneaky adaptive
+  optimisations, because "merge sort pays full price on a sorted array" is exactly the
+  lesson.
+- Styles live in globals.css §10.6 under `.race-*`; the outer shell reuses `.viz`.
 
 ### lib/quiz.tsx
-- `<Quiz ch="dp" items={QuizItem[]} />`;题型 choice / multi / fill(契约同 DataData);
-  **禁止通用文案**(「答案不正确」不合格),每个错误选项要针对性解释错在哪。
+- `<Quiz ch="dp" items={QuizItem[]} />`; question types choice / multi / fill (same
+  contract as DataData). **Generic feedback is banned** ("that is incorrect" is not
+  acceptable) — every wrong option needs its own explanation of what specifically is wrong.
 
 ### lib/problems.tsx
 - `<ProblemSet ch="dp" items={Problem[]} />`
-- `Problem = { lc, title, d:"easy"|"medium"|"hard", tags, hint:一句话方向不剧透, key:一段话讲透最优解 }`
+- `Problem = { lc, title, d:"easy"|"medium"|"hard", tags, hint: one line pointing at the
+  idea without spoiling it, key: a paragraph that fully explains the best solution }`
 
-## 内容标准(每章必须全部具备)
+## Content standard (every chapter needs all of this)
 
-1. **§01 为什么需要它**:痛点故事引入(暴力为什么不行)+ 直觉类比 + 规则/特性卡。
-2. **§02 核心思想拆解**:配逐帧可视化(algviz 三件套或自建),让「决策过程」可见。
-3. **§03 模板与正确性**:模板代码(CodeTabs 三语言)+ **为什么对**(不变量/交换论证/归纳)。
-4. **§04+ 题型分类推进**:每类 = 种子题 + 变式,遵循 lc.md「种子题 + 1~3 变式」规则。
-5. **LeetCode 精讲 3~4 道**,每道 = 题意 → 暴力 → 为什么能优化 → 逐帧动画 →
-   三语言题解(带高亮行 hl)→ 复杂度 → 面试追问(含变式链)。
-6. **同题多解**(lc.md 规则 2 点名的 23/37/122/200/215/264/322/718):在两处各讲一种
-   建模,并互相引用(如 322 在 07 章讲 min-DP、08 章讲完全背包)。
-7. **高频题单 8~16 题**,由易到难,tags 标套路;复盘题(在别章讲过)标 tag「复盘」。
-8. **通关测验 6~8 题**,混合题型,每个错误选项针对性纠错。
-9. **KeyPoints**(5~7 条,有加粗重点)+ `<ChapterFooter />`。
-10. 穿插 Callout:`deep` 工程现场(该算法在真实系统里的应用)、`warn` 常见误区、
-    `story` 历史/趣闻、`win` 面试话术与追问。
+1. **§01 why this exists**: a pain-point story (why brute force fails) + an intuitive
+   analogy + a card of the rules or properties.
+2. **§02 the core idea, taken apart**: with a frame-by-frame visualisation (one of the
+   three players, or a custom one) that makes *the decision process* visible.
+3. **§03 template and correctness**: template code (CodeTabs, three languages) plus **why
+   it is correct** (invariant, exchange argument, induction).
+4. **§04+ problem types, one at a time**: each type = a seed problem + variations,
+   following lc.md's "seed problem + 1–3 variations" rule.
+5. **3–4 LeetCode deep dives**, each one: what the problem asks → brute force → why it can
+   be improved → frame-by-frame animation → solutions in three languages (with `hl`
+   highlighted lines) → complexity → interview follow-ups (including the variation chain).
+6. **Same problem, several models** (lc.md rule 2 names 23 / 37 / 122 / 200 / 215 / 264 /
+   322 / 718): model it one way in one chapter and another way elsewhere, and
+   cross-reference the two (322 is min-DP in chapter 07 and unbounded knapsack in 08).
+7. **A problem set of 8–16 items**, easy to hard, tagged by technique; a problem already
+   taught elsewhere gets the tag "review".
+8. **A quiz of 6–8 questions**, mixed types, with targeted feedback on every wrong option.
+9. **KeyPoints** (5–7 items, key phrases in bold) + `<ChapterFooter />`.
+10. Callouts throughout: `deep` for engineering reality (where this algorithm actually
+    runs in production), `warn` for common mistakes, `story` for history and anecdotes,
+    `win` for interview phrasing and follow-ups.
 
-语气:中文为主,术语中英双写;像给聪明的朋友讲课,不端着;
-每个数字/结论都要能回答「为什么」。样板章 = **app/dp/**(page 1000+ 行量级)。
+Tone: teach it the way you would explain it to a sharp friend, without talking down or
+posturing. Every number and every conclusion must be able to answer "why". The reference
+chapter is **app/dp/** (page.tsx on the order of 1000+ lines).
 
-## 章节 CSS 规则
+## Chapter CSS rules
 
-所有 CSS 都是全局的!`app/<ch>/chapter.css` 里的自定义类**必须带章节前缀**
-(如排序章 `.srt-*`、回溯章 `.bt-*`),或整体套在 `[data-ch="<id>"]` 选择器下。
-颜色一律用 token:`var(--acc) --acc-soft --acc-border --acc-ink --acc-glow
---ok --warn --risk --info --text-2 --border` 等,深浅主题自动适配,禁止写死颜色。
-滑杆排版类 `.bigo-slider` 在 home.css(章节别用,自己在 chapter.css 里写)。
+All CSS is global. Custom classes in `app/<ch>/chapter.css` **must carry a chapter prefix**
+(`.srt-*` for sorting, `.bt-*` for backtracking, and so on) or be wrapped in a
+`[data-ch="<id>"]` selector.
 
-**设计系统标尺(2026-07 精装改版新增,优先用这些而非硬编码数值)**:
-- 圆角:`--r-xs`(7)`--r-sm`(10)`--r-md`(14)`--r-lg`(18)`--r-xl`(24)。卡片/viz 用
-  `--r-lg`/`--r-xl`,按钮/小元件 `--r-sm`,单元格/徽章 `--r-xs`~`--r-sm`。
-- 阴影:`--shadow-1`(轻)`--shadow-2`(卡片)`--shadow-3`(浮层);发光 `--glow-sm/-md/-lg`
-  (跟随章节主色)。玻璃顶部高光 `--hi`(强)`--hi-soft`(弱);渐变描边 `--edge`;
-  柔和主色渐变底 `--grad-soft`;极淡主色 `--acc-faint`。
-- 卡片材质约定:`box-shadow: var(--hi-soft), var(--shadow-1)`;hover 换 `var(--glow-lg)` 或 `--glow-md`。
-- 度量数字加 `font-variant-numeric: tabular-nums`(等宽对齐)。
+Colours must always come from tokens: `var(--acc) --acc-soft --acc-border --acc-ink
+--acc-glow --ok --warn --risk --info --text-2 --border` and friends, so light and dark
+themes adapt automatically. Never hard-code a colour. The slider layout class
+`.bigo-slider` lives in home.css — chapters should not use it, write your own in
+chapter.css.
 
-## 文案风格（重要，全站贯穿）
+**Design-system scales (added in the 2026-07 refinement; prefer these over hard-coded
+values):**
 
-**基调：教科书 / 技术文档式的清晰陈述。通俗 ≠ 口语化。**
-面向零基础讲得明白是目标，但语气必须专业、正式、简洁。
+- Radii: `--r-xs` (7) `--r-sm` (10) `--r-md` (14) `--r-lg` (18) `--r-xl` (24). Cards and
+  visualisations use `--r-lg` / `--r-xl`, buttons and small controls `--r-sm`, cells and
+  badges `--r-xs`–`--r-sm`.
+- Shadows: `--shadow-1` (light) `--shadow-2` (card) `--shadow-3` (overlay); glows
+  `--glow-sm/-md/-lg` (they follow the chapter colour). Glass top highlight `--hi`
+  (strong) and `--hi-soft` (subtle); gradient stroke `--edge`; soft accent gradient base
+  `--grad-soft`; very faint accent `--acc-faint`.
+- Card material convention: `box-shadow: var(--hi-soft), var(--shadow-1)`; on hover swap in
+  `var(--glow-lg)` or `--glow-md`.
+- Give measured numbers `font-variant-numeric: tabular-nums` so columns line up.
 
-- **禁止**：网络用语与流行梗（「翻车」「离谱」「一把梭」「说白了」「香」「完全体」
-  「正确姿势」「甩锅」「手一抖」「玩完了」「没毛病」「血赚」「天花板」）、
-  游戏／动漫／饭圈用语（「大招」「名场面」「官配」「装备栏」「段位」）、
-  卖萌语气词（「啦」「呀」「嘛」「~」）、插科打诨式自问自答（「你猜怎么着」
-  「好问题」「其实吧」）、拿读者开玩笑（「你会哭」「用户怕是要报警」）；
-- **同样禁止** AI 腔：「值得注意的是」「综上所述」「让我们深入探讨」「赋能」；
-- **保留并鼓励**：面向零基础的通俗解释、恰当的生活类比（一摞盘子讲栈、
-  编号储物柜讲数组、餐厅点菜讲 API）—— 类比本身是好东西，问题只出在表达轻佻。
-  比喻要讲得平实；
-- 感叹号克制使用。正文强调靠加粗和措辞，不靠标点；
-- 卡片标题、章节标题不加装饰性 emoji；符号只用 ✓ ✕ → ★ 这类功能性记号；
-- 代码注释同样适用以上规则，不要用第一人称拟人（「我比栈顶暖」）；
-- 术语第一次出现时中文 + 英文双写（如「哈希表（hash table）」），之后可只用惯用形；
-- 句子可以短，但必须完整、准确。
+## Prose style (important, applies site-wide)
 
-## JSX 文案注意
+**Register: the clear statement of a textbook or a good piece of technical writing.
+Accessible does not mean chatty.** Being understandable to a beginner is the goal, but the
+voice stays professional, composed and concise.
 
-- 正文引号直接用中文「」和"",不要转义英文引号;
-- 小于/大于号必须写 `&lt; &gt;`(如 sum &lt; target);
-- CodeTabs 的 code 用模板字符串,内部反引号要转义;代码中文注释没问题。
+- **Banned in Chinese copy**: internet slang and memes (「翻车」「离谱」「一把梭」
+  「说白了」「香」「完全体」「正确姿势」「甩锅」「手一抖」「玩完了」「没毛病」「血赚」
+  「天花板」), gaming / anime / fandom vocabulary (「大招」「名场面」「官配」「装备栏」
+  「段位」), cutesy particles (「啦」「呀」「嘛」「~」), vaudeville self-questioning
+  (「你猜怎么着」「好问题」「其实吧」), and jokes at the reader's expense
+  (「你会哭」「用户怕是要报警」).
+- **Equally banned, the AI register**: 「值得注意的是」「综上所述」「让我们深入探讨」
+  「赋能」, and in English "it is worth noting that", "in conclusion", "let us dive deep",
+  "leverage" as a verb.
+- **Keep and encourage**: plain explanations aimed at beginners and well-chosen everyday
+  analogies (a stack of plates for a stack, numbered lockers for an array, ordering in a
+  restaurant for an API). The analogy itself is a good thing — the problem is only ever a
+  flippant delivery. Keep the metaphor grounded.
+- Use exclamation marks sparingly. Emphasis comes from bold text and word choice, not
+  punctuation.
+- No decorative emoji in card titles or section headings. Only functional marks such as
+  ✓ ✕ → ★.
+- The same rules apply to code comments. No first-person anthropomorphising.
+- On a term's first appearance give both Chinese and English (「哈希表(hash table)」);
+  afterwards the common form is enough.
+- Sentences may be short, but they must be complete and accurate.
 
-## 阶段二章节蓝图(题目分配以此为准,避免撞题)
+## JSX copy notes
 
-> 通用要求见「内容标准」。「(补)」= lc.md 之外补充的经典题;「(盘)」= 别章主讲、本章复盘。
+- In Chinese copy use the Chinese quotation marks 「」 and "" directly; do not escape
+  English quotes.
+- Less-than and greater-than must be written `&lt;` and `&gt;` (for example sum &lt; target).
+- The `code` passed to CodeTabs is a template literal, so escape any backticks inside it.
+  Chinese comments inside that teaching code are fine and expected, and the English and
+  Chinese versions must keep identical executable lines and identical line counts, so `hl`
+  points at the right row in both.
 
-- **01 sorting 排序**:O(n²) 三兄弟(冒泡/选择/插入)→ 归并(分治首秀)→ 快排
-  (partition 逐帧、随机化)→ 计数/桶/基数概念(突破比较下界)→ 稳定性 →
-  三语言内置 sort 真身(Timsort/双轴快排)→ 快速选择。
-  可视化:自建条形图排序 stepper + partition ArrayStepper。
-  精讲:912(补,归并+快排双解)、215(Quickselect vs 堆)、56 合并区间。
-  题单:912(补) 88 75(补) 56 179 215 148 1365 1356。
-- **02 divide 分治**:分治三步 → 递归树算复杂度(主定理直觉版)→ 快速幂 →
-  归并分治(23)→ 逆序对(LCR 170 概念)→ 53 分治视角(对比 07 章 DP)→ Karatsuba 故事。
-  可视化:TreePlayer(3^13 快速幂分解树)、归并分层合并图。
-  精讲:50 Pow、23 合并 K 链表(归并思路,lc.md 规则 2)、53(分治视角)。
-  题单:50 23 53 169 215(盘) 148(盘) 4(选做)。
-- **03 binary 二分进阶**:模板复盘(704/35)→ 找边界 34(lower/upper_bound)→
-  二段性:旋转 33/81/153/154、峰值 162/852 → 矩阵 74/240 → **二分答案**
-  (875(补)/410/1011(补)/69/367)—— 本章重头戏。
-  可视化:RangeShrink 主场(875 吃香蕉逐帧收窄)+ ArrayStepper 旋转数组。
-  精讲:34(边界)、33(旋转)、875(补,二分答案)。
-  题单:704(盘) 35 34 69 367 278 852 162 33 81 153 74 240 410 1011(补) 4(选做)。
-- **04 bits 位运算**:二进制与补码 → 六运算符 → 技巧表(n&(n-1)、lowbit、异或性质)→
-  **位运算表示集合**(状压 DP 前置:枚举子集)→ 移位乘除。
-  可视化:32 盏位灯交互实验室、XOR 消消乐 ArrayStepper。
-  精讲:136(补,XOR)、191(补,n&(n-1))、137(逐位统计)。
-  题单:136(补) 191(补) 231 268 461 190(补) 137 260 318 1356(盘) 67。
-- **05 backtrack 回溯**:决策树心智模型 → 模板三问(路径/选择列表/结束条件)→
-  组合 77/216/17/39/40 → 分割 131/93 → 子集 78/90/491 → 排列 46/47 →
-  去重两板斧(树层 vs 树枝,lc.md 点名)→ 棋盘 51/37(37 位运算版进阶,规则 2)→ 剪枝。
-  可视化:TreePlayer 主场(77 组合树逐帧+剪枝变灰、46 排列 used 数组)。
-  精讲:77(组合+剪枝)、78(子集)、46(排列)、51(N 皇后,棋盘自建 viz)。
-  题单:77 216 17 39 40 131 93 78 90 491 46 47 51 37 22(补)。
-- **06 greedy 贪心**:贪心选择性质与交换论证(455 引入)→ 序列 376/53(盘)/122
-  (贪心 vs DP 双视角,规则 2)→ 跳跃 55/45 → 模拟 134/135/860/406 →
-  区间贪心 452/435/763/56(盘)→ 反例意识(预告 322)→ 贪心 vs DP 判据。
-  可视化:自建区间时间轴(435 排序后逐个选/弃)、跳跃覆盖范围 ArrayStepper。
-  精讲:455(交换论证)、45(跳跃)、435(区间)。
-  题单:455 860 376 122 55 45 134 135 406 452 435 763 738(选做) 1005(选做) 402 968(选做)。
-- **07 dp** ✔ 已完成(样板章,勿重写)。
-- **08 knapsack 背包**:0-1 背包引入 → 二维表 → 一维滚动(**为什么倒序**,逐帧对比
-  正序会怎么错)→ 装满型 416/1049 → 计数型 494(回溯 vs 背包一题两吃)→
-  二维费用 474 → 完全背包(为什么正序)→ 322(盘,完全背包视角,规则 2)/279/518/139 →
-  排列 vs 组合(377 vs 518 内外层)→ 多重背包概念。
-  可视化:DPTable 主场(0-1 二维表 + 一维滚动正序/倒序对比动画)。
-  精讲:416、494、518 vs 377(对比讲)。
-  题单:416 1049 494 474 322(盘) 518 279 139 377。
-- **09 dp-seq 子序列 DP**:子序列 vs 子数组 → LIS 300(n² → 贪心+二分 nlogn 概念)/673 →
-  连续 718 → 双序列 LCS 1143(718 vs 1143 状态定义对比,lc.md 规则 2)→
-  编辑距离 72 → 回文 647(补)/516/5 → 132 提点。
-  可视化:DPTable 双序列主场(1143 表格逐格,对角线转移高亮)。
-  精讲:300、1143、72。
-  题单:300 673 718 1143 72 516 5 647(补) 132 392(补)。
-- **10 dp-pro DP 进阶**:状态机 DP(股票族谱 121(盘)→122(盘)→123→309→714,
-  画状态转移图)→ 树形 DP(337/968(盘)/543)→ 区间 DP(516(盘)→312(补,戳气球))→
-  状压 DP(04 章位运算复盘 + 526(补)入门)→ 数位/概率 DP 一句话地图。
-  可视化:自建状态机转移图 SVG、TreePlayer 树形 DP、DPTable 区间 DP(按长度斜着填)。
-  精讲:309(状态机)、337(树形)、312(区间)。
-  题单:122 123 309 714 337 543 968 516(盘) 312(补) 264 174(选做) 526(补)。
-- **11 math 数学与数论**:溢出与取模(10⁹+7)→ gcd 辗转相除 → 质数与埃氏筛(204 补)→
-  快速幂(盘)→ 摩尔投票 169 → 下一个排列 31 → 博弈与不变量 292/1025/319 →
-  快乐数 202(循环检测)。
-  可视化:埃氏筛网格动画、Nim 博弈交互。
-  精讲:169(摩尔投票)、292(不变量)、204(补,筛法)。
-  题单:202 7 9 50(盘) 69(盘) 169 31 292 1025 319 204(补) 43 67(盘)。
-- **12 strings 字符串算法**:暴力匹配为什么慢 → 前缀函数直觉(失败=情报)→
-  KMP next 数组构建逐帧 + 匹配过程 → 459(next 妙用)→ Rabin-Karp 滚动哈希
-  (28 第二解法)→ 回文:5 中心扩展 → Manacher 概念(不强求实现)→ 205/8 解析类。
-  可视化:KMP next 构建动画(双行 ArrayStepper)、滚动哈希窗口更新。
-  精讲:28(KMP + Rabin-Karp 双解,规则 2)、459、5。
-  题单:28 459 5(盘) 205 8 796(补) 214(选做)。
-- **✦ atlas 终章**:范式选型决策树(交互问答式向导:看到题 → 问什么 → 哪盏灯)→
-  全书题单总表(pid 沿用各章 `<ch>/<lc>`,进度互通)→ lc.md 的 20 周计划表 →
-  模拟面试指南(限时/口述/D+1/D+7/D+21)→ DataData × AlgoAlgo 全景图。
+## Chapter blueprints (the delivered structure; problem allocation follows this so
+chapters do not collide)
 
-## GitHub / 其他
+> General requirements are in "Content standard". "(extra)" marks a classic problem added
+> beyond lc.md; "(review)" marks a problem taught mainly in another chapter.
 
-- 无 git 仓库;提交需用户明确要求。
-- 参考项目:../DataData(外壳与质量基线)、../SYSDesigner、../AgentLab —— 只读,勿改。
-- lc.md 是内容底料原文,只读。
+- **01 sorting**: the three O(n²) sorts (bubble / selection / insertion) → merge sort
+  (divide and conquer's first appearance) → quicksort (partition frame by frame,
+  randomisation) → counting / bucket / radix (breaking the comparison bound) → stability →
+  what the built-in sort really is in all three languages (Timsort, dual-pivot quicksort)
+  → quickselect. Plus **§05 the algorithm race** (three races: the O(n²) siblings, across
+  families, and what one line of randomisation buys).
+  Visualisations: custom bar-chart sorting stepper + partition ArrayStepper + AlgoRace.
+  Deep dives: 912 (extra, merge and quick), 215 (quickselect vs heap), 56 merge intervals.
+  Problems: 912 (extra) 88 75 (extra) 56 179 215 148 1365 1356.
+- **02 divide and conquer**: the three steps → cost via the recursion tree (the master
+  theorem, intuitively) → fast power (plus an AlgoRace: naive chaining vs recursive vs
+  iterative) → merging k lists (23) → inversion counting (LCR 170) → 53 from the
+  divide-and-conquer angle (contrast with DP in chapter 07) → the Karatsuba story.
+  Visualisations: TreePlayer (the 3^13 fast-power tree), layered merge diagram.
+  Deep dives: 50 Pow, 23 merge k lists (lc.md rule 2), 53 (divide and conquer view).
+  Problems: 50 23 53 169 215 (review) 148 (review) 4 (optional).
+- **03 binary search in depth**: template review (704 / 35) → boundaries with 34
+  (lower/upper_bound) → the two-segment property: rotated 33 / 81 / 153 / 154, peaks
+  162 / 852 → matrices 74 / 240 → **binary search on the answer** (875 (extra) / 410 /
+  1011 (extra) / 69 / 367), the centrepiece of the chapter. §01 also carries an AlgoRace
+  of linear scan vs binary search.
+  Visualisations: RangeShrink as the lead (875 narrowing frame by frame) + ArrayStepper for
+  rotated arrays.
+  Deep dives: 34 (boundaries), 33 (rotated), 875 (extra, search on the answer).
+  Problems: 704 (review) 35 34 69 367 278 852 162 33 81 153 74 240 410 1011 (extra) 4 (optional).
+- **04 bit manipulation**: binary and two's complement → the six operators → the trick
+  table (n&(n-1), lowbit, XOR properties) → **using bits as a set** (the prerequisite for
+  bitmask DP: enumerating subsets) → shifting for multiply and divide.
+  Visualisations: an interactive lab of 32 bit lamps, XOR cancellation ArrayStepper.
+  Deep dives: 136 (extra, XOR), 191 (extra, n&(n-1)), 137 (counting bit by bit).
+  Problems: 136 (extra) 191 (extra) 231 268 461 190 (extra) 137 260 318 1356 (review) 67.
+- **05 backtracking**: the decision-tree mental model → the three questions of the template
+  (path, choice list, stopping condition) → combinations 77 / 216 / 17 / 39 / 40 →
+  partitioning 131 / 93 → subsets 78 / 90 / 491 → permutations 46 / 47 → the two
+  deduplication techniques (across a level vs along a branch, named in lc.md) → boards
+  51 / 37 (37's bitmask version is the advanced take, rule 2) → pruning.
+  Visualisations: TreePlayer as the lead (77's tree frame by frame with pruned branches
+  going grey, 46's `used` array).
+  Deep dives: 77 (combinations + pruning), 78 (subsets), 46 (permutations), 51 (N queens,
+  custom board visualisation).
+  Problems: 77 216 17 39 40 131 93 78 90 491 46 47 51 37 22 (extra).
+- **06 greedy**: the greedy-choice property and the exchange argument (introduced with
+  455) → sequences 376 / 53 (review) / 122 (greedy and DP side by side, rule 2) → jumping
+  55 / 45 → simulation 134 / 135 / 860 / 406 → interval greedy 452 / 435 / 763 / 56
+  (review) → developing a sense for counterexamples (foreshadowing 322) → how to tell
+  greedy from DP.
+  Visualisations: custom interval timeline (435, picking and discarding after sorting),
+  jump-range ArrayStepper.
+  Deep dives: 455 (exchange argument), 45 (jumping), 435 (intervals).
+  Problems: 455 860 376 122 55 45 134 135 406 452 435 763 738 (optional) 1005 (optional)
+  402 968 (optional).
+- **07 dp** — the reference chapter, already complete; do not rewrite it. §02 also carries
+  an AlgoRace of naive fib vs memoised vs tabulated.
+- **08 knapsack**: 0/1 knapsack → the two-dimensional table → rolling to one dimension
+  (**why the loop runs backwards**, with a frame-by-frame comparison of what goes wrong
+  forwards) → "can it be filled" 416 / 1049 → counting 494 (the same problem as
+  backtracking and as knapsack) → two constraints 474 → unbounded knapsack (why forwards
+  this time) → 322 (review, as unbounded knapsack, rule 2) / 279 / 518 / 139 →
+  permutations vs combinations (377 vs 518, which loop goes outside) → bounded knapsack.
+  Visualisations: DPTable as the lead (the 2-D table plus a forwards/backwards rolling
+  comparison).
+  Deep dives: 416, 494, 518 vs 377 (taught as a pair).
+  Problems: 416 1049 494 474 322 (review) 518 279 139 377.
+- **09 subsequence DP**: subsequence vs subarray → LIS 300 (n² → the greedy + binary search
+  n log n idea) / 673 → contiguous 718 → two sequences, LCS 1143 (contrast the state
+  definitions of 718 and 1143, lc.md rule 2) → edit distance 72 → palindromes 647 (extra) /
+  516 / 5 → a note on 132.
+  Visualisations: DPTable on two sequences (1143 cell by cell, the diagonal transition
+  highlighted).
+  Deep dives: 300, 1143, 72.
+  Problems: 300 673 718 1143 72 516 5 647 (extra) 132 392 (extra).
+- **10 advanced DP**: state-machine DP (the stock family 121 (review) → 122 (review) → 123
+  → 309 → 714, drawn as a transition diagram) → DP on trees (337 / 968 (review) / 543) →
+  interval DP (516 (review) → 312 (extra, burst balloons)) → bitmask DP (reviewing chapter
+  04, with 526 (extra) as the entry point) → a one-line map of digit DP and probability DP.
+  Visualisations: custom state-machine SVG, TreePlayer for tree DP, DPTable for interval DP
+  (filled diagonally, by increasing span).
+  Deep dives: 309 (state machine), 337 (trees), 312 (intervals).
+  Problems: 122 123 309 714 337 543 968 516 (review) 312 (extra) 264 174 (optional) 526 (extra).
+- **11 maths and number theory**: overflow and modular arithmetic (10⁹+7) → gcd by the
+  Euclidean algorithm → primes and the sieve of Eratosthenes (204, extra) → fast power
+  (review) → Boyer-Moore majority vote 169 → next permutation 31 → games and invariants
+  292 / 1025 / 319 → happy numbers 202 (cycle detection).
+  Visualisations: animated sieve grid, interactive Nim.
+  Deep dives: 169 (majority vote), 292 (invariants), 204 (extra, the sieve).
+  Problems: 202 7 9 50 (review) 69 (review) 169 31 292 1025 319 204 (extra) 43 67 (review).
+- **12 string algorithms**: why naive matching is slow → the intuition behind the prefix
+  function (a failure is information) → building KMP's next array frame by frame, then
+  matching → 459 (a neat use of next) → Rabin-Karp rolling hash (a second solution to 28)
+  → palindromes: 5 by expanding around a centre → Manacher as a concept (no need to
+  implement) → parsing problems 205 / 8.
+  Visualisations: the next-array construction (two-row ArrayStepper), rolling-hash window
+  updates.
+  Deep dives: 28 (KMP and Rabin-Karp, rule 2), 459, 5.
+  Problems: 28 459 5 (review) 205 8 796 (extra) 214 (optional).
+- **✦ atlas, the finale**: a paradigm-selection decision tree (an interactive wizard: you
+  see a problem → what do you ask → which light comes on) → the full problem table for the
+  whole course (pids stay `<ch>/<lc>` so progress is shared) → lc.md's 20-week plan → a
+  mock-interview guide (timing, thinking aloud, D+1 / D+7 / D+21 review) → the
+  DataData × AlgoAlgo panorama.
+
+## GitHub and other notes
+
+- The repo is `renrenmimi/AlgoAlgo` on GitHub, default branch `main`. Work on a branch,
+  open a PR, and merge it — do not push straight to `main`. Commit and push only when the
+  user asks.
+- Commit messages, PR titles and bodies are **English** (see "Language policy").
+- Reference projects: `../DataData` (the shell and the quality bar), `../SYSDesigner`,
+  `../AgentLab` — read only, do not modify.
+- `lc.md` is the raw source material, read only. Note that it is derived from two paid
+  bootcamps, so treat it as third-party material.

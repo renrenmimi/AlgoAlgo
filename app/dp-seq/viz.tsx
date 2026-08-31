@@ -1,21 +1,21 @@
 "use client";
 
-// 第 9 章 · 子序列 DP 的专属可视化:
-//  - SubseqLab:子序列 vs 子数组 交互实验室 —— 亲手选字符,看「保持顺序即可」
-//    与「必须连续」两条规则的区别。这个区别决定了后面所有状态怎么定义。
-//  - LisPlayer:LIS 的 O(n²) 递推动画 —— nums 与 dp 两行联动,高亮「以 i 结尾」
-//    如何回头去接那个「最优前驱」。自建两行播放器,复用 lib/stepper 的控制条。
+// Chapter 9 - the visualizations that belong to the subsequence DP chapter:
+//  - SubseqLab: the subsequence vs. subarray lab - pick characters by hand and compare "order is enough"
+//    against "must be contiguous". That difference drives how every state below is defined.
+//  - LisPlayer: the O(n^2) bottom-up LIS animation - the nums and dp rows move together, highlighting how "ending at i"
+//    reaches back for the best predecessor. A custom two-row player reusing the control bar from lib/stepper.
 //
-//  (双序列二维表 718 / 1143 / 72 用共享库 DPTable,帧在 page.tsx 里生成;
-//   耐心排序 tails、回文中心扩展用共享库 ArrayStepper。)
+//  (The two-sequence 2-D tables 718 / 1143 / 72 use the shared DPTable, with frames generated in page.tsx;
+//   the patience-sorting tails and the palindrome center expansion use the shared ArrayStepper.)
 //
-// 双语:旁白用 <T en zh />,aria-label 等字符串 props 用 useL() 解析 { en, zh }。
+// Bilingual: narration uses <T en zh />; string props such as aria-label resolve { en, zh } through useL().
 
 import { useMemo, useState, type ReactNode } from "react";
 import { useStepper, StepControls } from "@/lib/stepper";
 import { T, useL } from "@/lib/i18n";
 
-/* ================= SubseqLab · 子序列 vs 子数组 ================= */
+/* ================= SubseqLab - subsequence vs. subarray ================= */
 
 const SUB_STR = "ABCDE";
 
@@ -163,19 +163,19 @@ export function SubseqLab() {
   );
 }
 
-/* ================= LisPlayer · LIS 的 O(n²) 递推动画 ================= */
+/* ================= LisPlayer - the O(n^2) bottom-up LIS animation ================= */
 
 const LIS_NUMS = [1, 3, 2, 4, 5];
 const LIS_DP = [1, 2, 2, 3, 4];
 
 interface LisFrame {
-  /** 正在计算的下标,null = 开场/收尾 */
+  /** the index being computed; null = opening/closing frame */
   i: number | null;
-  /** 合法前驱(nums[j] < nums[i])的下标集合 */
+  /** the set of indices that are valid predecessors (nums[j] < nums[i]) */
   preds: number[];
-  /** 已填好 dp 的最大下标(-1 = 还没开始填) */
+  /** the largest index whose dp value is already filled in (-1 = nothing filled yet) */
   dpUpto: number;
-  /** 收尾时高亮的一条最长上升子序列 */
+  /** one longest increasing subsequence, highlighted in the closing frame */
   chain?: number[];
   msg: ReactNode;
 }
@@ -375,7 +375,7 @@ export function LisPlayer() {
       </div>
       <div className="viz-stage" style={{ flexDirection: "column", gap: 4 }}>
         <div className="seq-lis">
-          {/* 指针行 */}
+          {/* pointer row */}
           <div
             className="seq-lis-cells"
             style={{ gridTemplateColumns: `repeat(${n}, 56px)`, minHeight: 24 }}
@@ -393,7 +393,7 @@ export function LisPlayer() {
               </div>
             ))}
           </div>
-          {/* nums 行 */}
+          {/* nums row */}
           <div className="seq-lis-row">
             <span className="seq-lis-tag">nums</span>
             <div
@@ -415,7 +415,7 @@ export function LisPlayer() {
               })}
             </div>
           </div>
-          {/* dp 行 */}
+          {/* dp row */}
           <div className="seq-lis-row" style={{ marginTop: 8 }}>
             <span className="seq-lis-tag">dp</span>
             <div

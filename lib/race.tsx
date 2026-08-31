@@ -1,58 +1,64 @@
 "use client";
 
-// 算法竞速 —— 同一份输入,让两种(或多种)算法同场跑,量出真实账单:
-// 比较次数、移动次数、额外空间。
+// The algorithm race -- run two (or more) algorithms on the same input and measure the real
+// bill: comparisons, moves, extra space.
 //
-// 为什么需要它:大 O 只说「增长趋势」,不说「这一份输入上到底花了多少」。
-// O(n²) 的插入排序在近乎有序的数组上可以只比较 n−1 次,把 O(n log n) 的归并
-// 打得很惨 —— 这种事只有把账算出来才看得见。本组件就是那台记账机。
+// Why it is needed: big-O only describes the growth trend, not what a particular input
+// actually costs. Insertion sort, at O(n^2), can get away with n-1 comparisons on a nearly
+// sorted array and thoroughly beat O(n log n) merge sort -- you only see that once you add up
+// the bill. This component is the machine that keeps those books.
 //
-// 用法三步:
-//   1. 写「带计数器的算法」:每次比较调 t.cmp(),每次写入调 t.mov(),
-//      申请辅助单元调 t.alloc(n)/t.free(n),递归进出调 t.enter()/t.exit()。
-//   2. 声明输入形状(随机 / 已排序 / 逆序 / 大量重复…),同一形状喂给所有选手。
+// Three steps to use it:
+//   1. Write an algorithm with counters: call t.cmp() on every comparison, t.mov() on every
+//      write, t.alloc(n)/t.free(n) when taking and releasing auxiliary cells, and
+//      t.enter()/t.exit() on entering and leaving a recursive call.
+//   2. Declare the input shapes (random / sorted / reversed / many duplicates ...); the same
+//      shape is fed to every contender.
 //   3. <AlgoRace algos={[A, B]} inputs={PATTERNS} sizes={[8,16,32]} />
 //
-// 引擎只认计数、不认算法,所以排序、快速幂、斐波那契、二分查找都能共用同一套。
+// The engine only knows about counts, not about algorithms, so sorting, fast exponentiation,
+// Fibonacci and binary search can all share it.
 //
-// 计数口径(全站统一,写在界面上,不许含糊):
-//   · 比较 = 两个元素之间的一次大小比较
-//   · 移动 = 一次「写入数组槽位」;一次交换 = 2 次写入
-//   · 空间 = 任一时刻「辅助单元 + 递归栈帧」的峰值(不含输入本身)
+// How things are counted (uniform across the site, printed in the UI, no hand-waving):
+//   . comparison = one size comparison between two elements
+//   . move = one write into an array slot; one swap = 2 writes
+//   . space = the peak of "auxiliary cells + recursion stack frames" at any instant
+//     (the input itself is not counted)
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useL, type Loc } from "@/lib/i18n";
 import { BigO } from "@/lib/kit";
 
 /* ================================================================
-   1. 计数器
+   1. Counters
    ================================================================ */
 
 export interface RaceCounts {
-  /** 比较次数 */
+  /** Number of comparisons */
   cmp: number;
-  /** 移动(数组写入)次数 */
+  /** Number of moves (array writes) */
   mov: number;
-  /** 额外空间峰值:辅助单元 + 递归栈帧 */
+  /** Peak extra space: auxiliary cells + recursion stack frames */
   space: number;
 }
 
 export interface Tracer {
-  /** 记一次比较 */
+  /** Record one comparison */
   cmp(n?: number): void;
-  /** 记 n 次写入(一次交换请记 2) */
+  /** Record n writes (record 2 for a swap) */
   mov(n?: number): void;
-  /** 申请 n 个辅助单元 */
+  /** Take n auxiliary cells */
   alloc(n: number): void;
-  /** 归还 n 个辅助单元 */
+  /** Release n auxiliary cells */
   free(n: number): void;
-  /** 进入一层递归 */
+  /** Enter one level of recursion */
   enter(): void;
-  /** 退出一层递归 */
+  /** Leave one level of recursion */
   exit(): void;
 }
 
-/** 操作数超过上限时抛出 —— 让「naive 递归会爆」这件事以可控的方式被看见。 */
+/** Thrown when the operation count exceeds the cap -- it makes "naive recursion blows up"
+ *  visible in a controlled way. */
 class RaceAbort extends Error {}
 
 class Trace implements Tracer {
@@ -103,38 +109,39 @@ class Trace implements Tracer {
 }
 
 /* ================================================================
-   2. 选手与输入
+   2. Contenders and inputs
    ================================================================ */
 
 export interface RaceAlgo<I> {
   id: string;
-  /** 选手名 */
+  /** Contender name */
   name: Loc<string>;
-  /** 一句话:它凭什么快 / 慢(显示在赛道上) */
+  /** One sentence on why it is fast or slow (shown on its lane) */
   note?: Loc<ReactNode>;
-  /** 时间复杂度,传给 <BigO o=…>:1|logn|n|nlogn|n2|2n */
+  /** Time complexity, passed to <BigO o=...>: 1|logn|n|nlogn|n2|2n */
   time: string;
-  /** 空间复杂度覆盖文字,如 "O(1)" / "O(n)" */
+  /** Override text for the space complexity, e.g. "O(1)" / "O(n)" */
   space: Loc<string>;
-  /** 跑一遍:input 是「副本」,可以随意改;每步操作要如实记账 */
+  /** Run once. input is a copy, so mutate it freely; every operation must be booked honestly. */
   run: (input: I, t: Tracer) => void;
 }
 
 export interface RaceInput<I> {
   id: string;
-  /** 形状名:随机 / 已排序 / 逆序… */
+  /** Shape name: random / sorted / reversed / ... */
   label: Loc<string>;
-  /** 造一份规模为 n 的输入;seed 相同 → 输入完全相同 */
+  /** Build an input of size n; the same seed produces exactly the same input */
   make: (n: number, seed: number) => I;
-  /** 这个形状想说明什么(选中时显示) */
+  /** What this shape is meant to demonstrate (shown while it is selected) */
   hint?: Loc<ReactNode>;
 }
 
-/** 三项指标的展示配置。复用同一引擎跑非排序算法时,改标签即可。 */
+/** Display configuration for the three metrics. When reusing this engine for non-sorting
+ *  algorithms, just relabel them. */
 export interface RaceMetric {
   key: keyof RaceCounts;
   label: Loc<string>;
-  /** 说明这一项到底在数什么 */
+  /** Explains what this metric actually counts */
   tip?: Loc<string>;
 }
 
@@ -166,7 +173,7 @@ export const DEFAULT_METRICS: RaceMetric[] = [
 ];
 
 /* ================================================================
-   3. 确定性随机 —— 同一 seed 造出同一份输入,结果可复现
+   3. Deterministic randomness -- the same seed builds the same input, so results reproduce
    ================================================================ */
 
 export function rng(seed: number) {
@@ -181,13 +188,13 @@ export function rng(seed: number) {
 }
 
 /* ================================================================
-   4. 跑一场
+   4. Running a race
    ================================================================ */
 
 export interface LaneResult {
   id: string;
   counts: RaceCounts;
-  /** 操作数超上限被中止 —— 说明它在这个规模上已经不可用 */
+  /** Aborted because the operation cap was exceeded -- it is unusable at this size */
   aborted: boolean;
 }
 
@@ -211,7 +218,7 @@ export function runRace<I>(
 }
 
 /* ================================================================
-   5. 数字滚动(尊重 prefers-reduced-motion)
+   5. Number roll-up (respects prefers-reduced-motion)
    ================================================================ */
 
 function useCountUp(target: number, ms = 620) {
@@ -219,7 +226,7 @@ function useCountUp(target: number, ms = 620) {
   const from = useRef(target);
   useEffect(() => {
     const a = from.current;
-    from.current = target; // 立刻记账,下次动画不会从更老的值起跳
+    from.current = target; // Book it immediately so the next animation does not start from a staler value
     const reduce =
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -236,8 +243,8 @@ function useCountUp(target: number, ms = 620) {
       if (p < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
-    // 兜底:隐藏标签页 / 被节流时 rAF 会暂停,setTimeout 仍会到 ——
-    // 数字是这个组件的立身之本,绝不允许停在旧值上。
+    // Safety net: rAF pauses on a hidden or throttled tab, but setTimeout still fires --
+    // the numbers are what this component stands on, so they must never be left stale.
     const settle = window.setTimeout(() => setV(target), ms + 140);
     return () => {
       cancelAnimationFrame(raf);
@@ -250,7 +257,7 @@ function useCountUp(target: number, ms = 620) {
 const fmt = (n: number) => n.toLocaleString("en-US");
 
 /* ================================================================
-   6. 组件
+   6. Component
    ================================================================ */
 
 export function AlgoRace<I>({
@@ -267,20 +274,20 @@ export function AlgoRace<I>({
   unitLabel,
 }: {
   title: Loc<ReactNode>;
-  /** 2~3 名选手最好读 */
+  /** Two or three contenders read best */
   algos: RaceAlgo<I>[];
   inputs: RaceInput<I>[];
   sizes: number[];
-  /** 把输入深拷一份给每位选手 —— 保证「同一输入」名副其实 */
+  /** Deep-copies the input for each contender, so "the same input" really means the same input */
   clone: (v: I) => I;
   metrics?: RaceMetric[];
   defaultInput?: number;
   defaultSize?: number;
-  /** 操作数上限,超了记为「已中止」 */
+  /** Operation cap; exceeding it marks the contender as aborted */
   opCap?: number;
-  /** 判读:为什么是这个结果(拿到成绩后由调用方解释) */
+  /** The reading: why the result came out this way (the caller explains it once the scores are in) */
   verdict?: (r: LaneResult[], ctx: { size: number; inputId: string }) => Loc<ReactNode>;
-  /** 规模单位,默认 n */
+  /** Unit for the size, n by default */
   unitLabel?: Loc<string>;
 }) {
   const L = useL();
@@ -296,8 +303,9 @@ export function AlgoRace<I>({
     [algos, shape, size, seed, opCap],
   );
 
-  // 有些形状与 seed 无关(「已排序」的 n 元数组只有一种),此时「换一组」按了也不会变 ——
-  // 按了没反应的按钮是坏体验,直接禁用并说明原因。
+  // Some shapes do not depend on the seed (there is only one sorted array of n elements), so
+  // "reshuffle" would change nothing. A button that does nothing when pressed is a bad
+  // experience, so disable it and say why.
   const seedMatters = useMemo(() => {
     try {
       return (
@@ -310,17 +318,19 @@ export function AlgoRace<I>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shape, size, seed]);
 
-  // 每项指标的最大值 —— 条形按它归一化(被中止的选手不参与,免得把标尺撑爆)
+  // The maximum for each metric -- bars are normalized against it (aborted contenders are
+  // excluded so they do not blow out the scale)
   const maxOf = (k: keyof RaceCounts) =>
     Math.max(1, ...results.filter((r) => !r.aborted).map((r) => r.counts[k]));
 
-  // 本项所有选手数值相同 → 没有可比性,条形走中性色,避免「全部拉满」的误导
+  // Every contender scored the same on this metric, so there is nothing to compare: draw the
+  // bars in a neutral color rather than misleadingly filling them all to the top.
   const tiedOn = (k: keyof RaceCounts): boolean => {
     const live = results.filter((r) => !r.aborted);
     return live.length > 1 && live.every((r) => r.counts[k] === live[0].counts[k]);
   };
 
-  // 每项指标的赢家(并列则都不标)
+  // The winner for each metric (nothing is marked when there is a tie)
   const winnerOf = (k: keyof RaceCounts): string | null => {
     const live = results.filter((r) => !r.aborted);
     if (live.length < 2) return live.length === 1 ? live[0].id : null;
@@ -339,7 +349,7 @@ export function AlgoRace<I>({
     <div className="viz race">
       <div className="viz-title">{L(title)}</div>
 
-      {/* 控制条:输入形状 + 规模 */}
+      {/* Control bar: input shape + size */}
       <div className="race-ctl">
         <div className="race-ctl-row">
           <span className="race-ctl-lab">{L({ en: "Input shape", zh: "输入形状" })}</span>
@@ -393,7 +403,7 @@ export function AlgoRace<I>({
 
       {shape.hint && <p className="race-hint">{L(shape.hint)}</p>}
 
-      {/* 赛道 */}
+      {/* Lanes */}
       <div className="race-lanes">
         {algos.map((a, k) => {
           const r = results.find((x) => x.id === a.id)!;
@@ -434,7 +444,7 @@ export function AlgoRace<I>({
         })}
       </div>
 
-      {/* 口径说明 —— 数字必须可追问 */}
+      {/* How things are counted -- the numbers have to stand up to questioning */}
       <ul className="race-legend">
         {metrics.map((m) => (
           <li key={m.key}>
@@ -466,13 +476,15 @@ function Bar({
   value: number;
   max: number;
   win: boolean;
-  /** 本项所有选手同分 —— 条形转中性,并标「并列」 */
+  /** Every contender scored the same on this metric -- the bar turns neutral and is marked
+   *  as a tie */
   tie: boolean;
   winLabel: string;
   tieLabel: string;
 }) {
   const shown = useCountUp(value);
-  // 同分时不拉满(拉满会被读成「爆表」,而同分往往恰恰是都很省)
+  // Do not fill the bar on a tie (a full bar reads as "off the charts", while a tie often
+  // means everyone was cheap)
   const pct = tie ? 30 : max > 0 ? Math.max(2, Math.round((value / max) * 100)) : 2;
   return (
     <div className={`race-bar${win ? " win" : ""}${tie ? " tie" : ""}`}>

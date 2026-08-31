@@ -1,8 +1,9 @@
-/* 第 6 章 · 贪心(data-ch="greedy")专属样式。
-   规则:自定义类名一律带 .grd- 前缀,或整体包在 [data-ch="greedy"] 下;
-   颜色只用 CSS token(var(--acc) / --ok / --risk 等),深浅主题自动适配。 */
+/* Chapter 6 · Greedy (data-ch="greedy") specific styles.
+   Rule: every custom class name is .grd- prefixed, or nested under [data-ch="greedy"];
+   colors come only from CSS tokens (var(--acc) / --ok / --risk and the like) so
+   light and dark themes adapt automatically. */
 
-/* ============ 通用:证明 / 判据步骤卡(交换论证三步、贪心 vs DP 判据) ============ */
+/* ============ Shared: proof / criterion step cards (the three steps of an exchange argument, greedy vs DP criteria) ============ */
 
 [data-ch="greedy"] .grd-steps {
   counter-reset: grdstep;
@@ -58,7 +59,7 @@
   color: var(--text-2);
 }
 
-/* ============ 贪心 vs DP / 贪心 vs 暴力 两列对比 ============ */
+/* ============ Greedy vs DP / greedy vs brute force, two-column comparison ============ */
 
 [data-ch="greedy"] .grd-duel {
   display: grid;
@@ -77,7 +78,7 @@
   }
 }
 
-/* ============ CookieMatch:双行匹配(455) ============ */
+/* ============ CookieMatch: two-row matching (455) ============ */
 
 [data-ch="greedy"] .grd-row {
   display: flex;
@@ -86,7 +87,7 @@
 }
 
 [data-ch="greedy"] .grd-rowlab {
-  /* 够放下英文的 "children g" / "cookies s",也够放中文的「孩子·胃口」 */
+  /* Wide enough for the English "children g" / "cookies s" and for the Chinese labels alike */
   width: 92px;
   flex-shrink: 0;
   white-space: nowrap;
@@ -103,12 +104,12 @@
   flex-wrap: wrap;
 }
 
-/* ============ IntervalTimeline:时间轴(435) ============ */
+/* ============ IntervalTimeline: the timeline (435) ============ */
 
 [data-ch="greedy"] .grd-timeline {
   position: relative;
   width: 100%;
-  /* 顶部留白给 lastEnd 竖线标签,避免它压到上方图例 */
+  /* Padding at the top leaves room for the lastEnd vertical-line label so it does not collide with the legend above */
   padding: 18px 8px 2px;
   box-sizing: border-box;
 }
@@ -187,7 +188,7 @@
 
 [data-ch="greedy"] .grd-marker-lab {
   position: absolute;
-  /* 居中挂在竖线上、坐进容器顶部 18px 留白里,靠近右端也不会溢出轨道 */
+  /* Centered on the vertical line and seated in the container's 18px top padding, so it stays inside the track even near the right edge */
   top: 0;
   left: 0;
   transform: translateX(-50%);
@@ -217,7 +218,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* 时间轴图例小方块 */
+/* Timeline legend swatch */
 [data-ch="greedy"] .grd-sw {
   display: inline-block;
   width: 14px;
@@ -231,7 +232,7 @@
 [data-ch="greedy"] .grd-sw.grd-bar-kept { background: var(--ok-bg); border-color: var(--ok); }
 [data-ch="greedy"] .grd-sw.grd-bar-removed { background: var(--risk-bg); border-color: var(--risk); }
 
-/* ============ CoinGreedyLab:硬币陷阱(§07) ============ */
+/* ============ CoinGreedyLab: the coin trap (§07) ============ */
 
 [data-ch="greedy"] .grd-coin-row {
   display: flex;
@@ -269,7 +270,7 @@
 [data-ch="greedy"] .grd-coin-sum .grd-sum-ok { color: var(--warn); }
 [data-ch="greedy"] .grd-coin-sum .grd-sum-best { color: var(--ok); }
 
-/* ============ 题单:英文题名比中文长,先让标签让位再截断标题 ============ */
+/* ============ Problem set: English titles run longer than Chinese, so shrink the tags before truncating the title ============ */
 
 [data-ch="greedy"] .prob-tags {
   flex: 0 1 auto;
@@ -277,7 +278,7 @@
   overflow: hidden;
 }
 
-/* ============ 摆动序列小图示(376) ============ */
+/* ============ Wiggle-sequence illustration (376) ============ */
 
 [data-ch="greedy"] .grd-wiggle {
   display: flex;

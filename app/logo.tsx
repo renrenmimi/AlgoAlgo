@@ -1,5 +1,7 @@
-// 品牌标:一个分叉又汇合的「决策流」—— 从一个起点出发,走过分支,抵达答案。
-// 寓意「算法 = 一串看得见的决策」。纯 SVG,继承 currentColor,放在渐变底的 .brand-mark 里。
+// Brand mark: a "decision flow" that branches and then converges -- start from one point,
+// pass through the branches, arrive at the answer. It stands for "an algorithm is a visible
+// sequence of decisions". Pure SVG, inherits currentColor, sits inside the gradient-backed
+// .brand-mark.
 
 export function BrandMark() {
   return (

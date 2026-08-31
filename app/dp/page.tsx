@@ -1,13 +1,13 @@
 "use client";
 
-// 第 7 章 · 动态规划入门 —— 全书样板章。
-// 九段式结构:直觉(递归树看重复)→ 记忆化 → 递推 + 精讲 A(爬楼梯)→
-// 五步法 → 网格 DP + 精讲 B(不同路径)→ 打家劫舍 + 精讲 C →
-// 贪心失效 + 精讲 D(零钱兑换)→ 题单 → 测验 → 要点。
-// DP 表格动画统一用 lib/algviz 的 DPTable;递归树用 TreePlayer(见 ./viz)。
+// Chapter 7 - Introduction to dynamic programming: the reference chapter for the whole course.
+// Nine-section structure: intuition (spot the repetition in the recursion tree) -> memoization -> bottom-up + Deep dive A (Climbing Stairs) ->
+// the five-step method -> grid DP + Deep dive B (Unique Paths) -> House Robber + Deep dive C ->
+// where greedy fails + Deep dive D (Coin Change) -> problem set -> quiz -> key points.
+// Every DP table animation uses DPTable from lib/algviz; recursion trees use TreePlayer (see ./viz).
 //
-// 双语:正文用 <T en zh />;组件的文案型 props 传 { en, zh }。
-// CodeTabs 的 code 也给两份 —— 两份之间只有注释不同,可执行代码逐行一致(hl 行号才对得上)。
+// Bilingual: body text uses <T en zh />; copy-style props on components take { en, zh }.
+// CodeTabs code is supplied twice as well - the two versions differ only in their comments, while the executable code matches line for line (so the hl line numbers stay correct).
 
 import "./chapter.css";
 import {
@@ -36,10 +36,10 @@ import {
   cloneN,
 } from "./viz";
 
-/* ================= §02 斐波那契竞速:指标重贴标签 ================= */
+/* ================= §02 Fibonacci race: relabeling the metrics ================= */
 
-// 竞速引擎的三个计数器本来是给排序用的(比较 / 移动 / 空间)。
-// 这里跑的是递归,字面含义不适用,于是重贴标签 —— 计数口径见 app/dp/viz.tsx。
+// The race engine's three counters were designed for sorting (comparisons / moves / space).
+// What runs here is recursion, where those literal meanings do not apply, so the labels are reassigned - see app/dp/viz.tsx for what is counted.
 const FIB_METRICS: RaceMetric[] = [
   {
     key: "cmp",
@@ -67,7 +67,7 @@ const FIB_METRICS: RaceMetric[] = [
   },
 ];
 
-/** 标准斐波那契(fib(0)=0, fib(1)=1)—— 判读里用它复核「调用数 = 2·fib(n+1)−1」。 */
+/** Standard Fibonacci (fib(0)=0, fib(1)=1) - the verdict uses it to double-check "calls = 2*fib(n+1)-1". */
 function fibOf(n: number): number {
   if (n < 2) return n;
   let a = 0;
@@ -82,7 +82,7 @@ function fibOf(n: number): number {
 
 const num = (n: number) => n.toLocaleString("en-US");
 
-/* ================= 精讲 A · LC 70 爬楼梯:一维表逐格填充 ================= */
+/* ================= Deep dive A - LC 70 Climbing Stairs: filling a 1-D table cell by cell ================= */
 
 const CLIMB_VALS = [1, 2, 3, 5, 8, 13]; // dp[1..6]
 
@@ -245,7 +245,7 @@ const F_CLIMB: DPFrame[] = [
   },
 ];
 
-/* ================= 精讲 B · LC 62 不同路径:二维表逐格填充 ================= */
+/* ================= Deep dive B - LC 62 Unique Paths: filling a 2-D table cell by cell ================= */
 
 const P62 = [
   [1, 1, 1, 1],
@@ -372,7 +372,7 @@ const F62: DPFrame[] = [
   },
 ];
 
-/* ================= 精讲 C · LC 198 打家劫舍:选 / 不选 ================= */
+/* ================= Deep dive C - LC 198 House Robber: take or skip ================= */
 
 const ROB_NUMS = [2, 7, 9, 3, 1];
 const ROB_DP = [2, 7, 11, 11, 12];
@@ -543,7 +543,7 @@ const F_ROB: DPFrame[] = [
   },
 ];
 
-/* ================= 精讲 D · LC 322 零钱兑换:min 型 DP ================= */
+/* ================= Deep dive D - LC 322 Coin Change: a min-type DP ================= */
 
 const COIN_DP = [0, 1, 2, 1, 1, 2, 2]; // coins = [1,3,4], amount = 6
 
@@ -724,7 +724,7 @@ const F_COIN: DPFrame[] = [
   },
 ];
 
-/* ================= 页面 ================= */
+/* ================= Page ================= */
 
 const CHIPS = [
   { id: "why", n: "01", label: { en: "Why DP exists", zh: "为什么会有 DP" } },
@@ -780,7 +780,7 @@ export default function DPChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 为什么 ================= */}
+      {/* ================= §01 Why ================= */}
       <Section
         id="why"
         index="01"
@@ -990,7 +990,7 @@ export default function DPChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §02 记忆化 ================= */}
+      {/* ================= §02 Memoization ================= */}
       <Section
         id="memo"
         index="02"
@@ -1248,7 +1248,7 @@ export default function DPChapter() {
             const naive = lane("fib-naive");
             const memo = lane("fib-memo").counts;
             const loop = lane("fib-iter").counts;
-            const calls = 2 * fibOf(size + 1) - 1; // 朴素递归的调用次数,可手算复核
+            const calls = 2 * fibOf(size + 1) - 1; // call count of the naive recursion; can be checked by hand
             const adds = fibOf(size + 1) - 1;
             if (naive.aborted)
               return {
@@ -1375,7 +1375,7 @@ export default function DPChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §03 递推 + 精讲 A ================= */}
+      {/* ================= §03 Bottom-up + Deep dive A ================= */}
       <Section
         id="tabulation"
         index="03"
@@ -1716,7 +1716,7 @@ export default function DPChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §04 五步法 ================= */}
+      {/* ================= §04 The five-step method ================= */}
       <Section
         id="framework"
         index="04"
@@ -1942,7 +1942,7 @@ export default function DPChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §05 网格 DP + 精讲 B ================= */}
+      {/* ================= §05 Grid DP + Deep dive B ================= */}
       <Section
         id="grid"
         index="05"
@@ -2235,7 +2235,7 @@ export default function DPChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §06 打家劫舍 + 精讲 C ================= */}
+      {/* ================= §06 House Robber + Deep dive C ================= */}
       <Section
         id="rob"
         index="06"
@@ -2470,7 +2470,7 @@ export default function DPChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §07 贪心失效 + 精讲 D ================= */}
+      {/* ================= §07 Where greedy fails + Deep dive D ================= */}
       <Section
         id="coin"
         index="07"
@@ -2798,7 +2798,7 @@ export default function DPChapter() {
         </Callout>
       </Section>
 
-      {/* ================= §08 题单 ================= */}
+      {/* ================= §08 Problem set ================= */}
       <Section
         id="problems"
         index="08"

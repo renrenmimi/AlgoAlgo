@@ -1,9 +1,13 @@
-// 第 5 章 · 回溯 —— 题单与测验数据。
-// 题单覆盖 lc.md 回溯模块:组合(77/216/17/39/40)、分割(131/93)、
-// 子集(78/90/491)、排列(46/47)、棋盘(51/37),补一道括号生成 22 —— 共 15 题。
-// hint 只给方向不剧透,key 用一段话把最优解 + 套路讲透。
-// 双语:title / tags / hint / key 与测验的每一项文案都是 Loc<…>,直接写 { en, zh }。
-// title 的英文用 LeetCode 官方英文题名,中文用官方中文题名。
+// Chapter 5 - Backtracking: problem set and quiz data.
+// The problem set covers the backtracking module of lc.md: combinations (77/216/17/39/40),
+// partitioning (131/93), subsets (78/90/491), permutations (46/47) and board problems
+// (51/37), plus one extra -- Generate Parentheses (22) -- for 15 problems in total.
+// hint only points at a direction without spoiling; key explains the optimal solution and
+// the underlying pattern in one paragraph.
+// Bilingual: title / tags / hint / key and every piece of quiz copy are Loc<...>, written
+// inline as { en, zh }.
+// The English title uses LeetCode's official English name, the Chinese one its official
+// Chinese name.
 
 import type { Problem } from "@/lib/problems";
 import type { QuizItem } from "@/lib/quiz";

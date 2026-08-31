@@ -1,22 +1,30 @@
 "use client";
 
-// 第 1 章 · 排序的专属可视化。排序的招牌是「条形图慢放」:
-//  - SortLab:条形图排序实验室 —— 同一组数据,冒泡 / 选择 / 插入三种排法自由切换,
-//    逐帧看「比较」「交换」「就位」三种动作。核心自建组件。
-//  - PartitionDemo:快排 partition 逐帧(Lomuto),复用 lib/stepper 的 ArrayStepper。
-//  - MergeDemo:归并的心脏 —— 两个有序段的「三指针合并」逐帧。
-//  - CountingDemo:计数排序 —— 不比较大小,只数数,突破比较排序的下界。
-//  - StabilityDemo:稳定 vs 不稳定 —— 同 key 元素的相对顺序会不会被打乱。
+// Chapter 1 · Sorting-specific visualizations. The signature device here is the
+// slow-motion bar chart:
+//  - SortLab: the bar-chart sorting lab —— one data set, freely switchable between
+//    bubble, selection and insertion sort, showing the three actions (compare, swap,
+//    settled) frame by frame. The core hand-built component.
+//  - PartitionDemo: quicksort's partition step by step (Lomuto), reusing ArrayStepper
+//    from lib/stepper.
+//  - MergeDemo: the heart of merge sort —— the three-pointer merge of two sorted runs,
+//    frame by frame.
+//  - CountingDemo: counting sort —— no magnitude comparisons at all, just tallying,
+//    which is how it breaks the comparison-sort lower bound.
+//  - StabilityDemo: stable vs unstable —— whether the relative order of equal-key
+//    elements survives.
 //
-// 双语:帧旁白直接写 <T en zh />;标题 / 按钮 / 图例 / 指针标签传 { en, zh },
-// 组件内用 useL() 解析。帧的旁白必须与该帧真正渲染的数组状态一致。
+// Bilingual: frame narration is written inline as <T en zh />; titles, buttons,
+// legends and pointer labels take { en, zh } and are resolved with useL() inside the
+// component. A frame's narration must match the array state that frame actually
+// renders.
 
 import { useState, type ReactNode } from "react";
 import { T, useL, type Loc } from "@/lib/i18n";
 import { useStepper, StepControls, ArrayStepper, type ArrayFrame } from "@/lib/stepper";
 
 /* ==================================================================
-   SortLab —— 条形图排序实验室(冒泡 / 选择 / 插入)
+   SortLab —— the bar-chart sorting lab (bubble / selection / insertion)
    ================================================================== */
 
 type BarState = "idle" | "cmp" | "swap" | "sorted" | "key" | "min";
@@ -27,10 +35,10 @@ interface BarFrame {
   msg: ReactNode;
 }
 
-const BASE = [5, 2, 9, 1, 6]; // 5 个数,maxV = 9,帧数适中
+const BASE = [5, 2, 9, 1, 6]; // 5 values, maxV = 9, which keeps the frame count reasonable
 const MAXV = 9;
 
-/* 冒泡:相邻逆序就换,大的往右冒 */
+/* Bubble sort: swap any adjacent inversion, so large values bubble to the right */
 function bubbleFrames(): BarFrame[] {
   const a = [...BASE];
   const n = a.length;
@@ -176,7 +184,7 @@ function bubbleFrames(): BarFrame[] {
   return frames;
 }
 
-/* 选择:每轮选出最小值,换到前面 */
+/* Selection sort: each round picks the minimum and swaps it to the front */
 function selectionFrames(): BarFrame[] {
   const a = [...BASE];
   const n = a.length;
@@ -341,7 +349,7 @@ function selectionFrames(): BarFrame[] {
   return frames;
 }
 
-/* 插入:摸牌插入到已排好的手牌里 */
+/* Insertion sort: draw a card and insert it into the already sorted hand */
 function insertionFrames(): BarFrame[] {
   const a = [...BASE];
   const n = a.length;
@@ -560,14 +568,14 @@ export function SortLab() {
           <T en="sorted region" zh="已排好的区间" />
         </span>
       </div>
-      {/* key 切换时强制重挂载,播放进度归零 */}
+      {/* Changing key forces a remount, which resets playback to the first frame */}
       <SortRunner key={algo} frames={ALGO[algo].frames} />
     </div>
   );
 }
 
 /* ==================================================================
-   PartitionDemo —— 快排的 partition(Lomuto)逐帧
+   PartitionDemo —— quicksort's partition (Lomuto), frame by frame
    ================================================================== */
 
 function partitionFrames(): ArrayFrame[] {
@@ -587,7 +595,7 @@ function partitionFrames(): ArrayFrame[] {
         return { v };
       }),
       ptrs: [
-        // 指针标签必须窄于 cellW(54px),否则相邻的 i / j 会撞在一起
+        // Pointer labels must be narrower than cellW (54px), or adjacent i / j labels collide
         ...(i >= 0 ? [{ i, label: { en: "i·edge", zh: "i·边界" } }] : []),
         ...(curJ !== null ? [{ i: curJ, label: { en: "j·scan", zh: "j·扫描" } }] : []),
         ...(finalPivot === undefined
@@ -763,7 +771,7 @@ export function PartitionDemo() {
 }
 
 /* ==================================================================
-   MergeDemo —— 归并的心脏:两个有序段的三指针合并
+   MergeDemo —— the heart of merge sort: the three-pointer merge of two sorted runs
    ================================================================== */
 
 const MERGE_L = [1, 4, 7];
@@ -1013,7 +1021,7 @@ export function MergeDemo() {
 }
 
 /* ==================================================================
-   CountingDemo —— 计数排序:不比较,只数数
+   CountingDemo —— counting sort: no comparisons, only tallying
    ================================================================== */
 
 const COUNT_IN = [2, 4, 2, 0, 3, 0];
@@ -1021,8 +1029,8 @@ const COUNT_MAX = 4;
 
 interface CountFrame {
   counts: number[];
-  litIn: number | null; // 正在数的输入下标
-  litBucket: number | null; // 高亮的桶
+  litIn: number | null; // index in the input currently being tallied
+  litBucket: number | null; // the highlighted bucket
   out: (number | null)[];
   msg: ReactNode;
 }
@@ -1053,7 +1061,7 @@ function countingFrames(): CountFrame[] {
       />
     ),
   });
-  // 计数阶段
+  // Counting phase
   for (let i = 0; i < COUNT_IN.length; i++) {
     const v = COUNT_IN[i];
     counts[v]++;
@@ -1103,7 +1111,7 @@ function countingFrames(): CountFrame[] {
       />
     ),
   });
-  // 重建阶段
+  // Rebuild phase
   const out: (number | null)[] = [];
   for (let b = 0; b <= COUNT_MAX; b++) {
     for (let c = 0; c < counts[b]; c++) {
@@ -1236,11 +1244,13 @@ export function CountingDemo() {
 }
 
 /* ==================================================================
-   StabilityDemo —— 稳定 vs 不稳定
+   StabilityDemo —— stable vs unstable
    ================================================================== */
 
-// 每张牌:key = 排序主键(第一次按它排),tag = 出场顺序编号(用来肉眼追踪)。
-// hue 跟着 key 走,方便看清「相同 key 的牌」在排完后谁前谁后。
+// Each card: key = the sort key (what the first sort orders by), tag = its original
+// position number (so it can be tracked by eye).
+// hue follows key, which makes it easy to see which of two same-key cards ends up
+// first after sorting.
 interface Card {
   key: number;
   tag: string;
@@ -1255,7 +1265,7 @@ const CARDS: Card[] = [
   { key: 2, tag: "⑤", hue: "c" },
 ];
 
-// 稳定:相同 key 保持出场先后 → 按 tag 升序;不稳定:相同 key 顺序被打乱(这里演示为倒序)。
+// Stable: equal keys keep their original order → ascending by tag. Unstable: the order of equal keys is disturbed (demonstrated here by reversing it).
 const STABLE = [...CARDS].sort((a, b) => a.key - b.key || a.tag.localeCompare(b.tag));
 const UNSTABLE = [...CARDS].sort((a, b) => a.key - b.key || b.tag.localeCompare(a.tag));
 
@@ -1353,7 +1363,7 @@ export function StabilityDemo() {
 }
 
 /* ==================================================================
-   IntervalsDemo —— LC 56 合并区间:排序后一次线性扫描
+   IntervalsDemo —— LC 56 merge intervals: sort, then a single linear scan
    ================================================================== */
 
 const IVS: [number, number][] = [
@@ -1365,9 +1375,9 @@ const IVS: [number, number][] = [
 const IV_SCALE = 19;
 
 interface IvFrame {
-  curIdx: number | null; // 正在看的输入区间
-  merged: [number, number][]; // 已收尾的段
-  cur: [number, number] | null; // 当前正在合并的段
+  curIdx: number | null; // the input interval currently under inspection
+  merged: [number, number][]; // segments already finalized
+  cur: [number, number] | null; // the segment currently being merged into
   msg: ReactNode;
 }
 

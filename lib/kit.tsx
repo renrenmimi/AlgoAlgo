@@ -1,14 +1,19 @@
 "use client";
 
-// 章节页通用原语:
-//  - Reveal:滚动进入视口时淡入上移(IntersectionObserver)。
-//  - Hero:章节开场(眉题 / 渐变大标题 / 本质一句话 / 巨型编号水印 / 段落跳转 chips)。
-//  - Section:编号章节段(§01 · 标题 + 描述 + 右侧徽章),自带 Reveal。
-//  - Callout:提示框(idea/warn/deep/story/win 五种语气)。
-//  - BigO:复杂度徽章。 KeyPoints:章末要点卡。 ChapterFooter:上一章/下一章。
+// Shared primitives for chapter pages:
+//  - Reveal: fades and slides content in when it scrolls into the viewport
+//    (IntersectionObserver).
+//  - Hero: the chapter opening (eyebrow / large gradient title / one-sentence essence /
+//    giant number watermark / jump-to-section chips).
+//  - Section: a numbered section (§01 · title + description + a badge on the right),
+//    with Reveal built in.
+//  - Callout: a callout box (five tones: idea/warn/deep/story/win).
+//  - BigO: a complexity badge. KeyPoints: the end-of-chapter takeaways card.
+//    ChapterFooter: previous/next chapter.
 //
-// 双语:所有文案型 props 都是 Loc<…>,可以直接传 { en, zh };
-// 也可以传一段 JSX 并在里面用 <T en zh />。两种写法都行,按可读性选。
+// Bilingual: every copy-carrying prop is a Loc<...>, so you can pass { en, zh } directly;
+// you can also pass a chunk of JSX and use <T en zh /> inside it. Both work -- pick whichever
+// reads better.
 
 import {
   useEffect,
@@ -39,7 +44,8 @@ export function Reveal({
     const el = ref.current;
     if (!el) return;
 
-    // 挂载时若已在视口内(或视口上方),立即显示 —— 避免首屏/快速跳转后内容停在隐藏态
+    // If the element is already in (or above) the viewport at mount time, show it right away --
+    // otherwise content can get stuck hidden on the first screen or after a fast jump.
     const r = el.getBoundingClientRect();
     const vh = window.innerHeight || document.documentElement.clientHeight;
     if (r.top < vh * 0.95) {
@@ -58,7 +64,8 @@ export function Reveal({
     );
     io.observe(el);
 
-    // 兜底:无论 IO 是否触发,2.5s 后强制显示,内容永不隐形
+    // Safety net: whether or not the observer ever fires, force the content visible after
+    // 2.5s so it can never stay invisible.
     const fallback = window.setTimeout(() => setInView(true), 2500);
 
     return () => {
@@ -94,11 +101,11 @@ export function Hero({
   children,
 }: {
   ch: ChapterId;
-  /** 渐变标题,例如 <>Sorting <span className="grad">排序</span></> */
+  /** Gradient title, e.g. <>Sorting <span className="grad">algorithms</span></> */
   title: Loc<ReactNode>;
   essence: Loc<ReactNode>;
   chips?: HeroChip[];
-  /** hero 右侧/下方的自定义视觉(每章专属动画) */
+  /** The custom visual to the right of (or below) the hero -- each chapter's own animation */
   children?: ReactNode;
 }) {
   const meta = CHAPTERS.find((c) => c.id === ch)!;
@@ -205,7 +212,7 @@ export function Callout({
 
 /* ---------- BigO ---------- */
 
-/** o 取值:1 | logn | n | nlogn | n2 | 2n,label 缺省按 o 生成 */
+/** o is one of: 1 | logn | n | nlogn | n2 | 2n. When label is omitted it is derived from o. */
 export function BigO({ o, label }: { o: string; label?: Loc<string> }) {
   const L = useL();
   const text =

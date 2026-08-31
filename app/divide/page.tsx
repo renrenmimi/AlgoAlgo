@@ -1,14 +1,20 @@
 "use client";
 
-// 第 2 章 · 分治 Divide & Conquer。
-// 结构:分治三步(分/治/合)+ 通用模板 → 递归树与主定理直觉 →
-// 精讲 A 快速幂(LC 50,PowTree + 算法竞速:朴素连乘 / 递归 / 迭代)→
-// 精讲 B 合并 K 链表(LC 23,分层合并图)→
-// 精讲 C 最大子数组分治视角(LC 53,对比 07 章 Kadane)→ 逆序对 + Karatsuba →
-// 题单 → 测验 → 要点。招牌可视化:TreePlayer(快速幂)、自建分层合并图。
+// Chapter 2 · Divide & Conquer.
+// Structure: the three steps (divide / conquer / combine) + a general template →
+// recursion trees and an intuition for the master theorem →
+// deep dive A, fast exponentiation (LC 50, PowTree + an algorithm race: naive
+// repeated multiplication / recursive / iterative) →
+// deep dive B, merge K sorted lists (LC 23, the layered merge diagram) →
+// deep dive C, maximum subarray from a divide-and-conquer angle (LC 53, contrasted
+// with Kadane's algorithm in chapter 07) → inversion counting + Karatsuba →
+// problem set → quiz → key points. Signature visualizations: TreePlayer (fast
+// exponentiation) and the hand-built layered merge diagram.
 //
-// 双语:正文用 <T en zh />;组件的文案型 props 传 { en, zh }。
-// CodeTabs 的 code 也给两份 —— 两份之间只有注释不同,可执行代码逐行一致(hl 行号才对得上)。
+// Bilingual: prose uses <T en zh />; a component's copy-style props take { en, zh }.
+// The code passed to CodeTabs also comes in two versions —— they differ only in the
+// comments, and the executable code matches line for line, so the hl line numbers
+// stay correct.
 
 import "./chapter.css";
 import type { ReactNode } from "react";
@@ -46,27 +52,31 @@ const CHIPS = [
   { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
 ];
 
-/* ================= §03 快速幂竞速:选手、输入形状、判读 =================
-   同一个指数交给三份实现,量两项账:乘法次数、峰值空间。
-   算的是 3^n mod (10^9+7) —— 浮点的 x^10000 早就溢出,而「每乘一次就取模」
-   本来就是模幂的标准做法,这样三者的结果才能逐位核对。
-   记账口径:一次乘法记一次 t.cmp();递归帧由 enter/exit 各记 1;
-   工作变量用 alloc(1) 记。这道题没有「数组写入」这回事,所以 mov 一次不记,
-   metrics 里也只显示两项。 */
+/* ================= §03 Fast-exponentiation race: contenders, input shapes, verdict =================
+   The same exponent is handed to three implementations and two bills are measured:
+   multiplication count and peak space.
+   What is computed is 3^n mod (10^9+7) —— a floating-point x^10000 would have
+   overflowed long ago, and taking the modulus after every multiplication is the
+   standard way to do modular exponentiation anyway, which is what lets the three
+   results be checked against each other digit for digit.
+   Accounting conventions: one multiplication records one t.cmp(); a recursive frame
+   records 1 through each of enter/exit; a working variable is recorded with
+   alloc(1). This problem has no notion of an array write, so mov is never recorded
+   and metrics shows only two entries. */
 
 const POW_MOD = 1_000_000_007n;
 const POW_BASE = 3n;
 
-/** 不超过 n 的最大 2 的幂。用倍增而不是 Math.log2,避免浮点误差。 */
+/** The largest power of 2 that does not exceed n. Doubling is used instead of Math.log2 to avoid floating-point error. */
 const pow2Floor = (n: number) => {
   let p = 1;
   while (p * 2 <= n) p *= 2;
   return p;
 };
 
-/** 朴素连乘:从 x 起步,一次一次乘上去 —— n − 1 次乘法。 */
+/** Naive repeated multiplication: start from x and multiply one step at a time —— n − 1 multiplications. */
 function powNaive(n: number, t: Tracer) {
-  t.alloc(1); // 一个累乘变量
+  t.alloc(1); // one running-product variable
   if (n === 0) return 1n;
   let res = POW_BASE;
   for (let i = 1; i < n; i++) {
@@ -76,20 +86,20 @@ function powNaive(n: number, t: Tracer) {
   return res;
 }
 
-/** 递归快速幂:x^n =(x^(n/2))²。基准情形取在 x¹,所以走到指数 1 不花乘法。 */
+/** Recursive fast exponentiation: x^n = (x^(n/2))². The base case sits at x¹, so reaching exponent 1 costs no multiplication. */
 function powRecursive(n: number, t: Tracer) {
   const go = (e: number): bigint => {
-    t.enter(); // 一层递归 = 一个活着的栈帧
+    t.enter(); // one level of recursion = one live stack frame
     let r: bigint;
     if (e <= 1) {
       r = e === 1 ? POW_BASE : 1n;
     } else {
       const half = go(e >> 1);
       r = (half * half) % POW_MOD;
-      t.cmp(); // 平方
+      t.cmp(); // squaring
       if (e & 1) {
         r = (r * POW_BASE) % POW_MOD;
-        t.cmp(); // 奇数补乘
+        t.cmp(); // the extra multiplication for an odd exponent
       }
     }
     t.exit();
@@ -98,9 +108,9 @@ function powRecursive(n: number, t: Tracer) {
   return go(n);
 }
 
-/** 迭代快速幂:同一串平方,改由 n 的二进制位驱动;最后一轮不做用不上的平方。 */
+/** Iterative fast exponentiation: the same chain of squarings, driven by the binary digits of n instead; the final round skips the squaring that would go unused. */
 function powIterative(n: number, t: Tracer) {
-  t.alloc(2); // 两个工作变量:结果 res、当前这一档的底数 b
+  t.alloc(2); // two working variables: the result res and b, the base at the current rung
   let res = 1n;
   let b = POW_BASE;
   let e = n;
@@ -339,7 +349,7 @@ export default function DivideChapter() {
         chips={CHIPS}
       />
 
-      {/* ================= §01 分治三步 ================= */}
+      {/* ================= §01 The three divide-and-conquer steps ================= */}
       <Section
         id="why"
         index="01"
@@ -795,7 +805,7 @@ function merge(x, y) {
         </Callout>
       </Section>
 
-      {/* ================= §02 递归树与复杂度 ================= */}
+      {/* ================= §02 Recursion trees and complexity ================= */}
       <Section
         id="cost"
         index="02"
@@ -1084,7 +1094,7 @@ function merge(x, y) {
         </Callout>
       </Section>
 
-      {/* ================= §03 精讲 A · 快速幂 LC 50 ================= */}
+      {/* ================= §03 Deep dive A · fast exponentiation, LC 50 ================= */}
       <Section
         id="pow"
         index="03"
@@ -1618,7 +1628,7 @@ function merge(x, y) {
         </div>
       </Section>
 
-      {/* ================= §04 精讲 B · 合并 K 链表 LC 23 ================= */}
+      {/* ================= §04 Deep dive B · merge K sorted lists, LC 23 ================= */}
       <Section
         id="merge"
         index="04"
@@ -1970,7 +1980,7 @@ function merge(x, y) {
         </Callout>
       </Section>
 
-      {/* ================= §05 精讲 C · 最大子数组 LC 53 ================= */}
+      {/* ================= §05 Deep dive C · maximum subarray, LC 53 ================= */}
       <Section
         id="maxsub"
         index="05"
@@ -2511,7 +2521,7 @@ var maxSubArray = function (nums) {
         </Callout>
       </Section>
 
-      {/* ================= §06 逆序对 + Karatsuba ================= */}
+      {/* ================= §06 Inversion counting + Karatsuba ================= */}
       <Section
         id="inversion"
         index="06"
@@ -2697,7 +2707,7 @@ var maxSubArray = function (nums) {
         </Callout>
       </Section>
 
-      {/* ================= §07 题单 ================= */}
+      {/* ================= §07 Problem set ================= */}
       <Section
         id="problems"
         index="07"
