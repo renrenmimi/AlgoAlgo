@@ -18,6 +18,10 @@ BFS/DFS, monotonic stacks) live there; the general problem-solving strategies li
 
 *Sorting, replayed frame by frame*
 
+![Algorithm race: three sorts billed on the same array — comparisons, moves and peak extra space](docs/race.jpg)
+
+*Algorithm race — the same array handed to each contender, then the actual bill: comparisons, moves and peak extra space. Change the input shape and the ranking changes with it.*
+
 ## Chapters
 
 | # | Chapter | What it covers |
