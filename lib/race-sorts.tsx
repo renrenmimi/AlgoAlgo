@@ -253,8 +253,8 @@ export const QUICK_LAST = A(
   "nlogn",
   { en: "O(log n) ~ O(n)", zh: "O(log n) ~ O(n)" },
   {
-    en: "Fast on random data. Feed it a sorted array and every partition splits 1 : n−1 — back to O(n²).",
-    zh: "随机数据上很快。但喂它已排序数组,每次划分都是 1 : n−1 —— 退化回 O(n²)。",
+    en: "Fast on random data. Feed it a sorted array and every partition splits 0 : n−1 — back to O(n²).",
+    zh: "随机数据上很快。但输入已排序数组时,每次划分都是 0 : n−1 —— 退化回 O(n²)。",
   },
   quickLast,
 );
@@ -265,8 +265,8 @@ export const QUICK_RANDOM = A(
   "nlogn",
   { en: "O(log n)", zh: "O(log n)" },
   {
-    en: "One line of randomisation and the adversarial input disappears — no shape can be aimed at it.",
-    zh: "一行随机化就让「专门害它的输入」消失 —— 没有哪种形状能瞄准它。",
+    en: "One line of randomisation defeats inputs aimed at a fixed pivot. This Lomuto version still degrades on many duplicate values; a three-way partition fixes that.",
+    zh: "一行随机化让专门针对固定轴的输入失效;但这里用的是 Lomuto 划分,大量重复值仍会让它退化,要靠三路划分解决。",
   },
   quickRandom,
 );

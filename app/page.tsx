@@ -1468,6 +1468,7 @@ function fact(n) {
                 <div className="map-meta">
                   <span
                     className="map-level"
+                    role="img"
                     aria-label={L({
                       en: `Difficulty ${c.level} of 5`,
                       zh: `难度 ${c.level}/5`,

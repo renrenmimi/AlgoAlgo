@@ -153,7 +153,7 @@ describe("quicksort pivot choice", () => {
     const sorted = bill(QUICK_LAST, SORTED.make(n, 1)).counts;
     const random = bill(QUICK_LAST, RANDOM.make(n, 1)).counts;
 
-    // Every partition splits 1 : n-1, so it reaches the quadratic comparison count.
+    // Every partition splits 0 : n-1, so it reaches the quadratic comparison count.
     expect(sorted.cmp).toBe(pairs(n)); // 496
     expect(sorted.cmp).toBeGreaterThan(random.cmp * 3);
     // And the recursion depth grows with n instead of log n - this is the stack
