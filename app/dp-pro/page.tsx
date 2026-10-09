@@ -191,17 +191,16 @@ const STOCK_309 = {
           The three <code>n*</code> temporaries are required. If you assigned to
           hold, sold, and rest directly, the later transitions would read{" "}
           <b>today&apos;s</b> new values instead of yesterday&apos;s and the answer
-          would be wrong. This is the general condition for shrinking a DP down to
-          a few variables: it is only valid while every transition reads values
-          from the previous step.
+          would be wrong. In this problem, shrinking the DP down to a few
+          variables is only valid while every transition reads values from the
+          previous step.
         </>
       ),
       zh: (
         <>
           三个 <code>n*</code> 临时变量是必需的。若直接给 hold、sold、rest 赋值,
           后面的转移读到的就是<b>今天</b>的新值而不是昨天的值,答案会错。
-          这也是「把 DP 压成几个变量」的通用前提:
-          只有当每条转移都只读上一步的值时才成立。
+          在本题中,「把 DP 压成几个变量」只有在每条转移都只读上一步的值时才成立。
         </>
       ),
     },
@@ -483,13 +482,14 @@ const BALLOON_312 = {
         <>
           Three loops: interval length on the outside, which guarantees the shorter
           intervals are already done; then the left endpoint; then the choice of
-          the balloon burst last. Time O(n³), which passes at n ≤ 500.
+          the balloon burst last. Time O(n³); at n ≤ 300, n³ is 2.7×10⁷, which
+          passes.
         </>
       ),
       zh: (
         <>
           三层循环:最外层是区间长度,它保证更短的区间已经算完;
-          中层是左端点;内层枚举「最后戳的气球」。时间 O(n³),n ≤ 500 能过。
+          中层是左端点;内层枚举「最后戳的气球」。时间 O(n³),n ≤ 300 时 n³ = 2.7×10⁷,能过。
         </>
       ),
     },
@@ -755,7 +755,7 @@ export default function DPProChapter() {
           ),
           zh: (
             <>
-              DP 进阶 <span className="grad">Advanced DP</span>
+              DP 状态的<span className="grad">四种形状</span>
             </>
           ),
         }}
@@ -774,7 +774,7 @@ export default function DPProChapter() {
           ),
           zh: (
             <>
-              DP 四章的最后一章。前三章的状态都是老实的 <code>dp[i]</code>、
+              DP 四章的最后一章。前三章的状态都是简单的 <code>dp[i]</code>、
               <code>dp[i][j]</code>;这一章,状态换了四副面孔:一台
               <strong>机器</strong>、一段<strong>区间</strong>、一棵
               <strong>树</strong>、一个<strong>集合</strong>。
@@ -805,10 +805,10 @@ export default function DPProChapter() {
               en={
                 <>
                   Look back at the three DP chapters so far. Chapter 07 used{" "}
-                  <code>dp[i]</code> along a line. Chapter 08 used{" "}
-                  <code>dp[i][j]</code> for knapsack and grids, with two
-                  dimensions. Chapter 09 used a two-dimensional table comparing two
-                  strings. In all of them the state fits in one sentence and is
+                  <code>dp[i]</code> along a line and <code>dp[i][j]</code> on a
+                  grid. Chapter 08 used <code>dp[i][j]</code> for the knapsack.
+                  Chapter 09 used a two-dimensional table comparing two strings.
+                  In all of them the state fits in one sentence and is
                   located by one or two indices. In this chapter the questions get
                   harder, and{" "}
                   <strong>the state itself grows a structure</strong>.
@@ -816,11 +816,11 @@ export default function DPProChapter() {
               }
               zh={
                 <>
-                  回顾 DP 前三章:第 7 章是线性的 <code>dp[i]</code>;
-                  第 8 章的背包与网格是两个维度的 <code>dp[i][j]</code>;
+                  回顾 DP 前三章:第 7 章有线性的 <code>dp[i]</code> 和网格的{" "}
+                  <code>dp[i][j]</code>;第 8 章的背包是 <code>dp[i][j]</code>;
                   第 9 章是两个字符串比对的二维表。
                   它们的状态都能一句话说清、用一两个下标定位。
-                  到了这一章,题目问得更刁,<strong>状态本身长出了结构</strong>。
+                  到了这一章,问题更复杂,<strong>状态本身长出了结构</strong>。
                 </>
               }
             />
@@ -828,7 +828,6 @@ export default function DPProChapter() {
         </div>
         <div className="grid-2" style={{ marginTop: 6 }}>
           <div className="card hoverable">
-            <div className="pro-type-ico" aria-hidden>🎛️</div>
             <div className="card-kicker">
               <T en={<>§02 · state machine DP</>} zh={<>§02 · 状态机 DP</>} />
             </div>
@@ -859,7 +858,6 @@ export default function DPProChapter() {
             </p>
           </div>
           <div className="card hoverable">
-            <div className="pro-type-ico" aria-hidden>🌳</div>
             <div className="card-kicker">
               <T en={<>§03 · tree DP</>} zh={<>§03 · 树形 DP</>} />
             </div>
@@ -890,7 +888,6 @@ export default function DPProChapter() {
             </p>
           </div>
           <div className="card hoverable">
-            <div className="pro-type-ico" aria-hidden>📏</div>
             <div className="card-kicker">
               <T en={<>§04 · interval DP</>} zh={<>§04 · 区间 DP</>} />
             </div>
@@ -922,7 +919,6 @@ export default function DPProChapter() {
             </p>
           </div>
           <div className="card hoverable">
-            <div className="pro-type-ico" aria-hidden>🔦</div>
             <div className="card-kicker">
               <T en={<>§05 · bitmask DP</>} zh={<>§05 · 状压 DP</>} />
             </div>
@@ -1041,9 +1037,9 @@ export default function DPProChapter() {
           <div className="pro-rung">
             <span className="pro-rung-lc">LC 121</span>
             <div>
-              <h4>
+              <h3>
                 <T en={<>One buy and one sell</>} zh={<>只能买卖一次</>} />
-              </h4>
+              </h3>
               <p>
                 <span className="add">
                   <T en={<>Adds: </>} zh={<>加什么:</>} />
@@ -1069,9 +1065,9 @@ export default function DPProChapter() {
           <div className="pro-rung">
             <span className="pro-rung-lc">LC 122</span>
             <div>
-              <h4>
+              <h3>
                 <T en={<>Unlimited trades</>} zh={<>可以无限次买卖</>} />
-              </h4>
+              </h3>
               <p>
                 <span className="add">
                   <T en={<>Adds: </>} zh={<>加什么:</>} />
@@ -1088,8 +1084,8 @@ export default function DPProChapter() {
                   zh={
                     <>
                       两个状态 hold 和 cash,可以反复互相转化。
-                      这题也能贪心(吃下每段上涨),答案相同,
-                      但状态机版才扛得住后面几条约束。
+                      这题也能用贪心(收下每段上涨),答案相同,
+                      但只有状态机版能沿用到后面几条约束。
                     </>
                   }
                 />
@@ -1099,9 +1095,9 @@ export default function DPProChapter() {
           <div className="pro-rung">
             <span className="pro-rung-lc">LC 123 / 188</span>
             <div>
-              <h4>
+              <h3>
                 <T en={<>At most k trades</>} zh={<>最多买卖 k 次</>} />
-              </h4>
+              </h3>
               <p>
                 <span className="add">
                   <T en={<>Adds: </>} zh={<>加什么:</>} />
@@ -1128,12 +1124,12 @@ export default function DPProChapter() {
           <div className="pro-rung">
             <span className="pro-rung-lc">LC 309</span>
             <div>
-              <h4>
+              <h3>
                 <T
                   en={<>A one-day cooldown (worked example below)</>}
                   zh={<>含冷冻期(本节精讲)</>}
                 />
-              </h4>
+              </h3>
               <p>
                 <span className="add">
                   <T en={<>Adds: </>} zh={<>加什么:</>} />
@@ -1159,9 +1155,9 @@ export default function DPProChapter() {
           <div className="pro-rung">
             <span className="pro-rung-lc">LC 714</span>
             <div>
-              <h4>
+              <h3>
                 <T en={<>A transaction fee</>} zh={<>含手续费</>} />
-              </h4>
+              </h3>
               <p>
                 <span className="add">
                   <T en={<>Adds: </>} zh={<>加什么:</>} />
@@ -1170,15 +1166,17 @@ export default function DPProChapter() {
                   en={
                     <>
                       no new state. Subtract the fee in the selling transition. It
-                      does break the LC 122 greedy rule, because many small trades
-                      each pay the fee, so from here on the DP is what you rely on.
+                      does break the LC 122 day-by-day greedy rule, because many
+                      small trades each pay the fee. Another greedy can still be
+                      found, but the state machine needs no new proof and is more
+                      general.
                     </>
                   }
                   zh={
                     <>
                       不加状态,只在「卖出」那条转移里扣 fee。
-                      但它让 122 的贪心失效了 —— 频繁的小额交易每笔都要付费,
-                      从此只能靠 DP 记账。
+                      但它让 122 的逐日差贪心失效了 —— 频繁的小额交易每笔都要付费。
+                      虽然仍能另找贪心,但状态机的写法不必重新证明,更通用。
                     </>
                   }
                 />
@@ -1343,7 +1341,7 @@ export default function DPProChapter() {
                   正则引擎靠在状态之间移动来匹配文本;
                   一个界面则处于加载中、加载成功或加载失败。
                   学会「把局面拆成有限的几个状态 + 明确的转移」,
-                  受益的远不止刷题。
+                  用处远不止练习题。
                 </>
               }
             />
@@ -1435,7 +1433,7 @@ export default function DPProChapter() {
         <div className="grid-2" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en={<>Same pattern · LC 543 (review)</>} zh={<>同款套路 · LC 543(复盘)</>} />
+              <T en={<>Same pattern · LC 543 (review)</>} zh={<>同一模式 · LC 543(复盘)</>} />
             </div>
             <div className="card-title">
               <T en={<>Diameter of a binary tree</>} zh={<>二叉树的直径</>} />
@@ -1489,7 +1487,7 @@ export default function DPProChapter() {
                     每个节点返回三种编码之一:未覆盖、已覆盖、有摄像头。
                     自底向上,再加一个贪心选择:把摄像头一路推迟到未覆盖节点的父亲 ——
                     装在那里,一台能同时覆盖该节点、它的兄弟和它自己的父亲。
-                    树形 DP 与贪心合体。比主线更难,之后再回来看。
+                    树形 DP 与贪心相结合。比主线更难,之后再回来看。
                   </>
                 }
               />
@@ -1838,7 +1836,7 @@ export default function DPProChapter() {
           tone="deep"
           title={{
             en: "The ceiling of bitmask DP: the traveling salesman problem",
-            zh: "状压的天花板:旅行商问题(TSP)",
+            zh: "状压 DP 的典型上限:旅行商问题(TSP)",
           }}
         >
           <p>
@@ -1853,10 +1851,11 @@ export default function DPProChapter() {
                   city i. There are 2ⁿ·n states and each one tries n next cities,
                   so the cost is <b>O(2ⁿ × n²)</b> instead of checking n!
                   routes. That is still exponential, but it solves instances up to
-                  about n = 20, which is enough for real tasks such as planning a
-                  delivery route or ordering the drill holes on a circuit board.
-                  This is the boundary of bitmask DP: n must be small, but a small n
-                  can still be worth a lot.
+                  about n = 20, which is enough for small real tasks such as
+                  ordering the stops of one delivery route. Large instances, such
+                  as the thousands of holes drilled into a circuit board, are
+                  handled with heuristics instead. This is the boundary of bitmask
+                  DP: n must be small, but a small n can still be worth a lot.
                 </>
               }
               zh={
@@ -1867,9 +1866,10 @@ export default function DPProChapter() {
                   当前停在城市 i」时的最短距离。状态共 2ⁿ·n 个,
                   每个再试 n 个下一站,所以代价是 <b>O(2ⁿ × n²)</b>,
                   而不是枚举 n! 条路线。它仍是指数级,
-                  但已经能解到 n ≈ 20 的实例 ——
-                  规划配送路线、给电路板打孔排序这类真实任务够用了。
-                  这就是状压的边界:n 必须小,但小的 n 也能很值钱。
+                  但已经能解到 n ≈ 20 的实例,
+                  足以应付安排一条配送路线上各站顺序这类小规模的真实任务;
+                  像电路板钻孔那样动辄数千个点的实例,则改用启发式算法。
+                  这就是状压的边界:n 必须小,但 n 小的问题也可能很有价值。
                 </>
               }
             />
@@ -1899,7 +1899,7 @@ export default function DPProChapter() {
                 <>
                   看到「集合」还不够,先看 n ——
                   <b>表有 2ⁿ 项,必须装得进内存</b>。n ≤ 20 是舒适区:
-                  2²⁰ 约一百万。n = 25 是 3300 万,n = 30 约十亿,基本出局。
+                  2²⁰ 约一百万。n = 25 是 3300 万,n = 30 约十亿,已不可行。
                   所以状压题的数据范围里几乎总有一个<b>小得反常的 n</b>:
                   它既是提示,也是红线。
                 </>
@@ -1935,7 +1935,7 @@ export default function DPProChapter() {
               }
               zh={
                 <>
-                  DP 还有两块区域值得点个名。它们套路固定,
+                  DP 还有两块区域值得一提。它们的模式固定,
                   但需要的背景比本章假设的更多。现在只要
                   <strong>知道它们存在、认得出信号</strong>就够了,
                   真遇到时再深入。
@@ -1946,7 +1946,6 @@ export default function DPProChapter() {
         </div>
         <div className="pro-mini">
           <div className="card">
-            <div className="pro-type-ico" aria-hidden>🔢</div>
             <div className="card-kicker">
               <T en={<>Digit DP</>} zh={<>数位 DP</>} />
             </div>
@@ -1987,7 +1986,6 @@ export default function DPProChapter() {
             </p>
           </div>
           <div className="card">
-            <div className="pro-type-ico" aria-hidden>🎲</div>
             <div className="card-kicker">
               <T en={<>Probability and expected value DP</>} zh={<>概率 / 期望 DP</>} />
             </div>
@@ -2046,12 +2044,12 @@ export default function DPProChapter() {
               }
               zh={
                 <>
-                  从第 7 章那句大白话 —— 把算过的结果记下来重复用 ——
+                  从第 7 章那句朴素的话 —— 把算过的结果记下来重复用 ——
                   到入门的线性表、背包的容量表、子序列的双序列表,
                   再到这一章的状态机、树形、区间、集合,
                   你手里已经有一整套流程:先认出状态的形状,再套五步法。
                   数位 DP 和概率 DP 只是边缘的两小块。
-                  <b>DP 并不玄:它只是把决策与状态的演进,一格一格地写出来。</b>
+                  <b>DP 并不神秘:它只是把决策与状态的演进,一格一格地写出来。</b>
                 </>
               }
             />
@@ -2108,9 +2106,9 @@ export default function DPProChapter() {
             </>,
             <>
               <b>State machine DP</b>: the problem moves between a few named
-              situations, and each new condition adds a state or a dimension (LC
-              121 → 122 → 123 → 309 → 714). A cooldown adds the state sold, meaning
-              &quot;sold today&quot;.
+              situations, and most new conditions add a state or a dimension (LC
+              121 → 122 → 123 → 309); the fee in LC 714 only changes a transition. A
+              cooldown adds the state sold, meaning &quot;sold today&quot;.
             </>,
             <>
               <b>Tree DP</b>: post-order, bottom-up, and every node{" "}
@@ -2150,8 +2148,8 @@ export default function DPProChapter() {
             </>,
             <>
               <b>状态机 DP</b>:问题在几种有名字的局面间移动,
-              每加一条约束就多一个状态或一个维度
-              (LC 121 → 122 → 123 → 309 → 714)。
+              多数约束会多出一个状态或一个维度
+              (LC 121 → 122 → 123 → 309),LC 714 的手续费则只改一条转移。
               冷冻期多出的是 sold,意思是「今天刚卖」。
             </>,
             <>
@@ -2172,7 +2170,7 @@ export default function DPProChapter() {
               消掉最低位的 1,<code>m &amp; -m</code> 把它单独取出来。
             </>,
             <>
-              <b>「最后一步是什么?」是所有 DP 的起手式</b>:
+              <b>「最后一步是什么?」是所有 DP 的切入点</b>:
               最后一格从哪来(线性)、最后一个物品选不选(背包)、
               最后戳哪个气球(区间)、最后放哪个数字(状压)。
             </>,
