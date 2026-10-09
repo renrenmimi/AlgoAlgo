@@ -67,7 +67,7 @@ const CHIPS = [
   { id: "select", n: "08", label: { en: "Kth largest", zh: "第 K 大" } },
   { id: "intervals", n: "09", label: { en: "Merge intervals", zh: "合并区间" } },
   { id: "problems", n: "10", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "11", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "11", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function SortingChapter() {
@@ -2955,12 +2955,12 @@ class Solution:
       <Section
         id="quiz"
         index="11"
-        title={{ en: "Quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Answer all 8 correctly to mark this chapter as complete.",
-          zh: "8 题全对,本章标记为通关",
+          zh: "8 题全对,本章标记为已完成",
         }}
-        badge={<span className="chip">✎ <T en="Quiz" zh="通关测验" /></span>}
+        badge={<span className="chip">✎ <T en="Chapter quiz" zh="本章测验" /></span>}
       >
         <Quiz ch="sorting" items={QUIZ} />
       </Section>

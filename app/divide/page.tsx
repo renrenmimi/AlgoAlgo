@@ -50,7 +50,7 @@ const CHIPS = [
   { id: "maxsub", n: "05", label: { en: "Max subarray · LC 53", zh: "最大子数组 · LC 53" } },
   { id: "inversion", n: "06", label: { en: "Inversions & Karatsuba", zh: "逆序对 & Karatsuba" } },
   { id: "problems", n: "07", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "08", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function DivideChapter() {
@@ -2370,12 +2370,12 @@ var maxSubArray = function (nums) {
       <Section
         id="quiz"
         index="08"
-        title={{ en: "Chapter quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Answer all 8 correctly to mark this chapter as complete.",
-          zh: "8 题全对,点亮本章绿灯",
+          zh: "8 题全对,本章标记为已完成",
         }}
-        badge={<span className="chip"><T en="✎ Quiz" zh="✎ 通关测验" /></span>}
+        badge={<span className="chip"><T en="✎ Chapter quiz" zh="✎ 本章测验" /></span>}
       >
         <Quiz ch="divide" items={QUIZ} />
       </Section>

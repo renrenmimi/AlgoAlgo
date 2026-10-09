@@ -175,7 +175,7 @@ const CHIPS = [
   { id: "answer", n: "05", label: { en: "Binary search on the answer", zh: "二分答案" } },
   { id: "answer2", n: "06", label: { en: "Three more variants", zh: "二分答案的变式" } },
   { id: "problems", n: "07", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "08", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function BinaryChapter() {
@@ -3056,14 +3056,14 @@ export default function BinaryChapter() {
       <Section
         id="quiz"
         index="08"
-        title={{ en: "Chapter quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Answer all 9 correctly to mark this chapter as complete.",
-          zh: "9 题全对,点亮本章绿灯",
+          zh: "9 题全对,本章标记为已完成",
         }}
         badge={
           <span className="chip">
-            <T en="✎ Quiz" zh="✎ 通关测验" />
+            <T en="✎ Chapter quiz" zh="✎ 本章测验" />
           </span>
         }
       >

@@ -35,7 +35,7 @@ const CHIPS = [
   { id: "palindrome", n: "07", label: { en: "Palindromes · LC 5", zh: "回文中心扩展 · 5" } },
   { id: "parse", n: "08", label: { en: "Parsing · LC 205/8", zh: "解析类 · 205/8" } },
   { id: "problems", n: "09", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "10", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "10", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function StringsChapter() {
@@ -2556,14 +2556,14 @@ function buildNext(p) {
       <Section
         id="quiz"
         index="10"
-        title={{ en: "Chapter quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Answer all 8 correctly to mark this chapter complete",
-          zh: "8 题全对,点亮本章绿灯",
+          zh: "8 题全对,本章标记为已完成",
         }}
         badge={
           <span className="chip">
-            <T en="✎ Chapter quiz" zh="✎ 通关测验" />
+            <T en="✎ Chapter quiz" zh="✎ 本章测验" />
           </span>
         }
       >

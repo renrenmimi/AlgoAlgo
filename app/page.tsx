@@ -1642,14 +1642,14 @@ function fact(n) {
       <Section
         id="quiz"
         index="08"
-        title={{ en: "Quick check: chapter quiz", zh: "快问快答:序章通关测验" }}
+        title={{ en: "Quick check: chapter quiz", zh: "快问快答:序章测验" }}
         desc={{
           en: "Seven questions. A perfect score lights the first green mark in the sidebar.",
-          zh: "7 题 —— 全对点亮侧栏第一盏绿灯",
+          zh: "7 题。全部答对后,侧栏中的第一个绿点会亮起",
         }}
         badge={
           <span className="chip">
-            <T en="✎ Chapter quiz" zh="✎ 通关测验" />
+            <T en="✎ Chapter quiz" zh="✎ 本章测验" />
           </span>
         }
       >

@@ -26,7 +26,7 @@ const CHIPS = [
   { id: "bitmask", n: "05", label: { en: "Bitmask DP", zh: "状压 DP" } },
   { id: "map", n: "06", label: { en: "Digit & probability DP", zh: "数位/概率地图" } },
   { id: "problems", n: "07", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "08", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 /* ================= Deep-dive code (the two versions differ only in comments; executable lines match line for line) ================= */
@@ -1951,14 +1951,14 @@ export default function DPProChapter() {
       <Section
         id="quiz"
         index="08"
-        title={{ en: "Quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "All 7 correct turns this chapter green, and finishes the DP series.",
-          zh: "7 题全对,点亮本章绿灯 —— 也点亮整个 DP 系列",
+          zh: "7 题全对,本章标记为已完成,DP 系列也到此结束",
         }}
         badge={
           <span className="chip">
-            <T en={<>✎ Quiz</>} zh={<>✎ 通关测验</>} />
+            <T en={<>✎ Chapter quiz</>} zh={<>✎ 本章测验</>} />
           </span>
         }
       >

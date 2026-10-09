@@ -657,7 +657,7 @@ const CHIPS = [
   { id: "complete", n: "07", label: { en: "Unbounded · ascending", zh: "完全背包 · 正序" } },
   { id: "permcomb", n: "08", label: { en: "Combinations vs permutations", zh: "组合 vs 排列" } },
   { id: "problems", n: "09", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "10", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "10", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function KnapsackChapter() {
@@ -3133,14 +3133,14 @@ var combinationSum4 = function (nums, target) {
       <Section
         id="quiz"
         index="10"
-        title={{ en: "Quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Answer all 8 correctly to mark this chapter complete.",
-          zh: "8 题全对,点亮本章绿灯",
+          zh: "8 题全对,本章标记为已完成",
         }}
         badge={
           <span className="chip">
-            <T en="✎ Quiz" zh="✎ 通关测验" />
+            <T en="✎ Chapter quiz" zh="✎ 本章测验" />
           </span>
         }
       >

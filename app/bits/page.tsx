@@ -424,7 +424,7 @@ const CHIPS = [
   { id: "set", n: "06", label: { en: "An integer as a set", zh: "位表示集合" } },
   { id: "shift", n: "07", label: { en: "Shifting", zh: "移位乘除" } },
   { id: "problems", n: "08", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "09", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "09", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function BitsChapter() {
@@ -2515,14 +2515,14 @@ let mid  = (lo + hi) >>> 1;  // 求中点,同时也是快速的向下取整除�
       <Section
         id="quiz"
         index="09"
-        title={{ en: "Chapter quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Answer all 8 questions correctly to mark this chapter complete",
-          zh: "8 题全对,点亮本章绿灯",
+          zh: "8 题全对,本章标记为已完成",
         }}
         badge={
           <span className="chip">
-            <T en={<>✎ Quiz</>} zh={<>✎ 通关测验</>} />
+            <T en={<>✎ Chapter quiz</>} zh={<>✎ 本章测验</>} />
           </span>
         }
       >
