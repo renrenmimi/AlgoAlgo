@@ -15,7 +15,7 @@
 
 import { useMemo, type ReactNode } from "react";
 import { highlight, type CodeLangId } from "@/lib/highlight";
-import { useShell, type CodeLang } from "@/app/theme-provider";
+import { useCodeLang, type CodeLang } from "@/app/theme-provider";
 import { useL, type Loc } from "@/lib/i18n";
 
 const LANG_LABEL: Record<CodeLangId, string> = {
@@ -116,7 +116,7 @@ export function CodeTabs({
   python: LangSnippet;
   js: LangSnippet;
 }) {
-  const { codeLang, setCodeLang } = useShell();
+  const { codeLang, setCodeLang } = useCodeLang();
   const L = useL();
   const snippets: Record<CodeLang, LangSnippet> = { java, python, js };
   const cur = snippets[codeLang];
