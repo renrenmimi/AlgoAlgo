@@ -23,6 +23,16 @@ export function stubMatchMedia(reducedMotion: boolean) {
 
 stubMatchMedia(false);
 
+// jsdom has no ResizeObserver; the scrollable stages use one (useEdgeFade) to fade their
+// edges. A plain assignment, so a test that calls vi.unstubAllGlobals() keeps it.
+if (!("ResizeObserver" in globalThis)) {
+  (globalThis as { ResizeObserver?: unknown }).ResizeObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
+}
+
 afterEach(() => {
   cleanup();
   stubMatchMedia(false);
