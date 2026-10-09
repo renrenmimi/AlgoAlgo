@@ -24,7 +24,8 @@ import { CodeTabs } from "@/lib/code";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
 import { T } from "@/lib/i18n";
-import { PROBLEMS, QUIZ } from "@/lib/greedy-data";
+import { PROBLEMS } from "@/lib/greedy-problems";
+import { QUIZ } from "@/lib/greedy-quiz";
 import {
   CookieMatch,
   JumpReach,

@@ -86,7 +86,8 @@ app/<ch>/chapter.css   Styles specific to this chapter. page.tsx MUST
                        `import "./chapter.css"` — forgetting it silently kills the
                        chapter's styling and collapses SVGs to zero width (a trap
                        DataData already fell into)
-lib/<ch>-data.tsx      This chapter's PROBLEMS list + QUIZ data
+lib/<ch>-problems.tsx  This chapter's PROBLEMS list
+lib/<ch>-quiz.tsx      This chapter's QUIZ data (kept apart so the atlas loads only problems)
 ```
 
 Each chapter's palette comes from `<main className="page" data-ch="<chapter id>">`

@@ -24,7 +24,8 @@ import { DPTable, type DPFrame, type DPCell } from "@/lib/algviz";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
 import { T } from "@/lib/i18n";
-import { PROBLEMS, QUIZ } from "@/lib/dp-seq-data";
+import { PROBLEMS } from "@/lib/dp-seq-problems";
+import { QUIZ } from "@/lib/dp-seq-quiz";
 import { SubseqLab, LisPlayer } from "./viz";
 import type { ReactNode } from "react";
 
