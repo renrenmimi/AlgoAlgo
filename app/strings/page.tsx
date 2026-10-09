@@ -58,7 +58,7 @@ export default function StringsChapter() {
         essence={{
           en: (
             <>
-              Every fast string matching algorithm rests on one idea:{" "}
+              KMP and the matching algorithms in its family rest on one idea:{" "}
               <strong>keep what each failed comparison told you, and use it next time</strong>.
               This chapter starts with the waste in naive matching, which throws away even the
               comparisons that succeeded. You then build the KMP prefix function by hand and
@@ -69,7 +69,7 @@ export default function StringsChapter() {
           ),
           zh: (
             <>
-              所有快速字符串匹配算法都建立在一句话上:
+              KMP 一类的字符串匹配算法都建立在一句话上:
               <strong>把每一次失败带来的信息留住,下一次直接用上</strong>。
               本章先看清暴力匹配的浪费 —— 它连比对成功的那部分也一起丢掉;
               然后亲手建出 KMP 的前缀函数,看主串指针从此不再回退;
@@ -230,13 +230,14 @@ export default function StringsChapter() {
                   <>
                     Precompute, for every possible failure point,{" "}
                     <b>which prefix the matched suffix is equal to</b>, and store it in a
-                    table. Then a mismatch is one table lookup and one jump. That is KMP.
+                    table. Then a mismatch only looks the table up and jumps, without moving
+                    back in the text. That is KMP.
                   </>
                 }
                 zh={
                   <>
                     对每一个可能的失配点,预先算出<b>「已匹配的后缀等于哪个前缀」</b>,
-                    存成一张表。这样失配就是一次查表加一次跳位。这就是 KMP。
+                    存成一张表。这样失配时只需查表跳位,不必在文本里回退。这就是 KMP。
                   </>
                 }
               />
@@ -306,7 +307,7 @@ export default function StringsChapter() {
                 <>
                   KMP 的全部内容压在一个数组里,叫 <strong>前缀函数(prefix function)</strong>,
                   代码里常写作 <strong>next</strong> 或 <strong>fail</strong>,论文里记作 π。
-                  它的定义只有一句,但每个词都要啃清楚。
+                  它的定义只有一句,但每个词都要弄清楚。
                 </>
               }
             />
@@ -425,21 +426,21 @@ export default function StringsChapter() {
               <T en="KMP" zh="KMP 的做法" />
             </div>
             <div className="card-title">
-              <T en="Failure = one table lookup" zh="失败 = 查一次表" />
+              <T en="Failure = fall back through the table" zh="失败 = 查表回退" />
             </div>
             <p>
               <T
                 en={
                   <>
                     Mismatch → i does not move, j = next[j−1].{" "}
-                    <b>How much of the matched suffix equals a prefix decides where j
-                    lands</b>, in one step.
+                    <b>j falls back along the next chain, possibly several times, until a
+                    match or j = 0.</b>
                   </>
                 }
                 zh={
                   <>
                     失配 → i 不动,j = next[j−1]。
-                    <b>已匹配后缀里有多长的一段等于前缀,直接决定 j 跳到哪</b>,一步到位。
+                    <b>沿 next 链回退,可能连退几次,直到对上或 j 退到 0。</b>
                   </>
                 }
               />
@@ -495,7 +496,7 @@ export default function StringsChapter() {
         }}
         badge={
           <span className="chip" data-tone="info">
-            <T en="★ Key animation" zh="★ 招牌动画" />
+            <T en="★ Key animation" zh="★ 关键动画" />
           </span>
         }
       >
@@ -670,7 +671,7 @@ int[] buildNext(String p) {
               ),
               zh: (
                 <>
-                  <b>坑:</b>Java 的 String 不能下标,取字符必须用 <code>charAt(i)</code>,
+                  <b>常见错误:</b>Java 的 String 不能下标,取字符必须用 <code>charAt(i)</code>,
                   不能写 <code>p[i]</code>。内层是 <code>while</code> 不是 <code>if</code> ——
                   i=6 那样的连续回退靠它。
                 </>
@@ -715,7 +716,7 @@ def build_next(p: str) -> list[int]:
               ),
               zh: (
                 <>
-                  <b>命名坑:</b><code>next</code> 是 Python 内置函数,拿它当变量名会遮蔽内置 ——
+                  <b>命名:</b><code>next</code> 是 Python 内置函数,拿它当变量名会遮蔽内置 ——
                   这里改用 <code>nxt</code>。Python 字符串可以直接 <code>p[i]</code> 下标取字符。
                 </>
               ),
@@ -743,12 +744,12 @@ function buildNext(p) {
     while (j > 0 && p[i] !== p[j])
       j = next[j - 1];                    // 失配:回退 j
     if (p[i] === p[j]) j++;               // 对上:长一格
-    next[i] = j;                          // 记账
+    next[i] = j;                          // 记录
   }
   return next;
 }`,
             },
-            hl: [6, 7, 8, 9],
+            hl: [6, 7, 8],
             note: {
               en: (
                 <>
@@ -1063,7 +1064,7 @@ function buildNext(p) {
           tone="deep"
           title={{
             en: "In practice: where the KMP family is used",
-            zh: "工程现场:KMP 家族在哪儿干活",
+            zh: "工程现场:KMP 家族的实际应用",
           }}
         >
           <p>
@@ -1154,7 +1155,7 @@ function buildNext(p) {
               }
               zh={
                 <>
-                  如果每个窗口都从头重算哈希,总量还是 O(n·m),白忙。关键在
+                  如果每个窗口都从头重算哈希,总量还是 O(n·m),没有任何收益。关键在
                   <strong>滚动哈希(rolling hash)</strong>:窗口向右滑一格时,
                   哈希<strong>只需 O(1) 更新</strong> —— 减去移出字符的贡献、
                   其余整体乘以基数、加上新进来的字符。看动画:
@@ -1387,7 +1388,7 @@ function buildNext(p) {
               ),
               zh: (
                 <>
-                  <b>精度坑:</b>JS 的 Number 超过 2⁵³ 就丢精度,哈希会算错 ——
+                  <b>精度:</b>JS 的 Number 超过 2⁵³ 就丢精度,哈希会算错 ——
                   必须用 <code>BigInt</code>(带 <code>n</code> 后缀)。
                   BigInt 运算慢一些,但取模的结果是精确的。
                 </>
@@ -1460,7 +1461,7 @@ function buildNext(p) {
                     }
                     zh={
                       <>
-                        <b>最坏情况也是 O(n + m)</b>,不怕刁难数据。
+                        <b>最坏情况也是 O(n + m)</b>,不受对抗性数据影响。
                       </>
                     }
                   />
@@ -1637,19 +1638,21 @@ function buildNext(p) {
             <T
               en={
                 <>
-                  The candidate period length is <b>n − k</b>. Why: if s is a substring of
-                  length d repeated t times with t ≥ 2, then the prefix that drops the last
-                  copy and the suffix that drops the first copy are the same string, and their
-                  length is <b>n − d</b>. That is exactly next[n−1], so d = n − k. It remains
-                  to check that d divides n, so the period tiles the string exactly, and that
-                  k &gt; 0, so the string really does repeat itself.
+                  The candidate period length is <b>n − k</b>. Why: suppose s is a substring
+                  repeated t times with t ≥ 2, and take d to be the <b>smallest</b> such
+                  repeating unit (it divides n). The prefix without the last copy equals the
+                  suffix without the first copy, and that length, <b>n − d</b>, is the longest
+                  equal proper prefix and suffix, next[n−1]. So d = n − k. It remains to check
+                  that d divides n, so the period tiles the string exactly, and that k &gt; 0,
+                  so the string really does repeat itself.
                 </>
               }
               zh={
                 <>
-                  循环节的候选长度就是 <b>n − k</b>。原因:若 s 由长度 d 的子串重复 t 次
-                  (t ≥ 2)构成,那么「去掉最后一份」的前缀和「去掉第一份」的后缀是同一个串,
-                  长度都是 <b>n − d</b> —— 这正是 next[n−1],所以 d = n − k。
+                  循环节的候选长度就是 <b>n − k</b>。原因:若 s 由某个子串重复 t 次(t ≥ 2)构成,
+                  取 d 为<b>最小</b>的重复单元(它整除 n),那么「去掉最后一份」的前缀与
+                  「去掉第一份」的后缀相等,长度为 <b>n − d</b>,它就是最长相等真前后缀,
+                  即 next[n−1],所以 d = n − k。
                   剩下只需验证 d 能整除 n(循环节严丝合缝铺满),且 k &gt; 0(串确实存在自相似)。
                 </>
               }
@@ -1853,7 +1856,7 @@ function buildNext(p) {
                   掐头去尾判子串,原理是 s 的任何旋转都藏在双倍串里;
                   但它依赖库函数的子串查找,最坏 O(n²)。要保证 O(n),我用 next 数组:
                   <code>k = next[n−1]</code>,判 <code>k &gt; 0 且 n % (n−k) == 0</code>,
-                  循环节长度就是 n − k。」把「简短解」和「复杂度有保证的解」都端出来,分数最高。
+                  循环节长度就是 n − k。」把「简短解」和「复杂度有保证的解」都讲出来,分数最高。
                 </>
               }
             />
@@ -1912,8 +1915,8 @@ function buildNext(p) {
             <T
               en={
                 <>
-                  The DataData two-pointer chapter introduced the intuition for expanding from
-                  a center; this is a review that then connects to Manacher. The one thing to
+                  DataData chapter 02 (String) introduced the intuition for expanding from a
+                  center; this is a review that then connects to Manacher. The one thing to
                   watch is that <strong>palindromes have odd and even lengths</strong>: the
                   center of <code>aba</code> is a character, while the center of{" "}
                   <code>abba</code> is the gap between two characters. So there are{" "}
@@ -1922,7 +1925,7 @@ function buildNext(p) {
               }
               zh={
                 <>
-                  DataData(数据结构篇)的双指针章讲过中心扩展的直觉,这里作复盘并接上 Manacher。
+                  DataData 第 2 章(字符串)讲过中心扩展的直觉,这里作复盘并接上 Manacher。
                   唯一要留意的是<strong>回文分奇偶</strong>:<code>aba</code> 的中心是一个字符,
                   <code>abba</code> 的中心在两个字符的缝隙里。所以要枚举{" "}
                   <strong>2n−1</strong> 个中心(n 个字符 + n−1 个缝隙)。看动画:
@@ -2004,19 +2007,20 @@ function buildNext(p) {
     }
 }`,
             },
-            hl: [14, 17, 18],
+            hl: [14, 15, 17, 18],
             note: {
               en: (
                 <>
                   <b>Off-by-one:</b> when the while loop exits, l and r have each moved one step
                   too far, so the length is <code>r − l − 1</code>, not r − l. Both kinds of
-                  center must be tried; skipping one loses half of all palindromes.
+                  center must be tried; skipping the even centers misses every even-length
+                  palindrome.
                 </>
               ),
               zh: (
                 <>
-                  <b>差一坑:</b>while 退出时 l、r 各多走一步,所以长度是 <code>r − l − 1</code>{" "}
-                  而不是 r − l。奇偶两种中心都要试,漏一种就会错过一半回文。
+                  <b>差一错误:</b>while 退出时 l、r 各多走一步,所以长度是 <code>r − l − 1</code>{" "}
+                  而不是 r − l。奇偶两种中心都要试,漏掉偶数中心就会错过所有偶数长度的回文。
                 </>
               ),
             },
@@ -2048,7 +2052,7 @@ function buildNext(p) {
             best = max(best, expand(i, i), expand(i, i + 1), key=len)
         return best`,
             },
-            hl: [3, 4, 5, 6, 7],
+            hl: [4, 5, 6, 7],
             note: {
               en: (
                 <>
@@ -2104,7 +2108,7 @@ function buildNext(p) {
   return best;
 };`,
             },
-            hl: [3, 8, 11, 12],
+            hl: [4, 5, 6, 8],
             note: {
               en: (
                 <>
@@ -2477,7 +2481,7 @@ function buildNext(p) {
               ),
               zh: (
                 <>
-                  <b>溢出坑:</b>用 <code>long</code> 暂存,每读一位就和 int 边界比,
+                  <b>溢出:</b>用 <code>long</code> 暂存,每读一位就和 int 边界比,
                   超了立刻返回边界值。别等算完再判 —— 数字串很长时连 long 也会溢出。
                   <code>s.charAt(i) − &apos;0&apos;</code> 把数字字符转成它的数值。
                 </>
@@ -2649,8 +2653,8 @@ function buildNext(p) {
           zh: "高频题单:字符串算法 9 题",
         }}
         desc={{
-          en: "Grouped as KMP, uses of next, palindromes, and parsing, from easier to harder. Think for 30 seconds before opening the hint",
-          zh: "按「KMP → next 应用 → 回文 → 解析」分层,由易到难。先想 30 秒再看提示",
+          en: "Ordered from easy to hard. Think for 30 seconds before opening the hint",
+          zh: "由易到难排列。先想 30 秒再看提示",
         }}
         badge={
           <span className="chip">
@@ -2733,7 +2737,7 @@ function buildNext(p) {
           ],
           zh: [
             <>
-              本章灵魂:<b>把每一次失败带来的信息留住,下一次直接用上</b>。暴力匹配的病根,
+              本章核心:<b>把每一次失败带来的信息留住,下一次直接用上</b>。暴力匹配的病根,
               是失配后<b>把已经比对成功的前缀信息一起丢掉,还让主串指针回退</b>。
             </>,
             <>
@@ -2761,7 +2765,7 @@ function buildNext(p) {
             </>,
             <>
               回文靠<b>中心对称</b>:枚举 <b>2n−1</b> 个中心(n 个字符加 n−1 个缝隙)向两侧扩,
-              O(n²);扩张停下时回文区间是 <b>[l+1, r−1]</b>,这是要记住的差一坑。
+              O(n²);扩张停下时回文区间是 <b>[l+1, r−1]</b>,这是要记住的差一错误。
               Manacher 靠复用对称性做到 O(n),还要配上「让每个回文都是奇长度」的插分隔符技巧 ——
               知道思路即可。
             </>,
