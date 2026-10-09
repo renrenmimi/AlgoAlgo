@@ -64,6 +64,11 @@ const GROUPS: { ch: ChapterId; problems: Problem[] }[] = [
 ];
 
 const TOTAL = GROUPS.reduce((s, g) => s + g.problems.length, 0);
+// A problem can appear in more than one chapter, so the table has more entries than
+// distinct LeetCode problems. The section title reports both numbers.
+const DISTINCT = new Set(
+  GROUPS.flatMap((g) => g.problems.map((p) => p.lc)),
+).size;
 
 const CHIPS = [
   {
@@ -121,8 +126,8 @@ export default function AtlasChapter() {
           ),
           zh: (
             <>
-              十二种算法都练过了,最后一课只教一件事:<strong>看到问题的那一刻,
-              你脑子里应该亮起哪盏灯</strong>。选型不是玄学 —— 依次问自己
+              十二章算法都练过了,最后一课只教一件事:<strong>看到问题的那一刻,
+              你脑子里应该亮起哪盏灯</strong>。选型并不神秘 —— 依次问自己
               「求什么 → 贪心能不能证明 → 子问题重不重叠 → 答案有没有单调判定」,
               灯自己会亮。
             </>
@@ -138,7 +143,7 @@ export default function AtlasChapter() {
         title={{ en: "Choosing a paradigm", zh: "范式选型向导" }}
         desc={{
           en: "Take any problem and walk through these questions. After enough repetitions you will ask them without the page.",
-          zh: "拿到任何一道题,先陪自己走一遍这几问 —— 走多了,它会长在你脑子里",
+          zh: "拿到任何一道题,先依次回答这几问 —— 练习多了,不看本页也会按这个顺序提问",
         }}
       >
         <DecisionLab />
@@ -169,7 +174,7 @@ export default function AtlasChapter() {
                   它不是标准答案,是<b>提问顺序</b>:先问「求什么」,再问「贪心能不能证明、
                   子问题重不重叠、猜一个答案能不能验证」。真实题目常要<b>组合</b>
                   (回溯 + 剪枝、贪心 + 堆、二分套 DP 判定)—— 先各自定范式,再拼起来。
-                  走到死胡同却发现子问题重叠了?那就是 DP 该出场的信号。
+                  走到死胡同却发现子问题重叠了?那就是该改用 DP 的信号。
                 </>
               }
             />
@@ -182,12 +187,12 @@ export default function AtlasChapter() {
         id="problems"
         index="02"
         title={{
-          en: `Every problem in the course: ${TOTAL}`,
-          zh: `全书题单总表:${TOTAL} 题`,
+          en: `Every problem in the course: ${TOTAL} entries (${DISTINCT} distinct problems)`,
+          zh: `全书题单总表:${TOTAL} 题次(去重后 ${DISTINCT} 道)`,
         }}
         desc={{
           en: "The high-frequency problems from all twelve chapters. Your checkmarks are shared with each chapter page, so this is one single list.",
-          zh: "十二章的高频题全在这里,勾选状态与各章互通 —— 这就是你的刷题地图",
+          zh: "十二章的高频题汇总在这里,勾选状态与各章页面互通 —— 全书共用这一份题单",
         }}
       >
         <div className="atl-banner">
@@ -226,9 +231,9 @@ export default function AtlasChapter() {
               }
               zh={
                 <>
-                  建议节奏:每章先把 Easy 扫完建立手感,
+                  建议节奏:每章第一遍先做 Easy,熟悉题型;
                   <br />
-                  二刷只做 Medium,三刷限时。绿灯会陪你记录这一切。
+                  第二遍只做 Medium,第三遍限时完成。
                 </>
               }
             />
@@ -272,8 +277,8 @@ export default function AtlasChapter() {
           zh: "推荐顺序整理成表 —— 结构篇(DataData)与算法篇(本课)交替推进",
         }}
         badge={{
-          en: "🗓 5 study days, 1 review day, 1 rest day",
-          zh: "🗓 每周 5 学 1 复 1 休",
+          en: "5 study days, 1 review day, 1 rest day",
+          zh: "每周 5 天学习、1 天复习、1 天休息",
         }}
       >
         <div className="table-wrap atl-plan">
@@ -322,7 +327,7 @@ export default function AtlasChapter() {
           tone="deep"
           title={{
             en: "Five optional chapters you can insert at any point",
-            zh: "五门「工具 / 补漏」章,随时插进来",
+            zh: "五个「工具 / 补漏」章节,可随时穿插",
           }}
         >
           <div className="atl-plan-note">
@@ -382,9 +387,9 @@ export default function AtlasChapter() {
         title={{ en: "Mock interview guide", zh: "模拟面试指南" }}
         desc={{
           en: "Having solved a problem is not the same as knowing it. Here are six things an interview expects, and a review schedule that keeps what you learned.",
-          zh: "「刷完」不等于「会了」—— 面试级完成标准的六条,和把知识焊进长期记忆的复习节奏",
+          zh: "「做完」不等于「会了」—— 面试级完成标准的六条,以及把知识固化为长期记忆的复习节奏",
         }}
-        badge={{ en: "🎯 Interview standard", zh: "🎯 面试级标准" }}
+        badge={{ en: "Interview standard", zh: "面试级标准" }}
       >
         <p className="sec-desc" style={{ marginTop: -4 }}>
           <T
@@ -396,7 +401,7 @@ export default function AtlasChapter() {
             }
             zh={
               <>
-                <b>六项标准</b>必须同时满足,才算真正「刷完」一道题:
+                <b>六项标准</b>必须同时满足,才算真正「做完」一道题:
               </>
             }
           />
@@ -422,8 +427,8 @@ export default function AtlasChapter() {
         <Callout
           tone="win"
           title={{
-            en: "Review schedule: three points that work against forgetting",
-            zh: "复习节奏:对抗遗忘曲线的三个时间点",
+            en: "Review schedule: three fixed points, plus a final pre-interview pass",
+            zh: "复习节奏:三个固定时间点,加一次面试前冲刺",
           }}
         >
           <p>
@@ -454,7 +459,7 @@ export default function AtlasChapter() {
         }}
         desc={{
           en: "Data structures are the nouns, algorithms are the verbs. Together the two courses cover data structures and algorithms as a whole.",
-          zh: "数据结构是名词,算法是动词 —— 两门课拼在一起,才是完整的 DSA",
+          zh: "数据结构是名词,算法是动词 —— 两门课合在一起,才是完整的数据结构与算法",
         }}
       >
         <div className="atl-pano">
@@ -473,7 +478,7 @@ export default function AtlasChapter() {
             <span className="lab">
               <T
                 en="Nouns × verbs = solving problems"
-                zh="名词 × 动词 = 解题力"
+                zh="名词 × 动词 = 解题能力"
               />
             </span>
           </div>
@@ -510,7 +515,7 @@ export default function AtlasChapter() {
               zh={
                 <>
                   同一套外壳、同一套设计语言,却刻意拆成「结构」与「算法」两册:
-                  结构决定<b>能怎么快地存取数据</b>,算法决定<b>怎么把问题拆成一串决策</b>。
+                  结构决定<b>能多快地存取数据</b>,算法决定<b>怎么把问题拆成一串决策</b>。
                   先认全名词,再练熟动词 —— 拼起来,你就有了从零到面试的完整地图。
                 </>
               }
@@ -551,8 +556,8 @@ export default function AtlasChapter() {
             }
             zh={
               <>
-                选型四问依次走:<b>求什么 → 贪心能否证明 → 子问题重不重叠 →
-                答案有无单调判定</b>。答完,该用的范式自己就浮出来了。
+                选型四问依次回答:<b>求什么 → 贪心能否证明 → 子问题重不重叠 →
+                答案有无单调判定</b>。四问答完,该用的范式通常也就确定了。
               </>
             }
           />,
@@ -569,7 +574,7 @@ export default function AtlasChapter() {
             zh={
               <>
                 一条主线贯穿 DP 四章:<b>回溯太慢、贪心失灵 ⇒ DP 兜底</b>。
-                322 硬币 [1,3,4] 是那个让你永远记住「贪心会失效」的反例。
+                322 硬币 [1,3,4] 是说明「贪心会失效」的典型反例。
               </>
             }
           />,
@@ -586,7 +591,7 @@ export default function AtlasChapter() {
             }
             zh={
               <>
-                难题拼积木:回溯 + 剪枝、贪心 + 堆、二分套判定、分治升级成 DP ——
+                难题往往组合多种范式:回溯 + 剪枝、贪心 + 堆、二分套判定、分治升级成 DP ——
                 <b>先各自定范式,再组合</b>;同一题常有多种视角(53 / 122 / 322)。
               </>
             }
@@ -617,13 +622,13 @@ export default function AtlasChapter() {
                 explaining it out loud, D+7 redoing it, and D+21 redoing it
                 against a timer. Work through the full problem list three times
                 and fill in every chapter. <b>Then go and take the real
-                test.</b> 🎓
+                test.</b>
               </>
             }
             zh={
               <>
-                「刷完」= 六条面试标准全过 + D+1 口述 / D+7 重做 / D+21 限时。
-                题单总表刷三遍,每章绿灯点满 —— <b>然后,去外面的世界考试吧</b>。🎓
+                「做完」= 六条面试标准全部满足 + D+1 口述 / D+7 重做 / D+21 限时。
+                题单总表完整做三遍,每章的绿灯全部点亮 —— <b>然后,去参加真正的考试</b>。
               </>
             }
           />,
