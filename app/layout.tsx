@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Syne, Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import {
   ThemeProvider,
@@ -14,23 +14,25 @@ import { LangProvider, langScript } from "@/lib/i18n";
 import { SITE_TITLE } from "@/lib/curriculum";
 
 // Three typefaces: Syne (oversized display type, strongly geometric), Space Grotesk (UI and
-// headings) and JetBrains Mono (code and numbers). Chinese falls back to PingFang SC;
-// the font stacks are assembled in globals.css.
-const syne = Syne({
-  subsets: ["latin"],
-  weight: ["600", "700", "800"],
+// headings) and JetBrains Mono (code and numbers). Chinese falls back to PingFang SC; the font
+// stacks are assembled in globals.css. All three are self-hosted from app/fonts, so a build
+// never downloads fonts (see app/fonts/README.md). Each file is Google Fonts' latin subset of
+// the variable font.
+const syne = localFont({
+  src: "./fonts/syne-latin.woff2",
+  weight: "600 800",
   variable: "--font-syne",
   display: "swap",
 });
-const grotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const grotesk = localFont({
+  src: "./fonts/space-grotesk-latin.woff2",
+  weight: "400 700",
   variable: "--font-grotesk",
   display: "swap",
 });
-const jetbrains = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
+const jetbrains = localFont({
+  src: "./fonts/jetbrains-mono-latin.woff2",
+  weight: "400 700",
   variable: "--font-jb",
   display: "swap",
 });
