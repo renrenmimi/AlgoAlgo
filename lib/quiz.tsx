@@ -7,14 +7,22 @@
 //  - multi: multiple choice, checked after the reader presses "check"; missing selections and
 //    extra selections get separate hints.
 //  - fill: fill in the blank, judged on Enter or the button; the reader can retry until it is
-//    right (scoring uses whether they got there in the end).
+//    right, but only an answer that is right on the first try counts toward the score.
 // Once every question is answered -> a results panel, and the score is written to the progress
-// system (the best historical score wins, and it decides the chapter's "cleared" state).
+// system (the best historical score wins, and it decides the chapter's "completed" state).
+//
+// A fill item's answers are compared ignoring case, spaces and full-width forms (NFKC), so
+// 「O（n）」 typed with a Chinese input method counts as O(n); the IME's 「、」 and 「。」 stand
+// for "," or "/" and for "." respectively.
+//
+// Accessibility: each question has a persistent live region, so its verdict is announced when
+// it appears, and answering never disables the focused control (aria-disabled instead), so
+// keyboard focus stays where the learner was.
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useProgress } from "@/lib/progress";
 import type { ChapterId } from "@/lib/curriculum";
-import { T, useL, type Loc } from "@/lib/i18n";
+import { T, useL, useLang, type Lang, type Loc } from "@/lib/i18n";
 
 export type QuizItem =
   | {
@@ -54,12 +62,39 @@ type ItemState =
 
 const KEYS = "ABCDEFGH";
 
-function norm(s: string) {
-  return s.trim().toLowerCase().replace(/\s+/g, "");
+/**
+ * Canonical form for comparing a typed answer with an accepted one. NFKC folds full-width
+ * forms (（）， ０-９ Ａ-Ｚ) into ASCII. The ideographic full stop becomes "."; the ideographic
+ * comma 、 is what a Chinese IME produces both for "," in a list and for "/" in a fraction, so
+ * it is resolved to `sep`.
+ */
+export function normAnswer(s: string, sep: "," | "/" = ",") {
+  return s
+    .normalize("NFKC")
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/。/g, ".")
+    .replace(/、/g, sep);
+}
+
+/** Does a typed answer match one of the accepted answers? */
+export function answerMatches(typed: string, answers: string[]) {
+  return ([",", "/"] as const).some((sep) => {
+    const t = normAnswer(typed, sep);
+    return t !== "" && answers.some((a) => normAnswer(a, sep) === t);
+  });
+}
+
+const HAS_CJK = /[\u3400-\u9fff]/;
+
+/** The accepted answer to show a reader: the first one written in their language. */
+export function displayAnswer(answers: string[], lang: Lang) {
+  return answers.find((a) => HAS_CJK.test(a) === (lang === "zh")) ?? answers[0];
 }
 
 export function Quiz({ ch, items }: { ch: ChapterId; items: QuizItem[] }) {
-  const { reportQuiz } = useProgress();
+  const { reportQuiz, data, ready } = useProgress();
+  const best = ready ? data.quiz[ch] : undefined;
   const L = useL();
   const [states, setStates] = useState<ItemState[]>(() =>
     items.map(() => ({ phase: "idle" })),
@@ -74,31 +109,23 @@ export function Quiz({ ch, items }: { ch: ChapterId; items: QuizItem[] }) {
   ).length;
   const allDone = answered === items.length;
 
-  const finish = useMemo(
-    () => (nextStates: ItemState[]) => {
-      const done = nextStates.every((s) => s.phase !== "idle");
-      if (done && !reported) {
-        const right = nextStates.filter(
-          (s) => s.phase === "right" && s.first,
-        ).length;
-        reportQuiz(ch, right, items.length);
-        setReported(true);
-      }
-    },
-    [ch, items.length, reported, reportQuiz],
-  );
+  // All answered -> report the score. This lives in an effect, not in a setStates updater:
+  // updaters must be pure, and Strict Mode and concurrent rendering may call them more than
+  // once, which would report the score twice.
+  useEffect(() => {
+    if (reported || states.length === 0) return;
+    if (!states.every((s) => s.phase !== "idle")) return;
+    const right = states.filter((s) => s.phase === "right" && s.first).length;
+    reportQuiz(ch, right, items.length);
+    setReported(true);
+  }, [states, reported, reportQuiz, ch, items.length]);
 
   const setState = (i: number, st: ItemState) => {
-    // Compute the new array outside of rendering first, then commit the state and the score
-    // separately.
-    // (The old code passed finish into the setStates updater -- an updater must be a pure
-    //  function, and calling reportQuiz inside it updates ProgressProvider while Quiz is
-    //  rendering, which React warns about; under StrictMode the updater runs twice, so the
-    //  score would also be reported twice.)
-    const next = [...states];
-    next[i] = st;
-    setStates(next);
-    finish(next);
+    setStates((prev) => {
+      const next = [...prev];
+      next[i] = st;
+      return next;
+    });
   };
 
   const reset = () => {
@@ -110,6 +137,24 @@ export function Quiz({ ch, items }: { ch: ChapterId; items: QuizItem[] }) {
 
   return (
     <div className="quiz">
+      {best && (
+        <p className="q-best">
+          <T
+            en={
+              <>
+                Your best score so far: <b>{best.right}/{best.total}</b>
+                {best.right === best.total ? ". Chapter complete." : "."}
+              </>
+            }
+            zh={
+              <>
+                历史最佳成绩：<b>{best.right}/{best.total}</b>
+                {best.right === best.total ? "，本章已完成。" : "。"}
+              </>
+            }
+          />
+        </p>
+      )}
       {items.map((item, i) => {
         const st = states[i];
         const dataState =
@@ -117,7 +162,10 @@ export function Quiz({ ch, items }: { ch: ChapterId; items: QuizItem[] }) {
         return (
           <div className="q-item" key={i} data-state={dataState}>
             <div className="q-num">
-              QUESTION {String(i + 1).padStart(2, "0")} / {items.length}
+              <T
+                en={`QUESTION ${String(i + 1).padStart(2, "0")} / ${items.length}`}
+                zh={`第 ${i + 1} 题 / 共 ${items.length} 题`}
+              />
             </div>
             <p className="q-text">{L(item.q)}</p>
 
@@ -167,14 +215,15 @@ export function Quiz({ ch, items }: { ch: ChapterId; items: QuizItem[] }) {
             {item.type === "fill" && (
               <FillBody
                 item={item}
+                index={i}
                 st={st}
                 text={fillText[i] ?? ""}
                 setText={(v) => setFillText((p) => ({ ...p, [i]: v }))}
                 onSubmit={() => {
                   if (st.phase === "right") return;
-                  const val = norm(fillText[i] ?? "");
-                  if (!val) return;
-                  const ok = L(item.answers).some((a) => norm(a) === val);
+                  const typed = fillText[i] ?? "";
+                  if (!typed.trim()) return;
+                  const ok = answerMatches(typed, L(item.answers));
                   if (ok)
                     setState(i, {
                       phase: "right",
@@ -203,13 +252,13 @@ export function Quiz({ ch, items }: { ch: ChapterId; items: QuizItem[] }) {
               <T
                 en={
                   <>
-                    <b>All correct. Chapter cleared.</b> The green dot in the
-                    sidebar is now lit.
+                    <b>All correct. Chapter complete.</b> The green dot next to
+                    this chapter in the sidebar is now on.
                   </>
                 }
                 zh={
                   <>
-                    <b>全对!本章正式通关</b> —— 侧栏的小绿灯已经为你点亮。
+                    <b>全部答对，本章已完成。</b>侧栏中本章旁的绿点已经亮起。
                   </>
                 }
               />
@@ -225,8 +274,8 @@ export function Quiz({ ch, items }: { ch: ChapterId; items: QuizItem[] }) {
                 }
                 zh={
                   <>
-                    第一次尝试答对 {firstRight} 题。回头看看错题的解释,然后
-                    <b>重做一遍拿全对</b>,才算真正拿下这一章。
+                    第一次尝试答对 {firstRight} 题。先看看错题的解释，然后
+                    <b>重做一遍并全部答对</b>，才算完成这一章。
                   </>
                 }
               />
@@ -271,7 +320,7 @@ function ChoiceBody({
               key={k}
               type="button"
               className={cls}
-              disabled={locked}
+              aria-disabled={locked || undefined}
               onClick={() => onPick(k)}
             >
               <span className="key">{KEYS[k]}</span>
@@ -280,25 +329,27 @@ function ChoiceBody({
           );
         })}
       </div>
-      {st.phase === "right" && (
-        <div className="q-feedback ok">✓ {L(item.why)}</div>
-      )}
-      {st.phase === "wrong" && st.picked !== null && (
-        <div className="q-feedback no">
-          ✕{" "}
-          {(item.wrong === undefined ? undefined : L(item.wrong)[st.picked]) ??
-            L(item.why)}
-          <p style={{ marginTop: 6, marginBottom: 0 }}>
-            <b>
-              <T
-                en={<>The correct answer is {KEYS[item.correct]}: </>}
-                zh={<>正确答案是 {KEYS[item.correct]}:</>}
-              />
-            </b>
-            {L(item.why)}
-          </p>
-        </div>
-      )}
+      <div aria-live="polite">
+        {st.phase === "right" && (
+          <div className="q-feedback ok">✓ {L(item.why)}</div>
+        )}
+        {st.phase === "wrong" && st.picked !== null && (
+          <div className="q-feedback no">
+            ✕{" "}
+            {(item.wrong === undefined ? undefined : L(item.wrong)[st.picked]) ??
+              L(item.why)}
+            <p style={{ marginTop: 6, marginBottom: 0 }}>
+              <b>
+                <T
+                  en={<>The correct answer is {KEYS[item.correct]}: </>}
+                  zh={<>正确答案是 {KEYS[item.correct]}：</>}
+                />
+              </b>
+              {L(item.why)}
+            </p>
+          </div>
+        )}
+      </div>
     </>
   );
 }
@@ -339,7 +390,8 @@ function MultiBody({
               key={k}
               type="button"
               className={cls}
-              disabled={locked}
+              aria-pressed={picks.includes(k)}
+              aria-disabled={locked || undefined}
               onClick={() => onToggle(k)}
             >
               <span className="key">{picks.includes(k) ? "✓" : KEYS[k]}</span>
@@ -348,68 +400,83 @@ function MultiBody({
           );
         })}
       </div>
-      {!locked && (
-        <div style={{ marginTop: 12 }}>
-          <button
-            type="button"
-            className="btn btn-sm"
-            disabled={picks.length === 0}
-            onClick={onCheck}
-          >
-            {L({ en: "Check answer", zh: "检查(多选)" })}
-          </button>
-        </div>
-      )}
-      {st.phase === "right" && (
-        <div className="q-feedback ok">✓ {L(item.why)}</div>
-      )}
-      {st.phase === "wrong" && (
-        <div className="q-feedback no">
-          ✕{" "}
-          {extra
-            ? L(item.extraHint)
-            : missed
-              ? L(item.missHint)
-              : L(item.why)}
-          <p style={{ marginTop: 6, marginBottom: 0 }}>
-            <b>{L({ en: "Correct combination: ", zh: "正确组合:" })}</b>
-            {item.correct.map((c) => KEYS[c]).join(" + ")} —— {L(item.why)}
-          </p>
-        </div>
-      )}
+      <div style={{ marginTop: 12 }}>
+        {/* Stays mounted after checking: removing the focused button would drop keyboard
+            focus onto <body> */}
+        <button
+          type="button"
+          className="btn btn-sm"
+          aria-disabled={locked || picks.length === 0 || undefined}
+          onClick={() => {
+            if (!locked && picks.length > 0) onCheck();
+          }}
+        >
+          {L({ en: "Check answer", zh: "检查答案" })}
+        </button>
+      </div>
+      <div aria-live="polite">
+        {st.phase === "right" && (
+          <div className="q-feedback ok">✓ {L(item.why)}</div>
+        )}
+        {st.phase === "wrong" && (
+          <div className="q-feedback no">
+            ✕{" "}
+            {extra
+              ? L(item.extraHint)
+              : missed
+                ? L(item.missHint)
+                : L(item.why)}
+            <p style={{ marginTop: 6, marginBottom: 0 }}>
+              <b>{L({ en: "Correct combination: ", zh: "正确组合：" })}</b>
+              {item.correct.map((c) => KEYS[c]).join(" + ")}
+              <T en=" — " zh="——" />
+              {L(item.why)}
+            </p>
+          </div>
+        )}
+      </div>
     </>
   );
 }
 
 function FillBody({
   item,
+  index,
   st,
   text,
   setText,
   onSubmit,
 }: {
   item: Extract<QuizItem, { type: "fill" }>;
+  index: number;
   st: ItemState;
   text: string;
   setText: (v: string) => void;
   onSubmit: () => void;
 }) {
   const L = useL();
+  const { lang } = useLang();
   const solved = st.phase === "right";
   return (
     <>
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
         <input
           className="q-input"
+          aria-label={L({
+            en: `Answer to question ${index + 1}`,
+            zh: `第 ${index + 1} 题的答案`,
+          })}
           placeholder={
             item.placeholder === undefined
               ? L({ en: "Type your answer…", zh: "输入答案…" })
               : L(item.placeholder)
           }
           value={text}
-          disabled={solved}
+          readOnly={solved}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => {
+            // The Enter that confirms an IME composition is not a submit
+            if (e.nativeEvent.isComposing || e.keyCode === 229) return;
             if (e.key === "Enter") onSubmit();
           }}
         />
@@ -422,18 +489,22 @@ function FillBody({
           {L({ en: "Submit", zh: "确认" })}
         </button>
       </div>
-      {solved && <div className="q-feedback ok">✓ {L(item.why)}</div>}
-      {st.phase === "wrong" && (
-        <div className="q-feedback no">
-          ✕ {L({ en: "Not quite", zh: "还不对" })} —— {L(item.hint)}
-          {st.tries >= 3 && (
-            <p style={{ marginTop: 6, marginBottom: 0 }}>
-              <b>{L({ en: "Answer: ", zh: "参考答案:" })}</b>
-              <code>{L(item.answers)[0]}</code>
-            </p>
-          )}
-        </div>
-      )}
+      <div aria-live="polite">
+        {solved && <div className="q-feedback ok">✓ {L(item.why)}</div>}
+        {st.phase === "wrong" && (
+          <div className="q-feedback no">
+            ✕ {L({ en: "Not quite", zh: "还不对" })}
+            <T en=" — " zh="——" />
+            {L(item.hint)}
+            {st.tries >= 3 && (
+              <p style={{ marginTop: 6, marginBottom: 0 }}>
+                <b>{L({ en: "Answer: ", zh: "参考答案：" })}</b>
+                <code>{displayAnswer(L(item.answers), lang)}</code>
+              </p>
+            )}
+          </div>
+        )}
+      </div>
     </>
   );
 }

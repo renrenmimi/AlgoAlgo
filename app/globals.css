@@ -1318,7 +1318,9 @@ li code {
   transform: translateY(0) scale(0.97);
 }
 
-.btn:disabled {
+/* aria-disabled: looks disabled but keeps keyboard focus (the quiz uses it) */
+.btn:disabled,
+.btn[aria-disabled="true"] {
   opacity: 0.4;
   cursor: not-allowed;
   transform: none;
@@ -1562,6 +1564,13 @@ li code {
   animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
 
+/* The saved best score, shown above the questions */
+.q-best {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--text-2);
+}
+
 .q-num {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -1601,7 +1610,7 @@ li code {
     border-color 0.18s, background 0.18s, color 0.18s;
 }
 
-.q-opt:hover:not(:disabled) {
+.q-opt:hover:not(:disabled):not([aria-disabled="true"]) {
   border-color: var(--acc-border);
   background: var(--acc-soft);
   color: var(--text);
@@ -1659,7 +1668,9 @@ li code {
   color: #fff;
 }
 
-.q-opt:disabled {
+/* Answered options stay focusable (aria-disabled) so focus is not lost */
+.q-opt:disabled,
+.q-opt[aria-disabled="true"] {
   cursor: default;
 }
 
