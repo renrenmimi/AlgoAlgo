@@ -1,6 +1,6 @@
 // Chapter 9 - Subsequence DP: problem set and quiz data.
-// The problem set runs easy to hard along "subsequence checking -> LIS -> contiguous ->
-// two sequences (LCS / edit distance / deletions and edits) -> palindromes";
+// The problem set covers subsequence checking, LIS, the contiguous type, two sequences
+// (LCS / edit distance / deletions) and palindromes, ordered easy to hard;
 // hint only points at a direction without spoiling, key explains the state definition, the
 // transition, the boundaries and where the answer lives in one paragraph.
 // Bilingual: all copy is Loc<...> with English as the default. Titles use LeetCode's official
@@ -106,7 +106,7 @@ export const PROBLEMS: Problem[] = [
     },
     hint: {
       en: "Keep a second array next to dp[i] from LC 300: when a longer subsequence is found, reset the count; when the same length is matched, add to it.",
-      zh: "在 LC 300 的 dp[i] 旁边再挂一个数组:发现更长就重置计数,长度打平就累加计数。",
+      zh: "在 LC 300 的 dp[i] 旁边再维护一个数组:发现更长就重置计数,长度相同就累加计数。",
     },
     key: {
       en: (
@@ -170,7 +170,7 @@ export const PROBLEMS: Problem[] = [
           状态:dp[i][j] = <b>正好以 a[i-1]、b[j-1] 结尾</b>的最长公共连续段长度。
           转移:a[i-1] == b[j-1] 时 dp[i][j] = dp[i-1][j-1] + 1,否则 dp[i][j] = 0。
           初始:第 0 行、第 0 列全为 0。关键就是那个 0 ——
-          当前两个元素一旦不同,连续段就断了,前面攒的长度一点也带不过来,
+          当前两个元素一旦不同,连续段就断了,前面积累的长度一点也带不过来,
           这正是它和 LC 1143 的分界。答案取<b>整张表的最大值</b>,不是右下角,
           因为连续段可以在任何位置结束。共 (m+1)(n+1) 个状态、每格 O(1),
           时间 O(mn),表本身占 O(mn) 空间。§03 有逐格填表动画。
@@ -227,7 +227,7 @@ export const PROBLEMS: Problem[] = [
     d: "medium",
     tags: {
       en: ["LCS", "Restated problem", "Review"],
-      zh: ["LCS", "换皮题", "复盘"],
+      zh: ["LCS", "同构题", "复盘"],
     },
     hint: {
       en: "The lines connect equal numbers and may not cross, so the pairs they connect appear in the same order in both rows. Which problem is that?",
@@ -253,7 +253,7 @@ export const PROBLEMS: Problem[] = [
           所以「不交叉」就等于:选出的这些配对在两个数组里顺序一致,而且配的是相等的数。
           「按相同顺序配对相等元素,且配对数最多」正是最长公共子序列的定义。
           把两个数组当成两个「字符串」,直接套 LC 1143 的转移,一行都不用改。
-          这是 LCS 最典型的换皮题:故事换了,表没换。
+          这是 LCS 最典型的同构题:故事换了,表没换。
           能从新说法里认出 LCS 的骨架,才是这题真正考的能力。
         </>
       ),
@@ -284,8 +284,9 @@ export const PROBLEMS: Problem[] = [
           first j characters of t. If the two last characters are equal, keep both
           and take dp[i-1][j-1]. If not, delete one of them: min(dp[i-1][j],
           dp[i][j-1]) + 1. Base: dp[i][0] = i and dp[0][j] = j, since making a
-          prefix equal to the empty string means deleting all of it. This is edit
-          distance with insert and replace removed, so LC 72 makes this one easy.
+          prefix equal to the empty string means deleting all of it. It is edit
+          distance without replacement: deleting from s is the cell above,
+          deleting from t is the cell on the left, so LC 72 makes this one easy.
         </>
       ),
       zh: (
@@ -296,7 +297,8 @@ export const PROBLEMS: Problem[] = [
           两个末字符相等 → 都留着,dp[i][j] = dp[i-1][j-1];
           不等 → 删掉其中一个,dp[i][j] = min(dp[i-1][j], dp[i][j-1]) + 1。
           初始:dp[i][0] = i、dp[0][j] = j —— 要和空串相等只能全删。
-          它就是编辑距离砍掉「增」和「改」之后的样子,理解了 LC 72,这题顺手就能写。
+          它就是编辑距离去掉「替换」之后的样子:删 s 的字符对应上方,删 t 的字符对应左方。
+          理解了 LC 72,这题顺手就能写。
         </>
       ),
     },
@@ -673,7 +675,7 @@ export const QUIZ: QuizItem[] = [
     correct: [0, 1, 2],
     missHint: {
       en: "The three parts are: the diagonal on a match, the larger of the two neighbors on a mismatch, and 0 along the empty-string row and column. Check which one you left out.",
-      zh: "三件套是:匹配走对角线、不匹配取两个邻格里较大的、空串那一行一列是 0。看看漏了哪一条。",
+      zh: "三个要点是:匹配走对角线、不匹配取两个邻格里较大的、空串那一行一列是 0。看看漏了哪一条。",
     },
     extraHint: {
       en: "One option belongs to LC 718. Resetting to 0 is what a contiguous problem does. A longest common subsequence never resets.",
