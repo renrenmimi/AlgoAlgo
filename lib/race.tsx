@@ -72,6 +72,10 @@ export interface RaceInput<I> {
   make: (n: number, seed: number) => I;
   /** What this shape is meant to demonstrate (shown while it is selected) */
   hint?: Loc<ReactNode>;
+  /** Set when the seed cannot change any count for this shape, even though it changes the
+   *  values (a binary search's cost depends only on where the target sits). The reroll button
+   *  is then disabled, and this says why. */
+  seedless?: Loc<string>;
 }
 
 /** Display configuration for the three metrics. When reusing this engine for non-sorting
@@ -116,10 +120,14 @@ export const DEFAULT_METRICS: RaceMetric[] = [
 
 function useCountUp(target: number, ms = 620) {
   const [v, setV] = useState(target);
-  const from = useRef(target);
+  // The value on screen right now: an interrupted roll-up continues from here rather than
+  // jumping back to the previous target first
+  const shown = useRef(target);
   useEffect(() => {
-    const a = from.current;
-    from.current = target; // Book it immediately so the next animation does not start from a staler value
+    shown.current = v;
+  });
+  useEffect(() => {
+    const a = shown.current;
     const reduce =
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -200,6 +208,7 @@ export function AlgoRace<I>({
   // "reshuffle" would change nothing. A button that does nothing when pressed is a bad
   // experience, so disable it and say why.
   const seedMatters = useMemo(() => {
+    if (shape.seedless) return false;
     try {
       return (
         JSON.stringify(shape.make(size, seed)) !==
@@ -223,19 +232,13 @@ export function AlgoRace<I>({
     return live.length > 1 && live.every((r) => r.counts[k] === live[0].counts[k]);
   };
 
-  // The winner for each metric (nothing is marked when there is a tie)
-  const winnerOf = (k: keyof RaceCounts): string | null => {
+  // The contenders with the lowest value for each metric. Several share it on a partial tie,
+  // and all of them are marked; when everyone ties, tiedOn takes over instead.
+  const winnersOf = (k: keyof RaceCounts): string[] => {
     const live = results.filter((r) => !r.aborted);
-    if (live.length < 2) return live.length === 1 ? live[0].id : null;
-    let best = live[0];
-    let tie = false;
-    for (const r of live.slice(1)) {
-      if (r.counts[k] < best.counts[k]) {
-        best = r;
-        tie = false;
-      } else if (r.counts[k] === best.counts[k]) tie = true;
-    }
-    return tie ? null : best.id;
+    if (live.length === 0 || tiedOn(k)) return [];
+    const low = Math.min(...live.map((r) => r.counts[k]));
+    return live.filter((r) => r.counts[k] === low).map((r) => r.id);
   };
 
   return (
@@ -252,6 +255,7 @@ export function AlgoRace<I>({
                 key={s.id}
                 type="button"
                 className={`seg-btn${k === ii ? " on" : ""}`}
+                aria-pressed={k === ii}
                 onClick={() => setII(k)}
               >
                 {L(s.label)}
@@ -269,6 +273,7 @@ export function AlgoRace<I>({
                 key={s}
                 type="button"
                 className={`seg-btn${s === size ? " on" : ""}`}
+                aria-pressed={s === size}
                 onClick={() => setSize(s)}
               >
                 {s}
@@ -283,10 +288,10 @@ export function AlgoRace<I>({
             title={L(
               seedMatters
                 ? { en: "New input of the same shape", zh: "换一份同形状的输入" }
-                : {
+                : (shape.seedless ?? {
                     en: "This shape has only one form at a given n — nothing to reroll.",
-                    zh: "这个形状在给定 n 下只有一种,没有可换的输入。",
-                  },
+                    zh: "这个形状在给定 n 下只有一种，没有可换的输入。",
+                  }),
             )}
           >
             {L({ en: "↻ Reroll", zh: "↻ 换一组" })}
@@ -318,18 +323,23 @@ export function AlgoRace<I>({
                 </p>
               ) : (
                 <div className="race-bars">
-                  {metrics.map((m) => (
-                    <Bar
-                      key={m.key}
-                      label={L(m.label)}
-                      value={r.counts[m.key]}
-                      max={maxOf(m.key)}
-                      win={winnerOf(m.key) === a.id}
-                      tie={tiedOn(m.key)}
-                      winLabel={L({ en: "best", zh: "最少" })}
-                      tieLabel={L({ en: "tied", zh: "并列" })}
-                    />
-                  ))}
+                  {metrics.map((m) => {
+                    const winners = winnersOf(m.key);
+                    return (
+                      <Bar
+                        key={m.key}
+                        label={L(m.label)}
+                        value={r.counts[m.key]}
+                        max={maxOf(m.key)}
+                        win={winners.includes(a.id)}
+                        tie={tiedOn(m.key)}
+                        // Two "best" flags already say it is a tie; the flag column has
+                        // no room for a longer word on phones
+                        winLabel={L({ en: "best", zh: "最少" })}
+                        tieLabel={L({ en: "tied", zh: "并列" })}
+                      />
+                    );
+                  })}
                 </div>
               )}
             </div>
