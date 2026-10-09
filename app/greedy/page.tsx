@@ -42,7 +42,7 @@ const CHIPS = [
   { id: "interval", n: "06", label: { en: "Intervals", zh: "区间贪心" } },
   { id: "fail", n: "07", label: { en: "Where greedy fails", zh: "贪心失效" } },
   { id: "problems", n: "08", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "09", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "09", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 // Small wiggle-sequence diagram: 1,4,7,2,5 - only the endpoints and the turning points (7 and 2) join the wiggle subsequence
@@ -2669,14 +2669,14 @@ export default function GreedyChapter() {
       <Section
         id="quiz"
         index="09"
-        title={{ en: "Quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Answer all 8 correctly to mark this chapter complete",
-          zh: "8 题全对,点亮本章绿灯",
+          zh: "8 题全对,本章标记为已完成",
         }}
         badge={
           <span className="chip">
-            <T en={<>✎ Quiz</>} zh={<>✎ 通关测验</>} />
+            <T en={<>✎ Chapter quiz</>} zh={<>✎ 本章测验</>} />
           </span>
         }
       >

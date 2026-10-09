@@ -173,7 +173,7 @@ const CHIPS = [
   { id: "nim", n: "07", label: { en: "Game invariants", zh: "博弈不变量" } },
   { id: "happy", n: "08", label: { en: "Happy number", zh: "快乐数" } },
   { id: "problems", n: "09", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "10", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "10", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function MathChapter() {
@@ -2671,14 +2671,14 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
       <Section
         id="quiz"
         index="10"
-        title={{ en: "Quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Get all 8 right to mark this chapter complete.",
-          zh: "8 题全对,点亮本章绿灯",
+          zh: "8 题全对,本章标记为已完成",
         }}
         badge={{
-          en: <span className="chip">✎ Quiz</span>,
-          zh: <span className="chip">✎ 通关测验</span>,
+          en: <span className="chip">✎ Chapter quiz</span>,
+          zh: <span className="chip">✎ 本章测验</span>,
         }}
       >
         <Quiz ch="math" items={QUIZ} />

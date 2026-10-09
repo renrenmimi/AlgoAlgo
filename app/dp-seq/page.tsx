@@ -877,7 +877,7 @@ const CHIPS = [
   { id: "edit", n: "05", label: { en: "Edit distance · LC 72", zh: "编辑距离 · LC 72" } },
   { id: "palindrome", n: "06", label: { en: "Palindromes", zh: "回文家族" } },
   { id: "problems", n: "07", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "08", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function DpSeqChapter() {
@@ -2885,14 +2885,14 @@ export default function DpSeqChapter() {
       <Section
         id="quiz"
         index="08"
-        title={{ en: "Chapter quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Answer all 7 correctly to mark this chapter as complete.",
-          zh: "7 题全对,点亮本章绿灯",
+          zh: "7 题全对,本章标记为已完成",
         }}
         badge={
           <span className="chip">
-            <T en="✎ Quiz" zh="✎ 通关测验" />
+            <T en="✎ Chapter quiz" zh="✎ 本章测验" />
           </span>
         }
       >

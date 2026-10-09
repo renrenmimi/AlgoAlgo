@@ -46,7 +46,7 @@ const CHIPS = [
   { id: "dedup", n: "08", label: { en: "Duplicate values", zh: "去重两板斧" } },
   { id: "board", n: "09", label: { en: "N-Queens", zh: "N 皇后" } },
   { id: "problems", n: "10", label: { en: "Problem set", zh: "高频题单" } },
-  { id: "quiz", n: "11", label: { en: "Quiz", zh: "通关测验" } },
+  { id: "quiz", n: "11", label: { en: "Quiz", zh: "本章测验" } },
 ];
 
 export default function BacktrackChapter() {
@@ -2886,14 +2886,14 @@ function backtrack(start) {
       <Section
         id="quiz"
         index="11"
-        title={{ en: "Quiz", zh: "通关测验" }}
+        title={{ en: "Chapter quiz", zh: "本章测验" }}
         desc={{
           en: "Get all 8 right to mark this chapter complete.",
-          zh: "8 题全对,点亮本章绿灯",
+          zh: "8 题全对,本章标记为已完成",
         }}
         badge={
           <span className="chip">
-            <T en="✎ Quiz" zh="✎ 通关测验" />
+            <T en="✎ Chapter quiz" zh="✎ 本章测验" />
           </span>
         }
       >
