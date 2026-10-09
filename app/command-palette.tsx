@@ -5,6 +5,11 @@
 // The global keyboard listener lives here; Esc closes, up/down arrows move the selection.
 // Search keys from both languages are indexed, so Chinese keywords still find a chapter while
 // the UI is in English.
+//
+// It is a modal dialog built on the combobox pattern: focus stays in the search box (Tab
+// cannot leave the dialog), the results are a listbox whose active option is announced
+// through aria-activedescendant and kept in view, the page behind does not scroll, and
+// closing returns focus to whatever opened it.
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -17,6 +22,8 @@ export default function CommandPalette() {
   const [query, setQuery] = useState("");
   const [sel, setSel] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+  const opener = useRef<HTMLElement | null>(null);
   const router = useRouter();
   const L = useL();
   const { lang } = useLang();
@@ -35,13 +42,28 @@ export default function CommandPalette() {
   }, [setCmdkOpen]);
 
   useEffect(() => {
-    if (cmdkOpen) {
-      setQuery("");
-      setSel(0);
-      // Wait until the overlay has rendered before focusing
-      requestAnimationFrame(() => inputRef.current?.focus());
-    }
+    if (!cmdkOpen) return;
+    opener.current = document.activeElement as HTMLElement | null;
+    setQuery("");
+    setSel(0);
+    // Wait until the overlay has rendered before focusing
+    requestAnimationFrame(() => inputRef.current?.focus());
+    const html = document.documentElement;
+    const previousOverflow = html.style.overflow;
+    html.style.overflow = "hidden";
+    return () => {
+      html.style.overflow = previousOverflow;
+      // Back to the button (or field) that opened the palette
+      opener.current?.focus?.();
+    };
   }, [cmdkOpen]);
+
+  // Keep the option chosen with the arrow keys inside the scrolling list
+  useEffect(() => {
+    listRef.current
+      ?.querySelector<HTMLElement>('[aria-selected="true"]')
+      ?.scrollIntoView({ block: "nearest" });
+  }, [sel, query, cmdkOpen]);
 
   const hits = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -75,11 +97,25 @@ export default function CommandPalette() {
       <div
         className="cmdk"
         role="dialog"
+        aria-modal="true"
         aria-label={L({ en: "Jump to a chapter", zh: "快速跳转" })}
+        onKeyDown={(e) => {
+          // Focus lives in the search box; Tab must not escape the dialog
+          if (e.key === "Tab") {
+            e.preventDefault();
+            inputRef.current?.focus();
+          }
+        }}
       >
         <input
           ref={inputRef}
           className="cmdk-input"
+          role="combobox"
+          aria-expanded="true"
+          aria-controls="cmdk-list"
+          aria-autocomplete="list"
+          aria-label={L({ en: "Search chapters", zh: "搜索章节" })}
+          aria-activedescendant={hits[sel] ? `cmdk-opt-${hits[sel].id}` : undefined}
           placeholder={L({
             en: "Search chapters, algorithms, tags…",
             zh: "搜索章节、算法、标签…",
@@ -101,19 +137,29 @@ export default function CommandPalette() {
             }
           }}
         />
-        <div className="cmdk-list">
+        <div
+          ref={listRef}
+          className="cmdk-list"
+          id="cmdk-list"
+          role="listbox"
+          aria-label={L({ en: "Chapters", zh: "章节" })}
+        >
           {hits.length === 0 && (
             <div className="cmdk-empty">
               {L({
                 en: "No chapter matches. Try another keyword.",
-                zh: "没有匹配的章节 —— 换个关键词?",
+                zh: "没有匹配的章节，请换一个关键词。",
               })}
             </div>
           )}
           {hits.map((c, i) => (
             <button
               key={c.id}
+              id={`cmdk-opt-${c.id}`}
               type="button"
+              role="option"
+              aria-selected={i === sel}
+              tabIndex={-1}
               className={`cmdk-item${i === sel ? " sel" : ""}`}
               style={{ "--ch-hue": c.hue } as React.CSSProperties}
               onMouseEnter={() => setSel(i)}
