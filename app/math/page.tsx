@@ -94,7 +94,7 @@ const NP_FRAMES: ArrayFrame[] = [
         }
         zh={
           <>
-            <b>第 2 步 · 找接班人。</b>在 i 右边的降序段里,从右往左找第一个比 3 大的数 →
+            <b>第 2 步 · 找替换的数。</b>在 i 右边的降序段里,从右往左找第一个比 3 大的数 →
             4(j = 3)。因为那段是降序,从右边先遇到的就是<b>最小</b>的那个「仍比 3 大」的数,
             换上去能让增幅最小。
           </>
@@ -156,7 +156,7 @@ const NP_FRAMES: ArrayFrame[] = [
         }
         zh={
           <>
-            完成:13542 的下一个排列是 <b>14235</b>。规律四连:找断点 → 找刚好更大的 →
+            完成:13542 的下一个排列是 <b>14235</b>。规律分四步:找断点 → 找刚好更大的 →
             交换 → 反转右段。O(n) 时间、O(1) 空间,不用任何数学公式。
           </>
         }
@@ -217,9 +217,9 @@ export default function MathChapter() {
             <>
               这一章最容易被名字吓退,其实全书数学含量最低。
               <strong>数学题不考数学,考的是你能不能找到那个规律、那个不变量</strong> ——
-              Nim 是 n % 4、灯泡是完全平方数、多数元素是「抵消」。真正的工程刚需只有一件:
+              Nim 是 n % 4、灯泡是完全平方数、多数元素是「抵消」。工程上真正必须注意的只有一件:
               <strong>别让大数溢出</strong>。本章教你把「一脸公式」的题,拆成
-              「先手玩两把、读出一条规律」。
+              「先试两个小例子、读出一条规律」。
             </>
           ),
         }}
@@ -236,7 +236,7 @@ export default function MathChapter() {
         }}
         desc={{
           en: "One is how to attack the problem. The other is a rule the code cannot break.",
-          zh: "一件是解题的心法,一件是工程的底线 —— 本章围绕这两条转",
+          zh: "一件是解题的思路,一件是工程的底线 —— 本章围绕这两条展开",
         }}
       >
         <div className="prose">
@@ -259,13 +259,13 @@ export default function MathChapter() {
               }
               zh={
                 <>
-                  先说心法。数学题的可怕全在「它看起来需要数学」。但面试里的数学题几乎从不考
+                  先说思路。数学题的可怕全在「它看起来需要数学」。但面试里的数学题几乎从不考
                   微积分、线性代数,它考的是:你能不能
                   <strong>
-                    先手算几个小例子,从中读出一条规律或一个
+                    先手动算几个小例子,从中读出一条规律或一个
                     <b>不变量(invariant)</b> —— 某个在整个过程中恒不改变的量
                   </strong>
-                  。找到它,题目瞬间坍缩成一行代码;找不到,你会陷在暴力模拟里出不来。
+                  。找到它,题目往往就归结为一行代码;找不到,你会陷在暴力模拟里出不来。
                 </>
               }
             />
@@ -283,9 +283,9 @@ export default function MathChapter() {
               }
               zh={
                 <>
-                  这是本章反复上演的剧本:Nim 游戏的不变量是「剩余石子模 4」、
+                  这是本章反复出现的模式:Nim 游戏的不变量是「剩余石子模 4」、
                   灯泡开关的规律是「因子个数的奇偶」、多数元素的不变量是「抵消不完」。
-                  所以本章的通用套路是:
+                  所以本章的通用流程是:
                 </>
               }
             />
@@ -294,12 +294,12 @@ export default function MathChapter() {
         <div className="mth-steps">
           <div className="mth-step">
             <div>
-              <h4>
+              <h3>
                 <T
                   en="Build a table — compute a few small answers by hand"
-                  zh="打表 —— 先手算几个小规模答案"
+                  zh="打表 —— 先手动算几个小规模答案"
                 />
-              </h4>
+              </h3>
               <p>
                 <T
                   en={
@@ -313,7 +313,7 @@ export default function MathChapter() {
                   zh={
                     <>
                       n = 1, 2, 3, 4, 5 分别是什么结果?博弈题就手推谁赢,
-                      计数题就列出前几项。别嫌笨,规律往往在第 4、5 个数据上才冒头。
+                      计数题就列出前几项。这样做看似慢,但规律往往到第 4、5 个数据才显现。
                     </>
                   }
                 />
@@ -322,12 +322,12 @@ export default function MathChapter() {
           </div>
           <div className="mth-step">
             <div>
-              <h4>
+              <h3>
                 <T
                   en="Guess the pattern, or name the invariant"
                   zh="猜规律 / 找不变量 —— 那个不变的量是什么"
                 />
-              </h4>
+              </h3>
               <p>
                 <T
                   en={
@@ -349,12 +349,12 @@ export default function MathChapter() {
           </div>
           <div className="mth-step">
             <div>
-              <h4>
+              <h3>
                 <T
                   en="Prove it by induction — say why it always holds"
                   zh="归纳证明 —— 说清「为什么永远成立」"
                 />
-              </h4>
+              </h3>
               <p>
                 <T
                   en={
@@ -413,7 +413,7 @@ export default function MathChapter() {
               <T en="Rule · addition" zh="法则 · 加" />
             </div>
             <div className="card-title">
-              <T en="➕ Addition distributes" zh="➕ 加法分配" />
+              <T en="Addition distributes" zh="加法分配" />
             </div>
             <p>
               <T
@@ -437,7 +437,7 @@ export default function MathChapter() {
               <T en="Rule · multiplication" zh="法则 · 乘" />
             </div>
             <div className="card-title">
-              <T en="✖️ Multiplication distributes" zh="✖️ 乘法分配" />
+              <T en="Multiplication distributes" zh="乘法分配" />
             </div>
             <p>
               <T
@@ -450,7 +450,7 @@ export default function MathChapter() {
                 }
                 zh={
                   <>
-                    (a × b) % m = ((a%m) × (b%m)) % m。这条最要命:两个约 10⁹ 的数相乘
+                    (a × b) % m = ((a%m) × (b%m)) % m。这条最关键:两个约 10⁹ 的数相乘
                     ≈ 10¹⁸,<b>乘积必须用 64 位 long 接</b>。
                   </>
                 }
@@ -462,7 +462,7 @@ export default function MathChapter() {
               <T en="Rule · division (trap)" zh="法则 · 除(陷阱)" />
             </div>
             <div className="card-title">
-              <T en="➗ Division does not distribute" zh="➗ 除法不分配" />
+              <T en="Division does not distribute" zh="除法不分配" />
             </div>
             <p>
               <T
@@ -477,7 +477,7 @@ export default function MathChapter() {
                 zh={
                   <>
                     (a ÷ b) % m ≠ ((a%m) ÷ (b%m)) % m。要除得先求<b>模逆元</b>,
-                    而逆元只在 b 与 m 互质时存在。算 C(n, k) mod p 就会撞上这一点 ——
+                    而逆元只在 b 与 m 互质时存在。算 C(n, k) mod p 就会遇到这一点 ——
                     见 §04 快速幂的费马小定理。
                   </>
                 }
@@ -530,8 +530,8 @@ export default function MathChapter() {
               ),
               zh: (
                 <>
-                  <b>坑:</b>Java 的 int 溢出<b>不会报错</b>,只会悄悄回绕成一个错的数。
-                  一旦有乘法,把参与者全提升成 <code>long</code> 是肌肉记忆。另外 Java 的{" "}
+                  <b>陷阱:</b>Java 的 int 溢出<b>不会报错</b>,只会悄悄回绕成一个错的数。
+                  一旦有乘法,先把所有参与运算的数提升成 <code>long</code>。另外 Java 的{" "}
                   <code>%</code> 取被除数的符号,<code>-7 % 3</code> 等于{" "}
                   <code>-1</code>,所以减法记得写 <code>(x % m + m) % m</code>。
                 </>
@@ -576,7 +576,7 @@ def mul(a: int, b: int) -> int:
                   Python 的 <code>%</code> 取除数的符号,<code>-7 % 3</code> 等于{" "}
                   <code>2</code>,结果永不为负,所以不需要{" "}
                   <code>(x % m + m) % m</code> 这类修正。这两点在换到 Java / C++
-                  面试时都会绊人。
+                  面试时都容易出错。
                 </>
               ),
             },
@@ -594,7 +594,7 @@ const mul = (a, b) => (a * b) % MOD;
 const add = (a, b) => (a + b) % MOD;
 const mul = (a, b) => (a * b) % MOD;
 
-// 若坚持用 Number:a*b 一旦超过 9e15 结果就不可信,计数题必须上 BigInt`,
+// 若坚持用 Number:a*b 一旦超过 9e15 结果就不可信,计数题必须改用 BigInt`,
             },
             hl: [1, 4],
             note: {
@@ -612,7 +612,7 @@ const mul = (a, b) => (a * b) % MOD;
               ),
               zh: (
                 <>
-                  <b>坑:</b>JS 只有一种数字类型 Number(双精度浮点),安全整数上限是
+                  <b>陷阱:</b>JS 只有一种数字类型 Number(双精度浮点),安全整数上限是
                   2⁵³ ≈ 9×10¹⁵。两个 10⁹ 相乘 = 10¹⁸ 远超它,结果会<b>丢精度</b>
                   (既不报错也不回绕,更隐蔽)。涉及大数取模,一律用{" "}
                   <code>BigInt</code>(字面量带 <code>n</code>)。它的 <code>%</code>{" "}
@@ -627,7 +627,7 @@ const mul = (a, b) => (a * b) % MOD;
           tone="story"
           title={{
             en: "Why does everyone use 10⁹+7?",
-            zh: "为什么全世界都用 10⁹+7 这个怪数?",
+            zh: "10⁹+7 为什么被普遍采用?",
           }}
         >
           <p>
@@ -648,9 +648,9 @@ const mul = (a, b) => (a * b) % MOD;
               }
               zh={
                 <>
-                  它必须满足三个条件才好用:①<b>足够大</b>,让不同答案很难在取模后撞车;
+                  它必须满足三个条件才好用:①<b>足够大</b>,让不同答案在取模后很少重合;
                   ②是<b>质数</b>,这样任何不是它倍数的数都存在模逆元,除法才能做(见 §04);
-                  ③平方后 (10⁹+7)² ≈ 10¹⁸ 仍<b>塞进 64 位 long</b>(上限 ≈ 9.2×10¹⁸),
+                  ③平方后 (10⁹+7)² ≈ 10¹⁸ 仍<b>能放进 64 位 long</b>(上限 ≈ 9.2×10¹⁸),
                   两个已取模的数相乘不溢出。10⁹+7 正好卡在这三条同时成立的位置 ——
                   它的兄弟 998244353 也是质数,因为适合快速数论变换(NTT)而在竞赛里更常见。
                 </>
@@ -689,7 +689,7 @@ const mul = (a, b) => (a * b) % MOD;
               zh={
                 <>
                   两个数的最大公约数(greatest common divisor, gcd)是能同时整除它们的最大的数。
-                  最笨的办法是从 min(a, b) 往下试每个数,O(min(a, b))。
+                  最直接的办法是从 min(a, b) 往下试每个数,O(min(a, b))。
                   欧几里得给了一条短得多的路:<strong>gcd(a, b) = gcd(b, a % b)</strong>,
                   一直辗转到余数为 0,此时的除数就是答案。这叫
                   <strong>辗转相除法(欧几里得算法)</strong>。
@@ -749,12 +749,12 @@ const mul = (a, b) => (a * b) % MOD;
         <div className="mth-steps">
           <div className="mth-step">
             <div>
-              <h4>
+              <h3>
                 <T
                   en="gcd(48, 36): 48 % 36 = 12, so it becomes gcd(36, 12)"
                   zh="gcd(48, 36):48 % 36 = 12 → 换成 gcd(36, 12)"
                 />
-              </h4>
+              </h3>
               <p>
                 <T
                   en="A large problem becomes a smaller one, and the set of common divisors does not change."
@@ -765,12 +765,12 @@ const mul = (a, b) => (a * b) % MOD;
           </div>
           <div className="mth-step">
             <div>
-              <h4>
+              <h3>
                 <T
                   en="gcd(36, 12): 36 % 12 = 0, so it becomes gcd(12, 0)"
                   zh="gcd(36, 12):36 % 12 = 0 → 换成 gcd(12, 0)"
                 />
-              </h4>
+              </h3>
               <p>
                 <T
                   en="A remainder of 0 means 12 divides 36, so the recursion is about to stop."
@@ -781,12 +781,12 @@ const mul = (a, b) => (a * b) % MOD;
           </div>
           <div className="mth-step">
             <div>
-              <h4>
+              <h3>
                 <T
                   en="gcd(12, 0) = 12 — the remainder is 0, so the divisor is the answer"
                   zh="gcd(12, 0) = 12 —— 余数为 0,除数即答案"
                 />
-              </h4>
+              </h3>
               <p>
                 <T
                   en="The gcd of any number and 0 is that number itself. The answer is 12."
@@ -837,7 +837,7 @@ const mul = (a, b) => (a * b) % MOD;
               ),
               zh: (
                 <>
-                  <b>坑:</b>lcm 千万别写成 <code>a * b / gcd</code> —— a×b
+                  <b>陷阱:</b>lcm 不要写成 <code>a * b / gcd</code> —— a×b
                   会先溢出。永远<b>先除后乘</b>:<code>a / gcd × b</code>
                   (gcd 一定整除 a,不丢精度)。注意强转的位置:
                   <code>(long) a</code> 在除法之前,整个表达式都在 64 位里算。
@@ -929,7 +929,8 @@ const lcm = (a, b) => (a / gcd(a, b)) * b;   // 先除后乘`,
                 <>
                   The Euclidean algorithm appears in Book VII of Euclid&apos;s
                   Elements, written around 300 BC. Twenty-three centuries later, the{" "}
-                  <code>gcd</code> you write today is the same procedure. It is also
+                  <code>gcd</code> you write today follows the same idea; Euclid
+                  subtracted repeatedly where the code takes a remainder. It is also
                   part of the base of modern cryptography: RSA key generation uses the{" "}
                   <b>extended Euclidean algorithm</b> to find modular inverses. The
                   extended version returns x and y with{" "}
@@ -941,7 +942,7 @@ const lcm = (a, b) => (a / gcd(a, b)) * b;   // 先除后乘`,
               zh={
                 <>
                   辗转相除法出现在欧几里得《几何原本》(约公元前 300 年)第七卷 ——
-                  两千三百年过去,你今天写的 <code>gcd</code> 一字未改。
+                  两千三百年过去,你今天写的 <code>gcd</code> 与它思路一脉相承(欧几里得用的是辗转相减,代码里换成了取余)。
                   它还是现代密码学的地基:RSA 用<b>扩展欧几里得</b>求模逆元来生成密钥。
                   扩展版会给出满足 <b>ax + by = gcd(a, b)</b> 的 x、y;
                   当 gcd(a, b) = 1 时,这个 x 就是 a 在模 b 下的逆元 ——
@@ -1002,7 +1003,7 @@ const lcm = (a, b) => (a / gcd(a, b)) * b;   // 先除后乘`,
                 <>
                   <b>为什么试除到 √x 就够?</b>若 x = a × b 且两个因子都大于 √x,
                   那么 a × b 就会大于 x,不可能。所以两个因子里至少有一个 ≤ √x。
-                  大于 √x 的因子必然有一个小于 √x 的搭档,试除到 √x 就一定能撞到那个搭档。
+                  大于 √x 的因子必然有一个小于 √x 的搭档,试除到 √x 就一定能找到那个搭档。
                 </>
               }
             />
@@ -1114,7 +1115,7 @@ const lcm = (a, b) => (a / gcd(a, b)) * b;   // 先除后乘`,
               ),
               zh: (
                 <>
-                  <b>坑:</b>当 i 接近 √(2³¹) ≈ 46341 时,<code>i * i</code> 会溢出 int
+                  <b>陷阱:</b>当 i 接近 √(2³¹) ≈ 46341 时,<code>i * i</code> 会溢出 int
                   成负数,循环直接失控。把 j 声明成 <code>long</code>、或写{" "}
                   <code>(long) i * i</code>,是必须的防溢出动作。外层之所以枚举到 n,
                   只是因为它还要顺手计数;i 超过 √n 后,内层循环体一次也不会执行。
@@ -1162,7 +1163,7 @@ const lcm = (a, b) => (a / gcd(a, b)) * b;   // 先除后乘`,
                 <>
                   <b>地道写法:</b>切片赋值{" "}
                   <code>is_prime[i*i : n : i] = [False] * k</code>{" "}
-                  一口气划掉一整串倍数,比 Python 层的 for 循环快得多 ——
+                  一次划掉一整串倍数,比 Python 层的 for 循环快得多 ——
                   切片是 C 实现的。最后 <code>sum</code> 一个布尔列表就是统计幸存者。
                 </>
               ),
@@ -1252,18 +1253,18 @@ const lcm = (a, b) => (a / gcd(a, b)) * b;   // 先除后乘`,
         <Callout
           tone="deep"
           title={{
-            en: "In production: every HTTPS handshake",
-            zh: "工程现场:你的每一次 HTTPS 握手",
+            en: "In production: generating an RSA key",
+            zh: "工程现场:生成 RSA 密钥时",
           }}
         >
           <p>
             <T
               en={
                 <>
-                  Public-key systems such as RSA and Diffie-Hellman rest on one
-                  asymmetry: finding two large primes is easy, and factoring their
-                  product back is very hard. When a key is generated, the machine keeps
-                  picking a large random number and running a primality test. At that
+                  RSA rests on one asymmetry: finding two large primes is easy, and
+                  factoring their product back is very hard. When a key is generated,
+                  the machine keeps picking a large random number and running a
+                  primality test. At that
                   size the test is the probabilistic Miller-Rabin, not a sieve — you
                   cannot sieve numbers around 2²⁰⁴⁸. Trial division by small primes is
                   still used as a cheap pre-filter, and that is the sieve&apos;s idea of
@@ -1272,7 +1273,7 @@ const lcm = (a, b) => (a / gcd(a, b)) * b;   // 先除后乘`,
               }
               zh={
                 <>
-                  RSA、Diffie-Hellman 这些公钥密码,安全性建立在一个不对称上:
+                  RSA 的安全性建立在一个不对称上:
                   找两个大质数很容易,把它们的乘积再分解回去却极难。生成密钥时,
                   机器就是不停地随机取大数、做素性测试。那个量级用的是概率性的
                   Miller-Rabin,而不是筛法 —— 2²⁰⁴⁸ 附近的数根本没法筛。
@@ -1295,7 +1296,7 @@ const lcm = (a, b) => (a / gcd(a, b)) * b;   // 先除后乘`,
         }}
         desc={{
           en: "The divide and conquer tool from chapter 02, this time with the modulus",
-          zh: "第 2 章分治的老朋友,这次专攻它的取模变体",
+          zh: "第 2 章分治里的工具,这次专讲它的取模变体",
         }}
         badge={{
           en: <span className="chip">Review · divide and conquer</span>,
@@ -1321,7 +1322,7 @@ const lcm = (a, b) => (a / gcd(a, b)) * b;   // 先除后乘`,
               }
               zh={
                 <>
-                  算 a^b,老实乘 b 次是 O(b);b = 10⁹ 就没法看了。分治章教过的
+                  算 a^b,逐次乘 b 次是 O(b);b = 10⁹ 时完全不可行。分治章教过的
                   <strong>快速幂(fast exponentiation / binary exponentiation)</strong>
                   把它压到 <strong>O(log b)</strong>:核心是 a^b = (a²)^(b/2),
                   <strong>底数不断平方、指数不断折半</strong>。等价地看 b 的二进制 ——
@@ -1349,12 +1350,12 @@ const lcm = (a, b) => (a / gcd(a, b)) * b;   // 先除后乘`,
               }
               zh={
                 <>
-                  为什么要在快速幂里专门讲取模?因为 §01 留了个尾巴:
+                  为什么要在快速幂里专门讲取模?因为 §01 留下了一个问题:
                   <strong>取模不能做除法</strong>,而快速幂正是补上这个缺口的工具。
                   <strong>费马小定理</strong>说:当 m 是<b>质数</b>、a{" "}
                   <b>不是 m 的倍数</b>时,a^(m−1) ≡ 1 (mod m)。两边乘上 a 的逆元,
                   就得到 a 的模逆元 = a^(m−2) mod m。要算 (x ÷ a) % m,
-                  就改算 (x × a^(m−2)) % m —— 一个快速幂搞定。
+                  就改算 (x × a^(m−2)) % m —— 一次快速幂即可。
                   两个条件都不能省:m 不是质数时这条公式就是错的,
                   那时要用 §02 的扩展欧几里得。
                 </>
@@ -1420,7 +1421,7 @@ const lcm = (a, b) => (a / gcd(a, b)) * b;   // 先除后乘`,
               ),
               zh: (
                 <>
-                  <b>坑:</b>res、a 必须是 <code>long</code> —— 两个约 10⁹ 的数相乘
+                  <b>陷阱:</b>res、a 必须是 <code>long</code> —— 两个约 10⁹ 的数相乘
                   ≈ 10¹⁸,int 直接溢出。每次乘完立刻取模,让它们始终待在安全区。
                   注意 <code>res * a % MOD</code> 的含义是{" "}
                   <code>(res * a) % MOD</code>,模作用在乘积上,不是某个操作数上。
@@ -1459,7 +1460,7 @@ def qpow(a: int, b: int, mod: int = MOD) -> int:
 # pow(a, b, mod)           # = a^b % mod
 # pow(a, -1, mod)          # = a 的模逆元(3.8+,要求 gcd(a, mod) == 1)`,
             },
-            hl: [13, 14],
+            hl: [6, 7, 8],
             note: {
               en: (
                 <>
@@ -1523,17 +1524,14 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
                   <b>Trap:</b> whenever modular multiplication is involved, use BigInt,
                   or a*a loses precision. BigInt and Number cannot appear in the same
                   arithmetic expression, so every constant needs the <code>n</code>{" "}
-                  suffix (<code>1n</code>, <code>MOD - 2n</code>). BigInt division
-                  truncates, which is another reason the inverse has to go through fast
-                  power.
+                  suffix (<code>1n</code>, <code>MOD - 2n</code>).
                 </>
               ),
               zh: (
                 <>
-                  <b>坑:</b>只要涉及取模乘法,JS 一律用 BigInt,否则 a*a 丢精度。
+                  <b>陷阱:</b>只要涉及取模乘法,JS 一律用 BigInt,否则 a*a 丢精度。
                   BigInt 和 Number 不能出现在同一个算式里,常量都要带{" "}
                   <code>n</code>(如 <code>1n</code>、<code>MOD - 2n</code>)。
-                  BigInt 的除法是截断除,这也是求逆元必须走快速幂的原因之一。
                 </>
               ),
             },
@@ -1568,7 +1566,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
                   <b>对满足结合律的运算,用二进制拆分把 n 次操作压成 log n 次</b>」。
                   把「数的乘法」换成「矩阵乘法」,就是<b>矩阵快速幂</b>:
                   斐波那契 / 爬楼梯的 O(log n) 解法(第 7 章 DP 埋过这个伏笔),
-                  n = 10¹⁸ 也能秒算。凡是线性递推,都能这么加速。
+                  n = 10¹⁸ 也能很快算出。凡是线性递推,都能这么加速。
                 </>
               }
             />
@@ -1794,7 +1792,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
                   <b>同时维护两个候选和两个计数</b>,规则照搬,最后再逐个验证;
                   ②「&gt; n/k 呢?」→ 维护 k−1 个候选(Misra-Gries 算法);
                   ③「为什么不能直接返回、要验证?」→ 不保证存在时,
-                  摩尔投票仍会吐出一个幸存候选,它未必真过半。
+                  摩尔投票仍会给出一个幸存候选,它未必真过半。
                 </>
               }
             />
@@ -1804,7 +1802,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
           tone="deep"
           title={{
             en: "In production: heavy hitters in a data stream",
-            zh: "工程现场:流式数据里的「找大户」",
+            zh: "工程现场:流式数据里的高频元素",
           }}
         >
           <p>
@@ -1827,8 +1825,8 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
                   (网络流量里找发包最多的 IP、日志里找最高频的错误码),
                   摩尔投票的推广版 <b>Misra-Gries / Space-Saving</b> 就是标准答案:
                   用固定几个计数槽,近似找出高频元素 —— 这正是
-                  <b>Heavy Hitters(重击者)</b>问题的经典解。O(1)
-                  空间的抵消思想,在真实系统里价值千金。
+                  <b>高频元素(heavy hitters)</b>问题的经典解。O(1)
+                  空间的抵消思想,正是这类方案得以实现的关键。
                 </>
               }
             />
@@ -1860,7 +1858,8 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
                   the smallest arrangement that is still larger than the current one. If
                   it is already the largest, return the smallest.{" "}
                   <b>Brute force:</b> generate all n! permutations, sort them, and look
-                  up the next one — already impossible at n = 10.{" "}
+                  up the next one. At n = 12 there are already about 479 million
+                  permutations, so this does not scale.{" "}
                   <b>The solution:</b> think of it as adding one to a number and
                   carrying. The pattern has four steps.
                 </>
@@ -1869,7 +1868,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
                 <>
                   <b>题意:</b>把数组重排成<strong>字典序里的下一个排列</strong>,
                   也就是「比它大、且大得最少」的那个排列(若已是最大,则回到最小)。
-                  <b>暴力:</b>生成全部 n! 个排列排序后找下一个 —— n = 10 就爆了。
+                  <b>暴力:</b>生成全部 n! 个排列排序后找下一个 —— n = 12 时已有约 4.8 亿个排列,这条路走不通。
                   <b>正解:</b>把它当成「给一个数做加一进位」来想,规律只有四步。
                 </>
               }
@@ -1993,7 +1992,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
             nums[i], nums[j] = nums[j], nums[i]    # 3. 交换
         nums[i + 1:] = reversed(nums[i + 1:])      # 4. 反转右段`,
             },
-            hl: [5, 12],
+            hl: [5, 9, 11],
             note: {
               en: (
                 <>
@@ -2055,7 +2054,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
               zh: (
                 <>
                   <b>细节:</b>解构赋值 <code>[a, b] = [b, a]</code>{" "}
-                  是右边先整体求值,交换 / 反转都不会互相覆盖 —— 比临时变量清爽。
+                  是右边先整体求值,交换 / 反转都不会互相覆盖。
                   整题 O(n) 时间、O(1) 空间。
                 </>
               ),
@@ -2066,7 +2065,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
           tone="win"
           title={{
             en: "In an interview, state the pattern before you write code",
-            zh: "面试话术:先复述规律,再写代码",
+            zh: "面试表述:先复述规律,再写代码",
           }}
         >
           <p>
@@ -2131,8 +2130,8 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
                 <>
                   <b>题意:</b>桌上 n 颗石子,你和对手轮流拿,每次拿 1~3 颗,
                   <strong>拿到最后一颗的人赢</strong>。假设两人都绝顶聪明,你先手,能赢吗?
-                  <b>暴力:</b>博弈搜索(minimax)—— 递归枚举每种拿法,状态 O(n),会 TLE。
-                  <b>正解:</b>§01 的心法登场:
+                  <b>暴力:</b>博弈搜索(minimax)—— 递归枚举每种拿法,状态 O(n),会超时。
+                  <b>正解:</b>§01 的流程派上用场:
                   <strong>打表 → 猜规律 → 证明</strong>。
                 </>
               }
@@ -2159,14 +2158,14 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
               }
               zh={
                 <>
-                  先手玩几个小的:n = 1/2/3,一把拿光,<strong>先手胜</strong>;
+                  先试几个小例子:n = 1、2、3 时一次拿光,<strong>先手胜</strong>;
                   n = 4,你拿几颗(1~3)都会给对手留下 1~3 颗让他拿光,
                   <strong>先手败</strong>;n = 5/6/7,你可以拿掉 1/2/3 颗,
-                  把那个「必败的 4」丢给对手,<strong>先手胜</strong>;
+                  把那个「必败的 4」留给对手,<strong>先手胜</strong>;
                   n = 8,又回到「怎么拿都给对手留下 5/6/7(对他都是必胜态)」的必败局……
                   规律浮出水面:<strong>n 是 4 的倍数时先手必败,否则必胜</strong>。
                   这里的不变量就是 <strong>n % 4</strong>。亲手验证 ——
-                  你能在必败态下翻盘吗?
+                  你能在必败态下扭转局面吗?
                 </>
               }
             />
@@ -2195,11 +2194,11 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
                 <>
                   <strong>为什么这个不变量成立(归纳证明)?</strong>
                   定义「剩余是 4 的倍数、且轮到你走」为<strong>必败态</strong>。
-                  ①出口:剩 0 颗轮到你 = 上一个人拿了最后一颗、你没得拿,你输 ——
+                  ①基例:剩 0 颗轮到你 = 上一个人拿了最后一颗、你没得拿,你输 ——
                   而 0 是 4 的倍数,符合。②归纳:若你面对 4 的倍数,你拿 k 颗(1~3),
                   对手总能拿 <strong>4−k</strong> 颗,把剩余重新变回 4 的倍数丢还给你;
                   如此循环,直到把 0 留给你。反之,若 n 不是 4 的倍数,你首手拿掉{" "}
-                  <strong>n % 4</strong> 颗,就把必败态甩给对手。所以答案一行:
+                  <strong>n % 4</strong> 颗,就把必败态留给对手。所以答案一行:
                 </>
               }
             />
@@ -2254,8 +2253,8 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
               ),
               zh: (
                 <>
-                  <b>提醒:</b>这是「巴什博弈(Bash Game)」的特例:每次取 1~m 颗,
-                  必败态是 (m+1) 的倍数。这里 m = 3,所以看 % 4。记住通式,一类题通吃。
+                  <b>推广:</b>这是「巴什博弈(Bash Game)」的特例:每次取 1~m 颗,
+                  必败态是 (m+1) 的倍数。这里 m = 3,所以看 % 4。记住通式,这一类题都适用。
                 </>
               ),
             },
@@ -2270,14 +2269,16 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
                 <>
                   <b>The real Nim:</b> LeetCode 292 is this subtraction game, not
                   classical Nim. Classical Nim has several piles, and the winner is
-                  decided by the XOR of the pile sizes (the Sprague-Grundy theorem).
+                  decided by the XOR of the pile sizes (Bouton&apos;s theorem; the
+                  Sprague-Grundy theorem generalises it).
                   That is an advanced use of XOR from the bit-manipulation chapter.
                 </>
               ),
               zh: (
                 <>
-                  <b>正牌 Nim:</b>LeetCode 292 其实是巴什博弈。真正的「Nim 游戏」
-                  有多堆石子,胜负由各堆异或和(Sprague-Grundy 定理)决定 ——
+                  <b>真正的 Nim:</b>LeetCode 292 其实是巴什博弈。真正的「Nim 游戏」
+                  有多堆石子,胜负由各堆异或和决定(Bouton 定理;Sprague-Grundy
+                  定理把它推广到一切公平博弈)——
                   那是位运算章异或的高阶应用。
                 </>
               ),
@@ -2296,7 +2297,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
               }
               zh={
                 <>
-                  同一套「找不变量」的招式,横扫一堆博弈 / 找规律题。
+                  同一套「找不变量」的方法,适用于一大类博弈 / 找规律题。
                   挑两道本章题单里的近亲:
                 </>
               }
@@ -2334,7 +2335,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
                     轮流把 n 减去它的一个真因子(<code>0 &lt; x &lt; n</code> 且{" "}
                     <code>n % x == 0</code>),轮到自己时<b>无法操作的人输</b>。
                     打表发现:<b>n 偶数先手胜、奇数先手败</b>。
-                    因为偶数能减 1 把奇数丢给对手,而奇数的因子全是奇数、减完必变偶数。
+                    因为偶数能减 1 把奇数留给对手,而奇数的因子全是奇数、减完必变偶数。
                     不变量 = n 的奇偶。
                   </>
                 }
@@ -2403,7 +2404,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
                   把各堆数量<b>异或</b>起来,结果非 0 则先手必胜。后来
                   Sprague-Grundy 定理把它推广到<b>一切</b>公平组合游戏 ——
                   每个局面都能算出一个「Grundy 数」,整场游戏的胜负就是各独立子游戏
-                  Grundy 数的异或。博弈论的半壁江山,起点就是这个拿石子的小游戏。
+                  Grundy 数的异或。组合博弈论的很大一部分,起点就是这个拿石子的小游戏。
                 </>
               }
             />
@@ -2558,7 +2559,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
                   因为各位平方和不会失控:一个 3 位数最大是 999,平方和 3 × 9² = 243,
                   已经比 999 小;位数越多,平方和落后得越远。所以数值很快被压进{" "}
                   <strong>[1, 243] 这个有限区间</strong>。在有限个状态里一直走,
-                  由鸽巢原理,要么撞上 1,要么撞上一个重复值(成环)—— 必有结局。
+                  由鸽巢原理,要么遇到 1,要么遇到一个重复值(成环)—— 必有结局。
                 </>
               }
             />
@@ -2614,7 +2615,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
                 <>
                   <b>两种写法:</b>快慢指针 O(1) 空间;更直观的是用{" "}
                   <code>HashSet</code> 记录见过的数,重复出现即成环 —— 代价是 O(k)
-                  空间。面试报「Floyd 判圈」更亮眼。
+                  空间。面试时说出「Floyd 判圈」是更好的回答。
                 </>
               ),
             },
@@ -2692,7 +2693,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
   return fast === 1;
 };`,
             },
-            hl: [7, 8, 9, 10],
+            hl: [8, 9, 10],
             note: {
               en: (
                 <>
@@ -2706,7 +2707,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
               zh: (
                 <>
                   <b>细节:</b>拆位用 <code>x = (x - d) / 10</code> 保证结果是整数
-                  (JS 的 <code>/</code> 是浮点除,先减掉个位再除才干净);
+                  (JS 的 <code>/</code> 是浮点除,先减掉个位再除,结果才精确);
                   数字全在安全范围,无需 BigInt。
                 </>
               ),
@@ -2738,8 +2739,8 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
                 <>
                   一旦某个过程是「当前状态唯一决定下一个状态」,它就是一条隐形链表,
                   「会不会陷入循环」就能用快慢指针破解。LC 202 快乐数、LC 287 寻找重复数
-                  (把 nums[i] 当 next 指针)、检测函数迭代的周期……底层都是同一招
-                  Floyd 判圈。<b>看穿伪装,比记住算法更值钱。</b>
+                  (把 nums[i] 当 next 指针)、检测函数迭代的周期……底层都是同一种方法:
+                  Floyd 判圈。<b>看穿伪装,比记住算法更有价值。</b>
                 </>
               }
             />
@@ -2756,8 +2757,8 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
           zh: "高频题单:数学与数论 13 题",
         }}
         desc={{
-          en: "Grouped by pattern finding, modular arithmetic, and game theory, easy to hard. Think for 30 seconds before opening the hint.",
-          zh: "按「找规律 / 取模防溢出 / 博弈」分层,由易到难。先想 30 秒再看提示",
+          en: "Ordered from easy to hard. Think for 30 seconds before opening the hint.",
+          zh: "由易到难排列。先想 30 秒再看提示",
         }}
         badge={{
           en: <span className="chip">Core + optional</span>,
@@ -2825,10 +2826,10 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
               a second pass.
             </>,
             <>
-              Game problems: find the losing position. Nim uses <b>n % 4</b>, the divisor
-              game uses <b>parity</b>, the bulb problem uses{" "}
-              <b>perfect squares</b>. Once you know who faces the losing position, the
-              problem collapses into one line.
+              Game problems: find the losing position — <b>n % 4</b> for Nim,{" "}
+              <b>parity</b> for the divisor game. Once you know who faces the losing
+              position, the problem collapses into one line. Pattern problems such as
+              Bulb Switcher come down to <b>perfect squares</b>.
             </>,
             <>
               Two useful restatements: next permutation is{" "}
@@ -2840,7 +2841,7 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
           ],
           zh: [
             <>
-              本章灵魂:<b>数学题不考数学,考的是找不变量 / 规律</b>。通用套路 ——
+              本章核心:<b>数学题不考数学,考的是找不变量 / 规律</b>。通用流程 ——
               <b>打表(算几个小例子)→ 猜规律 / 不变量 → 归纳证明</b>。
             </>,
             <>
@@ -2849,8 +2850,8 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
               那时中间结果早溢出了。
             </>,
             <>
-              为什么用 10⁹+7:<b>够大、是质数(能求逆元)、平方后不爆 64 位 long</b>。
-              Java 静默溢出、JS 超 2⁵³ 丢精度(上 BigInt)、Python 无上限但仍要取模压小。
+              为什么用 10⁹+7:<b>够大、是质数(能求逆元)、平方后不超出 64 位 long</b>。
+              Java 静默溢出、JS 超 2⁵³ 丢精度(改用 BigInt)、Python 无上限但仍要取模压小。
               负数取模也不同:Java / JS 取被除数符号,Python 取除数符号。
             </>,
             <>
@@ -2864,11 +2865,11 @@ const inverse = (a) => qpow(a, MOD - 2n);   // 费马小定理:MOD 必须是质�
               <b>确实存在</b>,否则要回头验证候选。
             </>,
             <>
-              博弈找必败态:Nim 看 <b>n % 4</b>、除数博弈看<b>奇偶</b>、
-              灯泡开关看<b>完全平方数</b>。找到「谁面对必败态」,题目就塌成一行。
+              博弈题找必败态:Nim 看 <b>n % 4</b>,除数博弈看<b>奇偶</b>。
+              找到「谁面对必败态」,题目就归结为一行。找规律题如灯泡开关,看的是<b>完全平方数</b>。
             </>,
             <>
-              两个万能改述:下一个排列 = <b>字典序进位规律</b>
+              两个有用的改述:下一个排列 = <b>字典序进位规律</b>
               (找断点 → 换上仍更大的最小数 → 反转右段);快乐数 ={" "}
               <b>链表找环</b>(next 函数当指针,快慢指针判圈)。
             </>,

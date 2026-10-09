@@ -26,13 +26,15 @@ export const PROBLEMS: Problem[] = [
     key: {
       en: (
         <>
-          A negative number is never a palindrome, because the minus sign is only
-          at the front. Reverse the digits of the second half one at a time and
-          compare them with the first half. Stop when{" "}
+          First rule out two kinds of numbers: negative numbers, because the
+          minus sign is only at the front, and non-zero numbers that end in 0 (x %
+          10 == 0 and x ≠ 0), because a palindrome cannot start with 0. Then
+          reverse the second half digit by digit, and stop when{" "}
           <b>the reversed value is greater than or equal to the remaining value</b>.
-          That single condition handles both an even and an odd number of digits;
-          with an odd count the middle digit ends up in the reversed value and
-          does not affect the comparison. Everything is integer arithmetic, so the
+          Compare the two: with an even number of digits they must be equal; with
+          an odd count the middle digit has ended up in the reversed value, so
+          compare the remaining value with reversed / 10. Everything is integer
+          arithmetic, so the
           time is O(log n) in the number of digits and the extra space is O(1).
           The idea to notice is &quot;reverse only half&quot;, not any advanced
           maths.
@@ -40,9 +42,10 @@ export const PROBLEMS: Problem[] = [
       ),
       zh: (
         <>
-          负数一律不是回文(负号只在开头)。把后半段数字逐位反转,和前半段比较:
-          当 <b>反转值 ≥ 剩余值</b> 时停下。这一个条件同时处理了奇偶位数 ——
-          位数为奇时,中间那位会落进反转值里,不影响比较结果。
+          先排除两类数:负数(负号只在开头),以及末位为 0 的非零数
+          (x % 10 == 0 且 x ≠ 0)—— 回文不可能以 0 开头。然后把后半段逐位反转,
+          当 <b>反转值 ≥ 剩余值</b> 时停下,再比较两者:位数为偶时两者应相等;
+          位数为奇时中间那位落进了反转值,比较剩余值与反转值 / 10。
           全程只用整数运算,时间 O(log n)(位数),空间 O(1)。
           核心是「只反转一半」这个观察,而不是任何高深数学。
         </>
@@ -67,7 +70,7 @@ export const PROBLEMS: Problem[] = [
           Binary search on the answer: in [0, x], find the <b>largest</b> mid with
           mid×mid ≤ x. Compute mid×mid in a 64-bit type, because the product of
           two ints can overflow. Newton&apos;s method is an alternative and
-          converges faster: x_{"{k+1}"} = (x_k + n/x_k) / 2. This chapter treats
+          converges faster: y_{"{k+1}"} = (y_k + x/y_k) / 2. This chapter treats
           the problem as a review of &quot;binary search plus overflow-safe
           rounding&quot;. For the binary search template itself, see chapter 03.
         </>
@@ -76,7 +79,7 @@ export const PROBLEMS: Problem[] = [
         <>
           二分答案:在 [0, x] 上找<b>最大</b>的 mid 满足 mid×mid ≤ x ——
           mid×mid 要用 64 位类型算,两个 int 相乘会溢出。
-          也可用牛顿迭代 x_{"{k+1}"} = (x_k + n/x_k) / 2,收敛更快。
+          也可用牛顿迭代 y_{"{k+1}"} = (y_k + x/y_k) / 2,收敛更快。
           本章把它当作「二分 + 防溢出取整」的复盘;二分模板细节回看第 3 章。
         </>
       ),
@@ -111,8 +114,8 @@ export const PROBLEMS: Problem[] = [
           双指针从两串末尾往前走,每位 sum = a 位 + b 位 + 进位,
           当前位 = sum % 2、新进位 = sum / 2,循环结束后别漏了最高位的进位。
           位运算在第 4 章主讲,这里练的是「进位模拟」的手感。
-          Java / JS 别偷懒用 <code>parseInt</code> 整串转数字 —— 输入长度足以让数值失真,
-          老实逐位加。
+          Java / JS 不要用 <code>parseInt</code> 把整串转成数字 —— 输入长度足以让数值失真,
+          应逐位相加。
         </>
       ),
     },
@@ -160,8 +163,8 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Majority Element", zh: "多数元素" },
     d: "easy",
     tags: {
-      en: ["Boyer-Moore voting", "Invariant"],
-      zh: ["摩尔投票", "不变量"],
+      en: ["Boyer-Moore voting", "Invariant", "Review"],
+      zh: ["摩尔投票", "不变量", "复盘"],
     },
     hint: {
       en: "Same value +1, different value −1, and pick a new candidate when the count reaches zero. Which value can survive to the end?",
@@ -219,7 +222,7 @@ export const PROBLEMS: Problem[] = [
       zh: (
         <>
           结论很短:<b>n 为偶数先手必胜,奇数必败</b>。
-          归纳:偶数可以减 1,把奇数丢给对手;而奇数的因子全是奇数,
+          归纳:偶数可以减 1,把奇数留给对手;而奇数的因子全是奇数,
           减去后必然变偶数留给对手 —— 双方在奇偶之间来回,拿到 1 的人无法操作而输。
           看出「奇偶」这个不变量后,一行 <code>return n % 2 == 0</code> 就够了,
           完全不需要枚举。
@@ -358,7 +361,7 @@ export const PROBLEMS: Problem[] = [
         <>
           快速幂(第 2 章分治主讲):按 n 的二进制位,底数不断平方,
           遇到为 1 的位就把当前的幂乘进结果,O(log n)。
-          两个坑:n 为负要先取 x 的倒数;对 Integer.MIN_VALUE 直接取负会溢出,
+          两个陷阱:n 为负要先取 x 的倒数;对 Integer.MIN_VALUE 直接取负会溢出,
           先转成 64 位再取负。本章 §04 复盘它的<b>取模变体</b>(边乘边模,别等算完)。
         </>
       ),
@@ -516,14 +519,19 @@ export const QUIZ: QuizItem[] = [
     },
     why: {
       en: "Addition and multiplication distribute over the modulus, so you can reduce at every step and keep each intermediate value below 10⁹+7. A product of two such values is at most about (10⁹)² = 10¹⁸, which fits in a 64-bit long. That is the engineering reason 10⁹+7 is used everywhere.",
-      zh: "加法和乘法对取模是分配的,所以可以「边算边模」,把每个中间量摁在 10⁹+7 以下;两个这样的数相乘最大约 (10⁹)² = 10¹⁸,刚好塞进 64 位 long —— 这就是全世界都用 10⁹+7 的工程理由。",
+      zh: "加法和乘法对取模是分配的,所以可以「边算边模」,把每个中间量控制在 10⁹+7 以下;两个这样的数相乘最大约 (10⁹)² = 10¹⁸,刚好能放进 64 位 long —— 这就是 10⁹+7 被普遍采用的工程理由。",
     },
   },
   {
     type: "choice",
     q: {
-      en: <>Which of these modular identities is <b>false</b>?</>,
-      zh: <>下面哪一条取模等式是<b>错的</b>(不成立)?</>,
+      en: (
+        <>
+          Which of these modular identities is <b>false</b>? (Here % means the
+          non-negative remainder, as in mathematics.)
+        </>
+      ),
+      zh: <>下面哪一条取模等式是<b>错的</b>(不成立)?(本题的 % 指数学意义上的非负余数)</>,
     },
     opts: {
       en: [
@@ -594,13 +602,13 @@ export const QUIZ: QuizItem[] = [
           smaller prime factor and was marked earlier
         </>,
         "Because no number below i×i is a multiple of i",
-        "Only to write a shorter loop. Starting at 2i gives the same result and the same complexity",
+        "It is purely a way to write a slightly shorter loop",
         "Because there are no composite numbers below i×i",
       ],
       zh: [
         <>因为所有小于 i×i 的 i 的倍数(2i、3i…)都已被更小的质因子划过了</>,
         "因为 i×i 之前的数都不是 i 的倍数",
-        "纯粹为了少写一点循环,从 2i 开始结果和复杂度都完全一样",
+        "纯粹为了少写一点循环",
         "因为 i×i 之前根本没有合数",
       ],
     },
@@ -669,7 +677,7 @@ export const QUIZ: QuizItem[] = [
     },
     why: {
       en: "Every −1 step cancels one copy of the current candidate against one copy of a different value. If a value appears more than n/2 times, all the other values together are fewer than n/2, so it cannot be cancelled away and it survives. If the problem does not guarantee that such a value exists, the scan still returns some candidate, so you have to scan a second time and check that it really appears more than n/2 times.",
-      zh: "每次 −1 都是拿一个候选和一个异值成对抵消。若某个值出现次数 &gt; n/2,其他所有值加起来不到 n/2,它抵消不完,一定留到最后。若题目不保证这样的值存在,扫描仍会吐出一个候选,所以要再扫一遍、验证它是否真的出现 &gt; n/2 次。",
+      zh: "每次 −1 都是拿一个候选和一个异值成对抵消。若某个值出现次数 &gt; n/2,其他所有值加起来不到 n/2,它抵消不完,一定留到最后。若题目不保证这样的值存在,扫描仍会给出一个候选,所以要再扫一遍、验证它是否真的出现 &gt; n/2 次。",
     },
   },
   {
@@ -712,7 +720,7 @@ export const QUIZ: QuizItem[] = [
       zh: [
         undefined,
         "拿 3 剩 9,对手拿 1 补成 8(仍是 4 的倍数),你又回到「面对 4 的倍数」的必败局。任何拿法都逃不掉。",
-        "拿 1 剩 11,对手拿 3 补成 8;同样被拉回 4 的倍数。先手在 12 颗下没有翻盘手。",
+        "拿 1 剩 11,对手拿 3 补成 8;同样被拉回 4 的倍数。先手在 12 颗时没有能扭转局面的走法。",
         "Nim 是完全信息、无随机的博弈,结果由 n % 4 唯一决定,不存在运气。",
       ],
     },
@@ -749,7 +757,7 @@ export const QUIZ: QuizItem[] = [
     correct: [0, 1, 2],
     missHint: {
       en: "The first three all follow the same route: try a few small cases, guess the pattern or invariant, then prove it. Check which one you left out.",
-      zh: "前三题都是「先手玩几个小例子 → 猜出规律 / 不变量 → 归纳验证」,再看看你漏了哪个。",
+      zh: "前三题都是「先试几个小例子 → 猜出规律 / 不变量 → 归纳验证」,再看看你漏了哪个。",
     },
     extraHint: {
       en: "One option claims a simple problem needs advanced calculus. The point of this chapter is the opposite: these problems need one observation, not a formula.",
@@ -799,8 +807,8 @@ export const QUIZ: QuizItem[] = [
       ],
       zh: [
         undefined,
-        "「拍脑袋定个 100 次上限」不严谨:凭什么是 100 不是 99?正确做法是检测环 —— 一旦某个数重复出现,就可以断定序列永远循环。",
-        "各位平方和不会无限变大(三位数最大 3 × 9² = 243),数字根本溢不出去,「变大」不能作为判据。",
+        "「随意定个 100 次上限」不严谨:凭什么是 100 不是 99?正确做法是检测环 —— 一旦某个数重复出现,就可以断定序列永远循环。",
+        "各位平方和不会无限变大(三位数最大 3 × 9² = 243),数字根本不会溢出,「变大」不能作为判据。",
         "确实有解:序列要么到 1,要么进入一个固定循环(4→16→37→…→4),两种结局都会在有限步内出现。",
       ],
     },
