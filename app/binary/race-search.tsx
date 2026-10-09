@@ -175,7 +175,7 @@ const H = (
   // decides every count here
   seedless: {
     en: "Here the counts depend only on where the target sits, and a reroll would only shift the values.",
-    zh: "这里的计数只取决于目标所在的位置，换一组只会平移数值，计数不会变化。",
+    zh: "这里的计数只取决于目标所在的位置,换一组只会平移数值,计数不会变化。",
   },
 });
 

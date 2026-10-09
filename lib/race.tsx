@@ -290,7 +290,7 @@ export function AlgoRace<I>({
                 ? { en: "New input of the same shape", zh: "换一份同形状的输入" }
                 : (shape.seedless ?? {
                     en: "This shape has only one form at a given n — nothing to reroll.",
-                    zh: "这个形状在给定 n 下只有一种，没有可换的输入。",
+                    zh: "这个形状在给定 n 下只有一种,没有可换的输入。",
                   }),
             )}
           >
