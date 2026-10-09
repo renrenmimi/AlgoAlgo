@@ -59,11 +59,15 @@ Build with type checking: `npm run build`.
 
 ## Structure
 
-Next.js 15 (App Router) + TypeScript + React 19, plain CSS. No API routes, so everything prerenders to static pages.
+Next.js 15 (App Router) + TypeScript + React 19, plain CSS. No API routes, so everything prerenders to static pages. The three typefaces are self-hosted from `app/fonts`, so a build never downloads fonts.
 
 Each chapter is one folder under `app/` holding its page, its visualizations (`viz.tsx`) and
-its own stylesheet, paired with a data file under `lib/` for the problem sets. Frames are
-precomputed at module load — `buildXxx(): Frame[]` — and the component only renders frame *i*.
+its own stylesheet, paired with two data modules under `lib/`: `<chapter>-problems.tsx` for
+the problem set and `<chapter>-quiz.tsx` for the quiz (kept apart so the atlas, which lists
+every chapter's problems, does not load the quizzes). Frames are precomputed at module load —
+`buildXxx(): Frame[]` — and the component only renders frame *i*.
+
+`CHANGELOG.md` records the changes made after the 2026-10 audit.
 
 Shared pieces: the stepper in `lib/stepper.tsx`, the graph renderer, the quiz component,
 progress tracking in `lib/progress.tsx`, and the chapter registry in `lib/curriculum.ts`
