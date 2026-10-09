@@ -148,7 +148,7 @@ export default function CommandPalette() {
             <div className="cmdk-empty">
               {L({
                 en: "No chapter matches. Try another keyword.",
-                zh: "没有匹配的章节，请换一个关键词。",
+                zh: "没有匹配的章节,请换一个关键词。",
               })}
             </div>
           )}
