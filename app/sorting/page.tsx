@@ -49,6 +49,9 @@ import {
   CountingDemo,
   StabilityDemo,
   IntervalsDemo,
+  sortRace1Verdict,
+  sortRace2Verdict,
+  sortRace3Verdict,
 } from "./viz";
 
 /* ================= Page ================= */
@@ -101,7 +104,7 @@ export default function SortingChapter() {
             <>
               排序看似只是「把数字从小排到大」,却是整门算法课的<strong>思想展览馆</strong>:
               从蛮力的两两比较,到分治的一分为二,再到「根本不比较」的数数 ——
-              每一次变快,背后都是一种全新的世界观。学完这一章,你不仅会写排序,
+              每一次变快,背后都是一种全新的视角。学完这一章,你不仅会写排序,
               更会看懂「为什么它能这么快」,以及<strong>什么时候该借排序给别的问题开路</strong>。
             </>
           ),
@@ -138,8 +141,8 @@ export default function SortingChapter() {
               zh={
                 <>
                   先破除一个误会:面试里几乎没人让你「手写一个排序」当最终答案 ——
-                  因为每种语言都内置了 <code>sort</code>。那为什么还要学?因为<strong>排序是一种预处理的世界观</strong>:
-                  很多看起来杂乱无章的问题,<strong>只要先排个序,难度就塌了一半</strong>。
+                  因为每种语言都内置了 <code>sort</code>。那为什么还要学?因为<strong>排序是一种预处理的思路</strong>:
+                  很多看起来杂乱无章的问题,<strong>只要先排个序,难度就降了一半</strong>。
                 </>
               }
             />
@@ -195,8 +198,8 @@ export default function SortingChapter() {
               zh={
                 <>
                   更重要的是:排序算法本身是<strong>算法思想的最佳教具</strong>。这一章我们会亲眼见到
-                  分治(归并)、随机化(快排)、以空间换时间(计数)、以及「稳定性」这种在工程里
-                  要命、教材里却常被一笔带过的概念。它们全都会在后面的章节反复登场。
+                  分治(归并)、随机化(快排)、以空间换时间(计数)、以及「稳定性」这种在工程中
+                  非常重要、教材里却常被一笔带过的概念。它们全都会在后面的章节反复登场。
                 </>
               }
             />
@@ -205,8 +208,8 @@ export default function SortingChapter() {
         <Callout
           tone="story"
           title={{
-            en: "People have sorted things for centuries. Computers have done it for seventy years.",
-            zh: "人类排了几千年,计算机排了七十年",
+            en: "People have sorted things for thousands of years. Computers have done it for about eighty years.",
+            zh: "人类排了几千年,计算机排了大约八十年",
           }}
         >
           <p>
@@ -217,8 +220,8 @@ export default function SortingChapter() {
                   click on a spreadsheet column header: putting things in order is an
                   old human habit. In 1945 <b>John von Neumann</b> wrote{" "}
                   <b>merge sort</b> as one of the earliest programs for a
-                  stored-program computer. In 1959 <b>Tony Hoare</b> invented{" "}
-                  <b>quicksort</b> while working on machine translation from Russian
+                  stored-program computer. In 1959–1960 <b>Tony Hoare</b>, then 25,
+                  invented <b>quicksort</b> while working on machine translation from Russian
                   to English, where words had to be sorted before they could be looked
                   up in a dictionary. The history of sorting is close to the history of
                   computer algorithms itself.
@@ -227,8 +230,8 @@ export default function SortingChapter() {
               zh={
                 <>
                   图书馆按书号上架、扑克摸牌时理牌、Excel 点一下列头 —— 排序是人类最古老的整理本能。
-                  1945 年 <b>冯·诺依曼</b>为第一台存储程序计算机写下的早期程序之一,就是<b>归并排序</b>;
-                  1959 年 <b>Tony Hoare</b> 为了给俄英机器翻译排词典,发明了<b>快速排序</b>。
+                  1945 年 <b>冯·诺依曼</b>为存储程序计算机 EDVAC 写下的早期程序之一,就是<b>归并排序</b>;
+                  1959 至 1960 年间,时年 25 岁的 <b>Tony Hoare</b> 为了给俄英机器翻译排词典,发明了<b>快速排序</b>。
                   排序的历史,几乎就是计算机算法史本身。
                 </>
               }
@@ -359,7 +362,7 @@ export default function SortingChapter() {
                     并且已落在最终位置。每轮扫完整个未排序区找最小值,再换到区首。
                     它的<b>交换次数最少</b>(至多 n−1 次),但比较次数恒为约 n²/2,
                     所以最好、平均、最坏都是 <b>O(n²)</b> —— 输入已有序也快不了。
-                    它<b>不稳定</b>:那一次长距离交换可能把某个元素甩到与它相等的元素前面。
+                    它<b>不稳定</b>:那一次长距离交换可能把某个元素移到与它相等的元素前面。
                   </>
                 }
               />
@@ -447,7 +450,7 @@ export default function SortingChapter() {
               }
               zh={
                 <>
-                  三者之中,<strong>插入排序</strong>最值得写到形成肌肉记忆:
+                  三者之中,<strong>插入排序</strong>最值得反复练到能默写:
                   它是 TimSort 的组成部分,也是近乎有序数据上的最快选择。
                   下面是三语言模板。注意内层循环的方向:它<strong>向左</strong>走,
                   一路把更大的值往右挪。
@@ -476,7 +479,7 @@ export default function SortingChapter() {
               zh: `class Solution {
     public void insertionSort(int[] a) {
         for (int i = 1; i < a.length; i++) {
-            int key = a[i];             // 摸起第 i 张新牌
+            int key = a[i];             // 摸起新牌
             int j = i - 1;
             while (j >= 0 && a[j] > key) {  // 比 key 大的值统统右移
                 a[j + 1] = a[j];
@@ -624,7 +627,7 @@ export default function SortingChapter() {
                 <>
                   n = 10⁵ 时,O(n²) 约是 100 亿次操作,必然超时;
                   O(n log n) 只有约 170 万次。所以 LC 912(排序数组,n 可达 5×10⁴)
-                  提交冒泡会 TLE。这三个仍然值得学,原因有二:
+                  提交冒泡会超时(TLE)。这三个仍然值得学,原因有二:
                   它们讲清了不变量;而且在几十个元素的<b>小数组</b>上,
                   它们常数小,确实更快。真正处理大数据的算法,在接下来两节。
                 </>
@@ -983,7 +986,7 @@ export default function SortingChapter() {
                 <td><BigO o="nlogn" /></td>
                 <td><BigO o="nlogn" /></td>
                 <td><BigO o="n" /></td>
-                <td><T en="✅ Yes" zh="✅ 稳定" /></td>
+                <td><T en="✓ Yes" zh="✓ 稳定" /></td>
               </tr>
             </tbody>
           </table>
@@ -1006,9 +1009,10 @@ export default function SortingChapter() {
                   read each file forward and keep one position per file in
                   memory. A database running <code>ORDER BY</code> over a large
                   result set, and the shuffle stage of MapReduce, both work this
-                  way. Quicksort cannot be used here because it jumps to
-                  arbitrary positions, and disk is slow at that. Merge sort only
-                  reads sequentially.
+                  way. Each chunk that fits in memory can be sorted with any
+                  algorithm, often quicksort. Combining the chunks into one file
+                  can only read and write sequentially, and that step is
+                  naturally a merge.
                 </>
               }
               zh={
@@ -1018,8 +1022,8 @@ export default function SortingChapter() {
                   每块排好写回磁盘,再<b>把这些有序文件合并起来</b>。
                   合并时每个文件只需顺序往下读,内存里为每个文件保留一个位置即可。
                   数据库对大结果集执行 <code>ORDER BY</code>、MapReduce 的 shuffle 阶段,
-                  用的都是这套办法。快排在这里用不了:它要跳到任意位置读,而磁盘做这件事很慢。
-                  归并只需顺序读。
+                  用的都是这套办法。每一块装进内存后可以用任何排序(常用快排)排好;
+                  把多块合成一个文件时只能顺序读写,这一步天然就是归并。
                 </>
               }
             />
@@ -1070,9 +1074,9 @@ export default function SortingChapter() {
               }
               zh={
                 <>
-                  归并是「先不看值地劈开,合并时才真正干活」;快排正好相反:
-                  <strong>划分时就干完活,合并时什么也不用做</strong>。
-                  干活的那个操作叫 <strong>partition(划分)</strong>:
+                  归并是「先不看值地劈开,真正的工作在合并时完成」;快排正好相反:
+                  <strong>工作在划分时就已完成,合并时什么也不用做</strong>。
+                  完成这项工作的操作叫 <strong>partition(划分)</strong>:
                   选一个元素作<strong>基准(pivot)</strong>,扫一遍,
                   <strong>把比它小的挪到左边,比它大的留在右边</strong>,
                   基准自己落到两者之间的分界处。这一趟结束后,
@@ -1122,8 +1126,12 @@ export default function SortingChapter() {
                   cost becomes O(n²) with a real risk of stack overflow. The fix
                   is a <strong>random pivot</strong>: before partitioning, pick a
                   random index and swap that element into the last position. The
-                  worst case still exists, but no particular input triggers it,
-                  so it becomes very unlikely.
+                  worst case still exists, but inputs aimed at a fixed pivot, such
+                  as sorted or reversed arrays, no longer trigger it, so on them it
+                  becomes very unlikely. Many duplicate values are the exception:
+                  this partition sends every copy of the pivot to the same side, so
+                  an array of equal values still costs O(n²) whichever pivot is
+                  drawn. A three-way partition (LC 75) fixes that.
                 </>
               }
               zh={
@@ -1133,10 +1141,12 @@ export default function SortingChapter() {
                   (基准那一格已经正确,跳过)。但有一个问题必须处理 ——
                   <strong>基准怎么选</strong>。如果总是取最后一个元素,
                   那么面对<strong>已经有序</strong>的数组,每次划分只能切掉一个元素,
-                  递归会深达 n 层,代价退化成 O(n²),而且真的可能爆栈。
+                  递归会深达 n 层,代价退化成 O(n²),而且确实可能栈溢出。
                   解决办法是<strong>随机基准</strong>:划分前随机选一个下标,
-                  把那个元素换到末位。最坏情况依然存在,但不再由某类特定输入触发,
-                  概率低到可以忽略。
+                  把那个元素换到末位。最坏情况依然存在,但已排序、逆序这类针对固定基准的输入
+                  不再触发它,在这些输入上它的概率低到可以忽略。大量重复值是例外:
+                  这种划分把与基准相等的值都送到同一侧,所以全是相等值的数组无论抽到哪个基准,
+                  代价都是 O(n²)。三路划分(LC 75)能解决这个问题。
                 </>
               }
             />
@@ -1191,7 +1201,7 @@ export default function SortingChapter() {
     private void swap(int[] a, int x, int y) { int t = a[x]; a[x] = a[y]; a[y] = t; }
 }`,
             },
-            hl: [14, 15],
+            hl: [13, 14],
             note: {
               en: (
                 <>
@@ -1208,7 +1218,7 @@ export default function SortingChapter() {
               zh: (
                 <>
                   <b>不随机化就会超时。</b>LC 912 专门放了「已排序」和「所有值相等」的用例,
-                  就是用来卡朴素快排的。随机基准(或三数取中)能应付已排序的情况,
+                  就是为了让朴素快排超时。随机基准(或三数取中)能应付已排序的情况,
                   但<b>解决不了</b>全相等的情况:这种划分方式下每次仍只能减少一个元素。
                   重复元素很多时,请改用<b>三路划分</b>(见 LC 75)。
                 </>
@@ -1258,7 +1268,7 @@ class Solution:
         quick(0, len(nums) - 1)
         return nums`,
             },
-            hl: [8],
+            hl: [8, 9],
             note: {
               en: (
                 <>
@@ -1272,7 +1282,7 @@ class Solution:
               zh: (
                 <>
                   Python 默认递归深度上限是 1000。用随机基准时期望深度是 O(log n),
-                  所以是安全的。若想在坏情况下也把深度卡住,可以
+                  所以是安全的。若想在坏情况下也把深度限制住,可以
                   <b>只对较短的一侧递归</b>,较长的一侧在同一次调用里用循环处理。
                 </>
               ),
@@ -1315,7 +1325,7 @@ class Solution:
   return nums;
 };`,
             },
-            hl: [5],
+            hl: [5, 6],
             note: {
               en: (
                 <>
@@ -1354,7 +1364,7 @@ class Solution:
                 <td><BigO o="nlogn" /></td>
                 <td><BigO o="n2" /></td>
                 <td><BigO o="logn" /></td>
-                <td><T en="❌ No" zh="❌ 不稳定" /></td>
+                <td><T en="✕ No" zh="✕ 不稳定" /></td>
               </tr>
             </tbody>
           </table>
@@ -1432,14 +1442,14 @@ class Solution:
           tone="story"
           title={{
             en: "Hoare on what the hard part actually is",
-            zh: "快排作者 Hoare 的一句大实话",
+            zh: "快排作者 Hoare 眼中真正的难点",
           }}
         >
           <p>
             <T
               en={
                 <>
-                  Tony Hoare invented quicksort at 26. His point about algorithms
+                  Tony Hoare invented quicksort at 25. His point about algorithms
                   was that writing one down is not the difficult part —{" "}
                   <b>showing that it is correct, and why it is fast, is</b>. The
                   loop invariant of partition is a good example: at any point
@@ -1451,7 +1461,7 @@ class Solution:
               }
               zh={
                 <>
-                  Tony Hoare 26 岁发明了快排。他对算法的看法是:
+                  Tony Hoare 25 岁时发明了快排。他对算法的看法是:
                   把算法写出来并不难,难的是<b>证明它正确、并说清它为什么快</b>。
                   partition 的循环不变量就是个好例子:扫描进行到任何时刻,
                   下标 <b>i</b> 及其左边的元素都小于基准,而 <b>i</b> 与 <b>j</b>{" "}
@@ -1540,73 +1550,7 @@ class Solution:
           sizes={[8, 16, 32, 64]}
           defaultSize={32}
           clone={cloneArr}
-          verdict={(r, { inputId }) => {
-            const g = (id: string) => r.find((x) => x.id === id)!.counts;
-            const ins = g("insertion");
-            const sel = g("selection");
-            if (inputId === "sorted" || inputId === "nearly")
-              return {
-                en: (
-                  <>
-                    Look at selection sort: <b>{sel.cmp} comparisons</b> — exactly the same
-                    number it spends on every other shape. It cannot do better, because to
-                    name the minimum it must scan all the remaining elements, every single
-                    round. Insertion sort needs only {ins.cmp} and writes {ins.mov} times.
-                    That gap is what the word <b>adaptive</b> is worth: an algorithm that
-                    notices the input is already in order.
-                  </>
-                ),
-                zh: (
-                  <>
-                    看选择排序:<b>{sel.cmp} 次比较</b> —— 和它在任何别的形状上花的次数一模一样。
-                    它没法更少,因为要说出「谁是最小的」,就必须每轮把剩下的元素全扫一遍。
-                    插入排序只要 {ins.cmp} 次比较、写 {ins.mov} 次。
-                    这个差距就是<b>自适应(adaptive)</b>这个词的含金量:
-                    一个算法能察觉「输入本来就有序」。
-                  </>
-                ),
-              };
-            if (inputId === "reversed")
-              return {
-                en: (
-                  <>
-                    Reversed input is insertion sort&apos;s true worst case: every element
-                    has to be shifted all the way to the front, so it writes {ins.mov} times
-                    against selection sort&apos;s {sel.mov}. This is the one shape where
-                    selection sort looks good — it always swaps at most once per round.
-                    Which is exactly when you would pick it: when a write is far more
-                    expensive than a comparison.
-                  </>
-                ),
-                zh: (
-                  <>
-                    逆序是插入排序真正的最坏情况:每个元素都得一路挪到最前面,
-                    于是它写了 {ins.mov} 次,而选择排序只写 {sel.mov} 次。
-                    这是选择排序唯一好看的形状 —— 它每轮最多只交换一次。
-                    这也正是你会选它的场合:当一次写入远比一次比较昂贵的时候。
-                  </>
-                ),
-              };
-            return {
-              en: (
-                <>
-                  On unordered data all three stay in the n² family, but the constants
-                  differ: insertion sort compares {ins.cmp} times, roughly half of bubble
-                  sort, because it stops the moment it finds the right slot instead of
-                  sweeping to the end. Selection sort remains pinned at {sel.cmp}{" "}
-                  comparisons — and still writes the fewest.
-                </>
-              ),
-              zh: (
-                <>
-                  在无序数据上三者都还在 n² 这个量级里,但常数不同:
-                  插入排序比较 {ins.cmp} 次,大约是冒泡的一半 ——
-                  因为它一找到该待的位置就停,不像冒泡非要扫到底。
-                  选择排序则依旧钉在 {sel.cmp} 次比较上,而写入仍然最少。
-                </>
-              ),
-            };
-          }}
+          verdict={sortRace1Verdict}
         />
 
         <Callout
@@ -1649,61 +1593,7 @@ class Solution:
           defaultSize={32}
           defaultInput={1}
           clone={cloneArr}
-          verdict={(r, { inputId, size }) => {
-            const g = (id: string) => r.find((x) => x.id === id)!.counts;
-            const ins = g("insertion");
-            const mer = g("merge");
-            if (inputId === "sorted" || inputId === "nearly")
-              return {
-                en: (
-                  <>
-                    Here is the headline: the O(n²) algorithm beats the O(n log n) one.
-                    Insertion sort spends {ins.cmp} comparisons and {ins.mov} moves; merge
-                    sort spends {mer.cmp} comparisons, <b>{mer.mov} moves and {mer.space}{" "}
-                    cells of extra space</b> — and it will spend the same {mer.mov} moves on
-                    every other shape, because textbook merge sort is not adaptive: it
-                    splits and merges regardless of what the data already looks like. Big-O
-                    was never wrong; it just describes n → ∞, and n = {size} is not
-                    infinity. This is precisely why Timsort — the real sort in Python and
-                    Java — first scans for existing sorted runs and hands short pieces to
-                    insertion sort.
-                  </>
-                ),
-                zh: (
-                  <>
-                    这就是本场的头条:O(n²) 的算法打赢了 O(n log n) 的。
-                    插入排序花 {ins.cmp} 次比较、{ins.mov} 次移动;归并排序花 {mer.cmp} 次比较、
-                    <b>{mer.mov} 次移动、{mer.space} 个额外单元</b> ——
-                    而且它在任何别的形状上都会花同样的 {mer.mov} 次移动,
-                    因为教科书版归并不自适应:不管数据长什么样,照拆照并。
-                    大 O 从没说错,它描述的是 n → ∞,而 n = {size} 不是无穷。
-                    这也正是 Timsort(Python 与 Java 里真正在跑的那个排序)
-                    要先扫描已有的有序段、并把短片段交给插入排序的原因。
-                  </>
-                ),
-              };
-            return {
-              en: (
-                <>
-                  Now the asymptotics assert themselves: insertion sort pays {ins.cmp}{" "}
-                  comparisons against merge sort&apos;s {mer.cmp}, and the gap widens as you
-                  raise n — try 128. Note the price of that speed, though: merge sort rents{" "}
-                  <b>{mer.space} cells</b> of extra space, while randomised quicksort keeps
-                  its footprint to the recursion stack alone. Sorting in place or sorting
-                  fast is a trade you make on purpose.
-                </>
-              ),
-              zh: (
-                <>
-                  这下渐进复杂度开始说话了:插入排序付 {ins.cmp} 次比较,归并只付 {mer.cmp} 次,
-                  而且你把 n 调大差距会拉得更开 —— 试试 128。
-                  但也请注意这份速度的代价:归并借走了 <b>{mer.space} 个额外单元</b>,
-                  而随机快排的占用只有递归栈本身。
-                  「原地排序」还是「排得更快」,是一个要你自己拿主意的取舍。
-                </>
-              ),
-            };
-          }}
+          verdict={sortRace2Verdict}
         />
 
         <AlgoRace
@@ -1716,57 +1606,12 @@ class Solution:
           sizes={[16, 32, 64, 128]}
           defaultSize={64}
           clone={cloneArr}
-          verdict={(r, { inputId, size }) => {
-            const fixed = r.find((x) => x.id === "quick-last")!.counts;
-            const rand = r.find((x) => x.id === "quick-rand")!.counts;
-            if (inputId === "random")
-              return {
-                en: (
-                  <>
-                    On random data the two are neck and neck ({fixed.cmp} versus {rand.cmp}{" "}
-                    comparisons) — randomisation costs a few extra swaps and buys nothing
-                    visible. Switch the shape to <b>Already sorted</b> to see what it was
-                    actually insurance against.
-                  </>
-                ),
-                zh: (
-                  <>
-                    在随机数据上两者几乎不分上下({fixed.cmp} 对 {rand.cmp} 次比较)——
-                    随机化只多花了几次交换,看不出任何好处。
-                    把形状切到<b>已排序</b>,就能看见它到底是给什么买的保险。
-                  </>
-                ),
-              };
-            return {
-              en: (
-                <>
-                  Sorted input is the fixed-pivot version&apos;s nightmare: the pivot is
-                  always the largest element left, so every partition splits 1 : n−1 and it
-                  degenerates to <b>{fixed.cmp} comparisons</b> with a recursion depth of{" "}
-                  <b>{fixed.space}</b> — at n = {size} that is a stack proportional to n,
-                  which is how real services meet a stack overflow. Randomising the pivot
-                  brings the same input down to {rand.cmp} comparisons and depth{" "}
-                  {rand.space}. Nothing about the input changed; what changed is that an
-                  adversary can no longer aim at you.
-                </>
-              ),
-              zh: (
-                <>
-                  已排序输入是固定轴版本的噩梦:轴永远是剩下元素里最大的那个,
-                  于是每次划分都是 1 : n−1,直接退化成 <b>{fixed.cmp} 次比较</b>、
-                  递归深度 <b>{fixed.space}</b> —— 在 n = {size} 时这就是一个与 n 同阶的栈,
-                  真实服务里的栈溢出就是这么来的。
-                  把轴随机化,同一份输入降到 {rand.cmp} 次比较、深度 {rand.space}。
-                  输入没有任何变化,变的是「对手再也没法瞄准你」。
-                </>
-              ),
-            };
-          }}
+          verdict={sortRace3Verdict}
         />
 
         <Callout
           tone="deep"
-          title={{ en: "On the job: why libraries are hybrids", zh: "工程现场:标准库为什么都是混血" }}
+          title={{ en: "On the job: why libraries are hybrids", zh: "工程现场:标准库为什么都是混合算法" }}
         >
           <p>
             <T
@@ -1776,8 +1621,10 @@ class Solution:
                   algorithm. Python and Java&apos;s <code>sort</code> for objects use
                   Timsort: find existing sorted runs, insertion-sort the short ones, merge
                   the rest — it is built to win Race 2&apos;s nearly-sorted column. Java&apos;s
-                  primitive <code>sort</code> uses a dual-pivot quicksort with randomised
-                  and introspective safeguards, so it never loses Race 3. When you next
+                  primitive <code>sort</code> uses a dual-pivot quicksort that picks its
+                  pivots from five sample points and falls back to heapsort when recursion
+                  gets too deep, so the sorted and reversed inputs of Race 3 do not slow it
+                  down. When you next
                   choose a sort, do not ask which one is fastest; ask{" "}
                   <b>what shape is my data, and which resource is scarce — comparisons,
                   writes, or memory?</b>
@@ -1789,8 +1636,8 @@ class Solution:
                   Python 和 Java 对象版的 <code>sort</code> 用的是 Timsort:
                   先找已有的有序段、短片段交给插入排序、其余归并 ——
                   它就是为了赢下第二场里「近乎有序」那一栏而设计的。
-                  Java 基本类型的 <code>sort</code> 用双轴快排,配随机化与内省式兜底,
-                  所以它不会输掉第三场。
+                  Java 基本类型的 <code>sort</code> 用双轴快排(从 5 个采样点选两个轴),
+                  递归过深时改用堆排序兜底,所以第三场里的已排序和逆序输入拖不慢它。
                   下次选排序,别问哪个最快,问:
                   <b>我的数据是什么形状,以及哪种资源更紧张 —— 比较、写入,还是内存?</b>
                 </>
@@ -2307,7 +2154,7 @@ class Solution:
                   用两次普通排序就能做到:<strong>先按时间排,再按金额排</strong>。
                   只要第二次排序是<strong>稳定</strong>的,金额相同的订单就会
                   <strong>保留第一次排出来的时间顺序</strong>,一步到位。
-                  如果第二次排序不稳定,那个时间顺序就被打乱了,第一次白排。
+                  如果第二次排序不稳定,那个时间顺序就被打乱了,第一次排序就白做了。
                   这就是稳定性的价值:<strong>排序可以一次接一次地叠加</strong>。
                 </>
               }
@@ -2331,43 +2178,43 @@ class Solution:
               <tr>
                 <td><b><T en="Bubble" zh="冒泡" /></b></td>
                 <td><BigO o="n" /></td><td><BigO o="n2" /></td><td><BigO o="n2" /></td>
-                <td><BigO o="1" /></td><td>✅</td>
+                <td><BigO o="1" /></td><td>✓</td>
                 <td><T en="Swaps neighbors only, so it is stable; the early-exit flag gives the O(n) best case" zh="只交换相邻元素,所以稳定;靠提前退出的标志位拿到 O(n) 最好情况" /></td>
               </tr>
               <tr>
                 <td><b><T en="Insertion" zh="插入" /></b></td>
                 <td><BigO o="n" /></td><td><BigO o="n2" /></td><td><BigO o="n2" /></td>
-                <td><BigO o="1" /></td><td>✅</td>
+                <td><BigO o="1" /></td><td>✓</td>
                 <td><T en="O(n) on nearly sorted data; the best choice for small arrays" zh="近乎有序时 O(n);小数组的首选" /></td>
               </tr>
               <tr>
                 <td><b><T en="Selection" zh="选择" /></b></td>
                 <td><BigO o="n2" /></td><td><BigO o="n2" /></td><td><BigO o="n2" /></td>
-                <td><BigO o="1" /></td><td>❌</td>
+                <td><BigO o="1" /></td><td>✕</td>
                 <td><T en="Sorted input does not help; the long swap breaks the order of equal elements" zh="输入有序也快不了;长距离交换会打乱相等元素的顺序" /></td>
               </tr>
               <tr>
                 <td><b><T en="Merge" zh="归并" /></b></td>
                 <td><BigO o="nlogn" /></td><td><BigO o="nlogn" /></td><td><BigO o="nlogn" /></td>
-                <td><BigO o="n" /></td><td>✅</td>
+                <td><BigO o="n" /></td><td>✓</td>
                 <td><T en="Stable and O(n log n) even in the worst case; the choice for linked lists and external sorting" zh="稳定,最坏也是 O(n log n);链表和外部排序的选择" /></td>
               </tr>
               <tr>
                 <td><b><T en="Quick" zh="快排" /></b></td>
                 <td><BigO o="nlogn" /></td><td><BigO o="nlogn" /></td><td><BigO o="n2" /></td>
-                <td><BigO o="logn" /></td><td>❌</td>
+                <td><BigO o="logn" /></td><td>✕</td>
                 <td><T en="Fastest on average, so it is the default in memory; needs a random pivot" zh="平均最快,内存排序的默认选择;需要随机基准" /></td>
               </tr>
               <tr>
                 <td><b><T en="Heap" zh="堆排" /></b></td>
                 <td><BigO o="nlogn" /></td><td><BigO o="nlogn" /></td><td><BigO o="nlogn" /></td>
-                <td><BigO o="1" /></td><td>❌</td>
+                <td><BigO o="1" /></td><td>✕</td>
                 <td><T en="O(n log n) guaranteed with O(1) auxiliary space (heaps: DataData · 09)" zh="O(n log n) 有保证,辅助空间 O(1)(堆见 DataData · 09)" /></td>
               </tr>
               <tr>
                 <td><b><T en="Counting" zh="计数" /></b></td>
                 <td><BigO o="n" label="O(n+k)" /></td><td><BigO o="n" label="O(n+k)" /></td><td><BigO o="n" label="O(n+k)" /></td>
-                <td><BigO o="n" label="O(k)" /></td><td>✅*</td>
+                <td><BigO o="n" label="O(k)" /></td><td>✓*</td>
                 <td><T en="No comparisons; needs integer keys in a bounded range k" zh="不做比较;要求键是有界范围 k 内的整数" /></td>
               </tr>
             </tbody>
@@ -2486,8 +2333,11 @@ words.sort(key=lambda w: (len(w), w))   # by length, then alphabetically
 
 # When the rule is really "compare these two" (LC 179), convert it:
 from functools import cmp_to_key
+def cmp(x, y):                  # must return 0 on a tie, not only 1 or -1
+    s, t = f"{y}{x}", f"{x}{y}"
+    return (s > t) - (s < t)
 nums = [3, 30, 34, 5, 9]
-nums.sort(key=cmp_to_key(lambda x, y: 1 if f"{y}{x}" > f"{x}{y}" else -1))`,
+nums.sort(key=cmp_to_key(cmp))`,
               zh: `a = [5, 2, 9, 1, 6]
 a.sort()                       # 原地排序;TimSort;稳定
 b = sorted(a, reverse=True)    # 返回新列表;a 不变
@@ -2498,8 +2348,11 @@ words.sort(key=lambda w: (len(w), w))   # 先按长度,再按字典序
 
 # 规则确实是「比较这两个」时(LC 179),把它转换一下:
 from functools import cmp_to_key
+def cmp(x, y):                  # 相等时必须返回 0,不能只返回 1 或 -1
+    s, t = f"{y}{x}", f"{x}{y}"
+    return (s > t) - (s < t)
 nums = [3, 30, 34, 5, 9]
-nums.sort(key=cmp_to_key(lambda x, y: 1 if f"{y}{x}" > f"{x}{y}" else -1))`,
+nums.sort(key=cmp_to_key(cmp))`,
             },
             hl: [2],
             note: {
@@ -2600,8 +2453,8 @@ arr.sort((x, y) => x.k - y.k);  // "a" 仍然排在 "b" 前面`,
                   <b>insertion sort</b>, which is the fastest option on short and
                   nearly sorted pieces. Then it uses <b>merge sort</b> to combine
                   the runs, which keeps the result stable. Best case O(n), worst
-                  case O(n log n), stable. It combines most of the algorithms in
-                  this chapter, and it is a good illustration that the practical
+                  case O(n log n), stable. It combines insertion sort and merge sort
+                  from this chapter, and it is a good illustration that the practical
                   question is not which algorithm is best, but which combination
                   fits the data.
                 </>
@@ -2615,7 +2468,7 @@ arr.sort((x, y) => x.k - y.k);  // "a" 仍然排在 "b" 前面`,
                   在短片段和近乎有序的数据上,插入排序最快。
                   然后用<b>归并</b>把这些 run 拼起来,结果保持稳定。
                   最好 O(n),最坏 O(n log n),稳定。
-                  它把本章几乎所有算法组合在了一起,
+                  它把本章的插入排序与归并排序组合在一起,
                   也说明了一件事:实际要问的不是哪个算法最好,而是哪种组合适合手上的数据。
                 </>
               }
@@ -2680,8 +2533,14 @@ arr.sort((x, y) => x.k - y.k);  // "a" 仍然排在 "b" 前面`,
             <T
               en={
                 <>
-                  The frame-by-frame partition in section 04 is the same operation
-                  used here. The new part is that{" "}
+                  The code below splits the range into three groups instead of the
+                  two in section 04: smaller than the pivot, equal to it, and larger
+                  — the Dutch flag partition of LC 75. All copies of the pivot then
+                  reach their final indices together, so an array full of equal
+                  values is settled in one pass. With the two-way partition of
+                  section 04, every copy would cost a pass of its own, which is
+                  O(n²), and a random pivot cannot prevent that because every pivot
+                  drawn has the same value. The idea itself does not change:{" "}
                   <strong>only one side is searched after each partition</strong>.
                   If the pivot splits the range near the middle, the expected work
                   is n + n/2 + n/4 + … = 2n = <strong>O(n)</strong>:
@@ -2689,8 +2548,11 @@ arr.sort((x, y) => x.k - y.k);  // "a" 仍然排在 "b" 前面`,
               }
               zh={
                 <>
-                  §04 那段逐帧 partition 就是这里用的同一个操作。
-                  新的地方在于<strong>每次划分之后只在一侧继续找</strong>。
+                  下面的代码把区间分成三组,而不是 §04 的两组:小于基准、等于基准、大于基准,
+                  也就是 LC 75 的荷兰国旗划分。这样基准的所有副本会一起落到最终下标上,
+                  全是相等值的数组一趟就能解决。如果用 §04 的两路划分,每个副本都要单独花一趟,
+                  代价是 O(n²);随机选基准也挡不住,因为抽到的每个基准都是同一个值。
+                  思路本身不变:<strong>每次划分之后只在一侧继续找</strong>。
                   如果基准大致把区间从中间切开,期望的总工作量是
                   n + n/2 + n/4 + … = 2n = <strong>O(n)</strong>:
                 </>
@@ -2706,22 +2568,19 @@ arr.sort((x, y) => x.k - y.k);  // "a" 仍然排在 "b" 前面`,
     public int findKthLargest(int[] nums, int k) {
         int target = nums.length - k;    // kth largest = index (n-k) when ascending
         int lo = 0, hi = nums.length - 1;
-        while (lo <= hi) {
-            int p = partition(nums, lo, hi);
-            if (p == target) return nums[p];   // found it
-            else if (p < target) lo = p + 1;   // target is on the right; drop the left
-            else hi = p - 1;                    // target is on the left; drop the right
+        while (true) {
+            int r = lo + (int) (Math.random() * (hi - lo + 1)); // random pivot, required
+            int pivot = nums[r];
+            int lt = lo, i = lo, gt = hi;   // three groups: < pivot | == pivot | > pivot
+            while (i <= gt) {
+                if (nums[i] < pivot) swap(nums, lt++, i++);
+                else if (nums[i] > pivot) swap(nums, i, gt--);  // i stays: new value unseen
+                else i++;
+            }
+            if (target < lt) hi = lt - 1;        // target is left of the pivot copies
+            else if (target > gt) lo = gt + 1;   // target is right of the pivot copies
+            else return pivot;                   // target is one of the pivot copies
         }
-        return -1;
-    }
-    private int partition(int[] a, int lo, int hi) {
-        int r = lo + (int) (Math.random() * (hi - lo + 1)); // random pivot, required
-        swap(a, r, hi);
-        int pivot = a[hi], i = lo - 1;
-        for (int j = lo; j < hi; j++)
-            if (a[j] < pivot) swap(a, ++i, j);
-        swap(a, i + 1, hi);
-        return i + 1;
     }
     private void swap(int[] a, int x, int y) { int t = a[x]; a[x] = a[y]; a[y] = t; }
 }`,
@@ -2729,41 +2588,40 @@ arr.sort((x, y) => x.k - y.k);  // "a" 仍然排在 "b" 前面`,
     public int findKthLargest(int[] nums, int k) {
         int target = nums.length - k;    // 第 k 大 = 升序时的下标 (n-k)
         int lo = 0, hi = nums.length - 1;
-        while (lo <= hi) {
-            int p = partition(nums, lo, hi);
-            if (p == target) return nums[p];   // 找到了
-            else if (p < target) lo = p + 1;   // 目标在右侧,丢掉左侧
-            else hi = p - 1;                    // 目标在左侧,丢掉右侧
+        while (true) {
+            int r = lo + (int) (Math.random() * (hi - lo + 1)); // 随机基准,必须有
+            int pivot = nums[r];
+            int lt = lo, i = lo, gt = hi;   // 分三组:< 基准 | == 基准 | > 基准
+            while (i <= gt) {
+                if (nums[i] < pivot) swap(nums, lt++, i++);
+                else if (nums[i] > pivot) swap(nums, i, gt--);  // i 不动:换来的值还没看过
+                else i++;
+            }
+            if (target < lt) hi = lt - 1;        // 目标在基准副本的左侧
+            else if (target > gt) lo = gt + 1;   // 目标在基准副本的右侧
+            else return pivot;                   // 目标就是基准的某个副本
         }
-        return -1;
-    }
-    private int partition(int[] a, int lo, int hi) {
-        int r = lo + (int) (Math.random() * (hi - lo + 1)); // 随机基准,必须有
-        swap(a, r, hi);
-        int pivot = a[hi], i = lo - 1;
-        for (int j = lo; j < hi; j++)
-            if (a[j] < pivot) swap(a, ++i, j);
-        swap(a, i + 1, hi);
-        return i + 1;
     }
     private void swap(int[] a, int x, int y) { int t = a[x]; a[x] = a[y]; a[y] = t; }
 }`,
             },
-            hl: [7, 8, 9],
+            hl: [14, 15, 16],
             note: {
               en: (
                 <>
                   Because only one side is ever searched, a <b>while loop</b>{" "}
                   replaces the recursion and the stack stays O(1). The random
                   pivot is still required: without it, sorted input drives this to
-                  O(n²).
+                  O(n²). The loop always ends at the <code>return</code>, because
+                  the range keeps the target index and shrinks every round.
                 </>
               ),
               zh: (
                 <>
                   因为每次只在一侧继续找,用 <b>while 循环</b>就能代替递归,
                   栈空间保持 O(1)。随机基准仍然必须有:没有它,
-                  已排序的输入会把它拖到 O(n²)。
+                  已排序的输入会把它拖到 O(n²)。循环一定会在 <code>return</code> 处结束,
+                  因为区间始终包含目标下标,而且每一轮都在缩小。
                 </>
               ),
             },
@@ -2776,48 +2634,52 @@ class Solution:
     def findKthLargest(self, nums: list[int], k: int) -> int:
         target = len(nums) - k          # kth largest = index (n-k) when ascending
         lo, hi = 0, len(nums) - 1
-        while lo <= hi:
-            r = random.randint(lo, hi)
-            nums[r], nums[hi] = nums[hi], nums[r]
-            pivot, i = nums[hi], lo - 1
-            for j in range(lo, hi):
-                if nums[j] < pivot:
+        while True:
+            pivot = nums[random.randint(lo, hi)]    # random pivot, required
+            lt, i, gt = lo, lo, hi      # three groups: < pivot | == pivot | > pivot
+            while i <= gt:
+                if nums[i] < pivot:
+                    nums[lt], nums[i] = nums[i], nums[lt]
+                    lt += 1
                     i += 1
-                    nums[i], nums[j] = nums[j], nums[i]
-            nums[i + 1], nums[hi] = nums[hi], nums[i + 1]
-            p = i + 1
-            if p == target:
-                return nums[p]          # found it
-            elif p < target:
-                lo = p + 1              # search the right side only
+                elif nums[i] > pivot:
+                    nums[i], nums[gt] = nums[gt], nums[i]
+                    gt -= 1             # i stays: the value from gt is unseen
+                else:
+                    i += 1
+            if target < lt:
+                hi = lt - 1             # search left of the pivot copies only
+            elif target > gt:
+                lo = gt + 1             # search right of the pivot copies only
             else:
-                hi = p - 1              # search the left side only
-        return -1`,
+                return pivot            # target is one of the pivot copies`,
               zh: `import random
 
 class Solution:
     def findKthLargest(self, nums: list[int], k: int) -> int:
         target = len(nums) - k          # 第 k 大 = 升序时的下标 (n-k)
         lo, hi = 0, len(nums) - 1
-        while lo <= hi:
-            r = random.randint(lo, hi)
-            nums[r], nums[hi] = nums[hi], nums[r]
-            pivot, i = nums[hi], lo - 1
-            for j in range(lo, hi):
-                if nums[j] < pivot:
+        while True:
+            pivot = nums[random.randint(lo, hi)]    # 随机基准,必须有
+            lt, i, gt = lo, lo, hi      # 分三组:< 基准 | == 基准 | > 基准
+            while i <= gt:
+                if nums[i] < pivot:
+                    nums[lt], nums[i] = nums[i], nums[lt]
+                    lt += 1
                     i += 1
-                    nums[i], nums[j] = nums[j], nums[i]
-            nums[i + 1], nums[hi] = nums[hi], nums[i + 1]
-            p = i + 1
-            if p == target:
-                return nums[p]          # 找到了
-            elif p < target:
-                lo = p + 1              # 只在右侧继续找
+                elif nums[i] > pivot:
+                    nums[i], nums[gt] = nums[gt], nums[i]
+                    gt -= 1             # i 不动:从 gt 换来的值还没看过
+                else:
+                    i += 1
+            if target < lt:
+                hi = lt - 1             # 只在基准副本的左侧继续找
+            elif target > gt:
+                lo = gt + 1             # 只在基准副本的右侧继续找
             else:
-                hi = p - 1              # 只在左侧继续找
-        return -1`,
+                return pivot            # 目标就是基准的某个副本`,
             },
-            hl: [17, 18, 19, 20, 21],
+            hl: [20, 21, 22, 23, 24, 25],
             note: {
               en: (
                 <>
@@ -2848,37 +2710,35 @@ class Solution:
   const target = nums.length - k;      // kth largest = index (n-k) when ascending
   const swap = (x, y) => { [nums[x], nums[y]] = [nums[y], nums[x]]; };
   let lo = 0, hi = nums.length - 1;
-  while (lo <= hi) {
-    const r = lo + Math.floor(Math.random() * (hi - lo + 1));
-    swap(r, hi);
-    const pivot = nums[hi];
-    let i = lo - 1;
-    for (let j = lo; j < hi; j++) if (nums[j] < pivot) swap(++i, j);
-    swap(i + 1, hi);
-    const p = i + 1;
-    if (p === target) return nums[p];  // found it
-    else if (p < target) lo = p + 1;   // search the right side only
-    else hi = p - 1;                    // search the left side only
+  while (true) {
+    const pivot = nums[lo + Math.floor(Math.random() * (hi - lo + 1))]; // random pivot
+    let lt = lo, i = lo, gt = hi;      // three groups: < pivot | == pivot | > pivot
+    while (i <= gt) {
+      if (nums[i] < pivot) swap(lt++, i++);
+      else if (nums[i] > pivot) swap(i, gt--);   // i stays: the new value is unseen
+      else i++;
+    }
+    if (target < lt) hi = lt - 1;      // search left of the pivot copies only
+    else if (target > gt) lo = gt + 1; // search right of the pivot copies only
+    else return pivot;                 // target is one of the pivot copies
   }
-  return -1;
 };`,
               zh: `var findKthLargest = function (nums, k) {
   const target = nums.length - k;      // 第 k 大 = 升序时的下标 (n-k)
   const swap = (x, y) => { [nums[x], nums[y]] = [nums[y], nums[x]]; };
   let lo = 0, hi = nums.length - 1;
-  while (lo <= hi) {
-    const r = lo + Math.floor(Math.random() * (hi - lo + 1));
-    swap(r, hi);
-    const pivot = nums[hi];
-    let i = lo - 1;
-    for (let j = lo; j < hi; j++) if (nums[j] < pivot) swap(++i, j);
-    swap(i + 1, hi);
-    const p = i + 1;
-    if (p === target) return nums[p];  // 找到了
-    else if (p < target) lo = p + 1;   // 只在右侧继续找
-    else hi = p - 1;                    // 只在左侧继续找
+  while (true) {
+    const pivot = nums[lo + Math.floor(Math.random() * (hi - lo + 1))]; // 随机基准
+    let lt = lo, i = lo, gt = hi;      // 分三组:< 基准 | == 基准 | > 基准
+    while (i <= gt) {
+      if (nums[i] < pivot) swap(lt++, i++);
+      else if (nums[i] > pivot) swap(i, gt--);   // i 不动:换来的值还没看过
+      else i++;
+    }
+    if (target < lt) hi = lt - 1;      // 只在基准副本的左侧继续找
+    else if (target > gt) lo = gt + 1; // 只在基准副本的右侧继续找
+    else return pivot;                 // 目标就是基准的某个副本
   }
-  return -1;
 };`,
             },
             hl: [13, 14, 15],
@@ -2886,12 +2746,10 @@ class Solution:
               en: (
                 <>
                   Average <b>O(n)</b>, worst <b>O(n²)</b>, auxiliary space{" "}
-                  <b>O(1)</b>. A random pivot makes the sorted-input worst case
-                  very unlikely, but it does <b>not</b> help against many equal
-                  values. If every element is equal, this partition scheme moves
-                  the boundary by one each time and the cost is O(n²) every run,
-                  not just occasionally. For that input, use the three-way
-                  partition from LC 75. Also note this function{" "}
+                  <b>O(1)</b>. The two safeguards do different jobs: the random
+                  pivot makes the sorted-input worst case very unlikely, and the
+                  three-way split handles many equal values, which a random pivot
+                  alone cannot. Also note this function{" "}
                   <b>reorders the input array</b>; copy it first if the caller
                   needs the original.
                 </>
@@ -2899,10 +2757,8 @@ class Solution:
               zh: (
                 <>
                   平均 <b>O(n)</b>,最坏 <b>O(n²)</b>,辅助空间 <b>O(1)</b>。
-                  随机基准能把「输入已排序」这种最坏情况的概率压得很低,
-                  但它<b>解决不了</b>大量相等值的情况。如果所有元素都相等,
-                  这种划分每次只能把边界推进一格,代价必然是 O(n²),而不是偶尔如此。
-                  遇到这种输入,请改用 LC 75 的三路划分。另外这个函数会
+                  两道保险各管一件事:随机基准把「输入已排序」这种最坏情况的概率压得很低,
+                  三路划分负责大量相等值的情况 —— 这一点光靠随机基准做不到。另外这个函数会
                   <b>改变输入数组的顺序</b>;调用方还需要原数组的话,要先复制一份。
                 </>
               ),
@@ -3069,7 +2925,7 @@ class Solution:
             <T
               en={
                 <>
-                  Three implementations. Both do the same two things:{" "}
+                  Three implementations. All three do the same two things:{" "}
                   <strong>sort by left endpoint</strong> and{" "}
                   <strong>
                     compare the next left endpoint with the current right endpoint
@@ -3277,8 +3133,8 @@ class Solution:
           zh: "高频题单:排序 9 题",
         }}
         desc={{
-          en: "Ordered by idea: counting, merging, comparators, partition variants, then merge sort. Think for 30 seconds before opening a hint.",
-          zh: "按思路排列:计数 → 合并 → 比较器 → partition 变体 → 归并。先自己想 30 秒再看提示",
+          en: "Ordered from easy to hard. Think for 30 seconds before opening a hint.",
+          zh: "由易到难排列。先自己想 30 秒再看提示",
         }}
         badge={<span className="chip"><T en="Core set" zh="主线必做" /></span>}
       >
@@ -3328,7 +3184,7 @@ class Solution:
               Fastest on average, but O(n²) in the worst case, so it needs a{" "}
               <b>random pivot</b> (sorted input with a fixed pivot is the bad
               case) and a three-way partition when there are many duplicates.
-              Running the same partition but searching only one side is{" "}
+              Partitioning and then searching only one side is{" "}
               <b>quickselect</b> (LC 215).
             </>,
             <>
@@ -3376,7 +3232,7 @@ class Solution:
               <b>快排</b>建立在 partition 上:<b>一趟就把基准放到它的最终下标,不再移动</b>。
               平均最快,但最坏 O(n²),所以需要<b>随机基准</b>
               (固定基准遇上已排序输入就是坏情况),重复元素多时还需要三路划分。
-              同样的 partition,只在一侧继续搜索,就是 <b>quickselect</b>(LC 215)。
+              划分之后只在一侧继续搜索,就是 <b>quickselect</b>(LC 215)。
             </>,
             <>
               <b>Ω(n log n) 这条下界只管基于比较的排序</b>,证明用的是决策树。

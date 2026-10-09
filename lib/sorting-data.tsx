@@ -81,7 +81,7 @@ export const PROBLEMS: Problem[] = [
     lc: 1356,
     title: {
       en: "Sort Integers by The Number of 1 Bits",
-      zh: "根据二进制中 1 的数目排序",
+      zh: "根据数字二进制下 1 的数目排序",
     },
     d: "easy",
     tags: {
@@ -145,7 +145,7 @@ export const PROBLEMS: Problem[] = [
       ),
       zh: (
         <>
-          本章两个主要算法的练兵场。<b>归并</b>:劈成两半,各自排好,再合并;
+          本章两个主要算法的练习场。<b>归并</b>:劈成两半,各自排好,再合并;
           稳定,最坏也是 O(n log n),需要 O(n) 辅助空间。
           <b>快排</b>:围绕基准划分,再对两侧递归;原地、平均最快,
           但<b>必须用随机基准</b>,否则已排序的输入会把它拖到 O(n²)。
@@ -177,8 +177,12 @@ export const PROBLEMS: Problem[] = [
           scan). On 0, swap with <code>lo</code> and advance both. On 2, swap
           with <code>hi</code> and <b>do not advance i</b> — the value that came
           back from <code>hi</code> has not been examined yet. On 1, just advance{" "}
-          <code>i</code>. One pass, O(n) time, O(1) space. This is also the core
-          of the three-way quicksort used when the input has many duplicates.
+          <code>i</code>. Advancing <code>i</code> after a swap with{" "}
+          <code>lo</code> is safe because the value coming back from{" "}
+          <code>lo</code> has already been scanned: it is a 1, or{" "}
+          <code>lo</code> and <code>i</code> are the same slot. One pass, O(n)
+          time, O(1) space. This is also the core of the three-way quicksort used
+          when the input has many duplicates.
         </>
       ),
       zh: (
@@ -188,6 +192,8 @@ export const PROBLEMS: Problem[] = [
           <code>i</code>(扫描)。遇到 0,与 <code>lo</code> 交换,两个指针都前进;
           遇到 2,与 <code>hi</code> 交换,而且 <b>i 不动</b> ——
           从 <code>hi</code> 换回来的值还没检查过;遇到 1,只让 <code>i</code> 前进。
+          与 <code>lo</code> 交换后 <code>i</code> 可以前进,是因为从 <code>lo</code>{" "}
+          换回来的值已经扫描过:它是 1,或者 <code>lo</code> 与 <code>i</code> 本来就是同一格。
           一趟扫完,时间 O(n),空间 O(1)。它也是输入含大量重复值时所用的三路快排的核心。
         </>
       ),
@@ -279,8 +285,11 @@ export const PROBLEMS: Problem[] = [
         <>
           Two approaches. <b>Quickselect</b>: run partition, look at where the
           pivot landed; if that index is the target, return the value, otherwise
-          recurse into the side that contains the target only. Average O(n), and
-          randomize the pivot to make the worst case unlikely. <b>Heap</b>: keep
+          continue in the side that contains the target only. Average O(n).
+          Randomize the pivot to make the sorted-input worst case unlikely, and
+          partition three ways (smaller, equal, larger, as in LC 75): with many
+          equal values a two-way partition removes one element per pass and costs
+          O(n²), which a random pivot cannot prevent. <b>Heap</b>: keep
           a min-heap of size K, which is O(n log K), does not modify the input,
           and works on a stream of values (heaps are covered in DataData · 09).
           Interviewers usually ask you to compare them: quickselect is faster on
@@ -292,8 +301,11 @@ export const PROBLEMS: Problem[] = [
       zh: (
         <>
           两条路。<b>快速选择</b>:做一次 partition,看基准落在哪个下标;
-          正好是目标下标就返回,否则只在包含目标的那一侧继续。平均 O(n),
-          基准要随机化以降低最坏情况的概率。<b>堆</b>:维护一个大小为 K 的小顶堆,
+          正好是目标下标就返回,否则只在包含目标的那一侧继续。平均 O(n)。
+          基准要随机化,以降低「输入已排序」这种最坏情况的概率;
+          还要按小于、等于、大于基准分三组(同 LC 75):相等值很多时,
+          两路划分每趟只能去掉一个元素,代价是 O(n²),随机基准也挡不住。
+          <b>堆</b>:维护一个大小为 K 的小顶堆,
           O(n log K),不修改输入,而且能处理逐个到达的数据流
           (堆见 DataData · 09)。面试通常要你对比两者:
           快速选择平均更快,但会打乱数组,最坏 O(n²);
@@ -311,8 +323,8 @@ export const PROBLEMS: Problem[] = [
       zh: ["归并", "链表", "O(1) 空间"],
     },
     hint: {
-      en: "Reading a linked list at an arbitrary position is expensive, so quicksort's index jumps do not fit. Which sort works well on a structure you can only walk forward through?",
-      zh: "链表按下标随机访问很贵,快排的下标跳转不适合。哪种排序天然适合「只能顺着往前走」的结构?",
+      en: "Reading a linked list at an arbitrary position is expensive, so the array version of quicksort, which swaps elements by index, does not carry over. Which sort works well on a structure you can only walk forward through?",
+      zh: "链表按下标随机访问很贵,数组版快排那种按下标交换的写法搬不过来。哪种排序天然适合「只能顺着往前走」的结构?",
     },
     key: {
       en: (
@@ -322,9 +334,12 @@ export const PROBLEMS: Problem[] = [
           recursively, then merge the two sorted lists — merging lists needs no
           extra array, only pointer updates. The recursive version uses O(log n)
           stack space. The bottom-up version merges runs of length 1, then 2,
-          then 4, and so on, which reaches genuine O(1) extra space. Quicksort is
-          awkward here because it needs O(1) access by index, which a linked list
-          does not provide. The structure decides which algorithm to use.
+          then 4, and so on, which reaches genuine O(1) extra space. Quicksort can
+          be written on a list too, by walking it into smaller, equal, and larger
+          sublists, but without access by index a good pivot is hard to pick, a
+          bad one makes it O(n²), and relinking nodes costs more per step than
+          swapping array slots. Merge sort has none of these problems. The
+          structure decides which algorithm to use.
         </>
       ),
       zh: (
@@ -333,7 +348,9 @@ export const PROBLEMS: Problem[] = [
           递归排好每一半,再合并两条有序链 ——
           合并链表不需要额外数组,改指针就行。递归版占 O(log n) 栈空间。
           自底向上的版本按长度 1、2、4…… 依次两两合并,能做到真正的 O(1) 额外空间。
-          快排在这里很别扭,因为它需要按下标 O(1) 访问,而链表给不了。
+          链表上也能写快排(遍历一遍,分成小于、等于、大于基准的三条子链),
+          但没有下标访问就很难选出好的基准,基准选得不好会退化到 O(n²),
+          而且改链接的每一步开销比交换数组元素大。归并排序没有这些问题。
           结构决定了该用哪个算法。
         </>
       ),
@@ -433,7 +450,7 @@ export const QUIZ: QuizItem[] = [
           sort and bubble sort are stable too. Stability pays off when you sort
           by more than one key: sort by the secondary key first, then by the
           primary key with a stable sort, and the secondary order survives inside
-          each group of equal primary keys. LC 1356 relies on exactly this.
+          each group of equal primary keys. LC 1356 can also be solved this way.
         </>
       ),
       zh: (
@@ -441,7 +458,7 @@ export const QUIZ: QuizItem[] = [
           合并这一步在两个候选相等时取左边,原有顺序因此被保留,所以归并排序稳定。
           插入排序和冒泡排序也稳定。稳定性在按多个键排序时才体现价值:
           先按次要键排,再用稳定排序按主要键排,
-          于是主键相同的那一组里,次要键的顺序被保留下来。LC 1356 靠的正是这一点。
+          于是主键相同的那一组里,次要键的顺序被保留下来。LC 1356 也可以这样解。
         </>
       ),
     },
@@ -663,8 +680,8 @@ export const QUIZ: QuizItem[] = [
   {
     type: "choice",
     q: {
-      en: "On an array that is already nearly sorted, what is the best-case time complexity of insertion sort?",
-      zh: "在一个已经近乎有序的数组上,插入排序的最好情况时间复杂度是多少?",
+      en: "On an array that is already nearly sorted, about how long does insertion sort take?",
+      zh: "在一个已经近乎有序的数组上,插入排序大约要花多少时间?",
     },
     opts: {
       en: [
@@ -686,13 +703,13 @@ export const QUIZ: QuizItem[] = [
         undefined,
         "O(n log n) is the level of merge sort and heap sort. On nearly sorted data insertion sort is faster than that and reaches linear time, which is exactly its advantage on small arrays and on sorted runs.",
         "O(n²) is the worst case, which happens on input in reverse order. Insertion sort is very sensitive to how sorted the input already is, and its best case is O(n).",
-        "O(log n) is not even enough to look at every element once. Any sort must be at least O(n), and insertion sort has to draw every card.",
+        "O(log n) is not even enough to look at every element once. Any sort needs at least Ω(n), and insertion sort has to draw every card.",
       ],
       zh: [
         undefined,
         "O(n log n) 是归并和堆排序的量级。近乎有序时插入排序比这更快,能达到线性 —— 这正是它在小数组和有序片段上的优势。",
         "O(n²) 是最坏情况,发生在输入完全逆序时。插入排序对输入的有序程度非常敏感,它的最好情况是 O(n)。",
-        "O(log n) 连把每个元素看一遍都不够。任何排序至少是 O(n),而插入排序必须把每张牌都摸一次。",
+        "O(log n) 连把每个元素看一遍都不够。任何排序至少要 Ω(n),而插入排序必须把每张牌都摸一次。",
       ],
     },
     why: {
@@ -700,17 +717,18 @@ export const QUIZ: QuizItem[] = [
         <>
           On nearly sorted data the inner loop that searches backwards stops
           almost immediately for every card, so the total cost is about O(n).
-          This is why TimSort, used by Python and by Java for objects, applies
-          insertion sort to short pieces and to stretches that are already
-          sorted, and then merges those pieces.
+          This is why TimSort, used by Python and by Java for objects, keeps the
+          stretches that are already sorted as they are, uses insertion sort only
+          to extend runs that are too short to a minimum length, and then merges
+          the runs.
         </>
       ),
       zh: (
         <>
           近乎有序时,每摸一张牌,那个往回找位置的内层循环几乎立刻就停,
           所以总代价约为 O(n)。这正是 TimSort
-          (Python 用它,Java 排对象也用它)对短片段和天然有序的片段
-          先用插入排序、再把这些片段合并起来的原因。
+          (Python 用它,Java 排对象也用它)会保留天然有序的片段,
+          只用插入排序把过短的片段补到最小长度,再把各段归并的原因。
         </>
       ),
     },
@@ -766,7 +784,7 @@ export const QUIZ: QuizItem[] = [
           没有唯一正确答案:数据放得下内存、允许打乱、想要最好的平均速度,
           就用 quickselect;数据是流、是只读的、或者需要最坏情况的保证,
           就用大小为 K 的堆,O(n log K)。
-          能把这组取舍说清楚,比只会一种解法更能拿分。堆见 DataData · 09。
+          能把这组取舍说清楚,比只会一种解法更有说服力。堆见 DataData · 09。
         </>
       ),
     },
