@@ -64,7 +64,7 @@ const KEYS = "ABCDEFGH";
 
 /**
  * Canonical form for comparing a typed answer with an accepted one. NFKC folds full-width
- * forms (（）， ０-９ Ａ-Ｚ) into ASCII. The ideographic full stop becomes "."; the ideographic
+ * forms (（）, ０-９ Ａ-Ｚ) into ASCII. The ideographic full stop becomes "."; the ideographic
  * comma 、 is what a Chinese IME produces both for "," in a list and for "/" in a fraction, so
  * it is resolved to `sep`.
  */
@@ -148,8 +148,8 @@ export function Quiz({ ch, items }: { ch: ChapterId; items: QuizItem[] }) {
             }
             zh={
               <>
-                历史最佳成绩：<b>{best.right}/{best.total}</b>
-                {best.right === best.total ? "，本章已完成。" : "。"}
+                历史最佳成绩:<b>{best.right}/{best.total}</b>
+                {best.right === best.total ? ",本章已完成。" : "。"}
               </>
             }
           />
@@ -258,7 +258,7 @@ export function Quiz({ ch, items }: { ch: ChapterId; items: QuizItem[] }) {
                 }
                 zh={
                   <>
-                    <b>全部答对，本章已完成。</b>侧栏中本章旁的绿点已经亮起。
+                    <b>全部答对,本章已完成。</b>侧栏中本章旁的绿点已经亮起。
                   </>
                 }
               />
@@ -274,8 +274,8 @@ export function Quiz({ ch, items }: { ch: ChapterId; items: QuizItem[] }) {
                 }
                 zh={
                   <>
-                    第一次尝试答对 {firstRight} 题。先看看错题的解释，然后
-                    <b>重做一遍并全部答对</b>，才算完成这一章。
+                    第一次尝试答对 {firstRight} 题。先看看错题的解释,然后
+                    <b>重做一遍并全部答对</b>,才算完成这一章。
                   </>
                 }
               />
@@ -342,7 +342,7 @@ function ChoiceBody({
               <b>
                 <T
                   en={<>The correct answer is {KEYS[item.correct]}: </>}
-                  zh={<>正确答案是 {KEYS[item.correct]}：</>}
+                  zh={<>正确答案是 {KEYS[item.correct]}:</>}
                 />
               </b>
               {L(item.why)}
@@ -427,7 +427,7 @@ function MultiBody({
                 ? L(item.missHint)
                 : L(item.why)}
             <p style={{ marginTop: 6, marginBottom: 0 }}>
-              <b>{L({ en: "Correct combination: ", zh: "正确组合：" })}</b>
+              <b>{L({ en: "Correct combination: ", zh: "正确组合:" })}</b>
               {item.correct.map((c) => KEYS[c]).join(" + ")}
               <T en=" — " zh="——" />
               {L(item.why)}
@@ -498,7 +498,7 @@ function FillBody({
             {L(item.hint)}
             {st.tries >= 3 && (
               <p style={{ marginTop: 6, marginBottom: 0 }}>
-                <b>{L({ en: "Answer: ", zh: "参考答案：" })}</b>
+                <b>{L({ en: "Answer: ", zh: "参考答案:" })}</b>
                 <code>{displayAnswer(L(item.answers), lang)}</code>
               </p>
             )}
