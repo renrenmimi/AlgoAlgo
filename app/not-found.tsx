@@ -22,7 +22,7 @@ export default function NotFound() {
         <p className="hero-essence">
           <T
             en="The address may be mistyped, or the page may have moved. Pick a chapter to continue."
-            zh="地址可能输错了，也可能页面已经移动。请选择一个章节继续学习。"
+            zh="地址可能输错了,也可能页面已经移动。请选择一个章节继续学习。"
           />
         </p>
       </header>
