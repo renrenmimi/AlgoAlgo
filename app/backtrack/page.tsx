@@ -126,7 +126,7 @@ export default function BacktrackChapter() {
               }
               zh={
                 <>
-                  先看一个循环能搞定的枚举:「从 5 个数里选 2 个」,两层 <code>for</code> 就写完了。
+                  先看一个用循环就能完成的枚举:「从 5 个数里选 2 个」,两层 <code>for</code> 就写完了。
                   可如果题目是「从 n 个数里选 k 个」,k 是运行时才知道的呢?你没法写「k 层 for 循环」——
                   <strong>循环层数在写代码时就固定了</strong>。再想想「把字符串切成任意段」
                   「在棋盘上放皇后直到放满」—— 这些问题的共同点是:
@@ -510,7 +510,7 @@ void backtrack(int n, int k, int start) {
               ),
               zh: (
                 <>
-                  <b>头号坑:</b>必须存 <code>new ArrayList&lt;&gt;(path)</code>。
+                  <b>最常见的错误:</b>必须存 <code>new ArrayList&lt;&gt;(path)</code>。
                   整个搜索里 <code>path</code> 自始至终是同一个对象,写{" "}
                   <code>res.add(path)</code> 存进去的是<b>引用</b>;之后每一次{" "}
                   <code>add</code> / <code>remove</code> 都会把已经收进 res 的答案一起改掉。
@@ -556,7 +556,7 @@ def backtrack(n, k, start):
               ),
               zh: (
                 <>
-                  <b>头号坑:</b>收集时写 <code>path[:]</code> 或 <code>path.copy()</code>。
+                  <b>最常见的错误:</b>收集时写 <code>path[:]</code> 或 <code>path.copy()</code>。
                   <code>res.append(path)</code> 追加的是同一个列表的引用,后面的{" "}
                   <code>pop</code> 会把它清空 —— 新手最常见的「结果全是空列表」就是这么来的。
                 </>
@@ -717,8 +717,8 @@ function backtrack(n, k, start) {
         id="combine"
         index="03"
         title={{
-          en: "Featured problem A · LC 77 Combinations: draw the tree, then cut it down",
-          zh: "精讲 A · LC 77 组合:把决策树画出来,再把它剪瘦",
+          en: "Worked example A · LC 77 Combinations: draw the tree, then cut it down",
+          zh: "精讲 A · LC 77 组合:把决策树画出来,再把它剪小",
         }}
         desc={{
           en: "Combinations are the first backtracking problem to learn, and they teach the two ideas this chapter is built on: a start index, and pruning before you enter a branch.",
@@ -888,15 +888,15 @@ function backtrack(n, k, start) {
               en: (
                 <>
                   The recursive call passes <code>i + 1</code>: each number is used at
-                  most once, and only larger numbers follow. The pruning line is what
-                  decides this problem in practice — without it the answer is still
-                  correct, but large n and k time out.
+                  most once, and only larger numbers follow. This pruning line decides
+                  the practical speed: without it the answer is still correct, but the
+                  search walks many branches that can never reach k elements.
                 </>
               ),
               zh: (
                 <>
                   递归传 <code>i + 1</code>:每个数最多用一次,而且后面只能选更大的。
-                  剪枝那两行是本题的分水岭 —— 不剪答案也对,但 n、k 一大就会超时。
+                  这一行剪枝决定了实际效率:不剪答案也对,但会多走大量注定凑不够 k 个的分支。
                 </>
               ),
             },
@@ -1123,8 +1123,8 @@ function backtrack(n, k, start) {
         id="family"
         index="04"
         title={{
-          en: "The combination family: one skeleton, five variations",
-          zh: "组合家族:一套骨架,五种换皮",
+          en: "The combination family: one skeleton, four variations",
+          zh: "组合家族:一套骨架,四个变式",
         }}
         desc={{
           en: "LC 17 / 216 / 39 / 40 are LC 77 plus one extra rule each. The trick is to see exactly which line changes.",
@@ -1479,7 +1479,7 @@ function backtrack(n, k, start) {
         id="subset"
         index="06"
         title={{
-          en: "Featured problem B · LC 78 Subsets: record at every node",
+          en: "Worked example B · LC 78 Subsets: record at every node",
           zh: "精讲 B · LC 78 子集:走到哪,收到哪",
         }}
         desc={{
@@ -1701,7 +1701,7 @@ function backtrack(n, k, start) {
                   <b>O(n · 2ⁿ)</b>, space is <b>O(n)</b> for the path and the
                   recursion, not counting the output, which is itself O(n · 2ⁿ).
                   Follow-ups: (1) &quot;duplicate values?&quot; → <b>LC 90</b>, sort
-                  and skip at the same level (§08); (2) &quot;increasing subsequences
+                  and skip at the same level (§08); (2) &quot;non-decreasing subsequences
                   only, and sorting is not allowed?&quot; → <b>LC 491</b>, use one set
                   per level instead; (3) &quot;without recursion?&quot; → enumerate
                   the integers 0..2ⁿ−1 and read bit j as &quot;element j is
@@ -1713,7 +1713,7 @@ function backtrack(n, k, start) {
                   树有 2ⁿ 个节点(n 是元素个数),每个节点复制一条长度不超过 n 的路径。
                   时间 <b>O(n · 2ⁿ)</b>,空间 <b>O(n)</b>(路径 + 递归深度,不算输出;
                   输出本身就是 O(n · 2ⁿ))。追问:①「数组有重复值?」→ <b>LC 90</b>,
-                  排序 + 同层跳过(§08);②「只要递增子序列、而且不能排序?」→ <b>LC 491</b>,
+                  排序 + 同层跳过(§08);②「只要非递减子序列、而且不能排序?」→ <b>LC 491</b>,
                   改用「每层一个 set」;③「能不能不用递归?」→ 枚举整数 0..2ⁿ−1,
                   第 j 位为 1 表示选第 j 个元素(第 04 章讲过「用一个整数表示集合」)。
                 </>
@@ -1728,7 +1728,7 @@ function backtrack(n, k, start) {
         id="permute"
         index="07"
         title={{
-          en: "Featured problem C · LC 46 Permutations: startIndex fails, use a used array",
+          en: "Worked example C · LC 46 Permutations: startIndex fails, use a used array",
           zh: "精讲 C · LC 46 全排列:startIndex 失灵,改用 used 数组",
         }}
         desc={{
@@ -1803,7 +1803,7 @@ function backtrack(n, k, start) {
               zh={
                 <>
                   注意撤销时<strong>要还原两处状态:used 和 path</strong> ——
-                  这是排列比组合多出来的一个坑。循环每一层都从{" "}
+                  这是排列比组合多出来的一个陷阱。循环每一层都从{" "}
                   <span className="mono">i = 0</span> 开始,不用 start,靠 used 过滤:
                 </>
               }
@@ -2196,7 +2196,7 @@ function backtrack(n, k, start) {
               }
               zh={
                 <>
-                  再看它为什么不会误杀合法答案。这个条件比较的只是<b>同一个循环里的兄弟下标</b>。
+                  再看它为什么不会误删合法答案。这个条件比较的只是<b>同一个循环里的兄弟下标</b>。
                   <span className="mono">i == start</span> 是这个节点的<b>第一个</b>选择,
                   永远通过。更深一层的调用收到的是 <span className="mono">start = i + 1</span>,
                   所以和刚才那个值相等的元素,在更深的节点上正好落在
@@ -2410,7 +2410,7 @@ function backtrack(start) {
                 </td>
                 <td>
                   <span style={{ color: "var(--risk)" }}>
-                    <T en="Skip" zh="✂️ 跳过" />
+                    <T en="Skip" zh="跳过" />
                   </span>
                 </td>
                 <td>
@@ -2451,7 +2451,7 @@ function backtrack(start) {
                 </td>
                 <td>
                   <span style={{ color: "var(--ok)" }}>
-                    <T en="Keep" zh="✅ 保留" />
+                    <T en="Keep" zh="保留" />
                   </span>
                 </td>
                 <td>
@@ -2506,7 +2506,7 @@ function backtrack(start) {
         id="board"
         index="09"
         title={{
-          en: "Featured problem D · LC 51 N-Queens: the decision tree on a board",
+          en: "Worked example D · LC 51 N-Queens: the decision tree on a board",
           zh: "精讲 D · LC 51 N 皇后:决策树长在棋盘上",
         }}
         desc={{
@@ -2941,9 +2941,11 @@ function backtrack(start) {
                   which costs O(n²). The diagonal checks remove the large majority of
                   those branches in practice, and the real number of solutions grows
                   much more slowly than n!, but{" "}
-                  <b>no better worst-case bound is known</b> — pruning changes the
-                  running time, not the bound. Space is <b>O(n)</b> for the recursion
-                  and the three sets.
+                  <b>no better worst-case bound is known</b>: pruning such as the
+                  diagonal check usually changes the actual running time, but it
+                  rarely improves the worst-case bound. (The column rule is the
+                  pruning that did improve it, from nⁿ to n!.) Space is <b>O(n)</b>{" "}
+                  for the recursion and the three sets.
                 </>
               }
               zh={
@@ -2952,7 +2954,8 @@ function backtrack(start) {
                   第 1 行至多 n−1 种…… 所以搜索至多考察 <b>n!</b> 种完整摆法(n 是棋盘边长);
                   每找到一个解,还要写出 n 个长度为 n 的字符串,花 O(n²)。
                   对角线检查在实践中砍掉了其中绝大多数分支,真实解的个数增长也远慢于 n!,
-                  但<b>目前并没有更好的最坏情况上界</b> —— 剪枝改变的是运行时间,不是这个界。
+                  但<b>目前并没有更好的最坏情况上界</b>:对角线检查这类剪枝通常只改变实际运行时间,
+                  难以改进最坏情况的上界(同列规则正是那个改进了上界的剪枝,从 nⁿ 降到 n!)。
                   空间 <b>O(n)</b>(递归深度 + 三个集合)。
                 </>
               }
@@ -2990,8 +2993,8 @@ function backtrack(start) {
         index="10"
         title={{ en: "Problem set: 15 backtracking problems", zh: "高频题单:回溯 15 题" }}
         desc={{
-          en: "Grouped as combinations, partitioning, subsets, permutations, and boards, from easier to harder. Think for 30 seconds before opening a hint.",
-          zh: "按「组合 → 分割 → 子集 → 排列 → 棋盘」分组,由易到难。先想 30 秒再看提示",
+          en: "Ordered from easy to hard. Think for 30 seconds before opening a hint.",
+          zh: "由易到难排列。先想 30 秒再看提示",
         }}
         badge={
           <span className="chip">

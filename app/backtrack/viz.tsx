@@ -168,7 +168,7 @@ const MAZE_FRAMES: TreeFrame[] = [
         }
         zh={
           <>
-            找到出口!回溯的全部动作就这三下:<b>选一个 → 走下去 → 不行就撤销,换下一个</b>。
+            找到出口。回溯的全部动作就这三步:<b>选一个 → 走下去 → 不行就撤销,换下一个</b>。
             把「岔路口」画成树,你就得到了本章所有题目的心智模型。
           </>
         }
@@ -528,7 +528,7 @@ const DUP_MSGS: ReactNode[] = [
   <T
     key="d0"
     en={<>The array [1, 1, 2] holds two 1s. Do nothing special at first and enumerate every index. The empty set is recorded.</>}
-    zh={<>数组 [1, 1, 2] 里有两个 1。先不做任何处理,老实枚举每个下标。空集收下。</>}
+    zh={<>数组 [1, 1, 2] 里有两个 1。先不做任何处理,逐个枚举每个下标。空集收下。</>}
   />,
   <T key="d1" en={<>Take the 1 at index 0 → {"{1}"}, recorded.</>} zh={<>选下标 0 的 1 → {"{1}"},收下。</>} />,
   <T key="d2" en={<>Take the 1 at index 1 → {"{1,1}"}, recorded.</>} zh={<>再选下标 1 的 1 → {"{1,1}"},收下。</>} />,
@@ -537,9 +537,9 @@ const DUP_MSGS: ReactNode[] = [
   <T
     key="d5"
     en={<>Back at the root, take the 1 at index 1 → {"{1}"} again. <b>This is the same answer as step 2.</b></>}
-    zh={<>回到根,选下标 1 的 1 → 又得到 {"{1}"} —— <b>和第 2 步一模一样,重复了!</b></>}
+    zh={<>回到根,选下标 1 的 1 → 又得到 {"{1}"} —— <b>和第 2 步一模一样,重复了。</b></>}
   />,
-  <T key="d6" en={<>Below it, take 2 → {"{1,2}"} — <b>the same answer again.</b></>} zh={<>它下面再选 2 → {"{1,2}"} —— <b>又撞车。</b></>} />,
+  <T key="d6" en={<>Below it, take 2 → {"{1,2}"} — <b>the same answer again.</b></>} zh={<>它下面再选 2 → {"{1,2}"} —— <b>又重复了。</b></>} />,
   <T key="d7" en={<>Take the 2 at index 2 → {"{2}"}. This one is new.</>} zh={<>选下标 2 的 2 → {"{2}"},这个不重复。</>} />,
 ];
 
@@ -919,7 +919,7 @@ function buildQueenFrames(n: number): QFrame[] {
             }
             zh={
               <>
-                {n} 行全部放满 —— <b>找到一个解!</b>这 {n} 个皇后互不攻击,
+                {n} 行全部放满 —— <b>找到一个解。</b>这 {n} 个皇后互不攻击,
                 自上而下的列坐标是 [{cols.join(", ")}]。
               </>
             }
