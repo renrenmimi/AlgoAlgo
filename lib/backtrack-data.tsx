@@ -21,7 +21,7 @@ export const PROBLEMS: Problem[] = [
     },
     d: "medium",
     tags: {
-      en: ["combinations", "several sets", "starter"],
+      en: ["Combinations", "Several sets", "Starter"],
       zh: ["组合", "多个集合", "入门"],
     },
     hint: {
@@ -56,7 +56,7 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Combinations", zh: "组合" },
     d: "medium",
     tags: {
-      en: ["combinations", "startIndex", "pruning", "featured"],
+      en: ["Combinations", "startIndex", "Pruning", "Worked example"],
       zh: ["组合", "startIndex", "剪枝", "精讲"],
     },
     hint: {
@@ -74,7 +74,7 @@ export const PROBLEMS: Problem[] = [
           needed, so the loop can stop at{" "}
           <span className="mono">n − (k − path.size) + 1</span> instead of n. That is
           a constraint check — the cut branches cannot produce a valid answer at all.
-          Featured problem A has the two decision trees, before and after pruning.
+          Worked example A has the two decision trees, before and after pruning.
         </>
       ),
       zh: (
@@ -95,7 +95,7 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Subsets", zh: "子集" },
     d: "medium",
     tags: {
-      en: ["subsets", "record at every node", "featured"],
+      en: ["Subsets", "Record at every node", "Worked example"],
       zh: ["子集", "每节点收集", "精讲"],
     },
     hint: {
@@ -110,7 +110,7 @@ export const PROBLEMS: Problem[] = [
           path is already a subset, the empty one included. dfs(start): add a copy of
           the path to the answers, then pick forward from start, recurse, and undo.
           Time is O(n · 2ⁿ), where n is the number of elements: there are 2ⁿ subsets
-          and copying one costs up to O(n). Featured problem B animates the node-by-node
+          and copying one costs up to O(n). Worked example B animates the node-by-node
           collection.
         </>
       ),
@@ -130,7 +130,7 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Permutations", zh: "全排列" },
     d: "medium",
     tags: {
-      en: ["permutations", "used array", "featured"],
+      en: ["Permutations", "used array", "Worked example"],
       zh: ["排列", "used 数组", "精讲"],
     },
     hint: {
@@ -146,7 +146,7 @@ export const PROBLEMS: Problem[] = [
           dfs(): when the path holds n numbers, record a copy; otherwise loop over
           every index i, skip it if used[i] is true, and otherwise choose it
           (used[i]=true, push to path), recurse, and undo both (used[i]=false, pop).
-          Time is O(n · n!): n! permutations, each copied in O(n). Featured problem C shows
+          Time is O(n · n!): n! permutations, each copied in O(n). Worked example C shows
           the used array frame by frame.
         </>
       ),
@@ -167,7 +167,7 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Combination Sum III", zh: "组合总和 III" },
     d: "medium",
     tags: {
-      en: ["combinations", "two prunings"],
+      en: ["Combinations", "Two prunings"],
       zh: ["组合", "双重剪枝"],
     },
     hint: {
@@ -201,7 +201,7 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Combination Sum", zh: "组合总和" },
     d: "medium",
     tags: {
-      en: ["combinations", "reuse the same number", "distinct values"],
+      en: ["Combinations", "Reuse the same number", "Distinct values"],
       zh: ["组合", "可重复选", "无重复元素"],
     },
     hint: {
@@ -238,7 +238,7 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Combination Sum II", zh: "组合总和 II" },
     d: "medium",
     tags: {
-      en: ["combinations", "skip at the same level", "duplicate values"],
+      en: ["Combinations", "Skip at the same level", "Duplicate values"],
       zh: ["组合", "树层去重", "重复元素"],
     },
     hint: {
@@ -279,7 +279,7 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Subsets II", zh: "子集 II" },
     d: "medium",
     tags: {
-      en: ["subsets", "skip at the same level", "review"],
+      en: ["Subsets", "Skip at the same level", "Review"],
       zh: ["子集", "树层去重", "复盘"],
     },
     hint: {
@@ -312,7 +312,7 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Permutations II", zh: "全排列 II" },
     d: "medium",
     tags: {
-      en: ["permutations", "skip at the same level", "used"],
+      en: ["Permutations", "Skip at the same level", "used"],
       zh: ["排列", "树层去重", "used"],
     },
     hint: {
@@ -357,7 +357,7 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Palindrome Partitioning", zh: "分割回文串" },
     d: "medium",
     tags: {
-      en: ["partitioning", "startIndex is the cut point"],
+      en: ["Partitioning", "startIndex is the cut point"],
       zh: ["分割", "startIndex 当切割线"],
     },
     hint: {
@@ -379,7 +379,7 @@ export const PROBLEMS: Problem[] = [
       ),
       zh: (
         <>
-          分割问题的心法:<b>startIndex 表示下一段的起点,也就是上一刀之后的位置</b>。
+          分割问题的要点:<b>startIndex 表示下一段的起点,也就是上一刀之后的位置</b>。
           dfs(start):让 i 从 start 走到末尾,取子串 s[start..i];
           若它是回文,就加入路径、递归 dfs(i+1)、撤销;不是回文就跳过 —— 这一跳就是剪枝。
           start 到达串尾 = 找到一种完整切法。
@@ -393,7 +393,7 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Restore IP Addresses", zh: "复原 IP 地址" },
     d: "medium",
     tags: {
-      en: ["partitioning", "many prunings"],
+      en: ["Partitioning", "Many prunings"],
       zh: ["分割", "多重剪枝"],
     },
     hint: {
@@ -428,7 +428,7 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Non-decreasing Subsequences", zh: "非递减子序列" },
     d: "medium",
     tags: {
-      en: ["subsets", "deduplication", "cannot sort"],
+      en: ["Subsets", "Deduplication", "Cannot sort"],
       zh: ["子集", "去重", "不能排序"],
     },
     hint: {
@@ -451,7 +451,7 @@ export const PROBLEMS: Problem[] = [
       ),
       zh: (
         <>
-          坑点:要保持原顺序,<b>不能排序</b>,所以 40 / 90 的「和前一个比」失去依据。
+          要注意:必须保持原顺序,<b>不能排序</b>,所以 40 / 90 的「和前一个比」失去依据。
           改用<b>每层一个 set</b>:在一次 dfs 调用内部记录「这个节点上已经选过哪些值」,
           遇到集合里已有的值就跳过。再叠加「必须非递减(nums[i] ≥ path 末尾)」
           和「长度至少为 2」两个条件。它和前面是同一条规则 ——
@@ -465,7 +465,7 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Generate Parentheses", zh: "括号生成" },
     d: "medium",
     tags: {
-      en: ["combinations", "the constraint is the pruning", "extra"],
+      en: ["Combinations", "The constraint is the pruning", "Extra"],
       zh: ["组合", "合法性剪枝", "补充"],
     },
     hint: {
@@ -511,7 +511,7 @@ export const PROBLEMS: Problem[] = [
     title: { en: "N-Queens", zh: "N 皇后" },
     d: "hard",
     tags: {
-      en: ["board", "conflict check", "featured"],
+      en: ["Board", "Conflict check", "Worked example"],
       zh: ["棋盘", "冲突检测", "精讲"],
     },
     hint: {
@@ -531,7 +531,7 @@ export const PROBLEMS: Problem[] = [
           <span className="mono">\</span> diagonal adds 1 to both row and col, so{" "}
           <span className="mono">row − col</span> is constant along it, and moving
           down a <span className="mono">/</span> diagonal keeps{" "}
-          <span className="mono">row + col</span> constant. Featured problem D animates a 4×4
+          <span className="mono">row + col</span> constant. Worked example D animates a 4×4
           board, conflicts and all.
         </>
       ),
@@ -555,7 +555,7 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Sudoku Solver", zh: "解数独" },
     d: "hard",
     tags: {
-      en: ["board", "2D backtracking", "bitmask version"],
+      en: ["Board", "2D backtracking", "Bitmask version"],
       zh: ["棋盘", "二维回溯", "位运算进阶"],
     },
     hint: {
@@ -879,22 +879,25 @@ export const QUIZ: QuizItem[] = [
     extraHint: {
       en: (
         <>
-          Pruning <b>does not change the answers</b>, and it does not change the
-          worst-case bound either — you selected one of the wrong options. It removes
+          Pruning <b>does not change the answers</b>, and it does not necessarily
+          improve the worst-case bound either — you selected one of the wrong
+          options. Pruning such as the diagonal check in N-Queens usually changes the
+          actual running time but rarely improves the worst-case bound. It removes
           only branches that were going to fail anyway, so the set of answers is
           identical while the running time can drop by orders of magnitude.
         </>
       ),
       zh: (
         <>
-          剪枝<b>不改变答案</b>,也<b>不改变最坏情况的上界</b> —— 你多选了一个错误项。
+          剪枝<b>不改变答案</b>,也<b>不一定改善最坏情况的上界</b> —— 你多选了一个错误项。
+          像 N 皇后的对角线检查这类剪枝,通常只改变实际运行时间,难以改进最坏情况的上界。
           被剪掉的都是注定失败的分支,答案一个不少,但运行时间可能快几个数量级。
         </>
       ),
     },
     why: {
-      en: "Pruning rejects branches in advance, so the answers stay the same while far fewer nodes are visited. There are two kinds: a branch that cannot be valid (a constraint check, which is what this chapter uses everywhere) and a branch that cannot be better than the best answer so far (a bound, used when searching for an optimum). LC 77 tightening the loop limit from n to n−(k−chosen)+1 is a constraint check, and so is the break in Combination Sum once the running sum exceeds the target. In both cases the worst case is unchanged; only the real running time falls.",
-      zh: "剪枝提前否定走不通的分支,答案不变,访问的节点数却少得多。它分两种:分支不可能合法(约束检查,本章处处都是),以及分支不可能比当前最优更好(界,求最优解时才用)。77 把上界从 n 收紧到 n−(k−已选)+1 属于前者;组合总和里「和已超过目标就 break」也是。两种情况下最坏上界都没变,变的只是真实运行时间。",
+      en: "Pruning rejects branches in advance, so the answers stay the same while far fewer nodes are visited. There are two kinds: a branch that cannot be valid (a constraint check, which is what this chapter uses everywhere) and a branch that cannot be better than the best answer so far (a bound, used when searching for an optimum). LC 77 tightening the loop limit from n to n−(k−chosen)+1 is a constraint check, and so is the break in Combination Sum once the running sum exceeds the target. In both cases what falls is mainly the real running time; the worst-case bound usually stays the same.",
+      zh: "剪枝提前否定走不通的分支,答案不变,访问的节点数却少得多。它分两种:分支不可能合法(约束检查,本章处处都是),以及分支不可能比当前最优更好(界,求最优解时才用)。77 把上界从 n 收紧到 n−(k−已选)+1 属于前者;组合总和里「和已超过目标就 break」也是。两种情况下下降的主要是真实运行时间,最坏情况的上界通常不变。",
     },
   },
   {
@@ -911,7 +914,7 @@ export const QUIZ: QuizItem[] = [
         "Nothing changes; the undo is optional",
       ],
       zh: [
-        "共享状态会残留上一条分支留下的东西,下一个选择是在这个脏现场上做的,答案就错了",
+        "共享状态会残留上一条分支留下的东西,下一个选择是在这个残留的状态上做的,答案就错了",
         "只是慢一点,结果仍然正确",
         "会导致栈溢出",
         "没有任何影响,撤销可有可无",
