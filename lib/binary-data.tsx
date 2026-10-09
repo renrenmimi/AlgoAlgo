@@ -83,7 +83,7 @@ export const PROBLEMS: Problem[] = [
     lc: 278,
     title: { en: "First Bad Version", zh: "第一个错误的版本" },
     d: "easy",
-    tags: { en: ["Answer search", "Predicate"], zh: ["二分答案", "判定函数"] },
+    tags: { en: ["Binary search on the answer", "Predicate"], zh: ["二分答案", "判定函数"] },
     hint: {
       en: "isBadVersion is false for a while and then true forever. Find the position where it flips.",
       zh: "isBadVersion 先一路 false、之后一路 true —— 找那个翻转点。",
@@ -113,7 +113,7 @@ export const PROBLEMS: Problem[] = [
     lc: 69,
     title: { en: "Sqrt(x)", zh: "x 的平方根" },
     d: "easy",
-    tags: { en: ["Answer search", "Square root"], zh: ["二分答案", "平方根"] },
+    tags: { en: ["Binary search on the answer", "Square root"], zh: ["二分答案", "平方根"] },
     hint: {
       en: "The answer k satisfies k×k <= x. That test is true for small k and false for large k, so look for the last k that passes.",
       zh: "答案 k 满足 k×k ≤ x:小 k 全真、大 k 全假 —— 找最后一个为真的 k。",
@@ -147,7 +147,7 @@ export const PROBLEMS: Problem[] = [
     lc: 367,
     title: { en: "Valid Perfect Square", zh: "有效的完全平方数" },
     d: "easy",
-    tags: { en: ["Answer search", "Review"], zh: ["二分答案", "复盘"] },
+    tags: { en: ["Binary search on the answer", "Review"], zh: ["二分答案", "复盘"] },
     hint: {
       en: "Same value range as LC 69. Here you need an exact hit rather than the largest k that fits.",
       zh: "和 69 同一个值域,只是这次要精确命中,而不是找最大的可行 k。",
@@ -168,7 +168,7 @@ export const PROBLEMS: Problem[] = [
         <>
           在 [1, num] 上二分 k:mid×mid == num 返回 true;mid×mid &lt; num 则 lo = mid + 1;
           否则 hi = mid − 1;区间空了返回 false。Java 里用 <code>(long) mid * mid</code>。
-          另有一个算术彩蛋:1+3+5+…+(2i−1) = i²,所以从 num 里连减奇数、
+          另有一条算术捷径:1+3+5+…+(2i−1) = i²,所以从 num 里连减奇数、
           恰好减到 0 就说明它是完全平方数。二分是通法,奇数和是巧法。
         </>
       ),
@@ -332,7 +332,7 @@ export const PROBLEMS: Problem[] = [
       en: "Find Minimum in Rotated Sorted Array II",
       zh: "寻找旋转排序数组中的最小值 II",
     },
-    d: "medium",
+    d: "hard",
     tags: {
       en: ["Monotonic split", "Duplicates degrade"],
       zh: ["二段性", "重复退化"],
@@ -499,7 +499,7 @@ export const PROBLEMS: Problem[] = [
     lc: 875,
     title: { en: "Koko Eating Bananas", zh: "爱吃香蕉的珂珂" },
     d: "medium",
-    tags: { en: ["Answer search", "judge function"], zh: ["二分答案", "judge 函数"] },
+    tags: { en: ["Binary search on the answer", "Judge function"], zh: ["二分答案", "judge 函数"] },
     hint: {
       en: "Computing the minimum speed directly is hard, but checking whether a given speed k finishes in h hours is easy — and a larger k never needs more hours.",
       zh: "直接求最小吃速很难,但「速度 k 能否 h 小时吃完」一问就明 —— 而且 k 越大用时不会更多。",
@@ -537,7 +537,7 @@ export const PROBLEMS: Problem[] = [
       zh: "在 D 天内送达包裹的能力",
     },
     d: "medium",
-    tags: { en: ["Answer search", "Minimax"], zh: ["二分答案", "最大值最小化"] },
+    tags: { en: ["Binary search on the answer", "Minimax"], zh: ["二分答案", "最大值最小化"] },
     hint: {
       en: "Same shape as LC 875: guess a capacity cap, then check whether the packages fit into D days.",
       zh: "和 875 一模一样的套路:猜一个运力 cap,再判定「D 天送得完吗」。",
@@ -568,7 +568,7 @@ export const PROBLEMS: Problem[] = [
     lc: 410,
     title: { en: "Split Array Largest Sum", zh: "分割数组的最大值" },
     d: "hard",
-    tags: { en: ["Answer search", "Minimax"], zh: ["二分答案", "最大值最小化"] },
+    tags: { en: ["Binary search on the answer", "Minimax"], zh: ["二分答案", "最大值最小化"] },
     hint: {
       en: "\"Make the largest piece as small as possible\" becomes: guess a limit x, then ask whether the array can be cut into at most m pieces with every piece sum <= x.",
       zh: "「让最大的那一段尽量小」翻译成:猜一个上限 x,再问「能不能切成 ≤ m 段、每段和都 ≤ x」。",
@@ -590,7 +590,7 @@ export const PROBLEMS: Problem[] = [
           它和 1011 是同一道题换了说法:一天变成一段子数组,运力变成每段和的上限。
           值域 [max(nums), sum(nums)]。judge(x) 扫一遍数组,数出「每段和 ≤ x」
           需要多少段;答案是段数 ≤ m 的最小 x。段是连续且有序的,所以贪心计数精确。
-          它挂着 hard,难在题面,不难在解法。
+          它标为 hard,难在题面,不难在解法。
         </>
       ),
     },
@@ -599,7 +599,10 @@ export const PROBLEMS: Problem[] = [
     lc: 4,
     title: { en: "Median of Two Sorted Arrays", zh: "寻找两个正序数组的中位数" },
     d: "hard",
-    tags: { en: ["Binary search", "Optional", "Stretch"], zh: ["二分", "选做", "冲刺"] },
+    tags: {
+      en: ["Binary search", "Optional", "Stretch", "Review"],
+      zh: ["二分", "选做", "冲刺", "复盘"],
+    },
     hint: {
       en: "The O(log(m+n)) solution searches the split position inside the shorter array. It is demanding, and skipping it does not affect the rest of the chapter.",
       zh: "O(log(m+n)) 的正解是在较短数组的分割位置上二分 —— 门槛很高,先跳过不影响主线。",

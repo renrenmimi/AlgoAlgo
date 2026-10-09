@@ -157,14 +157,14 @@ const KOKO_FRAMES: RangeFrame[] = [
             The last recorded candidate is <b>k = 4</b>, the smallest speed that
             finishes within 8 hours. Notice that the code never computed the
             answer directly. It only asked &quot;does this speed work?&quot;
-            about four times. That is binary search on the answer.
+            three times. That is binary search on the answer.
           </>
         }
         zh={
           <>
             区间被挤空(lo=4 &gt; hi=3),循环结束,ans 停在最后一次记录的
             <b> k = 4</b> —— 它就是「能在 8 小时吃完」的最小速度。
-            全程没有直接计算答案,只反复问「这个速度行不行」—— 这就是二分答案。
+            全程没有直接计算答案,只问了三次「这个速度行不行」—— 这就是二分答案。
           </>
         }
       />
@@ -179,8 +179,8 @@ const CHIPS = [
   { id: "bound", n: "02", label: { en: "Boundaries", zh: "找边界" } },
   { id: "rotate", n: "03", label: { en: "Rotated arrays", zh: "二段性 · 旋转" } },
   { id: "peak", n: "04", label: { en: "Peaks, matrices", zh: "峰值与矩阵" } },
-  { id: "answer", n: "05", label: { en: "Search the answer", zh: "二分答案" } },
-  { id: "answer2", n: "06", label: { en: "More answer search", zh: "答案二分续" } },
+  { id: "answer", n: "05", label: { en: "Binary search on the answer", zh: "二分答案" } },
+  { id: "answer2", n: "06", label: { en: "Three more variants", zh: "二分答案的变式" } },
   { id: "problems", n: "07", label: { en: "Problem set", zh: "高频题单" } },
   { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
 ];
@@ -601,7 +601,7 @@ export default function BinaryChapter() {
         <div className="grid-3 bin-tri" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="Failure 01" zh="死因 01" />
+              <T en="Failure 01" zh="错误 01" />
             </div>
             <div className="card-title">
               <T
@@ -633,7 +633,7 @@ export default function BinaryChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="Failure 02" zh="死因 02" />
+              <T en="Failure 02" zh="错误 02" />
             </div>
             <div className="card-title">
               <T en="mid overflows" zh="mid 溢出" />
@@ -663,7 +663,7 @@ export default function BinaryChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="Failure 03" zh="死因 03" />
+              <T en="Failure 03" zh="错误 03" />
             </div>
             <div className="card-title">
               <T en="The interval stops shrinking" zh="区间不再变小" />
@@ -911,8 +911,8 @@ export default function BinaryChapter() {
                   about the worst case, and capacity is planned on worst cases.
                   Second, a sorted array is not free — someone paid O(n log n) to
                   sort it. One lookup does not repay that; a million lookups on
-                  the same array repay it easily. That arithmetic is the entire
-                  argument for building a database index. The rest of this chapter
+                  the same array repay it easily. That arithmetic is one of the
+                  reasons a sorted index is worth building. The rest of this chapter
                   works on arrays whose order is less obvious than the one above.
                 </>
               }
@@ -922,7 +922,7 @@ export default function BinaryChapter() {
                   O(log n) 说的是最坏情况,而容量是按最坏情况规划的。
                   第二,有序数组不是白来的 —— 总得有人先付一次 O(n log n) 把它排好;
                   查一次收不回这笔钱,在同一个数组上查一百万次就轻松回本。
-                  这道算式就是「为什么要建数据库索引」的全部理由。
+                  这笔账正是有序索引值得建立的原因之一。
                   而本章接下来要处理的,是那些「有序」远没有上面这么显然的数组。
                 </>
               }
@@ -960,7 +960,7 @@ export default function BinaryChapter() {
               zh={
                 <>
                   精确查找有个软肋:数组里有<strong>重复元素</strong>时,
-                  它返回的是碰巧撞上的那个下标。而很多题要的是「第一个」或「最后一个」。
+                  它返回的是碰巧命中的那个下标。而很多题要的是「第一个」或「最后一个」。
                   两把精确的尺子几乎能覆盖所有这类问题:
                 </>
               }
@@ -1631,7 +1631,7 @@ export default function BinaryChapter() {
               <T en="Variant 02 · LC 81" zh="变式 02 · LC 81" />
             </div>
             <div className="card-title">
-              <T en="⚠️ Duplicates get in the way" zh="⚠️ 重复元素来捣乱" />
+              <T en="Duplicates get in the way" zh="重复元素带来的麻烦" />
             </div>
             <p>
               <T
@@ -1659,7 +1659,7 @@ export default function BinaryChapter() {
               <T en="Variant 03 · LC 154" zh="变式 03 · LC 154" />
             </div>
             <div className="card-title">
-              <T en="⚠️ Minimum with duplicates" zh="⚠️ 最小值 + 重复" />
+              <T en="Minimum with duplicates" zh="最小值 + 重复" />
             </div>
             <p>
               <T
@@ -2231,7 +2231,7 @@ export default function BinaryChapter() {
                 r += 1                            # 排掉一整行
         return False`,
             },
-            hl: [4, 9, 11],
+            hl: [4, 9, 10, 11, 12],
             note: {
               en: (
                 <>
@@ -2274,7 +2274,7 @@ export default function BinaryChapter() {
   return false;
 };`,
             },
-            hl: [4, 7, 8],
+            hl: [3, 7, 8],
             note: {
               en: (
                 <>
@@ -2320,7 +2320,7 @@ export default function BinaryChapter() {
                   one sentence:{" "}
                   <strong>
                     when computing the best answer is hard but checking a
-                    candidate answer is easy, search the answer
+                    candidate answer is easy, binary search on the answer
                   </strong>
                   . The condition is that the check must be{" "}
                   <strong>monotonic</strong>: there is a point where the yes/no
@@ -2482,7 +2482,7 @@ export default function BinaryChapter() {
     }
 }`,
             },
-            hl: [8, 9, 18],
+            hl: [8, 9, 17],
             note: {
               en: (
                 <>
@@ -2582,7 +2582,7 @@ export default function BinaryChapter() {
   return ans;
 };`,
             },
-            hl: [2, 8, 9],
+            hl: [2, 8],
             note: {
               en: (
                 <>
@@ -2590,8 +2590,8 @@ export default function BinaryChapter() {
                   below 2⁵³, which holds here. The upper bound comes from{" "}
                   <code>Math.max(...piles)</code>. And this is the place to
                   remember not to compute mid with <code>&gt;&gt;</code>: the
-                  value range in an answer search can be far larger than an array
-                  index.
+                  value range in a binary search on the answer can be far larger
+                  than an array index.
                 </>
               ),
               zh: (
@@ -2608,7 +2608,7 @@ export default function BinaryChapter() {
         <Callout
           tone="deep"
           title={{
-            en: "In production: answer search shows up in capacity planning",
+            en: "In production: binary search on the answer in capacity planning",
             zh: "工程现场:二分答案是资源规划的暗线",
           }}
         >
@@ -2618,22 +2618,25 @@ export default function BinaryChapter() {
                 <>
                   The pattern of &quot;guess a value, then verify it&quot; is
                   common in real systems. Load testing uses it to find the
-                  highest request rate a service still survives. Adaptive video
-                  players use it to pick the highest bitrate that does not
-                  stall. Query planners and compilers use it to find the smallest
-                  degree of parallelism that meets a latency budget. In every
-                  case computing the optimum directly is hard, while checking one
-                  configuration is easy — so the search runs over the space of
-                  answers.
+                  highest request rate a service still survives: run at one rate,
+                  check whether the error budget held, and halve the gap.{" "}
+                  <code>git bisect</code> applies the same shape to history:
+                  &quot;is the bug present at this commit?&quot; flips once, from no
+                  to yes, so it finds the first bad commit among n commits in
+                  about log₂n test runs. In both cases computing the answer
+                  directly is hard, while checking one candidate is easy — so the
+                  search runs over the space of answers.
                 </>
               }
               zh={
                 <>
                   「先猜一个值,再验证」的模式在真实系统里很常见。
-                  压测用它找「服务仍然撑得住的最高请求速率」;
-                  自适应视频播放器用它挑「不会卡顿的最高码率」;
-                  查询规划器和编译器用它找「满足延迟预算的最小并行度」。
-                  共同点是:直接算最优很难,而验证一个配置很容易 ——
+                  压测用它找服务仍然承受得住的最高请求速率:按某个速率跑一轮,
+                  看错误率是否超出预算,再把区间缩小一半。
+                  <code>git bisect</code> 在提交历史上用的是同一个形状:
+                  「这个提交里有没有这个 bug」只会从否翻到是一次,
+                  所以在 n 个提交里约 log₂n 次测试就能找到第一个出错的提交。
+                  共同点是:直接算出答案很难,而验证一个候选很容易 ——
                   于是把搜索放到答案空间上。
                 </>
               }
@@ -2644,7 +2647,7 @@ export default function BinaryChapter() {
           tone="win"
           title={{
             en: "Three questions to ask out loud in an interview",
-            zh: "面试话术:二分答案的三连自问",
+            zh: "面试话术:二分答案的三个自问",
           }}
         >
           <p>
@@ -2685,12 +2688,12 @@ export default function BinaryChapter() {
         id="answer2"
         index="06"
         title={{
-          en: "More answer search: one method, three appearances",
-          zh: "答案二分续:同一套路的三种脸",
+          en: "More binary search on the answer: one method, three appearances",
+          zh: "二分答案(续):同一方法的三种形态",
         }}
         desc={{
           en: "Minimize the maximum (LC 1011, LC 410) and find the largest feasible value (LC 69, LC 367).",
-          zh: "最大值最小化(1011/410)、最大可行(69/367)—— 换汤不换药",
+          zh: "最大值最小化(1011/410)与最大可行值(69/367)",
         }}
       >
         <div className="prose">
@@ -2778,7 +2781,7 @@ export default function BinaryChapter() {
     }
 }`,
             },
-            hl: [4, 8, 15],
+            hl: [4, 5, 8],
             note: {
               en: (
                 <>
@@ -2901,7 +2904,7 @@ export default function BinaryChapter() {
   return ans;
 };`,
             },
-            hl: [11, 12, 17],
+            hl: [11, 12, 16],
             note: {
               en: (
                 <>
@@ -2916,7 +2919,7 @@ export default function BinaryChapter() {
                 <>
                   <b>LC 410「分割数组的最大值」就是同一道题。</b>
                   把「D 天」换成「m 段」、「运力」换成「每段和的上限」,
-                  judge 一字不改。410 挂着 hard,主要难在题面的说法。
+                  judge 一字不改。410 标为 hard,主要难在题面的表述。
                 </>
               ),
             },
@@ -3206,8 +3209,8 @@ export default function BinaryChapter() {
           zh: "高频题单:二分进阶 18 题",
         }}
         desc={{
-          en: "Grouped as template, boundaries, monotonic split, and answer search, from easier to harder. Think for 30 seconds before opening the hint.",
-          zh: "按「模板 → 找边界 → 二段性 → 二分答案」分层,由易到难。先想 30 秒再看提示",
+          en: "Ordered from easy to hard, except that LC 154, the hard follow-up to LC 153, stays next to it. Think for 30 seconds before opening the hint.",
+          zh: "由易到难排列;LC 154 是 LC 153 的困难版,放在它旁边。先想 30 秒再看提示",
         }}
         badge={
           <span className="chip">
@@ -3290,7 +3293,7 @@ export default function BinaryChapter() {
             <>
               Cost: <b>O(log n)</b> time, <b>O(1)</b> extra space when written
               iteratively, <b>O(log n)</b> stack when written recursively. For an
-              answer search it is O(cost of judge × log(range)).
+              binary search on the answer it is O(cost of judge × log(range)).
             </>,
           ],
           zh: [

@@ -78,10 +78,10 @@ export function GuessLab() {
       </div>
       <div className="viz-stage" style={{ flexDirection: "column", gap: 6 }}>
         {status === "won" ? (
-          <div className="bin-guess-big" style={{ color: "var(--ok)" }}>🎯 {guess}</div>
+          <div className="bin-guess-big" style={{ color: "var(--ok)" }}>✓ {guess}</div>
         ) : status === "err" ? (
           <div className="bin-guess-big" style={{ fontSize: 30 }}>
-            <T en={<>🤔 hmm</>} zh={<>🤔 咦?</>} />
+            ✕
           </div>
         ) : (
           <div className="bin-guess-big">{guess}</div>
@@ -97,7 +97,7 @@ export function GuessLab() {
               }
               zh={
                 <>
-                  <b>{tries}</b> 次搞定。100 个数,理论上限是 <b>{GUESS_MAX}</b> 次 ——
+                  用 <b>{tries}</b> 次就找到了。100 个数,理论上限是 <b>{GUESS_MAX}</b> 次 ——
                   每回答一次就砍掉一半。
                 </>
               }
