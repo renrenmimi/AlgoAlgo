@@ -212,7 +212,7 @@ const REC_FRAMES: RecFrame[] = [
       },
       {
         name: "fact(1)",
-        note: <T en="base case: returns 1" zh="基准情形:直接返回 1" />,
+        note: <T en="base case: returns 1" zh="基例:直接返回 1" />,
         state: "cur",
       },
     ],
@@ -229,9 +229,9 @@ const REC_FRAMES: RecFrame[] = [
           }
           zh={
             <>
-              <b>fact(1)</b> 命中<b>基准情形(base case)</b>:
+              <b>fact(1)</b> 命中<b>基例(base case)</b>:
               最小的那个输入,不用再往下调用就知道答案是 1。
-              没有基准情形,栈帧会一直压下去,直到栈空间耗尽。
+              没有基例,栈帧会一直压下去,直到栈空间耗尽。
             </>
           }
         />
