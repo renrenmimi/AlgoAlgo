@@ -11,6 +11,7 @@ import Sidebar from "@/app/sidebar";
 import Toolbar from "@/app/toolbar";
 import CommandPalette from "@/app/command-palette";
 import { LangProvider, langScript } from "@/lib/i18n";
+import { SITE_TITLE } from "@/lib/curriculum";
 
 // Three typefaces: Syne (oversized display type, strongly geometric), Space Grotesk (UI and
 // headings) and JetBrains Mono (code and numbers). Chinese falls back to PingFang SC;
@@ -35,8 +36,10 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  // Resolves the canonical and Open Graph URLs set by each chapter layout
+  metadataBase: new URL("https://algo-algo.vercel.app"),
   title: {
-    default: "AlgoAlgo · Algorithms You Can See",
+    default: SITE_TITLE.en,
     template: "%s · AlgoAlgo",
   },
   description:
