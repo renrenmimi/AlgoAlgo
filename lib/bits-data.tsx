@@ -91,17 +91,23 @@ export const PROBLEMS: Problem[] = [
           A power of two has exactly one 1 bit in binary: 1, 10, 100, and so on.
           So n is a power of two when n &gt; 0 and n &amp; (n-1) == 0. Clearing
           the only 1 bit leaves 0, which proves there was just one. The n &gt; 0
-          test is required, because 0 and every negative number also give
-          n &amp; (n-1) == 0 for the wrong reason. The check n &amp; (-n) == n
-          works too, and it needs the same n &gt; 0 guard.
+          test is required. For n = 0, 0 &amp; (−1) is 0. With 32-bit integers,
+          as in Java and JavaScript, n = −2³¹, whose bits are 1000…0, also gives
+          n &amp; (n−1) = 0; no other negative number passes, and Python&apos;s
+          unbounded integers let no negative number through at all. The n &gt; 0
+          guard rules out these cases at once. The check n &amp; (-n) == n works
+          too, and it needs the same n &gt; 0 guard.
         </>
       ),
       zh: (
         <>
           2 的幂在二进制里恰好只有一个 1(1、10、100…)。所以 n &gt; 0 且
           n &amp; (n-1) == 0 即可判定 —— 清掉唯一的 1 后得 0,说明原本只有一个 1。
-          n &gt; 0 这个前置条件不能省:0 和所有负数也会让 n &amp; (n-1) == 0 成立,
-          但理由完全不同。用 n &amp; (-n) == n 判定同样可行,也同样要先判 n &gt; 0。
+          n &gt; 0 这个前置条件不能省:n = 0 时 0 &amp; (−1) = 0;
+          在 32 位整数下(如 Java、JavaScript),n = −2³¹ 的二进制是 1000…0,
+          n &amp; (n−1) 也是 0。其余负数都不满足,而 Python 的整数没有固定位宽,
+          任何负数都通不过。写上 n &gt; 0 可以一次挡住这些情况。
+          用 n &amp; (-n) == n 判定同样可行,也同样要先判 n &gt; 0。
         </>
       ),
     },
@@ -165,7 +171,7 @@ export const PROBLEMS: Problem[] = [
         <>
           汉明距离就是 x 和 y 二进制下不同位的个数。x ^ y 恰好在「不同的位」上得 1、
           相同的位上得 0,于是问题化归为「数 x^y 里有几个 1」,也就是 191 的
-          popcount。两个小招的组合:异或标出差异,popcount 数出个数。
+          popcount。两个小技巧的组合:异或标出差异,popcount 数出个数。
         </>
       ),
     },
@@ -185,7 +191,8 @@ export const PROBLEMS: Problem[] = [
           Bit by bit: loop 32 times. Each round, shift the result left by one to
           open a slot, put the lowest bit of n (n &amp; 1) into it, then shift n
           right by one: res = (res &lt;&lt; 1) | (n &amp; 1). There is also a
-          divide and conquer version in O(log n) that swaps blocks of 16, 8, 4,
+          divide and conquer version in O(log w), where w = 32 is the word size,
+          that swaps blocks of 16, 8, 4,
           2, then 1 bits. In Java and JavaScript use the unsigned shift
           &gt;&gt;&gt; so the sign bit does not repeat. Python integers have no
           fixed width, so mask with &amp; 0xFFFFFFFF to keep the value inside 32
@@ -196,7 +203,7 @@ export const PROBLEMS: Problem[] = [
         <>
           逐位法:循环 32 次,每次先把结果左移一位腾出空位,再把 n 的最低位
           (n &amp; 1)放进去,然后 n 右移一位 —— res = (res &lt;&lt; 1) | (n &amp; 1)。
-          还有 O(log n) 的分治版本:按 16/8/4/2/1 位的块两两互换。
+          还有 O(log w) 的分治版本(w = 32 为字长):按 16/8/4/2/1 位的块两两互换。
           Java 和 JavaScript 要用无符号右移 &gt;&gt;&gt;,否则符号位会不断复制;
           Python 整数没有固定位宽,要 &amp; 0xFFFFFFFF 把值截在 32 位内。
         </>

@@ -825,7 +825,7 @@ export default function BitsChapter() {
               <tr>
                 <td className="mono"><b>&lt;&lt;</b></td>
                 <td>
-                  <T en={<>Shift left</>} zh={<>左移 SHL</>} />
+                  <T en={<>Shift left</>} zh={<>左移</>} />
                 </td>
                 <td>
                   <T
@@ -843,7 +843,7 @@ export default function BitsChapter() {
               <tr>
                 <td className="mono"><b>&gt;&gt;</b></td>
                 <td>
-                  <T en={<>Shift right</>} zh={<>右移 SHR</>} />
+                  <T en={<>Shift right</>} zh={<>右移</>} />
                 </td>
                 <td>
                   <T
@@ -1307,7 +1307,7 @@ export default function BitsChapter() {
         }}
         desc={{
           en: "Worked example B · LC 191 Number of 1 Bits, the main use of n & (n-1)",
-          zh: "精讲 B · LC 191 位 1 的个数 —— n & (n-1) 的招牌用法",
+          zh: "精讲 B · LC 191 位 1 的个数 —— n & (n-1) 的典型用法",
         }}
         badge={<span className="lc-badge" data-d="easy">EASY</span>}
       >
@@ -1394,14 +1394,14 @@ export default function BitsChapter() {
                   <T
                     en={
                       <>
-                        In two&apos;s complement −n agrees with n only at that one
-                        position. Used for splitting into groups (260) and in
-                        Fenwick trees
+                        In two&apos;s complement the only bit that is 1 in both n
+                        and −n is the lowest set bit of n. Used for splitting into
+                        groups (260) and in Fenwick trees
                       </>
                     }
                     zh={
                       <>
-                        补码下 −n 只在这一位上与 n 相同。
+                        补码下 n 与 −n 唯一同为 1 的位,就是 n 最低位的 1。
                         用于分组(260)和树状数组
                       </>
                     }
@@ -1670,8 +1670,9 @@ export default function BitsChapter() {
                     A power of two has <b>exactly one 1 bit</b>, so{" "}
                     <code>n &gt; 0 &amp;&amp; (n &amp; (n−1)) == 0</code>. Clearing
                     the only 1 bit leaves 0. The <code>n &gt; 0</code> test is
-                    required: 0 and negative values pass the second test for a
-                    different reason.
+                    required: for n = 0, <code>0 &amp; (−1)</code> is 0, and with
+                    32-bit integers n = −2³¹ (bits 1000…0) passes the second test
+                    as well. No other negative number does.
                   </>
                 }
                 zh={
@@ -1679,7 +1680,8 @@ export default function BitsChapter() {
                     2 的幂在二进制里<b>只有一个 1</b>,所以
                     <code>n &gt; 0 &amp;&amp; (n &amp; (n−1)) == 0</code>:
                     清掉唯一的 1 后得 0。<code>n &gt; 0</code> 不能省 ——
-                    0 和负数也能通过后半个条件,但理由完全不同。
+                    n = 0 时 <code>0 &amp; (−1)</code> = 0;32 位整数下
+                    n = −2³¹(二进制 1000…0)也能通过后半个条件。其余负数都通不过。
                   </>
                 }
               />
@@ -1889,7 +1891,7 @@ export default function BitsChapter() {
             ans -= (1 << 32)
         return ans`,
             },
-            hl: [9, 10],
+            hl: [5, 6, 7, 9, 10],
             note: {
               en: (
                 <>
@@ -1905,7 +1907,7 @@ export default function BitsChapter() {
               ),
               zh: (
                 <>
-                  <b>本章最大的 Python 坑。</b>Python 整数没有固定位宽,
+                  <b>本章最大的 Python 陷阱。</b>Python 整数没有固定位宽,
                   第 31 位不会自动变成符号。逐位拼出来的 <code>ans</code> 若第 31 位是 1,
                   在 Python 里仍是个<b>很大的正数</b>,必须减去
                   <code>1 &lt;&lt; 32</code> 才能还原成负数。顺带一提,
@@ -2072,7 +2074,7 @@ export default function BitsChapter() {
                   就表示元素 i 在集合里。于是最多 32 个候选元素的集合,
                   正好装进一个 <code>int</code>。加入、删除、查询各变成一次位运算;
                   而且集合现在就是个数字,可以直接用 <code>==</code> 比较、
-                  当数组下标、或者塞进哈希表。先玩一玩,再看代码:
+                  当数组下标、或者放进哈希表。先动手试一试,再看代码:
                 </>
               }
             />
@@ -2109,7 +2111,7 @@ for (int sub = 0; sub < (1 << n); sub++) {
     // sub 就是一个子集,sub = 0 是空集
 }
 
-// 枚举某个集合 mask 的子集(状压 DP 的招牌循环)
+// 枚举某个集合 mask 的子集(状压 DP 的典型循环)
 for (int sub = mask; sub > 0; sub = (sub - 1) & mask) {
     // sub 从大到小遍历 mask 的每个非空子集
 }`,
@@ -2346,7 +2348,7 @@ for (let sub = mask; sub > 0; sub = (sub - 1) & mask) {
         }}
         desc={{
           en: "Left shift multiplies by 2ᵏ, right shift divides by 2ᵏ, and three traps you have to know",
-          zh: "左移 = 乘 2ᵏ,右移 = 除 2ᵏ,以及三个必须知道的坑",
+          zh: "左移 = 乘 2ᵏ,右移 = 除 2ᵏ,以及三个必须知道的陷阱",
         }}
       >
         <div className="prose">
@@ -2384,14 +2386,14 @@ for (let sub = mask; sub > 0; sub = (sub - 1) & mask) {
           <p>
             <T
               en={<>Shifting has three traps you have to know about.</>}
-              zh={<>但移位有三个必须知道的坑。</>}
+              zh={<>但移位有三个必须知道的陷阱。</>}
             />
           </p>
         </div>
         <div className="grid-3" style={{ marginTop: 4 }}>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en={<>Trap 01 · overflow</>} zh={<>坑 01 · 溢出</>} />
+              <T en={<>Trap 01 · overflow</>} zh={<>陷阱 01 · 溢出</>} />
             </div>
             <div className="card-title">
               <T en={<>Bits fall off the top</>} zh={<>左移会把 1 顶出去</>} />
@@ -2423,7 +2425,7 @@ for (let sub = mask; sub > 0; sub = (sub - 1) & mask) {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en={<>Trap 02 · negative values</>} zh={<>坑 02 · 负数右移</>} />
+              <T en={<>Trap 02 · negative values</>} zh={<>陷阱 02 · 负数右移</>} />
             </div>
             <div className="card-title">
               <T en={<>Arithmetic vs logical</>} zh={<>算术右移 vs 逻辑右移</>} />
@@ -2452,19 +2454,22 @@ for (let sub = mask; sub > 0; sub = (sub - 1) & mask) {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en={<>Trap 03 · precedence</>} zh={<>坑 03 · 优先级</>} />
+              <T en={<>Trap 03 · precedence</>} zh={<>陷阱 03 · 优先级</>} />
             </div>
             <div className="card-title">
-              <T en={<>Add the parentheses</>} zh={<>老老实实加括号</>} />
+              <T en={<>Add the parentheses</>} zh={<>加上括号</>} />
             </div>
             <p>
               <T
                 en={
                   <>
                     In Java and JavaScript, <code>==</code> binds tighter than{" "}
-                    <code>&amp;</code>, so <code>a &amp; 1 == 0</code> means{" "}
-                    <code>a &amp; (1 == 0)</code>. In Python the comparison binds
-                    more loosely, so the same line means{" "}
+                    <code>&amp;</code>, so <code>a &amp; 1 == 0</code> is read as{" "}
+                    <code>a &amp; (1 == 0)</code>. JavaScript then quietly computes{" "}
+                    <code>a &amp; false</code>, which is always 0; Java refuses to
+                    compile it, because <code>&amp;</code> cannot combine an{" "}
+                    <code>int</code> with a <code>boolean</code>. In Python the
+                    comparison binds more loosely, so the same line means{" "}
                     <code>(a &amp; 1) == 0</code>. The rule differs by language, so
                     always write <code>(a &amp; 1) == 0</code>.
                   </>
@@ -2473,7 +2478,10 @@ for (let sub = mask; sub > 0; sub = (sub - 1) & mask) {
                   <>
                     Java 和 JavaScript 里 <code>==</code> 比 <code>&amp;</code> 优先级高,
                     所以 <code>a &amp; 1 == 0</code> 会被解析成
-                    <code>a &amp; (1 == 0)</code>;Python 的比较运算符优先级更低,
+                    <code>a &amp; (1 == 0)</code>:JavaScript 会悄悄算出{" "}
+                    <code>a &amp; false</code>,结果恒为 0;Java 则直接编译失败,
+                    因为 <code>&amp;</code> 不能把 <code>int</code> 和{" "}
+                    <code>boolean</code> 放在一起。Python 的比较运算符优先级更低,
                     同一行的含义是 <code>(a &amp; 1) == 0</code>。
                     规则随语言而变,所以永远写成 <code>(a &amp; 1) == 0</code>。
                   </>
@@ -2626,8 +2634,8 @@ let mid  = (lo + hi) >>> 1;  // 求中点,同时也是快速的向下取整除�
           zh: "高频题单:位运算 11 题",
         }}
         desc={{
-          en: "Grouped as XOR, counting 1 bits, an integer as a set, and simulation, easiest first",
-          zh: "按「异或 → 数 1 → 位表示集合 → 模拟」分组,由易到难",
+          en: "The easy problems come first, then the medium ones; LC 1356, a review, and LC 67, a simulation, close the list",
+          zh: "先易后难;最后两题 LC 1356(复盘)和 LC 67(模拟)单独放在末尾",
         }}
         badge={
           <span className="chip">
