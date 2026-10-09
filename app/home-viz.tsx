@@ -3,7 +3,9 @@
 // Visualizations specific to the opening chapter:
 //  - HeroDecision: the autoplaying animation to the right of the hero -- a decision tree is
 //    explored step by step, dead ends gray out on the backtrack and the correct path lights up
-//    green, so "an algorithm is a visible sequence of decisions" lands at a glance.
+//    green, so "an algorithm is a visible sequence of decisions" lands at a glance. It advances
+//    only while it can be seen and has not been paused (a Pause / Play button, WCAG 2.2.2);
+//    readers who prefer reduced motion start paused.
 //    Nodes and edges reuse the .tp-node / .tp-edge state styles from globals.css directly.
 //  - RecursionLab: the call-stack laboratory -- step through how the stack frames of
 //    factorial(3) are pushed and then popped carrying their return values. Recursion is the
@@ -12,7 +14,7 @@
 // Bilingual UI: all visible copy goes through <T en zh />; node labels are symbols and are
 // shared by both languages.
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useStepper, StepControls } from "@/lib/stepper";
 import { T, useL } from "@/lib/i18n";
 
@@ -59,23 +61,58 @@ const H_FRAMES: Record<string, NState>[] = [
 
 export function HeroDecision() {
   const L = useL();
+  const wrapRef = useRef<HTMLDivElement>(null);
   const [tick, setTick] = useState(0);
+  const [seen, setSeen] = useState(false);
+  const [paused, setPaused] = useState(false);
 
+  // Respect prefers-reduced-motion: start paused on the first frame -- it was designed to be
+  // state-rich, so it looks good even when static.
   useEffect(() => {
-    // Respect prefers-reduced-motion: stay on the first frame -- it was designed to be
-    // state-rich, so it looks good even when static.
-    const reduce =
-      typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) setPaused(true);
+  }, []);
+
+  // Advance only while the figure is on screen in a visible tab
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    let onScreen = false;
+    const report = () => setSeen(onScreen && document.visibilityState === "visible");
+    const io = new IntersectionObserver(([e]) => {
+      onScreen = e.isIntersecting;
+      report();
+    });
+    io.observe(el);
+    document.addEventListener("visibilitychange", report);
+    return () => {
+      io.disconnect();
+      document.removeEventListener("visibilitychange", report);
+    };
+  }, []);
+
+  const running = seen && !paused;
+  useEffect(() => {
+    if (!running) return;
     const t = setInterval(() => setTick((v) => v + 1), 1000);
     return () => clearInterval(t);
-  }, []);
+  }, [running]);
 
   const f = H_FRAMES[tick % H_FRAMES.length];
 
   return (
-    <div className="hm-wrap">
+    <div className="hm-wrap" ref={wrapRef}>
+      <button
+        type="button"
+        className="hm-toggle"
+        onClick={() => setPaused((v) => !v)}
+        aria-label={L(
+          paused
+            ? { en: "Play the decision-tree animation", zh: "播放决策树动画" }
+            : { en: "Pause the decision-tree animation", zh: "暂停决策树动画" },
+        )}
+      >
+        {L(paused ? { en: "Play", zh: "播放" } : { en: "Pause", zh: "暂停" })}
+      </button>
       <svg
         className="hm-svg"
         viewBox="0 0 380 200"
