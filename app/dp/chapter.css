@@ -58,7 +58,7 @@
   border: 1px solid var(--acc-border);
 }
 
-[data-ch="dp"] .dp-step h4 {
+[data-ch="dp"] .dp-step h3 {
   font-size: 14.5px;
   margin: 2px 0 4px;
 }
