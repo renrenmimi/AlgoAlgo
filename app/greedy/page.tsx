@@ -170,8 +170,9 @@ export default function GreedyChapter() {
                   and undoes the ones that lead nowhere: always correct, but
                   exponential. <strong>Dynamic programming</strong> (next
                   chapter) also considers every choice, but stores the answer of
-                  each subproblem so it is computed once: always correct, and
-                  polynomial. Greedy goes further than both:{" "}
+                  each subproblem so it is computed once: always correct, and its
+                  cost is set by the number of distinct subproblems rather than by
+                  the number of paths through them. Greedy goes further than both:{" "}
                   <strong>
                     it keeps exactly one choice per step and throws the rest away
                   </strong>
@@ -185,7 +186,8 @@ export default function GreedyChapter() {
                   和你已经学过的两种方法比一下。<strong>回溯</strong>(第 5 章)
                   把每个选择都试一遍,走不通就撤销:必对,但指数级。
                   <strong>动态规划</strong>(下一章)同样考虑所有选择,
-                  但把每个子问题的答案记下来,只算一次:必对,多项式时间。
+                  但把每个子问题的答案记下来,只算一次:必对,
+                  代价取决于不同子问题的个数,而不是穷举路径的条数。
                   贪心比两者都激进:
                   <strong>每一步只保留一个选择,其余全部丢弃</strong>。
                   这就是它通常只要 O(n) 或 O(n log n) 的原因,
@@ -261,7 +263,7 @@ export default function GreedyChapter() {
               <T en={<>Property 03</>} zh={<>特征 03</>} />
             </div>
             <div className="card-title">
-              <T en={<>⚡ Sorting comes first</>} zh={<>⚡ 常常先排序</>} />
+              <T en={<>Sorting comes first</>} zh={<>常常先排序</>} />
             </div>
             <p>
               <T
@@ -371,10 +373,10 @@ export default function GreedyChapter() {
         index="02"
         title={{
           en: "The exchange argument",
-          zh: "交换论证:证明「贪完不后悔」的通用武器",
+          zh: "交换论证:证明贪心选择安全的通用方法",
         }}
         desc={{
-          en: "Featured problem A · LC 455 Assign Cookies — learn the proof first, then the code",
+          en: "Worked example A · LC 455 Assign Cookies — learn the proof first, then the code",
           zh: "精讲 A · LC 455 分发饼干 —— 先学会证明,再谈怎么贪",
         }}
         badge={
@@ -442,7 +444,7 @@ export default function GreedyChapter() {
               zh={
                 <>
                   代码就是排序加一次双指针扫描。短不等于对,
-                  <b>真正要回答的问题是:凭什么这条规则不会吃亏?</b>
+                  <b>真正要回答的问题是:为什么这条规则不会错过最优解?</b>
                 </>
               }
             />
@@ -558,7 +560,7 @@ export default function GreedyChapter() {
   return child;
 };`,
             },
-            hl: [2, 3],
+            hl: [2, 3, 6],
             note: {
               en: (
                 <>
@@ -616,12 +618,12 @@ export default function GreedyChapter() {
         <div className="grd-steps">
           <div className="grd-step">
             <div>
-              <h4>
+              <h3>
                 <T
                   en={<>Name the greedy choice, and take any optimal solution</>}
                   zh={<>写下贪心的选择,再任取一个最优解</>}
                 />
-              </h4>
+              </h3>
               <p>
                 <T
                   en={
@@ -647,12 +649,12 @@ export default function GreedyChapter() {
           </div>
           <div className="grd-step">
             <div>
-              <h4>
+              <h3>
                 <T
                   en={<>Rewrite OPT so that it pairs c₀ with s*</>}
                   zh={<>把 OPT 改写成「c₀ 配 s*」</>}
                 />
-              </h4>
+              </h3>
               <p>
                 <T
                   en={
@@ -682,12 +684,12 @@ export default function GreedyChapter() {
           </div>
           <div className="grd-step">
             <div>
-              <h4>
+              <h3>
                 <T
                   en={<>The count never drops, so induct on the rest</>}
                   zh={<>满足数不减少,于是对剩下的部分归纳</>}
                 />
-              </h4>
+              </h3>
               <p>
                 <T
                   en={
@@ -1039,9 +1041,10 @@ export default function GreedyChapter() {
                   . That is <code>cur = max(nums[i], cur + nums[i])</code>, while
                   tracking the largest <code>cur</code> seen. The same line is
                   also a one-dimensional DP where <code>cur</code> is the largest
-                  sum of a subarray ending at index i. Chapter 07 teaches it in
-                  full, with a cell-by-cell animation. Here it is only a
-                  reminder that one problem can have two justifications.
+                  sum of a subarray ending at index i. The LC 53 entry in the
+                  chapter 07 problem set gives its DP state and transition. Here
+                  it is only a reminder that one problem can have two
+                  justifications.
                 </>
               }
               zh={
@@ -1053,7 +1056,7 @@ export default function GreedyChapter() {
                   ,写出来就是 <code>cur = max(nums[i], cur + nums[i])</code>,
                   同时记录见过的最大 <code>cur</code>。同一行代码也是一维 DP:
                   <code>cur</code> 表示以下标 i 结尾的最大子数组和。
-                  第 7 章会完整讲它,并配逐格动画。
+                  第 7 章题单里的 LC 53 给出了它的 DP 状态与转移。
                   这里只是提醒:同一道题可以有两种解释。
                 </>
               }
@@ -1148,9 +1151,10 @@ export default function GreedyChapter() {
                   <>
                     <code>hold = max(hold, cash − p)</code>;{" "}
                     <code>cash = max(cash, hold + p)</code>. With a transaction
-                    fee (714) or a transaction limit (123), the greedy rule stops
-                    being optimal and only the state machine still works. Heavier
-                    to write, but general.
+                    fee (714) or a transaction limit (123), the day-by-day greedy
+                    rule no longer holds. A different greedy can still be found
+                    for 714, but the state machine needs no new proof and handles
+                    both. Heavier to write, but general.
                   </>
                 }
                 zh={
@@ -1158,7 +1162,8 @@ export default function GreedyChapter() {
                     <code>hold = max(hold, cash − p)</code>;
                     <code>cash = max(cash, hold + p)</code>。
                     一旦加上手续费(714)或限制交易次数(123),
-                    贪心就不再最优,只有状态机还能用。写起来重一些,但通用。
+                    逐日差的贪心就不再成立。714 仍能另找一种贪心,
+                    但状态机的写法不必重新证明,两题都能处理。写起来重一些,但通用。
                   </>
                 }
               />
@@ -1279,7 +1284,7 @@ export default function GreedyChapter() {
           zh: "跳跃游戏:盯住覆盖范围,而不是「怎么跳」",
         }}
         desc={{
-          en: "Featured problem B · LC 55 can you arrive → LC 45 in how few jumps",
+          en: "Worked example B · LC 55 can you arrive → LC 45 in how few jumps",
           zh: "精讲 B · LC 55 能否到达 → LC 45 最少几步",
         }}
         badge={
@@ -1491,7 +1496,7 @@ export default function GreedyChapter() {
   }
   return jumps;
 };`,
-            hl: [4, 5, 6, 7, 8],
+            hl: [4, 5, 6, 7],
             note: {
               en: (
                 <>
@@ -1615,7 +1620,7 @@ export default function GreedyChapter() {
               zh={
                 <>
                   这一类题没有精巧的排序技巧。你想清楚
-                  <strong>一条局部规则</strong>,然后老老实实模拟一遍。
+                  <strong>一条局部规则</strong>,然后按规则完整模拟一遍。
                   难点全在一个问题上:为什么照这条规则做,后面不会付出代价?
                 </>
               }
@@ -1835,7 +1840,7 @@ export default function GreedyChapter() {
               ),
               zh: (
                 <>
-                  一次遍历的底气全部来自结论(2):
+                  一次遍历之所以成立,全部依据结论(2):
                   被跳过的每个起点也会在同一站之前断油。
                   没有这个论证,丢弃前缀就只是猜测。
                 </>
@@ -1964,7 +1969,7 @@ export default function GreedyChapter() {
                 candy[i] = max(candy[i], candy[i + 1] + 1)
         return sum(candy)`,
             },
-            hl: [8, 9, 10],
+            hl: [5, 6, 7, 8, 9, 10],
             note: {
               en: (
                 <>
@@ -2004,7 +2009,7 @@ export default function GreedyChapter() {
   return candy.reduce((a, b) => a + b, 0);
 };`,
             },
-            hl: [6, 7, 8],
+            hl: [4, 5, 6, 7, 8],
             note: {
               en: (
                 <>
@@ -2076,7 +2081,7 @@ export default function GreedyChapter() {
           zh: "区间贪心:按左端还是右端排序?",
         }}
         desc={{
-          en: "Featured problem C · LC 435 Non-overlapping Intervals, with 452 / 763 / 56 alongside",
+          en: "Worked example C · LC 435 Non-overlapping Intervals, with 452 / 763 / 56 alongside",
           zh: "精讲 C · LC 435 无重叠区间 —— 附 452 / 763 / 56 对照",
         }}
         badge={
@@ -2515,18 +2520,18 @@ export default function GreedyChapter() {
                   CPU scheduler, and allocating time slices for bandwidth or
                   virtual machines are all the same problem. &quot;Sort by
                   finishing time and take the one that finishes first&quot; has
-                  been a proven result in operations research for decades. When a
-                  calendar tool suggests a set of meetings that do not clash, it
-                  is usually running this.
+                  been a proven result in operations research for decades. A
+                  calendar tool that has to pick the largest set of non-clashing
+                  meetings can use exactly this rule.
                 </>
               }
               zh={
                 <>
                   LC 435 的另一个名字是<b>活动选择(activity selection)</b>。
-                  会议室排会(同一间屋最多塞下几场不冲突的会)、
+                  会议室排会(同一间屋最多安排几场不冲突的会)、
                   CPU 调度里挑选任务、带宽或虚拟机的时间片分配,都是同一个问题。
                   「按结束时间排序、优先取结束最早的」在运筹学里已被证明了几十年。
-                  日历工具帮你选出一组互不冲突的会议时,背后通常就是它。
+                  日历工具若要挑出最多的互不冲突会议,就可以直接用这条规则。
                 </>
               }
             />
@@ -2724,12 +2729,12 @@ export default function GreedyChapter() {
         <div className="grd-steps">
           <div className="grd-step">
             <div>
-              <h4>
+              <h3>
                 <T
                   en={<>Try greedy: can you state the exchange argument in one sentence?</>}
                   zh={<>先试贪心:能用一句话说出交换论证吗?</>}
                 />
-              </h4>
+              </h3>
               <p>
                 <T
                   en={
@@ -2744,7 +2749,7 @@ export default function GreedyChapter() {
                     <>
                       如果能用一句话说清「当下的选择为什么不会毁掉最优解」
                       (435:结束更早留下的空间更多;455:最小的可用饼干不浪费),
-                      那就放心贪,O(n log n) 收工。
+                      那就放心使用贪心,总复杂度 O(n log n)。
                     </>
                   }
                 />
@@ -2753,12 +2758,12 @@ export default function GreedyChapter() {
           </div>
           <div className="grd-step">
             <div>
-              <h4>
+              <h3>
                 <T
                   en={<>Cannot prove it? Look for a counterexample</>}
                   zh={<>证不出来?去找反例</>}
                 />
-              </h4>
+              </h3>
               <p>
                 <T
                   en={
@@ -2782,28 +2787,28 @@ export default function GreedyChapter() {
           </div>
           <div className="grd-step">
             <div>
-              <h4>
+              <h3>
                 <T
                   en={<>Fall back to DP: enumerate every decision and store the results</>}
                   zh={<>退回 DP:枚举所有决策并记账</>}
                 />
-              </h4>
+              </h3>
               <p>
                 <T
                   en={
                     <>
                       List the possibilities for the last step, take the min or
                       max, and store each subproblem answer so it is computed
-                      once. Slower than greedy, but polynomial, and{" "}
-                      <b>always correct</b>. That is the tool the next chapter
-                      hands you.
+                      once. Slower than greedy, usually far faster than brute
+                      force, and <b>always correct</b>. That is the tool the next
+                      chapter hands you.
                     </>
                   }
                   zh={
                     <>
                       列出最后一步的所有可能,取 min 或 max,
                       并把每个子问题的答案记下来,只算一次。
-                      比贪心慢,但仍是多项式时间,而且<b>必对</b>。
+                      比贪心慢,通常远快于暴力,而且<b>必对</b>。
                       这正是下一章要交给你的工具。
                     </>
                   }
@@ -2860,8 +2865,8 @@ export default function GreedyChapter() {
         index="08"
         title={{ en: "Problem set: 18 greedy problems", zh: "高频题单:贪心 18 题" }}
         desc={{
-          en: "Grouped as exchange argument, sequence, jump, simulation, intervals, from easier to harder. Think for 30 seconds before opening the hint.",
-          zh: "按「交换论证 → 序列 → 跳跃 → 模拟 → 区间」分层,由易到难。先想 30 秒再看提示",
+          en: "Ordered from easy to hard. Think for 30 seconds before opening the hint.",
+          zh: "由易到难排列。先想 30 秒再看提示",
         }}
         badge={
           <span className="chip">

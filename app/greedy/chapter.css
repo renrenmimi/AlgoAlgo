@@ -48,7 +48,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-[data-ch="greedy"] .grd-step h4 {
+[data-ch="greedy"] .grd-step h3 {
   font-size: 14.5px;
   margin: 2px 0 4px;
 }

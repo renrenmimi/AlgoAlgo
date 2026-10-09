@@ -161,7 +161,7 @@ const COOKIE_FRAMES: CookieFrame[] = [
           <>
             结果:<b>2 个孩子</b>吃饱,胃口 5 的孩子没吃到。
             每一步都用「刚好够」的饼干,所以没有把大饼干浪费在小胃口上。
-            下面的交换论证正是用来证明这条规则不会吃亏的。
+            下面的交换论证正是用来证明这条规则不会错过最优解的。
           </>
         }
       />
@@ -795,14 +795,28 @@ const TARGET = 6;
 
 export function CoinGreedyLab() {
   const [picks, setPicks] = useState<number[]>([]);
+  // The tally of each strategy appears only after its button is pressed, so the lab
+  // does not hand out the answer it asks the reader to find.
+  const [seenGreedy, setSeenGreedy] = useState(false);
+  const [seenBest, setSeenBest] = useState(false);
   const L = useL();
   const sum = useMemo(() => picks.reduce((s, v) => s + v, 0), [picks]);
   const count = picks.length;
 
   const add = (c: number) => setPicks((p) => [...p, c]);
   const clear = () => setPicks([]);
-  const showGreedy = () => setPicks([4, 1, 1]); // greedy: take the largest usable denomination at every step
-  const showOpt = () => setPicks([3, 3]); // optimal
+  const showGreedy = () => {
+    setPicks([4, 1, 1]); // greedy: take the largest usable denomination at every step
+    setSeenGreedy(true);
+  };
+  const showOpt = () => {
+    setPicks([3, 3]); // optimal
+    setSeenBest(true);
+  };
+  const tally = [
+    seenGreedy && L({ en: "greedy 3", zh: "贪心 3 枚" }),
+    seenBest && L({ en: "best 2", zh: "最优 2 枚" }),
+  ].filter(Boolean);
 
   let msg: ReactNode;
   if (sum === 0) {
@@ -859,16 +873,33 @@ export function CoinGreedyLab() {
       <T
         en={
           <>
-            🏆 <b>2 coins (3 + 3)</b> is the best answer. Greedy takes the
+            ✓ <b>2 coins (3 + 3)</b> is the best answer. Greedy takes the
             largest coin that fits, so it starts with 4 and is then forced into 1
             + 1, using 3 coins. It never considers a plan that starts with 3.
           </>
         }
         zh={
           <>
-            🏆 <b>2 枚(3 + 3)</b>,这就是最优解。
+            ✓ <b>2 枚(3 + 3)</b>,这就是最优解。
             贪心每步拿能用的最大面额,所以先拿 4,之后只能用 1 + 1 收尾,共 3 枚 ——
             它从不考虑「以 3 开头」的方案。
+          </>
+        }
+      />
+    );
+  } else if (seenBest) {
+    msg = (
+      <T
+        en={
+          <>
+            You reached {TARGET}, but with <b>{count}</b> coins. Fewer is
+            possible: the best answer is <b>2 coins (3 + 3)</b>.
+          </>
+        }
+        zh={
+          <>
+            凑出了 {TARGET},但用了 <b>{count}</b> 枚 —— 还能更少。
+            最优是 <b>2 枚(3 + 3)</b>。
           </>
         }
       />
@@ -879,14 +910,14 @@ export function CoinGreedyLab() {
         en={
           <>
             You reached {TARGET}, but with <b>{count}</b> coins. Fewer is
-            possible: the best answer is <b>2 coins (3 + 3)</b>. Press
-            &quot;Show best&quot; to compare.
+            possible. Try another combination, or press &quot;Show best&quot;
+            when you think you have hit the limit.
           </>
         }
         zh={
           <>
             凑出了 {TARGET},但用了 <b>{count}</b> 枚 —— 还能更少。
-            最优是 <b>2 枚(3 + 3)</b>,点「看最优」对答案。
+            换一种组合再试,觉得到顶了再点「看最优」对答案。
           </>
         }
       />
@@ -921,7 +952,7 @@ export function CoinGreedyLab() {
           </span>
           <span className="dim">
             {" "}
-            / {TARGET} · {count} {L({ en: "coins", zh: "枚" })}
+            / {TARGET} · {count} {L({ en: count === 1 ? "coin" : "coins", zh: "枚" })}
           </span>
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
@@ -945,9 +976,11 @@ export function CoinGreedyLab() {
         <button type="button" className="btn btn-sm btn-primary" onClick={showOpt}>
           {L({ en: "Show best", zh: "看最优" })}
         </button>
-        <span className="mono dim" style={{ marginLeft: "auto", fontSize: 12 }}>
-          {L({ en: "greedy 3 · best 2", zh: "贪心 3 枚 · 最优 2 枚" })}
-        </span>
+        {tally.length > 0 && (
+          <span className="mono dim" style={{ marginLeft: "auto", fontSize: 12 }}>
+            {tally.join(" · ")}
+          </span>
+        )}
       </div>
     </div>
   );
