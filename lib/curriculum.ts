@@ -83,7 +83,7 @@ export const CHAPTERS: Chapter[] = [
     en: "Sorting",
     essence: {
       en: "Sorting is a museum of algorithmic ideas. Every speedup comes from seeing the data in a new way.",
-      zh: "排序是算法思想的展览馆:每一次变快,都是一种新的世界观。",
+      zh: "排序是算法思想的展览馆:每一次变快,都对应一种新的思路。",
     },
     hue: 200,
     level: 1,
@@ -203,7 +203,7 @@ export const CHAPTERS: Chapter[] = [
     freq: 5,
     tags: {
       en: ["Memoization", "Bottom-up", "Grid DP", "House Robber"],
-      zh: ["记忆化", "递推", "网格DP", "打家劫舍"],
+      zh: ["记忆化", "递推", "网格 DP", "打家劫舍"],
     },
   },
   {
@@ -221,7 +221,7 @@ export const CHAPTERS: Chapter[] = [
     freq: 5,
     tags: {
       en: ["0/1 knapsack", "Unbounded knapsack", "Rolling array"],
-      zh: ["0-1背包", "完全背包", "滚动数组"],
+      zh: ["0-1 背包", "完全背包", "滚动数组"],
     },
   },
   {
@@ -257,7 +257,7 @@ export const CHAPTERS: Chapter[] = [
     freq: 4,
     tags: {
       en: ["Stock series", "Interval DP", "Tree DP", "Bitmask DP"],
-      zh: ["股票系列", "区间DP", "树形DP", "状压DP"],
+      zh: ["股票系列", "区间 DP", "树形 DP", "状压 DP"],
     },
   },
   {
