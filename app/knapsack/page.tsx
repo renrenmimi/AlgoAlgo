@@ -108,7 +108,7 @@ const F_2D: DPFrame[] = [
         zh={
           <>
             第 0 行 = <b>一件物品都还没有</b>:无论容量多大,价值都是 0。
-            这是基准情形,其余每一行都由它推出来。
+            这是基例,其余每一行都由它推出来。
           </>
         }
       />
@@ -283,7 +283,7 @@ const F_ROLL: DPFrame[] = [
         zh={
           <>
             物品③(重 4、值 30)刷完后 dp 没有变化,dp[4] = <b>35</b> 就是答案。
-            空间从 O(nW) 降到 <b>O(W)</b> —— 整张表塌成一行,时间仍是 O(nW)。
+            空间从 O(nW) 降到 <b>O(W)</b> —— 整张表压缩成一行,时间仍是 O(nW)。
           </>
         }
       />
@@ -523,8 +523,8 @@ const F_322: DPFrame[] = [
       <T
         en={
           <>
-            Sweep coin <b>¥1</b> upward: dp[2] = dp[1] + 1 = 2, and dp[6] = 6.
-            Note that dp[2] already uses <b>two ¥1 coins</b>. Going up feeds a
+            Sweep coin <b>$1</b> upward: dp[2] = dp[1] + 1 = 2, and dp[6] = 6.
+            Note that dp[2] already uses <b>two $1 coins</b>. Going up feeds a
             cell that this same pass has updated into a larger capacity, so one
             coin is <b>used again</b> — which is exactly what unlimited supply
             means.
@@ -547,10 +547,10 @@ const F_322: DPFrame[] = [
       <T
         en={
           <>
-            Coin <b>¥3</b>: first dp[3] = dp[0] + 1 = 1. The interesting cell is
+            Coin <b>$3</b>: first dp[3] = dp[0] + 1 = 1. The interesting cell is
             dp[6] = <b>dp[3]</b> + 1 = <b>2</b>. The dashed dp[3] already contains
-            one ¥3, and going <b>up</b> lets that result be read again, so adding
-            one more ¥3 gives two. That is where the 3 + 3 solution comes from.
+            one $3, and going <b>up</b> lets that result be read again, so adding
+            one more $3 gives two. That is where the 3 + 3 solution comes from.
           </>
         }
         zh={
@@ -570,7 +570,7 @@ const F_322: DPFrame[] = [
       <T
         en={
           <>
-            Coin <b>¥4</b>: dp[4] = dp[0] + 1 = 1, and dp[6] stays <b>2</b>. The
+            Coin <b>$4</b>: dp[4] = dp[0] + 1 = 1, and dp[6] stays <b>2</b>. The
             answer is <b>2</b> coins (3 + 3). Chapter 7 reached the same number by
             asking which coin is the last one; this pass fills the same array one
             coin type at a time.
@@ -620,7 +620,7 @@ const F_518: DPFrame[] = [
       <T
         en={
           <>
-            With only <b>¥1</b> available, every amount has exactly one
+            With only <b>$1</b> available, every amount has exactly one
             combination: all ones. dp = [1, 1, 1, 1, 1, 1].
           </>
         }
@@ -639,8 +639,8 @@ const F_518: DPFrame[] = [
       <T
         en={
           <>
-            Add <b>¥2</b>: dp[j] += dp[j−2]. dp[4] = 3 (1+1+1+1, 1+1+2, 2+2) and
-            dp[5] = 3. Because ¥2 enters after ¥1 and never before it, the order
+            Add <b>$2</b>: dp[j] += dp[j−2]. dp[4] = 3 (1+1+1+1, 1+1+2, 2+2) and
+            dp[5] = 3. Because $2 enters after $1 and never before it, the order
             &quot;2 then 1&quot; is never counted as a separate way.
           </>
         }
@@ -660,7 +660,7 @@ const F_518: DPFrame[] = [
       <T
         en={
           <>
-            Add <b>¥5</b>: dp[5] += dp[0], giving <b>4</b> combinations: {"{5}"},{" "}
+            Add <b>$5</b>: dp[5] += dp[0], giving <b>4</b> combinations: {"{5}"},{" "}
             {"{1,2,2}"}, {"{1,1,1,2}"}, {"{1,1,1,1,1}"}.
           </>
         }
@@ -800,7 +800,7 @@ export default function KnapsackChapter() {
               zh={
                 <>
                   <b>暴力要花多少?</b>每件物品选或不选,n 件就有 2ⁿ 个子集。
-                  逐个检查重量与价值,n = 30 时约十亿步,远远跑不完 ——
+                  逐个检查重量与价值,n = 30 时约十亿步,慢得无法接受 ——
                   和第 5 章回溯树的增长完全一样。
                   <b> 为什么能优化?</b>因为同一个子问题被反复问到:
                   「前 3 件、容量 5 的最大价值」会被很多条不同的决策路径问到,
@@ -813,12 +813,12 @@ export default function KnapsackChapter() {
           </p>
         </div>
         <div className="kp-def">
-          <h4>
+          <h3>
             <T
-              en={<>📦 Four questions that turn a problem into a knapsack</>}
-              zh={<>📦 把一道题变成背包的四个问句</>}
+              en={<>Four questions that turn a problem into a knapsack</>}
+              zh={<>把一道题变成背包的四个问句</>}
             />
-          </h4>
+          </h3>
           <p>
             <T
               en={
@@ -877,7 +877,7 @@ export default function KnapsackChapter() {
               <T en="Uses per item" zh="每件用几次" />
             </div>
             <div className="card-title">
-              <T en="♾️ Unbounded knapsack" zh="♾️ 完全背包" />
+              <T en="Unbounded knapsack" zh="完全背包" />
             </div>
             <p>
               <T
@@ -1071,7 +1071,7 @@ export default function KnapsackChapter() {
               }
               zh={
                 <>
-                  两者取较大。<b>基准情形:</b>第 0 行全是 0 ——
+                  两者取较大。<b>基例:</b>第 0 行全是 0 ——
                   没有物品可用时,任何容量下的价值都是 0。<b>答案</b>
                   在 dp[n][W],也就是右下角那一格。
                   逐格看这张表怎么填出来,蓝色虚线格是当前格读取的值。
@@ -1196,7 +1196,7 @@ export default function KnapsackChapter() {
               ),
               zh: (
                 <>
-                  <b>值得注意:</b>二维写法里容量循环<b>正序倒序都对</b>。
+                  <b>注意:</b>二维写法里容量循环<b>正序倒序都对</b>。
                   第 i 行只会读第 i−1 行,本行写入什么都不会影响本行读到什么。
                   方向的讲究,是把表压成一行之后才出现的 —— 见 §03。
                 </>
@@ -1708,15 +1708,15 @@ export default function KnapsackChapter() {
             note: {
               en: (
                 <>
-                  <b>Checking the parity first</b> costs O(1) and rejects about
-                  half the inputs immediately. The transition uses boolean or,
+                  <b>Checking the parity first</b> costs O(1) and rejects every
+                  odd total immediately. The transition uses boolean or,
                   because this version only asks whether a sum is reachable, not
                   how much value it carries.
                 </>
               ),
               zh: (
                 <>
-                  <b>先判奇偶</b>只花 O(1),却能立刻否掉大约一半的输入。
+                  <b>先判奇偶</b>只花 O(1),总和为奇数的输入立刻就能否掉。
                   转移用布尔「或」,因为这个版本只问某个和能否达到,不关心价值。
                 </>
               ),
@@ -2000,7 +2000,7 @@ export default function KnapsackChapter() {
                   剩下的就是 LC 416 的骨架,只把布尔「或」换成<strong>方案数相加</strong>:
                   <code>dp[j] += dp[j−num]</code>。凑出 j 的方案数 = 已经数到的方案数,
                   加上「先凑出 j−num、再放一个 num」的方案数。
-                  基准情形 dp[0] = 1,因为空集是凑出 0 的一种方案。
+                  基例 dp[0] = 1,因为空集是凑出 0 的一种方案。
                   容量仍然倒序,因为每个数最多用一次。
                 </>
               }
@@ -2142,7 +2142,7 @@ export default function KnapsackChapter() {
   return dp[P];
 };`,
             },
-            hl: [7, 8],
+            hl: [8],
             note: {
               en: (
                 <>
@@ -2617,7 +2617,10 @@ export default function KnapsackChapter() {
             zh: "LC 322 · 完全背包视角,逐种硬币填(coins = [1,3,4],amount = 6)",
           }}
           frames={F_322}
-          colLabels={["¥0", "¥1", "¥2", "¥3", "¥4", "¥5", "¥6"]}
+          colLabels={{
+            en: ["$0", "$1", "$2", "$3", "$4", "$5", "$6"],
+            zh: ["¥0", "¥1", "¥2", "¥3", "¥4", "¥5", "¥6"],
+          }}
           cornerLabel="dp"
           cellW={52}
         />
@@ -2653,15 +2656,16 @@ export default function KnapsackChapter() {
               en: (
                 <>
                   Compare this line by line with the one-dimensional 0/1 code in
-                  §03: the <b>only</b> difference is that <code>j</code> counts up.
-                  The question asks for the fewest coins, so the operator is min,
+                  §03: in the loop structure, the <b>only</b> difference is that{" "}
+                  <code>j</code> counts up. The question asks for the fewest coins,
+                  so the operator is min,
                   dp[0] = 0, and every other cell starts at a value larger than any
                   real answer.
                 </>
               ),
               zh: (
                 <>
-                  把这段和 §03 的一维 0-1 代码逐行对照:<b>唯一</b>的差别是{" "}
+                  把这段和 §03 的一维 0-1 代码逐行对照:循环结构上<b>唯一</b>的差别是{" "}
                   <code>j</code> 变成递增。题目求最少枚数,所以算子是 min,
                   dp[0] = 0,其余每格都先设成一个比任何真实答案都大的值。
                 </>
@@ -2847,17 +2851,22 @@ export default function KnapsackChapter() {
                   <>
                     Between 0/1 and unbounded: item i may be used at most k times.
                     The direct method copies it into k separate 0/1 items. A better
-                    one is <b>binary splitting</b>: replace k copies with items of
-                    size 1, 2, 4, ... so any count from 0 to k can still be formed,
-                    which turns k items into about log k.
+                    one is <b>binary splitting</b>: replace the k copies with items
+                    of size 1, 2, 4, …, 2<sup>p−1</sup> plus one remainder item k −
+                    (2<sup>p</sup> − 1), where p is the largest exponent with 2
+                    <sup>p</sup> − 1 ≤ k (for k = 10: 1, 2, 4 and 3). That forms
+                    every count from 0 to k exactly and turns k items into about
+                    log k.
                   </>
                 }
                 zh={
                   <>
                     介于 0-1 与完全之间:第 i 件最多用 k 次。
                     最直接的做法是把它复制成 k 件 0-1 物品;更好的做法是
-                    <b>二进制拆分</b> —— 用大小为 1、2、4… 的若干件代替 k 件,
-                    仍能凑出 0 到 k 的任意个数,于是 k 件压缩到约 log k 件。
+                    <b>二进制拆分</b> —— 用 1、2、4、…、2<sup>p−1</sup> 再加一件余数
+                    k − (2<sup>p</sup> − 1) 代替 k 件(p 取满足 2<sup>p</sup> − 1 ≤ k
+                    的最大值;k = 10 时就是 1、2、4、3),就能恰好凑出 0 到 k 的任意个数,
+                    于是 k 件压缩到约 log k 件。
                   </>
                 }
               />
@@ -2976,10 +2985,10 @@ export default function KnapsackChapter() {
                   and amount 5. Coins on the outside means the passes happen in a
                   fixed order —{" "}
                   <strong>
-                    first count every way that uses only ¥1, then bring in ¥2, then
-                    ¥5
+                    first count every way that uses only $1, then bring in $2, then
+                    $5
                   </strong>
-                  . ¥2 always enters after ¥1, so no way is ever counted twice
+                  . $2 always enters after $1, so no way is ever counted twice
                   under a different ordering. Step through it:
                 </>
               }
@@ -3060,18 +3069,28 @@ class Solution377 {
             note: {
               en: (
                 <>
-                  <b>Overflow in LC 377:</b> the intermediate counts can exceed the
-                  range of a 32-bit int even when the final answer fits.
-                  LeetCode guarantees the final answer fits in an int, so this code
-                  is accepted, but accumulating in <code>long</code> is the safer
-                  habit.
+                  <b>Overflow in LC 377:</b> some intermediate counts do overflow a
+                  32-bit int. With nums = 10, 20, …, 990 plus 111 and target = 999,
+                  the answer is 1, yet dp[990] is about 3.2×10²⁹, too large even
+                  for a <code>long</code>. The code is still correct. A cell that
+                  feeds dp[target] can never hold more than the final answer,
+                  which LeetCode guarantees fits in an int, so the cells that
+                  overflow are never added into it; in Java they simply wrap
+                  around. Switching to <code>long</code> would therefore change
+                  nothing. In C++, signed overflow is
+                  undefined behavior, which is why C++ solutions use an unsigned
+                  type here.
                 </>
               ),
               zh: (
                 <>
-                  <b>LC 377 的溢出:</b>即使最终答案在 32 位 int 范围内,
-                  中间的累加值也可能超出。LeetCode 保证最终答案能放进 int,
-                  所以这份代码能通过,但用 <code>long</code> 累加是更稳妥的习惯。
+                  <b>LC 377 的溢出:</b>中间格子确实会超出 32 位 int。
+                  nums 为 10、20、…、990 再加 111,target = 999 时,答案是 1,
+                  dp[990] 却约为 3.2×10²⁹,连 <code>long</code> 也放不下。
+                  但这份代码仍然正确:能累加进 dp[target] 的格子,计数都不超过最终答案,
+                  而 LeetCode 保证最终答案能放进 int,所以溢出的格子根本不会被加进去;
+                  Java 的 int 溢出也只是回绕。因此改用 <code>long</code> 并不能改变什么。
+                  C++ 中有符号整数溢出是未定义行为,所以 C++ 写法在这里要用无符号类型。
                 </>
               ),
             },

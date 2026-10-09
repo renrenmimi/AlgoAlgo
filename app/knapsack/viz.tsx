@@ -12,7 +12,7 @@
 // where a plain string is required (aria-label), resolve it with useL().
 
 import { useMemo, useState, type ReactNode } from "react";
-import { useStepper, StepControls } from "@/lib/stepper";
+import { useStepper, StepControls, useEdgeFade } from "@/lib/stepper";
 import {
   TreePlayer,
   type TreeNodeSpec,
@@ -48,6 +48,9 @@ export function KnapSackLab() {
     LAB_ITEMS.map(() => false),
   );
   const [revealed, setRevealed] = useState(false);
+  // The control bar names the best value only once the reader has asked for it
+  // (and until "Clear all"), so the answer is not given away up front.
+  const [bestShown, setBestShown] = useState(false);
 
   const weight = useMemo(
     () => LAB_ITEMS.reduce((s, it, i) => s + (picked[i] ? it.w : 0), 0),
@@ -203,7 +206,7 @@ export function KnapSackLab() {
             }
             zh={
               <>
-                当前不超重的价值:<b>{value}</b>。觉得到顶了?点「看最优」对答案。
+                当前不超重的价值:<b>{value}</b>。觉得已经是最大值了?点「看最优」核对。
               </>
             }
           />
@@ -216,6 +219,7 @@ export function KnapSackLab() {
           onClick={() => {
             setPicked(LAB_ITEMS.map(() => false));
             setRevealed(false);
+            setBestShown(false);
           }}
         >
           <T en="Clear all" zh="清空重来" />
@@ -223,7 +227,10 @@ export function KnapSackLab() {
         <button
           type="button"
           className="btn btn-sm btn-primary"
-          onClick={() => setRevealed(true)}
+          onClick={() => {
+            setRevealed(true);
+            setBestShown(true);
+          }}
         >
           <T en="Show the best" zh="看最优" />
         </button>
@@ -233,6 +240,7 @@ export function KnapSackLab() {
           onClick={() => {
             setPicked(LAB_ITEMS.map((_, i) => BEST_SET.includes(i)));
             setRevealed(true);
+            setBestShown(true);
           }}
         >
           <T en="Pick the best set" zh="一键最优" />
@@ -241,12 +249,14 @@ export function KnapSackLab() {
           <T
             en={
               <>
-                capacity {CAP} · best {BEST_V}
+                capacity {CAP}
+                {bestShown && <> · best {BEST_V}</>}
               </>
             }
             zh={
               <>
-                容量 {CAP} · 最优 {BEST_V}
+                容量 {CAP}
+                {bestShown && <> · 最优 {BEST_V}</>}
               </>
             }
           />
@@ -418,7 +428,7 @@ function buildFwd(): RollFrame[] {
           zh={
             <>
               ⚠️ dp[{j}]:读 dp[{r}] = <b>{dp[r]}</b> —— 它<b>本轮刚被改成 {dp[r]}</b>,
-              里面<b>已经含一件</b>本物品!dp[{j}] = max({prev}, {dp[r]}+{RV}) ={" "}
+              里面<b>已经含一件</b>本物品。dp[{j}] = max({prev}, {dp[r]}+{RV}) ={" "}
               <b>{dp[j]}</b> —— 同一件物品被算了<b>两次</b> ✗。
             </>
           }
@@ -476,10 +486,13 @@ const FWD_FRAMES = buildFwd();
 
 function RollPlayer({ frames }: { frames: RollFrame[] }) {
   const stepper = useStepper(frames.length, 1300);
+  const edge = useEdgeFade<HTMLDivElement>();
   const f = frames[stepper.step];
   return (
     <>
       <div
+        ref={edge.ref}
+        data-fade={edge.fade}
         className="viz-stage"
         style={{ flexDirection: "column", gap: 6, overflowX: "auto" }}
       >
