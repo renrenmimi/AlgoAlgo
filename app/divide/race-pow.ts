@@ -1,7 +1,7 @@
 // Fast-exponentiation race: contenders, input shapes and metric labels.
 //
 // Kept apart from page.tsx so the counting logic can be imported by tests without
-// pulling in React. The verdict copy stays in page.tsx because it renders JSX.
+// pulling in React. The verdict copy lives in viz.tsx because it renders JSX.
 
 import type { RaceAlgo, RaceInput, RaceMetric } from "@/lib/race";
 import type { Tracer } from "@/lib/race-core";

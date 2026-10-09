@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LangProvider } from "@/lib/i18n";
@@ -7,18 +7,6 @@ import { BitLamps } from "@/app/bits/viz";
 // The bit-lamp lab (chapter 04, §01) must behave like a 32-bit int register:
 // +1 past the largest int and −1 past the smallest one wrap around, and the
 // decimal reading, the sign lamp and the explanation agree with the lamps.
-
-// jsdom has no ResizeObserver; the lamp stage uses one to fade its scrollable edge.
-beforeAll(() => {
-  vi.stubGlobal(
-    "ResizeObserver",
-    class {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-    },
-  );
-});
 
 function renderLamps() {
   const { container } = render(

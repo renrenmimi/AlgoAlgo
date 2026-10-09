@@ -202,10 +202,10 @@ argues with data instead of intuition.
 6. **Same problem, several models** (lc.md rule 2 names 23 / 37 / 122 / 200 / 215 / 264 /
    322 / 718): model it one way in one chapter and another way elsewhere, and
    cross-reference the two (322 is min-DP in chapter 07 and unbounded knapsack in 08).
-7. **A problem set of 8–16 items**, easy to hard, tagged by technique; a problem already
+7. **A problem set of 7–18 items**, easy to hard, tagged by technique; a problem already
    taught elsewhere gets the tag "review".
-8. **A quiz of 6–8 questions**, mixed types, with targeted feedback on every wrong option.
-9. **KeyPoints** (5–7 items, key phrases in bold) + `<ChapterFooter />`.
+8. **A quiz of 6–9 questions**, mixed types, with targeted feedback on every wrong option.
+9. **KeyPoints** (5–8 items, key phrases in bold) + `<ChapterFooter />`.
 10. Callouts throughout: `deep` for engineering reality (where this algorithm actually
     runs in production), `warn` for common mistakes, `story` for history and anecdotes,
     `win` for interview phrasing and follow-ups.
