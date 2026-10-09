@@ -270,6 +270,13 @@ voice stays professional, composed and concise.
 
 ## JSX copy notes
 
+- Keep a Chinese sentence in JSX on one line, or break it only next to a tag or a `{…}`
+  expression. JSX joins the lines of a text block with a space, and Chinese shows it as a
+  stray gap ("算。 建议"). For the same reason, write no space between Chinese text and a tag
+  whose text is Chinese (「叫<b>前缀函数</b>」, not 「叫 <b>前缀函数</b>」). Spaces belong only
+  between Chinese and Latin letters, digits or expressions ("第 3 章", "O(1) 随机访问"),
+  around "——" and around math operators — never after full-width punctuation.
+  `test/unit/zh-copy-spacing.test.ts` fails on any other.
 - In Chinese copy use the Chinese quotation marks 「」 and "" directly; do not escape
   English quotes.
 - Less-than and greater-than must be written `&lt;` and `&gt;` (for example sum &lt; target).

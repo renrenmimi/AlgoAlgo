@@ -64,9 +64,7 @@ const KOKO_FRAMES: RangeFrame[] = [
         }
         zh={
           <>
-            候选吃速 1~11 根/时。上界取 11(最大的一堆):每小时只吃一堆,
-            速度超过 11 之后每堆仍然要占满一小时,再快也没有意义。
-            速度越快,总用时不会变多 —— 判定「能否在 h 小时内吃完」对 k
+            候选吃速 1~11 根/时。上界取 11(最大的一堆):每小时只吃一堆,速度超过 11 之后每堆仍然要占满一小时,再快也没有意义。速度越快,总用时不会变多 —— 判定「能否在 h 小时内吃完」对 k
             是<b>单调</b>的,于是可以二分。
           </>
         }
@@ -91,9 +89,7 @@ const KOKO_FRAMES: RangeFrame[] = [
         }
         zh={
           <>
-            试 k=6:各堆用时 ⌈3/6⌉+⌈6/6⌉+⌈7/6⌉+⌈11/6⌉ = 1+1+2+2 = <b>6</b> ≤ 8,
-            吃得完 ✓。由单调性,比 6 更快的速度也都可行,所以把 6 记为当前最优候选、
-            整体丢掉右半,再往更小的方向找:hi = 5。
+            试 k=6:各堆用时 ⌈3/6⌉+⌈6/6⌉+⌈7/6⌉+⌈11/6⌉ = 1+1+2+2 = <b>6</b> ≤ 8,吃得完 ✓。由单调性,比 6 更快的速度也都可行,所以把 6 记为当前最优候选、整体丢掉右半,再往更小的方向找:hi = 5。
           </>
         }
       />
@@ -115,8 +111,7 @@ const KOKO_FRAMES: RangeFrame[] = [
         }
         zh={
           <>
-            试 k=3:1+2+3+4 = <b>10</b> &gt; 8,吃不完 ✗。比 3 更慢的速度更不可行,
-            一并淘汰,lo = 4。
+            试 k=3:1+2+3+4 = <b>10</b> &gt; 8,吃不完 ✗。比 3 更慢的速度更不可行,一并淘汰,lo = 4。
           </>
         }
       />
@@ -138,8 +133,7 @@ const KOKO_FRAMES: RangeFrame[] = [
         }
         zh={
           <>
-            试 k=4:1+2+2+3 = <b>8</b> ≤ 8,刚好吃完 ✓。把 4 记为当前最优候选,
-            再继续往更小的方向找:hi = 3。
+            试 k=4:1+2+2+3 = <b>8</b> ≤ 8,刚好吃完 ✓。把 4 记为当前最优候选,再继续往更小的方向找:hi = 3。
           </>
         }
       />
@@ -163,8 +157,7 @@ const KOKO_FRAMES: RangeFrame[] = [
         zh={
           <>
             区间被挤空(lo=4 &gt; hi=3),循环结束,ans 停在最后一次记录的
-            <b> k = 4</b> —— 它就是「能在 8 小时吃完」的最小速度。
-            全程没有直接计算答案,只问了三次「这个速度行不行」—— 这就是二分答案。
+            <b> k = 4</b> —— 它就是「能在 8 小时吃完」的最小速度。全程没有直接计算答案,只问了三次「这个速度行不行」—— 这就是二分答案。
           </>
         }
       />
@@ -221,12 +214,8 @@ export default function BinaryChapter() {
           ),
           zh: (
             <>
-              二分通常被介绍成「在有序数组里找一个数」,那只是其中一种情形。
-              它真正需要的是
-              <strong>一个只从「否」翻到「是」一次、之后不再翻回去的判定</strong>。
-              本章从一个模板和一套区间约定出发,依次走过找边界、旋转数组、峰值,
-              最后抵达<strong>二分答案</strong>:把一道求最优值的难题,
-              翻译成一小串是非判断。
+              二分通常被介绍成「在有序数组里找一个数」,那只是其中一种情形。它真正需要的是
+              <strong>一个只从「否」翻到「是」一次、之后不再翻回去的判定</strong>。本章从一个模板和一套区间约定出发,依次走过找边界、旋转数组、峰值,最后抵达<strong>二分答案</strong>:把一道求最优值的难题,翻译成一小串是非判断。
             </>
           ),
         }}
@@ -261,11 +250,7 @@ export default function BinaryChapter() {
               }
               zh={
                 <>
-                  二分查找(binary search)作用在一个有序序列上:
-                  拿<strong>正中间</strong>的元素和目标比一下,
-                  这一次比较就能判断答案在左半还是右半,于是一半候选立刻消失。
-                  100 个数最多问 7 次(⌈log₂100⌉),10 亿个数也不过 30 次。
-                  先亲手感受一下:
+                  二分查找(binary search)作用在一个有序序列上:拿<strong>正中间</strong>的元素和目标比一下,这一次比较就能判断答案在左半还是右半,于是一半候选立刻消失。100 个数最多问 7 次(⌈log₂100⌉),10 亿个数也不过 30 次。先亲手感受一下:
                 </>
               }
             />
@@ -290,9 +275,7 @@ export default function BinaryChapter() {
               zh={
                 <>
                   思路好说,代码难写。第一次动手时,大多数人写出的是
-                  <strong>死循环</strong>或<strong>差一错误(off-by-one)</strong>。
-                  这一点有据可查:Jon Bentley 在《编程珠玑》里报告过,
-                  他给职业程序员几个小时写一个二分查找,
+                  <strong>死循环</strong>或<strong>差一错误(off-by-one)</strong>。这一点有据可查:Jon Bentley 在《编程珠玑》里报告过,他给职业程序员几个小时写一个二分查找,
                   <strong>写对的不到一成</strong>。所以不要靠感觉写,要靠约定写。
                 </>
               }
@@ -321,8 +304,7 @@ export default function BinaryChapter() {
                   <strong>
                     不变量是:如果 target 在数组里,它的下标一定在 [lo, hi] 内
                   </strong>
-                  。已经丢掉的部分,都是被证明过不可能是答案的。
-                  循环条件和两条更新,全都从这一句推导出来:
+                  。已经丢掉的部分,都是被证明过不可能是答案的。循环条件和两条更新,全都从这一句推导出来:
                 </>
               }
             />
@@ -339,8 +321,7 @@ export default function BinaryChapter() {
                 }
                 zh={
                   <>
-                    [lo, hi] 非空当且仅当 <code>lo &lt;= hi</code>,
-                    所以循环条件就是它。lo == hi 时区间里还剩一个元素要查。
+                    [lo, hi] 非空当且仅当 <code>lo &lt;= hi</code>,所以循环条件就是它。lo == hi 时区间里还剩一个元素要查。
                   </>
                 }
               />
@@ -356,9 +337,7 @@ export default function BinaryChapter() {
                 }
                 zh={
                   <>
-                    若 <code>nums[mid] &lt; target</code>,则 mid 及其左边的值
-                    全都小于 target,答案只可能落在 [mid+1, hi],
-                    所以 <code>lo = mid + 1</code>。
+                    若 <code>nums[mid] &lt; target</code>,则 mid 及其左边的值全都小于 target,答案只可能落在 [mid+1, hi],所以 <code>lo = mid + 1</code>。
                   </>
                 }
               />
@@ -397,12 +376,9 @@ export default function BinaryChapter() {
               }
               zh={
                 <>
-                  <b>为什么一定会结束:</b>mid 永远落在 [lo, hi] 内,
-                  而两条更新都越过了 mid,所以每一轮至少删掉 mid 这一格,
-                  hi − lo 严格变小,有限步内区间必然变空。
-                  同时每一轮还砍掉了剩余部分的一半左右,所以循环大约执行 log₂n 次。
-                  <b>时间 <BigO o="logn" />。</b>迭代写法只维护两个数,
-                  额外空间 <BigO o="1" />;写成递归则调用栈深 <BigO o="logn" />。
+                  <b>为什么一定会结束:</b>mid 永远落在 [lo, hi] 内,而两条更新都越过了 mid,所以每一轮至少删掉 mid 这一格,
+                  hi − lo 严格变小,有限步内区间必然变空。同时每一轮还砍掉了剩余部分的一半左右,所以循环大约执行 log₂n 次。
+                  <b>时间 <BigO o="logn" />。</b>迭代写法只维护两个数,额外空间 <BigO o="1" />;写成递归则调用栈深 <BigO o="logn" />。
                 </>
               }
             />
@@ -428,15 +404,11 @@ export default function BinaryChapter() {
               }
               zh={
                 <>
-                  还有第二套约定:<strong>半开区间 [lo, hi)</strong>,
-                  其中 hi 指向最后一个候选的<i>下一个</i>位置。推导方式完全一样:
+                  还有第二套约定:<strong>半开区间 [lo, hi)</strong>,其中 hi 指向最后一个候选的<i>下一个</i>位置。推导方式完全一样:
                   [lo, hi) 非空的条件是 <code>lo &lt; hi</code>,所以循环写
                   <code>while (lo &lt; hi)</code>;丢掉右半时写 <code>hi = mid</code>
-                  而不是 <code>mid - 1</code>,因为 hi 本来就在区间之外;
-                  丢掉左半仍然是 <code>lo = mid + 1</code>。
-                  两套约定都对,<strong>把它们混用才是那个经典 bug</strong> ——
-                  <code>while (lo &lt;= hi)</code> 配 <code>hi = mid</code> 永远停不下来。
-                  选一套,其余全部由它推出。下文一律使用闭区间。
+                  而不是 <code>mid - 1</code>,因为 hi 本来就在区间之外;丢掉左半仍然是 <code>lo = mid + 1</code>。两套约定都对,<strong>把它们混用才是那个经典 bug</strong> ——
+                  <code>while (lo &lt;= hi)</code> 配 <code>hi = mid</code> 永远停不下来。选一套,其余全部由它推出。下文一律使用闭区间。
                 </>
               }
             />
@@ -540,9 +512,7 @@ export default function BinaryChapter() {
               ),
               zh: (
                 <>
-                  Python 整数是任意精度,<code>lo + hi</code> 不会溢出,
-                  在这里写 <code>(lo + hi) // 2</code> 也安全。
-                  但保持 <code>lo + (hi - lo) // 2</code> 的习惯仍然值得 ——
+                  Python 整数是任意精度,<code>lo + hi</code> 不会溢出,在这里写 <code>(lo + hi) // 2</code> 也安全。但保持 <code>lo + (hi - lo) // 2</code> 的习惯仍然值得 ——
                   同一段代码搬到 Java / C++ 也不会出错。
                 </>
               ),
@@ -587,12 +557,8 @@ export default function BinaryChapter() {
               ),
               zh: (
                 <>
-                  JavaScript 的数字是双精度浮点,能精确表示 2⁵³ 以内的所有整数,
-                  所以 <code>Math.floor((lo + hi) / 2)</code> 同样安全。
-                  不安全的是 <code>(lo + hi) &gt;&gt; 1</code>:
-                  <code>&gt;&gt;</code> 会先把操作数转成 32 位整数,
-                  一旦数值超过 2³¹ 就会悄悄算错。二分答案时值域可能真有这么大,
-                  所以别用位移。
+                  JavaScript 的数字是双精度浮点,能精确表示 2⁵³ 以内的所有整数,所以 <code>Math.floor((lo + hi) / 2)</code> 同样安全。不安全的是 <code>(lo + hi) &gt;&gt; 1</code>:
+                  <code>&gt;&gt;</code> 会先把操作数转成 32 位整数,一旦数值超过 2³¹ 就会悄悄算错。二分答案时值域可能真有这么大,所以别用位移。
                 </>
               ),
             },
@@ -623,8 +589,7 @@ export default function BinaryChapter() {
                 zh={
                   <>
                     用闭区间 <code>[lo, hi]</code> 时,循环必须写{" "}
-                    <code>lo &lt;= hi</code> —— lo == hi 时区间里还有一个元素没查。
-                    写成 <code>lo &lt; hi</code> 就会漏掉它。半开区间另有一套配对写法。
+                    <code>lo &lt;= hi</code> —— lo == hi 时区间里还有一个元素没查。写成 <code>lo &lt; hi</code> 就会漏掉它。半开区间另有一套配对写法。
                     <b>选一种,全程一致。</b>
                   </>
                 }
@@ -653,8 +618,7 @@ export default function BinaryChapter() {
                 zh={
                   <>
                     在 Java / C++ 这类定长整型语言里,<code>(lo + hi) / 2</code>{" "}
-                    可能溢出。写 <code>lo + (hi - lo) / 2</code>:取值相同,不会越界。
-                    Python 整数不会溢出,JavaScript 在 2⁵³ 以内精确 ——
+                    可能溢出。写 <code>lo + (hi - lo) / 2</code>:取值相同,不会越界。Python 整数不会溢出,JavaScript 在 2⁵³ 以内精确 ——
                     但那里的 <code>&gt;&gt;</code> 会截成 32 位,别用。
                   </>
                 }
@@ -682,10 +646,8 @@ export default function BinaryChapter() {
                 }
                 zh={
                   <>
-                    <code>mid</code> 向下取整,所以 hi == lo 或 hi == lo+1 时 mid == lo。
-                    在 <code>while (lo &lt;= hi)</code> 下,一旦 lo == hi,
-                    <code>hi = mid</code> 只是把 hi 写回原值 —— <b>死循环</b>;
-                    在 <code>while (lo &lt; hi)</code> 下,hi == lo+1 时{" "}
+                    <code>mid</code> 向下取整,所以 hi == lo 或 hi == lo+1 时 mid == lo。在 <code>while (lo &lt;= hi)</code> 下,一旦 lo == hi,
+                    <code>hi = mid</code> 只是把 hi 写回原值 —— <b>死循环</b>;在 <code>while (lo &lt; hi)</code> 下,hi == lo+1 时{" "}
                     <code>lo = mid</code> 同理。每个分支都必须越过 mid。
                   </>
                 }
@@ -721,14 +683,10 @@ export default function BinaryChapter() {
               }
               zh={
                 <>
-                  2006 年,Joshua Bloch 发表了
-                  《Extra, Extra — Read All About It: Nearly All Binary Searches
+                  2006 年,Joshua Bloch 发表了《Extra, Extra — Read All About It: Nearly All Binary Searches
                   and Mergesorts Are Broken》。他指出{" "}
                   <code>java.util.Arrays.binarySearch</code> 里算的是{" "}
-                  <code>(low + high) / 2</code>,数组一大就会溢出成负数。
-                  这段代码已经发布了约<b>九年</b>,同一行还被抄进了许多教科书。
-                  修复只有一行:<code>low + (high - low) / 2</code>。
-                  二分难的地方,永远是边界。
+                  <code>(low + high) / 2</code>,数组一大就会溢出成负数。这段代码已经发布了约<b>九年</b>,同一行还被抄进了许多教科书。修复只有一行:<code>low + (high - low) / 2</code>。二分难的地方,永远是边界。
                 </>
               }
             />
@@ -753,10 +711,7 @@ export default function BinaryChapter() {
               }
               zh={
                 <>
-                  边界的事说清了,剩下的是本节开头那句断言 —— 砍半比逐个看快。
-                  这种断言值得量一次,而不是再重复一遍。
-                  下面把同一个有序数组、同一个目标,同时交给线性扫描和两种二分写法,
-                  每一次比较都记账。只有两个计数器:<b>比较次数</b>与<b>额外空间</b> ——
+                  边界的事说清了,剩下的是本节开头那句断言 —— 砍半比逐个看快。这种断言值得量一次,而不是再重复一遍。下面把同一个有序数组、同一个目标,同时交给线性扫描和两种二分写法,每一次比较都记账。只有两个计数器:<b>比较次数</b>与<b>额外空间</b> ——
                   查找不往数组里写任何东西,所以没有「移动次数」可报。
                 </>
               }
@@ -767,7 +722,7 @@ export default function BinaryChapter() {
         <AlgoRace
           title={{
             en: "Race · scanning versus halving, on the same sorted array",
-            zh: "竞速 · 同一个有序数组上,逐个看 对 砍半",
+            zh: "竞速 · 同一个有序数组上,逐个查找与每次砍半",
           }}
           algos={SEARCH_ALGOS}
           inputs={SEARCH_SHAPES}
@@ -801,14 +756,9 @@ export default function BinaryChapter() {
                 ),
                 zh: (
                   <>
-                    这是线性扫描唯一赢的形状,值得如实说明:目标就在下标 0,
-                    扫描 <b>{lin.cmp} 次比较</b>就回答完了,
-                    而二分仍要从正中间一路走进来,花了 {bin.cmp} 次。
-                    二分从未承诺「在每一份输入上都更快」,它卖的是一个<b>上界</b>:
+                    这是线性扫描唯一赢的形状,值得如实说明:目标就在下标 0,扫描 <b>{lin.cmp} 次比较</b>就回答完了,而二分仍要从正中间一路走进来,花了 {bin.cmp} 次。二分从未承诺「在每一份输入上都更快」,它卖的是一个<b>上界</b>:
                     n = {size} 时,无论目标在哪、甚至根本不在,它都不会超过
-                    ⌊log₂{size}⌋ + 1 = <b>{cap}</b> 次探测。
-                    而扫描在 n 以下没有任何上界 —— 系统容量是按上界规划的,
-                    不是按最幸运的那一份输入。
+                    ⌊log₂{size}⌋ + 1 = <b>{cap}</b> 次探测。而扫描在 n 以下没有任何上界 —— 系统容量是按上界规划的,不是按最幸运的那一份输入。
                   </>
                 ),
               };
@@ -833,10 +783,8 @@ export default function BinaryChapter() {
                     这一栏没有运气可讲:目标不在数组里。扫描必须把 <b>{lin.cmp}</b>{" "}
                     个元素全部看过,才有资格回答「不存在」——
                     只要还有一个没看,那一个就可能是答案。二分用 <b>{bin.cmp}</b>{" "}
-                    次探测得到同一结论,且永远不超过 ⌊log₂{size}⌋ + 1 = {cap} 次,
-                    因为它每次排除的是一整个半区,靠的是一条已知事实 ——「数组有序」——
-                    而不是逐个去看。{lin.cmp} 对 {bin.cmp} 这个差距,
-                    就是<b>有序</b>这两个字的全部价值。
+                    次探测得到同一结论,且永远不超过 ⌊log₂{size}⌋ + 1 = {cap} 次,因为它每次排除的是一整个半区,靠的是一条已知事实 ——「数组有序」——
+                    而不是逐个去看。{lin.cmp} 对 {bin.cmp} 这个差距,就是<b>有序</b>这两个字的全部价值。
                   </>
                 ),
               };
@@ -859,12 +807,8 @@ export default function BinaryChapter() {
                 zh: (
                   <>
                     目标恰好就是二分第一次探测的那个元素,所以它 <b>{bin.cmp} 次比较</b>
-                    就结束了 —— 这是它的最好情况;而扫描仍要走半个数组,花 {lin.cmp} 次。
-                    额外空间那一栏容易被误读,提醒一句:扫描持有一个下标,
-                    迭代二分持有 lo 和 hi,而递归在这里只用了 {rec.space} 个栈帧 ——
-                    只是因为它一层都不必往下走。差一个变量说明不了任何问题,
-                    这个形状下三者都是 O(1)。换到任何别的形状,
-                    就能看见递归那一条爬向 log₂n 个栈帧。
+                    就结束了 —— 这是它的最好情况;而扫描仍要走半个数组,花 {lin.cmp} 次。额外空间那一栏容易被误读,提醒一句:扫描持有一个下标,迭代二分持有 lo 和 hi,而递归在这里只用了 {rec.space} 个栈帧 ——
+                    只是因为它一层都不必往下走。差一个变量说明不了任何问题,这个形状下三者都是 O(1)。换到任何别的形状,就能看见递归那一条爬向 log₂n 个栈帧。
                   </>
                 ),
               };
@@ -887,13 +831,10 @@ export default function BinaryChapter() {
               ),
               zh: (
                 <>
-                  目标是最后一个元素,扫描只能把 <b>{lin.cmp}</b> 个元素全看一遍,
-                  而二分 <b>{bin.cmp}</b> 次探测就找到了。倍数不是重点,增长方式才是:
+                  目标是最后一个元素,扫描只能把 <b>{lin.cmp}</b> 个元素全看一遍,而二分 <b>{bin.cmp}</b> 次探测就找到了。倍数不是重点,增长方式才是:
                   n 翻一倍,扫描的最坏情况跟着翻一倍,而二分只多 <b>1</b> 次比较 ——
                   长度翻倍,多砍一刀就砍回来了。把规模一路点上去,
-                  16 → 64 → 256 → 1024 → 4096,4096 次比较变成 13 次。
-                  也请一并看额外空间:迭代版在任何 n 下都只持有两个数,
-                  递归版持有 <b>{rec.space}</b> 个栈帧 ——
+                  16 → 64 → 256 → 1024 → 4096,4096 次比较变成 13 次。也请一并看额外空间:迭代版在任何 n 下都只持有两个数,递归版持有 <b>{rec.space}</b> 个栈帧 ——
                   这就是「代码更整洁」要付的 O(log n),n 足够大时,栈溢出就是从这里来的。
                 </>
               ),
@@ -919,11 +860,7 @@ export default function BinaryChapter() {
               zh={
                 <>
                   从这些数字里带走两个习惯。第一,引用复杂度之前先说清输入形状:
-                  O(log n) 说的是最坏情况,而容量是按最坏情况规划的。
-                  第二,有序数组不是白来的 —— 总得有人先付一次 O(n log n) 把它排好;
-                  查一次收不回这笔钱,在同一个数组上查一百万次就轻松回本。
-                  这笔账正是有序索引值得建立的原因之一。
-                  而本章接下来要处理的,是那些「有序」远没有上面这么显然的数组。
+                  O(log n) 说的是最坏情况,而容量是按最坏情况规划的。第二,有序数组不是白来的 —— 总得有人先付一次 O(n log n) 把它排好;查一次收不回这笔钱,在同一个数组上查一百万次就轻松回本。这笔账正是有序索引值得建立的原因之一。而本章接下来要处理的,是那些「有序」远没有上面这么显然的数组。
                 </>
               }
             />
@@ -959,9 +896,7 @@ export default function BinaryChapter() {
               }
               zh={
                 <>
-                  精确查找有个软肋:数组里有<strong>重复元素</strong>时,
-                  它返回的是碰巧命中的那个下标。而很多题要的是「第一个」或「最后一个」。
-                  两把精确的尺子几乎能覆盖所有这类问题:
+                  精确查找有个软肋:数组里有<strong>重复元素</strong>时,它返回的是碰巧命中的那个下标。而很多题要的是「第一个」或「最后一个」。两把精确的尺子几乎能覆盖所有这类问题:
                 </>
               }
             />
@@ -981,8 +916,7 @@ export default function BinaryChapter() {
                 zh={
                   <>
                     <strong>lower_bound(t)</strong> = <strong>第一个 ≥ t</strong>{" "}
-                    的元素下标,也等于「比 t 小的元素个数」。
-                    若所有元素都比 t 小,它返回 <code>n</code>(数组长度)——
+                    的元素下标,也等于「比 t 小的元素个数」。若所有元素都比 t 小,它返回 <code>n</code>(数组长度)——
                     也就是末尾的下一个位置。
                   </>
                 }
@@ -1001,8 +935,7 @@ export default function BinaryChapter() {
                 zh={
                   <>
                     <strong>upper_bound(t)</strong> = <strong>第一个 &gt; t</strong>{" "}
-                    的元素下标,也等于「≤ t 的元素个数」。
-                    若所有元素都 ≤ t,它同样返回 <code>n</code>。
+                    的元素下标,也等于「≤ t 的元素个数」。若所有元素都 ≤ t,它同样返回 <code>n</code>。
                   </>
                 }
               />
@@ -1023,10 +956,8 @@ export default function BinaryChapter() {
               zh={
                 <>
                   其余问题都由它们导出:t 的出现次数是{" "}
-                  <code>upper_bound(t) − lower_bound(t)</code>,为 0 就说明 t 不存在;
-                  第一次出现的位置是 <code>lower_bound(t)</code> ——
-                  但要先确认这个下标小于 n、且那里的值确实等于 t;
-                  确认之后,最后一次出现的位置是 <code>upper_bound(t) − 1</code>。
+                  <code>upper_bound(t) − lower_bound(t)</code>,为 0 就说明 t 不存在;第一次出现的位置是 <code>lower_bound(t)</code> ——
+                  但要先确认这个下标小于 n、且那里的值确实等于 t;确认之后,最后一次出现的位置是 <code>upper_bound(t) − 1</code>。
                 </>
               }
             />
@@ -1048,9 +979,7 @@ export default function BinaryChapter() {
               zh={
                 <>
                   两者用同一个模板写成:
-                  <strong>闭区间 + 一个候选变量</strong>。
-                  判定通过就把当前 mid 记进 <code>ans</code>,
-                  再朝想要的方向继续挤。不变量是:<code>ans</code>{" "}
+                  <strong>闭区间 + 一个候选变量</strong>。判定通过就把当前 mid 记进 <code>ans</code>,再朝想要的方向继续挤。不变量是:<code>ans</code>{" "}
                   是目前找到的最好下标,而更好的下标(如果有)一定还在 [lo, hi] 内。
                   <code>ans</code> 初值取 <code>n</code>,「一个都不满足」的情形才会正确。
                 </>
@@ -1074,10 +1003,9 @@ export default function BinaryChapter() {
                 <>
                   <b>LC 34:</b>在升序数组里返回 target 的
                   <strong>第一个和最后一个下标</strong>,不存在返回 [−1, −1]。
-                  <b> 暴力:</b>先找到任意一个匹配,再向左右线性扩张 ——
+                  <b>暴力:</b>先找到任意一个匹配,再向左右线性扩张 ——
                   全是 target 时退化到 O(n),也白白浪费了有序性。
-                  <b> 正解:</b>左边界 = lower_bound(target);
-                  右边界 = 「第一个大于 target 的下标」再退一格。逐帧看:
+                  <b>正解:</b>左边界 = lower_bound(target);右边界 = 「第一个大于 target 的下标」再退一格。逐帧看:
                 </>
               }
             />
@@ -1101,11 +1029,8 @@ export default function BinaryChapter() {
               }
               zh={
                 <>
-                  注意动画里的巧思:「第一个 &gt; 8」和「第一个 ≥ 9」是同一个位置,
-                  所以 <code>upper_bound(t) = lower_bound(t + 1)</code>。
-                  这个改写成立,是因为元素是<strong>整数</strong> ——
-                  t + 1 恰好是「下一个可能取值」;换成浮点数据就必须真写一个 upper_bound。
-                  在整数上,一个 lower_bound 函数就能给出两个边界:
+                  注意动画里的巧思:「第一个 &gt; 8」和「第一个 ≥ 9」是同一个位置,所以 <code>upper_bound(t) = lower_bound(t + 1)</code>。这个改写成立,是因为元素是<strong>整数</strong> ——
+                  t + 1 恰好是「下一个可能取值」;换成浮点数据就必须真写一个 upper_bound。在整数上,一个 lower_bound 函数就能给出两个边界:
                 </>
               }
             />
@@ -1170,8 +1095,7 @@ export default function BinaryChapter() {
               zh: (
                 <>
                   <b>核心动作:</b><code>ans = mid; hi = mid - 1;</code> ——
-                  记下候选,再往左找更早的。想找最后一个满足的下标,就记下候选后往右挤。
-                  本章所有找边界的写法,都是这两者之一。
+                  记下候选,再往左找更早的。想找最后一个满足的下标,就记下候选后往右挤。本章所有找边界的写法,都是这两者之一。
                 </>
               ),
             },
@@ -1225,8 +1149,7 @@ export default function BinaryChapter() {
               zh: (
                 <>
                   标准库里两者都有:<code>bisect.bisect_left</code> 就是 lower_bound,
-                  <code>bisect.bisect_right</code> 就是 upper_bound。
-                  面试中可以直接调用,但至少手写一遍循环 —— 边界是在手写时才真正弄懂的。
+                  <code>bisect.bisect_right</code> 就是 upper_bound。面试中可以直接调用,但至少手写一遍循环 —— 边界是在手写时才真正弄懂的。
                 </>
               ),
             },
@@ -1274,8 +1197,7 @@ export default function BinaryChapter() {
               ),
               zh: (
                 <>
-                  <b>顺序不能反:</b>先判 <code>left === nums.length</code>,
-                  再访问 <code>nums[left]</code>。反过来就会越界读。
+                  <b>顺序不能反:</b>先判 <code>left === nums.length</code>,再访问 <code>nums[left]</code>。反过来就会越界读。
                   <code>||</code> 在第一个为真的操作数处短路,正好保护了后一个判断。
                 </>
               ),
@@ -1309,10 +1231,8 @@ export default function BinaryChapter() {
                   两次二分,时间 <b>O(log n)</b>、空间 <b>O(1)</b>。常见追问:
                   ①「一个函数怎么同时拿到左右界?」—— 就是{" "}
                   <code>lower_bound(t)</code> 与 <code>lower_bound(t+1)-1</code>;
-                  ②「target 出现几次?」—— 右界 − 左界 + 1,
-                  等价于 upper_bound − lower_bound;
-                  ③「LC 35 搜索插入位置怎么做?」—— 答案直接就是 lower_bound(target),
-                  连「是否存在」都不用判。同一个模板,三种用法。
+                  ②「target 出现几次?」—— 右界 − 左界 + 1,等价于 upper_bound − lower_bound;
+                  ③「LC 35 搜索插入位置怎么做?」—— 答案直接就是 lower_bound(target),连「是否存在」都不用判。同一个模板,三种用法。
                 </>
               }
             />
@@ -1356,11 +1276,7 @@ export default function BinaryChapter() {
               zh={
                 <>
                   先纠正一个常见误解:
-                  <strong>二分的前提不是「数组有序」</strong>。
-                  真正的前提是 —— <strong>一次 O(1) 判断就能决定丢掉哪一半</strong>。
-                  换句话说:整个范围能被切成「判定为否的一段」和「判定为是的一段」,
-                  中间只翻转一次。中文里把这个性质叫<strong>二段性</strong>。
-                  有序只是产生二段性最常见的来源,不是唯一来源。
+                  <strong>二分的前提不是「数组有序」</strong>。真正的前提是 —— <strong>一次 O(1) 判断就能决定丢掉哪一半</strong>。换句话说:整个范围能被切成「判定为否的一段」和「判定为是的一段」,中间只翻转一次。中文里把这个性质叫<strong>二段性</strong>。有序只是产生二段性最常见的来源,不是唯一来源。
                 </>
               }
             />
@@ -1384,13 +1300,8 @@ export default function BinaryChapter() {
               }
               zh={
                 <>
-                  <b>LC 33:</b>一个升序数组被<strong>旋转</strong>过
-                  (如 [0,1,2,4,5,6,7] 变成 [4,5,6,7,0,1,2]),要在里面找 target 并返回下标。
-                  数组整体不再有序,精确二分直接失效。
-                  <b> 关键观察:</b>旋转只会造成<strong>一个下跌处</strong>,
-                  所以无论从哪里切,<strong>左右两半里至少有一半是完全有序的</strong>。
-                  先判断哪一半有序,再判断 target 在不在其中,就能安全丢掉一半。
-                  LC 33 保证元素互不相同,这让第一步判断永远不会含糊:
+                  <b>LC 33:</b>一个升序数组被<strong>旋转</strong>过(如 [0,1,2,4,5,6,7] 变成 [4,5,6,7,0,1,2]),要在里面找 target 并返回下标。数组整体不再有序,精确二分直接失效。
+                  <b>关键观察:</b>旋转只会造成<strong>一个下跌处</strong>,所以无论从哪里切,<strong>左右两半里至少有一半是完全有序的</strong>。先判断哪一半有序,再判断 target 在不在其中,就能安全丢掉一半。LC 33 保证元素互不相同,这让第一步判断永远不会含糊:
                 </>
               }
             />
@@ -1412,10 +1323,8 @@ export default function BinaryChapter() {
               }
               zh={
                 <>
-                  判据很短:<code>nums[lo] &lt;= nums[mid]</code> 说明 [lo, mid] 有序,
-                  否则 [mid, hi] 有序。然后拿 target 和<strong>那个有序半</strong>
-                  的两个端点比。在有序的一半里做范围比较是可靠的;
-                  另一半可能含着下跌处,留到下一轮再说。
+                  判据很短:<code>nums[lo] &lt;= nums[mid]</code> 说明 [lo, mid] 有序,否则 [mid, hi] 有序。然后拿 target 和<strong>那个有序半</strong>
+                  的两个端点比。在有序的一半里做范围比较是可靠的;另一半可能含着下跌处,留到下一轮再说。
                 </>
               }
             />
@@ -1474,8 +1383,7 @@ export default function BinaryChapter() {
               ),
               zh: (
                 <>
-                  <b>等号不能少:</b>判据是 <code>nums[lo] &lt;= nums[mid]</code>。
-                  当区间只剩两个元素时 mid 等于 lo,等号让「左半有序」成立 ——
+                  <b>等号不能少:</b>判据是 <code>nums[lo] &lt;= nums[mid]</code>。当区间只剩两个元素时 mid 等于 lo,等号让「左半有序」成立 ——
                   只有一个元素的区间当然有序。写成严格的 <code>&lt;</code>{" "}
                   就会掉进错误的分支。
                 </>
@@ -1618,9 +1526,7 @@ export default function BinaryChapter() {
                 zh={
                   <>
                     拿 <code>nums[mid]</code> 和<b>右端点</b>{" "}
-                    <code>nums[hi]</code> 比:大于就说明最小值严格在右边
-                    (lo = mid+1),否则 hi = mid。收敛到单点即最小值。
-                    改和 <code>nums[lo]</code> 比,会在「实际没旋转」的数组上误判。
+                    <code>nums[hi]</code> 比:大于就说明最小值严格在右边(lo = mid+1),否则 hi = mid。收敛到单点即最小值。改和 <code>nums[lo]</code> 比,会在「实际没旋转」的数组上误判。
                   </>
                 }
               />
@@ -1646,8 +1552,7 @@ export default function BinaryChapter() {
                 }
                 zh={
                   <>
-                    当 <code>a[lo] == a[mid] == a[hi]</code>(如 [1,1,1,0,1])时,
-                    哪一半有序都证不出来。二段性没了,只能{" "}
+                    当 <code>a[lo] == a[mid] == a[hi]</code>(如 [1,1,1,0,1])时,哪一半有序都证不出来。二段性没了,只能{" "}
                     <code>lo++, hi--</code>,最坏退化到 <BigO o="n" />。
                   </>
                 }
@@ -1674,10 +1579,7 @@ export default function BinaryChapter() {
                 }
                 zh={
                   <>
-                    153 的重复版:<code>a[mid] == a[hi]</code> 时无从判断,
-                    只能保守地 <code>hi--</code> 收缩一格;
-                    因为 mid 处还有一份 a[hi] 的副本,最小值一定仍在区间内。
-                    最坏 <BigO o="n" />。
+                    153 的重复版:<code>a[mid] == a[hi]</code> 时无从判断,只能保守地 <code>hi--</code> 收缩一格;因为 mid 处还有一份 a[hi] 的副本,最小值一定仍在区间内。最坏 <BigO o="n" />。
                   </>
                 }
               />
@@ -1712,13 +1614,8 @@ export default function BinaryChapter() {
               zh={
                 <>
                   没有重复时,<code>a[lo]</code> 与 <code>a[mid]</code>{" "}
-                  永远比得出确定的大小,分界每一步都成立,复杂度稳定在 O(log n)。
-                  一旦允许重复,且 <code>a[lo] == a[mid] == a[hi]</code>,
-                  这三个值既符合「左半是一段平坦的有序区」,
-                  也符合「下跌处被相等的值盖住了」—— 两种局面无从区分,
-                  这一步只好放弃砍半,改成两端各删一个元素。
-                  <strong>重复元素正是二分的破绽</strong>;
-                  面试官问「有重复怎么办」时,想听的就是这句话。
+                  永远比得出确定的大小,分界每一步都成立,复杂度稳定在 O(log n)。一旦允许重复,且 <code>a[lo] == a[mid] == a[hi]</code>,这三个值既符合「左半是一段平坦的有序区」,也符合「下跌处被相等的值盖住了」—— 两种局面无从区分,这一步只好放弃砍半,改成两端各删一个元素。
+                  <strong>重复元素正是二分的破绽</strong>;面试官问「有重复怎么办」时,想听的就是这句话。
                 </>
               }
             />
@@ -1762,13 +1659,8 @@ export default function BinaryChapter() {
               zh={
                 <>
                   <b>LC 162 寻找峰值:</b>返回<strong>任意一个</strong>
-                  比左右邻居都大的元素下标。相邻元素不相等,数组外侧视作 −∞。
-                  数组毫无有序性,但<strong>坡的方向</strong>提供了分界:
-                  若 <code>nums[mid] &lt; nums[mid+1]</code>,说明在 mid 处正在上升,
-                  那么 [mid+1, hi] 里<strong>一定</strong>有峰 ——
-                  要么一路升到 hi(它的右邻是 −∞,所以 hi 就是峰),
-                  要么在某处停止上升(那里就是峰)。否则 [lo, mid] 里有峰。
-                  于是「一直往高处走」就能砍半:
+                  比左右邻居都大的元素下标。相邻元素不相等,数组外侧视作 −∞。数组毫无有序性,但<strong>坡的方向</strong>提供了分界:若 <code>nums[mid] &lt; nums[mid+1]</code>,说明在 mid 处正在上升,那么 [mid+1, hi] 里<strong>一定</strong>有峰 ——
+                  要么一路升到 hi(它的右邻是 −∞,所以 hi 就是峰),要么在某处停止上升(那里就是峰)。否则 [lo, mid] 里有峰。于是「一直往高处走」就能砍半:
                 </>
               }
             />
@@ -1816,11 +1708,7 @@ export default function BinaryChapter() {
               ),
               zh: (
                 <>
-                  <b>收敛型模板。</b>目标不是命中某个具体值,而是把区间挤到只剩一个下标,
-                  所以循环写 <code>while (lo &lt; hi)</code>,以 lo == hi 结束。
-                  这里必须写 <code>hi = mid</code>,因为 mid 可能就是峰;
-                  这样写也是安全的:lo &lt; hi 保证 mid &lt; hi,hi 一定变小。
-                  但把这条更新配上 <code>lo &lt;= hi</code>,就会死循环。
+                  <b>收敛型模板。</b>目标不是命中某个具体值,而是把区间挤到只剩一个下标,所以循环写 <code>while (lo &lt; hi)</code>,以 lo == hi 结束。这里必须写 <code>hi = mid</code>,因为 mid 可能就是峰;这样写也是安全的:lo &lt; hi 保证 mid &lt; hi,hi 一定变小。但把这条更新配上 <code>lo &lt;= hi</code>,就会死循环。
                 </>
               ),
             },
@@ -1861,8 +1749,7 @@ export default function BinaryChapter() {
               zh: (
                 <>
                   <b>为什么 nums[mid + 1] 一定不越界:</b>
-                  <code>while lo &lt; hi</code> 保证 mid &lt; hi,
-                  而 hi 是最后一个下标,所以 mid + 1 最多等于 hi,不会摸到数组外。
+                  <code>while lo &lt; hi</code> 保证 mid &lt; hi,而 hi 是最后一个下标,所以 mid + 1 最多等于 hi,不会摸到数组外。
                 </>
               ),
             },
@@ -1904,8 +1791,7 @@ export default function BinaryChapter() {
                 <>
                   <b>LC 852 用同一段代码,一字不改。</b>
                   山脉数组先严格升后严格降,所以{" "}
-                  <code>nums[mid] &lt; nums[mid+1]</code> 在上升段为真、
-                  从峰顶起为假 —— 恰好只翻转一次。852 保证唯一峰,
+                  <code>nums[mid] &lt; nums[mid+1]</code> 在上升段为真、从峰顶起为假 —— 恰好只翻转一次。852 保证唯一峰,
                   162 允许多峰、任取其一。
                 </>
               ),
@@ -1924,8 +1810,7 @@ export default function BinaryChapter() {
               }
               zh={
                 <>
-                  再看二维。矩阵搜索有两种<strong>本质不同</strong>的题型,
-                  区别在于「有序覆盖到多大范围」:
+                  再看二维。矩阵搜索有两种<strong>本质不同</strong>的题型,区别在于「有序覆盖到多大范围」:
                 </>
               }
             />
@@ -1954,9 +1839,7 @@ export default function BinaryChapter() {
                 }
                 zh={
                   <>
-                    每行递增,且<b>下一行开头 &gt; 上一行结尾</b>。
-                    把 m×n 逐行接起来就是一条严格递增的数组。
-                    在 [0, mn−1] 上二分,再用 <code>mid/n</code>、
+                    每行递增,且<b>下一行开头 &gt; 上一行结尾</b>。把 m×n 逐行接起来就是一条严格递增的数组。在 [0, mn−1] 上二分,再用 <code>mid/n</code>、
                     <code>mid%n</code> 还原成行列。<BigO o="logn" label="O(log mn)" />。
                   </>
                 }
@@ -1985,9 +1868,7 @@ export default function BinaryChapter() {
                 }
                 zh={
                   <>
-                    只保证<b>行内、列内</b>各自递增,行与行之间不衔接。
-                    拉直后并不有序,单次二分会漏解。站在<b>右上角</b>:
-                    比目标大就左移(排掉一列),小就下移(排掉一行)。
+                    只保证<b>行内、列内</b>各自递增,行与行之间不衔接。拉直后并不有序,单次二分会漏解。站在<b>右上角</b>:比目标大就左移(排掉一列),小就下移(排掉一行)。
                     <BigO o="n" label="O(m + n)" />。
                   </>
                 }
@@ -2042,9 +1923,7 @@ export default function BinaryChapter() {
               ),
               zh: (
                 <>
-                  <b>换算关系:</b>第 mid 个元素在第 <code>mid / n</code> 行、
-                  第 <code>mid % n</code> 列,其中 n 是<b>列数</b>。
-                  拿行数去除是最常见的错误。
+                  <b>换算关系:</b>第 mid 个元素在第 <code>mid / n</code> 行、第 <code>mid % n</code> 列,其中 n 是<b>列数</b>。拿行数去除是最常见的错误。
                 </>
               ),
             },
@@ -2094,9 +1973,7 @@ export default function BinaryChapter() {
               ),
               zh: (
                 <>
-                  <b>对照 240:</b>若矩阵只保证行内、列内有序,
-                  这段代码会漏解 —— 因为拉直后不是有序序列。
-                  先辨清是哪一类矩阵,再选模板。
+                  <b>对照 240:</b>若矩阵只保证行内、列内有序,这段代码会漏解 —— 因为拉直后不是有序序列。先辨清是哪一类矩阵,再选模板。
                 </>
               ),
             },
@@ -2143,8 +2020,7 @@ export default function BinaryChapter() {
               ),
               zh: (
                 <>
-                  <b>细节:</b>行号必须写 <code>Math.floor(mid / n)</code>。
-                  JavaScript 的 <code>/</code> 是浮点除法,不取整就读不到东西:
+                  <b>细节:</b>行号必须写 <code>Math.floor(mid / n)</code>。JavaScript 的 <code>/</code> 是浮点除法,不取整就读不到东西:
                   <code>arr[1.5]</code> 是 <code>undefined</code>。
                 </>
               ),
@@ -2195,9 +2071,7 @@ export default function BinaryChapter() {
               ),
               zh: (
                 <>
-                  <b>为什么是右上角:</b>那个值是所在行的最大、所在列的最小,
-                  所以一次比较就能排掉一整行或一整列。左下角对称,同样可行。
-                  左上角和右下角不行 —— 在那里,一次比较什么也排除不了。
+                  <b>为什么是右上角:</b>那个值是所在行的最大、所在列的最小,所以一次比较就能排掉一整行或一整列。左下角对称,同样可行。左上角和右下角不行 —— 在那里,一次比较什么也排除不了。
                 </>
               ),
             },
@@ -2286,8 +2160,7 @@ export default function BinaryChapter() {
               ),
               zh: (
                 <>
-                  <b>复杂度:</b>r 只增、c 只减,各自最多走 m、n 步,
-                  所以是 <BigO o="n" label="O(m + n)" /> ——
+                  <b>复杂度:</b>r 只增、c 只减,各自最多走 m、n 步,所以是 <BigO o="n" label="O(m + n)" /> ——
                   比逐行二分的 O(m log n) 更好也更短。
                 </>
               ),
@@ -2337,10 +2210,7 @@ export default function BinaryChapter() {
                   <strong>
                     当「直接算出最优答案」很难,而「验证某个候选答案」很容易时,就去二分答案
                   </strong>
-                  。条件是这个验证必须<strong>单调</strong>:
-                  存在一个点,判定在那里从否翻成是,之后不再翻回去。
-                  画出来就是一条 F…F 接 T…T 的线。注意<b>不</b>要求的东西:
-                  输入数组根本不必有序,只有谓词必须单调。
+                  。条件是这个验证必须<strong>单调</strong>:存在一个点,判定在那里从否翻成是,之后不再翻回去。画出来就是一条 F…F 接 T…T 的线。注意<b>不</b>要求的东西:输入数组根本不必有序,只有谓词必须单调。
                 </>
               }
             />
@@ -2380,9 +2250,7 @@ export default function BinaryChapter() {
               zh={
                 <>
                   要找的就是那个<strong>被高亮的翻转点</strong> ——
-                  第一个通过判定的候选。这正是 §02 的 lower_bound,
-                  只替换了一处:判断标准不再是「和 target 比大小」,
-                  而是调用一个<strong>你自己写的谓词</strong>(通常叫 judge 或 check)。
+                  第一个通过判定的候选。这正是 §02 的 lower_bound,只替换了一处:判断标准不再是「和 target 比大小」,而是调用一个<strong>你自己写的谓词</strong>(通常叫 judge 或 check)。
                 </>
               }
             />
@@ -2409,15 +2277,11 @@ export default function BinaryChapter() {
               zh={
                 <>
                   <b>LC 875:</b>珂珂有几堆香蕉 <code>piles</code>,警卫{" "}
-                  <code>h</code> 小时后回来。她每小时挑一堆,从中吃 k 根;
-                  一堆吃完了就等下一个小时,不会接着吃另一堆。求
+                  <code>h</code> 小时后回来。她每小时挑一堆,从中吃 k 根;一堆吃完了就等下一个小时,不会接着吃另一堆。求
                   <strong>能在 h 小时内吃完的最小速度 k</strong>。
-                  <b> 暴力:</b>从 k=1 依次试到第一个可行的 —— O(max × n),
+                  <b>暴力:</b>从 k=1 依次试到第一个可行的 —— O(max × n),
                   max 可达 10⁹,超时。
-                  <b> 为什么能二分:</b>速度越快用时不会更多,
-                  所以 judge(k) = Σ⌈pile/k⌉ ≤ h 对 k 单调。
-                  在值域 [1, max(piles)] 上找第一个通过的 k。
-                  上面画的那条 F/T 线,正是本题在 piles = [3,6,7,11]、h = 8 时的样子:
+                  <b>为什么能二分:</b>速度越快用时不会更多,所以 judge(k) = Σ⌈pile/k⌉ ≤ h 对 k 单调。在值域 [1, max(piles)] 上找第一个通过的 k。上面画的那条 F/T 线,正是本题在 piles = [3,6,7,11]、h = 8 时的样子:
                 </>
               }
             />
@@ -2498,10 +2362,8 @@ export default function BinaryChapter() {
               ),
               zh: (
                 <>
-                  <b>两个细节:</b>①上取整写成 <code>(p + k - 1) / k</code>,
-                  全程留在整数域,不会出现舍入误差;
-                  ②用 <code>long</code> 累加 —— 堆数很多时,小时数之和可能超过 int 上限。
-                  结构和 §02 的找边界完全一致,只是把{" "}
+                  <b>两个细节:</b>①上取整写成 <code>(p + k - 1) / k</code>,全程留在整数域,不会出现舍入误差;
+                  ②用 <code>long</code> 累加 —— 堆数很多时,小时数之和可能超过 int 上限。结构和 §02 的找边界完全一致,只是把{" "}
                   <code>nums[mid] &gt;= t</code> 换成了 <code>canFinish(mid)</code>。
                 </>
               ),
@@ -2596,10 +2458,7 @@ export default function BinaryChapter() {
               ),
               zh: (
                 <>
-                  只要 p 远小于 2⁵³,<code>Math.ceil(p / k)</code> 就是精确的,
-                  本题满足。上界用 <code>Math.max(...piles)</code> 取。
-                  另外,这里正是要记住「别用 <code>&gt;&gt;</code> 求 mid」的场合:
-                  二分答案的值域可能远大于数组下标。
+                  只要 p 远小于 2⁵³,<code>Math.ceil(p / k)</code> 就是精确的,本题满足。上界用 <code>Math.max(...piles)</code> 取。另外,这里正是要记住「别用 <code>&gt;&gt;</code> 求 mid」的场合:二分答案的值域可能远大于数组下标。
                 </>
               ),
             },
@@ -2630,13 +2489,8 @@ export default function BinaryChapter() {
               }
               zh={
                 <>
-                  「先猜一个值,再验证」的模式在真实系统里很常见。
-                  压测用它找服务仍然承受得住的最高请求速率:按某个速率跑一轮,
-                  看错误率是否超出预算,再把区间缩小一半。
-                  <code>git bisect</code> 在提交历史上用的是同一个形状:
-                  「这个提交里有没有这个 bug」只会从否翻到是一次,
-                  所以在 n 个提交里约 log₂n 次测试就能找到第一个出错的提交。
-                  共同点是:直接算出答案很难,而验证一个候选很容易 ——
+                  「先猜一个值,再验证」的模式在真实系统里很常见。压测用它找服务仍然承受得住的最高请求速率:按某个速率跑一轮,看错误率是否超出预算,再把区间缩小一半。
+                  <code>git bisect</code> 在提交历史上用的是同一个形状:「这个提交里有没有这个 bug」只会从否翻到是一次,所以在 n 个提交里约 log₂n 次测试就能找到第一个出错的提交。共同点是:直接算出答案很难,而验证一个候选很容易 ——
                   于是把搜索放到答案空间上。
                 </>
               }
@@ -2670,12 +2524,10 @@ export default function BinaryChapter() {
               }
               zh={
                 <>
-                  碰到「最大化最小值 / 最小化最大值 / 求满足条件的极值」,
-                  当场把这三句说出来:
+                  碰到「最大化最小值 / 最小化最大值 / 求满足条件的极值」,当场把这三句说出来:
                   ①<b>「答案的取值范围是多少?」</b>—— 定下 lo、hi;
                   ②<b>「给定一个候选 x,能不能 O(n) 验证?」</b>—— 这就是 judge 函数;
-                  ③<b>「验证结果随 x 单调吗?」</b>—— 确认那条 F…F T…T 的线。
-                  三个都点头,就是二分答案,时间 <b>O(n · log(值域))</b>。
+                  ③<b>「验证结果随 x 单调吗?」</b>—— 确认那条 F…F T…T 的线。三个都点头,就是二分答案,时间 <b>O(n · log(值域))</b>。
                 </>
               }
             />
@@ -2722,11 +2574,8 @@ export default function BinaryChapter() {
                   <strong>「最大值最小化」</strong>的母题{" "}
                   <strong>LC 1011</strong>:传送带上的包裹必须
                   <strong>按给定顺序</strong>装船,求 D 天内运完所需的
-                  <strong>最小运力</strong>。judge(cap) 依次装货,
-                  装不下就开新的一天,最后比较天数与 D。
-                  值域下界是<strong>最重的包裹</strong> ——
-                  再小那件货永远装不上;上界是<strong>所有重量之和</strong>,
-                  一天就能全部运完。
+                  <strong>最小运力</strong>。judge(cap) 依次装货,装不下就开新的一天,最后比较天数与 D。值域下界是<strong>最重的包裹</strong> ——
+                  再小那件货永远装不上;上界是<strong>所有重量之和</strong>,一天就能全部运完。
                 </>
               }
             />
@@ -2794,8 +2643,7 @@ export default function BinaryChapter() {
               ),
               zh: (
                 <>
-                  <b>下界不能取 0 或 1</b>,必须是 <code>max(weights)</code>。
-                  运力比最重的包裹还小,那件货任何一天都装不上,
+                  <b>下界不能取 0 或 1</b>,必须是 <code>max(weights)</code>。运力比最重的包裹还小,那件货任何一天都装不上,
                   <code>canShip</code> 会不停地开新的一天却毫无进展。
                 </>
               ),
@@ -2855,8 +2703,7 @@ export default function BinaryChapter() {
               zh: (
                 <>
                   <b>和 875 对照:</b>结构完全一样,只有 judge 变了 ——
-                  从「按速度算小时数」变成「按运力算天数」。
-                  认出这层相同,一道题的力气就能用到十道题上。
+                  从「按速度算小时数」变成「按运力算天数」。认出这层相同,一道题的力气就能用到十道题上。
                 </>
               ),
             },
@@ -2942,11 +2789,7 @@ export default function BinaryChapter() {
               }
               zh={
                 <>
-                  最后一种形状是<strong>平方根</strong>(LC 69):
-                  求 ⌊√x⌋,即满足 <code>k×k ≤ x</code> 的最大整数 k。
-                  这个谓词同样单调,但方向相反:小 k 为真、大 k 为假,
-                  所以要的是<strong>最后一个</strong>通过的值。
-                  记下候选后往<strong>右</strong>挤:<code>lo = mid + 1</code> ——
+                  最后一种形状是<strong>平方根</strong>(LC 69):求 ⌊√x⌋,即满足 <code>k×k ≤ x</code> 的最大整数 k。这个谓词同样单调,但方向相反:小 k 为真、大 k 为假,所以要的是<strong>最后一个</strong>通过的值。记下候选后往<strong>右</strong>挤:<code>lo = mid + 1</code> ——
                   正是 875 的镜像。两个方向务必分清:
                 </>
               }
@@ -3002,11 +2845,7 @@ export default function BinaryChapter() {
               ),
               zh: (
                 <>
-                  <b>溢出:</b>x 可接近 2³¹,<code>mid * mid</code> 会溢出 int,
-                  必须先转型:<code>(long) mid * mid</code>。
-                  把判定改写成 <code>mid &lt;= x / mid</code> 也能绕开乘法,
-                  但前提是 mid ≥ 1 —— 当 <code>lo = 0</code> 时首个 mid 可能是 0,
-                  那样会除以零。<b>方向:</b>找最大可行值用{" "}
+                  <b>溢出:</b>x 可接近 2³¹,<code>mid * mid</code> 会溢出 int,必须先转型:<code>(long) mid * mid</code>。把判定改写成 <code>mid &lt;= x / mid</code> 也能绕开乘法,但前提是 mid ≥ 1 —— 当 <code>lo = 0</code> 时首个 mid 可能是 0,那样会除以零。<b>方向:</b>找最大可行值用{" "}
                   <code>lo = mid + 1</code>,与 875 相反。
                 </>
               ),
@@ -3096,11 +2935,7 @@ export default function BinaryChapter() {
                 <>
                   <b>关于精度:</b>mid 是探测值,不是答案。第一轮 mid ≈ x/2,
                   <code>mid * mid</code> 可达约 10¹⁸,已超出 JavaScript
-                  的精确整数范围(2⁵³ ≈ 9×10¹⁵)。但结果依然正确:
-                  乘积不精确时,它已经比 x 大了好几个数量级,比较方向不可能翻转;
-                  而在答案附近 mid ≈ √x ≤ 46341,mid×mid 是精确的。
-                  Java / C++ 的 int 则是真溢出,那里必须用 long,
-                  或在 mid ≥ 1 的前提下改写成 <code>mid &lt;= x / mid</code>。
+                  的精确整数范围(2⁵³ ≈ 9×10¹⁵)。但结果依然正确:乘积不精确时,它已经比 x 大了好几个数量级,比较方向不可能翻转;而在答案附近 mid ≈ √x ≤ 46341,mid×mid 是精确的。Java / C++ 的 int 则是真溢出,那里必须用 long,或在 mid ≥ 1 的前提下改写成 <code>mid &lt;= x / mid</code>。
                 </>
               ),
             },
@@ -3188,11 +3023,7 @@ export default function BinaryChapter() {
               zh={
                 <>
                   <b>普通二分</b>在已经排好的数据里找位置,搜索范围是数组下标;
-                  <b>二分答案</b>在「答案可能的取值范围」里猜,
-                  从最小可能答案到最大可能答案,输入数组甚至可能根本没排序。
-                  判断标准也变了:不再是「和 target 比大小」,
-                  而是调用一个你自己写的 judge 函数。
-                  正是这一步,把二分从「查一个值」推进到「解一道最优化问题」。
+                  <b>二分答案</b>在「答案可能的取值范围」里猜,从最小可能答案到最大可能答案,输入数组甚至可能根本没排序。判断标准也变了:不再是「和 target 比大小」,而是调用一个你自己写的 judge 函数。正是这一步,把二分从「查一个值」推进到「解一道最优化问题」。
                 </>
               }
             />
@@ -3299,31 +3130,24 @@ export default function BinaryChapter() {
           zh: [
             <>
               二分不要求数组有序,要求的是<b>一次 O(1) 判断就能决定丢掉哪一半</b> ——
-              整个范围能切成「否的一段」和「是的一段」,中间只翻转一次。
-              有序是产生这个分界最常见的来源,不是唯一来源。
+              整个范围能切成「否的一段」和「是的一段」,中间只翻转一次。有序是产生这个分界最常见的来源,不是唯一来源。
             </>,
             <>
               <b>先定区间,其余全部推导。</b>闭区间 [lo, hi] 配{" "}
               <code>lo &lt;= hi</code>、<code>hi = mid - 1</code>、
               <code>lo = mid + 1</code>;半开区间 [lo, hi) 配{" "}
-              <code>lo &lt; hi</code> 与 <code>hi = mid</code>。
-              把两套混用,就是那个经典 bug。
+              <code>lo &lt; hi</code> 与 <code>hi = mid</code>。把两套混用,就是那个经典 bug。
             </>,
             <>
-              不变量是:<b>如果答案存在,它的下标就在 [lo, hi] 内</b>。
-              所有关于正确性的说法都回到这一句;
-              每个分支都必须越过 mid,区间才会严格变小、循环才会结束。
+              不变量是:<b>如果答案存在,它的下标就在 [lo, hi] 内</b>。所有关于正确性的说法都回到这一句;每个分支都必须越过 mid,区间才会严格变小、循环才会结束。
             </>,
             <>
               溢出问题因语言而异:Java / C++ 里 <code>(lo + hi) / 2</code>{" "}
               可能溢出,写 <code>lo + (hi - lo) / 2</code>;
-              Python 整数任意精度;JavaScript 在 2⁵³ 内精确,普通除法没问题,
-              但 <code>(lo + hi) &gt;&gt; 1</code> 会截成 32 位,值域一大就错。
+              Python 整数任意精度;JavaScript 在 2⁵³ 内精确,普通除法没问题,但 <code>(lo + hi) &gt;&gt; 1</code> 会截成 32 位,值域一大就错。
             </>,
             <>
-              找边界 = <b>记下候选,再朝一侧继续挤</b>。
-              lower_bound(t) 是第一个 ≥ t 的下标,upper_bound(t) 是第一个 &gt; t 的下标;
-              都在「无人满足」时返回 n,且在整数上有{" "}
+              找边界 = <b>记下候选,再朝一侧继续挤</b>。lower_bound(t) 是第一个 ≥ t 的下标,upper_bound(t) 是第一个 &gt; t 的下标;都在「无人满足」时返回 n,且在整数上有{" "}
               <b>upper_bound(t) = lower_bound(t+1)</b>。
             </>,
             <>
@@ -3331,15 +3155,12 @@ export default function BinaryChapter() {
               <b>重复元素(81 / 154)会毁掉这个判据</b>,最坏退化到 O(n)。
             </>,
             <>
-              二分答案:<b>求解太难,就改成验证</b>。
-              若对候选答案的是非判定是单调的,就在<b>答案的取值范围</b>上二分 + judge。
-              875 / 1011 / 410 是同一套方法。两个镜像方向:
+              二分答案:<b>求解太难,就改成验证</b>。若对候选答案的是非判定是单调的,就在<b>答案的取值范围</b>上二分 + judge。875 / 1011 / 410 是同一套方法。两个镜像方向:
               <b>第一个可行</b>(875,hi = mid−1)与
               <b>最后一个可行</b>(69,lo = mid+1)。
             </>,
             <>
-              代价:时间 <b>O(log n)</b>;迭代写法额外空间 <b>O(1)</b>,
-              递归写法调用栈 <b>O(log n)</b>。二分答案则是
+              代价:时间 <b>O(log n)</b>;迭代写法额外空间 <b>O(1)</b>,递归写法调用栈 <b>O(log n)</b>。二分答案则是
               O(judge 的代价 × log(值域))。
             </>,
           ],
