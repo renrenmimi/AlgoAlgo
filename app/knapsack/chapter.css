@@ -16,7 +16,7 @@
   box-shadow: var(--hi-soft), var(--shadow-1);
 }
 
-[data-ch="knapsack"] .kp-def h4 {
+[data-ch="knapsack"] .kp-def h3 {
   margin: 0;
   font-size: 14.5px;
   color: var(--acc-ink);

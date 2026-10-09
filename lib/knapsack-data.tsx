@@ -55,7 +55,7 @@ export const PROBLEMS: Problem[] = [
     d: "medium",
     tags: {
       en: ["0/1 knapsack", "Fill as much as possible", "Variant of 416"],
-      zh: ["0-1 背包", "装满型", "416 变式"],
+      zh: ["0-1 背包", "尽量装满", "416 变式"],
     },
     hint: {
       en: "Split the stones into two piles and make the two totals as close as possible. That is LC 416 with a different question.",
@@ -91,7 +91,7 @@ export const PROBLEMS: Problem[] = [
     d: "medium",
     tags: {
       en: ["0/1 knapsack", "Counting", "Also a backtracking problem"],
-      zh: ["0-1 背包", "计数型", "回溯一题两吃"],
+      zh: ["0-1 背包", "计数型", "也可用回溯解"],
     },
     hint: {
       en: "Let P be the sum of the numbers you give a plus sign and N the sum of the rest: P - N = target and P + N = sum, so P = (sum + target) / 2.",
@@ -179,7 +179,8 @@ export const PROBLEMS: Problem[] = [
           min(dp[j], dp[j-coin] + 1), base dp[0] = 0, and amounts that cannot be
           reached keep a value larger than any real answer. The capacity loop runs{" "}
           <b>upward</b>, so dp[j-coin] may already include this same coin, which
-          is exactly how a coin gets reused. Two models, one piece of code.
+          is exactly how a coin gets reused. Two models, one answer; the code
+          differs only in the order of the two loops.
         </>
       ),
       zh: (
@@ -189,7 +190,8 @@ export const PROBLEMS: Problem[] = [
           转移 dp[j] = min(dp[j], dp[j−coin] + 1),初始 dp[0] = 0,
           凑不出的金额保持一个比任何真实答案都大的值。
           容量遍历<b>正序</b>,于是 dp[j−coin] 里可能已经含有同一枚硬币 ——
-          这正是「同一种硬币被重复使用」的实现方式。两种建模,同一份代码。
+          这正是「同一种硬币被重复使用」的实现方式。两种建模,同一个答案;
+          代码只差两层循环的嵌套顺序。
         </>
       ),
     },
@@ -273,7 +275,7 @@ export const PROBLEMS: Problem[] = [
     d: "medium",
     tags: {
       en: ["Unbounded knapsack", "Order matters"],
-      zh: ["完全背包", "排列型", "顺序有关"],
+      zh: ["完全背包", "顺序有关"],
     },
     hint: {
       en: 'A sentence has an order: "apple pen" is not "pen apple". That decides which of the two loops goes on the outside.',
@@ -327,8 +329,11 @@ export const PROBLEMS: Problem[] = [
           orders are counted separately. It is the exact mirror of LC 518. Which
           loop sits outside decides whether you count combinations or
           permutations, and that is the most common mistake in this chapter.
-          Intermediate sums can exceed a 32-bit int, so accumulate in a wider
-          type.
+          Some intermediate cells overflow even a 64-bit integer, but none of
+          them is ever added into dp[target]: a cell that feeds it never holds
+          more than the final answer, so the straightforward code is correct (in
+          C++, use an unsigned type, because signed overflow is undefined
+          behavior there).
         </>
       ),
       zh: (
@@ -338,7 +343,9 @@ export const PROBLEMS: Problem[] = [
           但<b>外层遍历容量、内层遍历数字</b>:对每个容量,每个数字都有机会当「最后一个」,
           于是两种顺序被分别计入。它正是 LC 518 的镜像。
           哪一层在外,决定你数的是组合还是排列 —— 这是本章最常见的错误。
-          中间结果可能超出 32 位整数,累加时用更宽的类型。
+          有些中间格子连 64 位整数都会溢出,但它们都不会被累加进 dp[target]:
+          能累加进去的格子,计数都不超过最终答案,所以按这个转移直接累加就是正确的
+          (C++ 中有符号溢出是未定义行为,那里要改用无符号类型)。
         </>
       ),
     },
@@ -536,7 +543,7 @@ export const QUIZ: QuizItem[] = [
         undefined,
         "两者都是同一个加法 dp[j] += dp[j−num]。区别只在两层循环的嵌套顺序。",
         "两者都是完全背包,容量都正序。倒序会把每件物品限制成只用一次,那是另一道题。",
-        "区别是实打实的:组合数不会超过排列数,通常还更小。硬币 [1,2] 凑 3:组合 1 种(1+2),排列 2 种(1+2、2+1)。",
+        "区别确实存在:组合数不会超过排列数,通常还更小。硬币 [1,2] 凑 3:组合 1 种(1+2),排列 2 种(1+2、2+1)。",
       ],
     },
     why: {
