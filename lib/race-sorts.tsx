@@ -206,7 +206,7 @@ export const BUBBLE = A(
   { en: "O(1)", zh: "O(1)" },
   {
     en: "Swaps neighbours. A clean pass means done — so a sorted array costs one pass.",
-    zh: "只换相邻两个。一整趟没换过就收工 —— 所以已排序的数组只需一趟。",
+    zh: "只交换相邻的两个元素。一整趟没有发生交换就提前结束 —— 所以已排序的数组只需一趟。",
   },
   bubble,
 );
@@ -242,7 +242,7 @@ export const MERGE = A(
   { en: "O(n)", zh: "O(n)" },
   {
     en: "Splits and merges, always. Steady but pays full price even on sorted input, and rents O(n) of scratch space.",
-    zh: "永远照拆照并。稳,但即使输入已排序也照付全价,还要借 O(n) 的临时空间。",
+    zh: "无论输入如何都完整地拆分与合并。性能稳定,但即使输入已排序也要付出全部代价,还需要 O(n) 的临时空间。",
   },
   mergeSort,
 );

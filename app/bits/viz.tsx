@@ -259,19 +259,45 @@ export function BitLamps() {
         )}
       </div>
       <div className="viz-ctl">
-        <button type="button" className="btn btn-sm" onClick={() => step(1)}>
+        {/* Named for screen readers: "−1" alone is also the label of a preset below */}
+        <button
+          type="button"
+          className="btn btn-sm"
+          aria-label={L({ en: "Add 1", zh: "加 1" })}
+          onClick={() => step(1)}
+        >
           +1
         </button>
-        <button type="button" className="btn btn-sm" onClick={() => step(-1)}>
+        <button
+          type="button"
+          className="btn btn-sm"
+          aria-label={L({ en: "Subtract 1", zh: "减 1" })}
+          onClick={() => step(-1)}
+        >
           −1
         </button>
-        <button type="button" className="btn btn-sm" onClick={() => apply((v) => v << 1)}>
+        <button
+          type="button"
+          className="btn btn-sm"
+          aria-label={L({ en: "Shift left by 1", zh: "左移 1 位" })}
+          onClick={() => apply((v) => v << 1)}
+        >
           &lt;&lt;1
         </button>
-        <button type="button" className="btn btn-sm" onClick={() => apply((v) => v >> 1)}>
+        <button
+          type="button"
+          className="btn btn-sm"
+          aria-label={L({ en: "Arithmetic shift right by 1", zh: "算术右移 1 位" })}
+          onClick={() => apply((v) => v >> 1)}
+        >
           &gt;&gt;1
         </button>
-        <button type="button" className="btn btn-sm" onClick={() => apply((v) => ~v)}>
+        <button
+          type="button"
+          className="btn btn-sm"
+          aria-label={L({ en: "Flip every bit (NOT)", zh: "按位取反" })}
+          onClick={() => apply((v) => ~v)}
+        >
           ~
         </button>
         <span className="mono dim bit-preset-lab">
@@ -282,6 +308,8 @@ export function BitLamps() {
             key={p.label}
             type="button"
             className={`btn btn-sm${val === p.v ? " btn-primary" : ""}`}
+            aria-label={`${L({ en: "Set to", zh: "设为" })} ${p.label}`}
+            aria-pressed={val === p.v}
             onClick={() => apply(() => p.v)}
           >
             {p.label}
