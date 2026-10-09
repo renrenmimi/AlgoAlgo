@@ -301,7 +301,7 @@ export const WEEKS: WeekRow[] = [
     },
     goal: {
       en: "Cover the important advanced problems. Full coverage is not the goal.",
-      zh: "拿下重点进阶题,不求全覆盖。",
+      zh: "掌握重点进阶题,不求全覆盖。",
     },
     track: "algo",
     ch: "dp-seq",
@@ -312,7 +312,7 @@ export const WEEKS: WeekRow[] = [
     wk: { en: "Weeks 19–20", zh: "第 19–20 周" },
     topic: {
       en: "Mixed timed sets, mock interviews, redoing what you got wrong",
-      zh: "混合限时、模拟面试、错题复刷",
+      zh: "混合限时、模拟面试、错题重做",
     },
     goal: {
       en: "Finish a medium problem in 35 to 45 minutes while explaining every step out loud.",
@@ -335,7 +335,7 @@ export const SIDE_CHAPTERS: { ch: ChapterId; href: string; note: Loc<string> }[]
       href: "/divide",
       note: {
         en: "Take it together with sorting in week 7: fast exponentiation, merging, and an intuition for the master theorem.",
-        zh: "随第 7 周排序一起吃:快速幂、归并、主定理直觉。",
+        zh: "与第 7 周的排序一起学习:快速幂、归并、主定理的直觉。",
       },
     },
     {
@@ -376,9 +376,8 @@ export const SIDE_CHAPTERS: { ch: ChapterId; href: string; note: Loc<string> }[]
  * Interview-level completion standards + review cadence                 *
  * ===================================================================== */
 
-export const STANDARDS: { icon: string; text: ReactNode }[] = [
+export const STANDARDS: { text: ReactNode }[] = [
   {
-    icon: "🗣",
     text: (
       <T
         en={
@@ -390,14 +389,13 @@ export const STANDARDS: { icon: string; text: ReactNode }[] = [
         }
         zh={
           <>
-            看到题目能<b>先说暴力解,再逐步优化</b> —— 而不是憋着,憋出最优解才开口。
+            看到题目能<b>先说暴力解,再逐步优化</b> —— 而不是一直沉默,等想出最优解才开口。
           </>
         }
       />
     ),
   },
   {
-    icon: "🧭",
     text: (
       <T
         en={
@@ -415,7 +413,6 @@ export const STANDARDS: { icon: string; text: ReactNode }[] = [
     ),
   },
   {
-    icon: "📐",
     text: (
       <T
         en={
@@ -433,7 +430,6 @@ export const STANDARDS: { icon: string; text: ReactNode }[] = [
     ),
   },
   {
-    icon: "🧪",
     text: (
       <T
         en={
@@ -452,7 +448,6 @@ export const STANDARDS: { icon: string; text: ReactNode }[] = [
     ),
   },
   {
-    icon: "⌨️",
     text: (
       <T
         en={
@@ -470,7 +465,6 @@ export const STANDARDS: { icon: string; text: ReactNode }[] = [
     ),
   },
   {
-    icon: "⏱",
     text: (
       <T
         en={
@@ -530,7 +524,7 @@ export const REVIEW: {
         }
         zh={
           <>
-            <b>完整重做</b>一遍,不看笔记,检验记忆是否落地。
+            <b>完整重做</b>一遍,不看笔记,检验哪些内容真正记住了。
           </>
         }
       />
@@ -550,7 +544,7 @@ export const REVIEW: {
         }
         zh={
           <>
-            <b>限时重做</b>,模拟面试压力,把「会」逼成「熟」。
+            <b>限时重做</b>,模拟面试压力,把「会」练成「熟」。
           </>
         }
       />
@@ -601,7 +595,7 @@ export const PANORAMA: {
     desc: (
       <T
         en="The nouns an algorithm works on. The shape you store data in decides how fast you can move it."
-        zh="算法操作的「名词」—— 数据摆成什么形状,决定了能怎么快地动它。"
+        zh="算法操作的「名词」—— 数据摆成什么形状,决定了能多快地操作它。"
       />
     ),
     items: [
@@ -711,7 +705,7 @@ export const QUIZ: QuizItem[] = [
       ],
       zh: [
         undefined,
-        "换成 [1,5,10,25],或者任何「每个面额都整除下一个更大面额」的面额组,贪心又对了 —— 光看是看不出来的,得有证明。",
+        "换成 [1,5,10,25],或者任何「每个面额都整除下一个更大面额」的面额组,贪心又是对的 —— 仅凭观察无法判断,需要证明。",
         "数据没问题,是这组面额破坏了贪心选择性质:先拿最大反而绕远路。",
         "回溯能得到对的答案,但指数级会超时;DP 才是这题的正解 —— 322 硬币 [1,3,4] 正是把 06 章接到 07 章的那个反例。",
       ],
@@ -826,26 +820,26 @@ export const QUIZ: QuizItem[] = [
       en: [
         undefined,
         "Repeated multiplication is O(n). With n = 10⁹ that is far too slow.",
-        "The subproblems of a power are independent and never repeat, so storing results gains nothing. DP's condition is not met.",
+        "The two halves x^(n/2) are the same subproblem, and storing it in one variable so it is computed once is all the reuse needed. Each level has only one distinct subproblem, so a DP table adds nothing.",
         "There is no local choice to make here.",
       ],
       zh: [
         undefined,
         "连乘 O(n),n = 10⁹ 时直接超时。",
-        "幂运算的子问题彼此独立、不会重复,记忆化没有收益 —— 不满足 DP 的前提。",
-        "这里没有「局部最优」可贪。",
+        "快速幂的两半 x^(n/2) 是同一个子问题,用一个变量存下、只算一次就够了;每层只有一个不同的子问题,没必要开 DP 表。",
+        "这里没有需要做出的局部选择。",
       ],
     },
     why: {
       en: "x^n = (x^(n/2))², so each step halves the exponent: O(log n). This is the standard divide and conquer application (chapter 02, LC 50).",
-      zh: "x^n = (x^(n/2))²,把指数折半 ⇒ O(log n)。分治的招牌应用(本课 02 章 50 题)。",
+      zh: "x^n = (x^(n/2))²,把指数折半 ⇒ O(log n)。分治的典型应用(本课 02 章 50 题)。",
     },
   },
   {
     type: "choice",
     q: {
       en: "What is the clearest signal that a problem needs DP?",
-      zh: "判断「该不该上 DP」,最关键的信号是?",
+      zh: "判断「是否该用 DP」,最关键的信号是?",
     },
     opts: {
       en: [
@@ -873,7 +867,7 @@ export const QUIZ: QuizItem[] = [
         undefined,
         "「有序」是二分的信号,不是 DP 的 —— 而二分真正需要的是判定条件在区间上单调,有序数组只是最常见的特例。",
         "「输出所有方案」是回溯的信号;DP 通常只求最优值或方案数。",
-        "能证明贪心成立就直接贪心,更快也更省空间,不必上 DP。",
+        "能证明贪心成立就直接用贪心,更快也更省空间,不必用 DP。",
       ],
     },
     why: {
@@ -885,7 +879,7 @@ export const QUIZ: QuizItem[] = [
     type: "choice",
     q: {
       en: "\"Halve the largest value in the array, repeat k times, then minimize the array sum.\" For a problem where each step takes the locally best option and you can prove you will not regret it, what is the first choice?",
-      zh: "「每次把当前最大值减半,k 次操作后求最小数组和」这类「每步取眼前最优、且能证明不后悔」的题,首选?",
+      zh: "「每次把当前最大值减半,k 次操作后求最小数组和」这类「每步取眼前最优、且能证明这样做是安全的」的题,首选?",
     },
     opts: {
       en: [
@@ -906,14 +900,14 @@ export const QUIZ: QuizItem[] = [
       ],
       zh: [
         undefined,
-        "状态是「操作了几次、堆成什么样」,空间爆炸且无需重用,DP 反而累赘。",
+        "状态是「操作了几次、堆成什么样」,状态空间过大且没有可重用的结果,DP 只会增加开销。",
         "回溯枚举每步选谁,会指数级超时。",
         "没有一个单调的「答案值域」可供猜测验证,二分答案无从下手。",
       ],
     },
     why: {
       en: "Take the current largest value each time, using a max-heap. An exchange argument shows this choice is never worse, so greedy is safe here (chapter 06).",
-      zh: "「每步拿当前最大来砍」用大顶堆实现的贪心;能用交换论证说明这样砍不会更差,就放心贪(本课 06 章)。",
+      zh: "「每步把当前最大值减半」是用大顶堆实现的贪心;能用交换论证说明这样做不会更差,就可以放心使用贪心(本课 06 章)。",
     },
   },
   {
@@ -971,7 +965,7 @@ export const QUIZ: QuizItem[] = [
       ],
       zh: [
         "贪心一旦做出选择就不回头;DP 会把需要的子问题都算清再组合",
-        "贪心必须能证明「贪心选择性质」,证不出来就别贪",
+        "贪心必须能证明「贪心选择性质」,无法证明就不要用贪心",
         "53 最大子数组、122 买卖股票 II,既能贪心也能 DP",
         "DP 一定比贪心更快",
       ],
@@ -987,7 +981,7 @@ export const QUIZ: QuizItem[] = [
     },
     why: {
       en: "Greedy commits to a local choice and therefore needs a proof. DP works out every subproblem it needs. Problems 53 and 122 are taught from both angles in this course.",
-      zh: "贪心是「敢赌局部最优」,但要给出证明;DP 是「把需要的子问题都算清」。53 / 122 两种视角本课都讲过。",
+      zh: "贪心直接采用局部最优的选择,因此必须给出证明;DP 是「把需要的子问题都算清」。53 / 122 两种视角本课都讲过。",
     },
   },
 ];

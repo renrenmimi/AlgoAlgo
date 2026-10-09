@@ -36,43 +36,43 @@ const TREE: Record<string, Node> = {
     opts: [
       {
         label: {
-          en: "🎯 One optimal value (a maximum, a minimum, the fewest steps, the most items)",
-          zh: "🎯 一个最优值(最大 / 最小 / 最少步 / 最多个)",
+          en: "One optimal value (a maximum, a minimum, the fewest steps, the most items)",
+          zh: "一个最优值(最大 / 最小 / 最少步 / 最多个)",
         },
         next: "optimize",
       },
       {
         label: {
-          en: "📋 Every concrete answer (combinations, subsets, permutations, partitions, board layouts)",
-          zh: "📋 列出所有具体方案(组合 / 子集 / 排列 / 切割 / 棋盘)",
+          en: "Every concrete answer (combinations, subsets, permutations, partitions, board layouts)",
+          zh: "列出所有具体方案(组合 / 子集 / 排列 / 切割 / 棋盘)",
         },
         next: "r-backtrack",
       },
       {
         label: {
-          en: "🧮 The number of answers (how many paths, how many ways to make a sum)",
-          zh: "🧮 方案总数(有多少种走法 / 凑法)",
+          en: "The number of answers (how many paths, how many ways to make a sum)",
+          zh: "方案总数(有多少种走法 / 凑法)",
         },
         next: "count",
       },
       {
         label: {
-          en: "🔎 Locating one answer inside a range where a yes/no test behaves monotonically",
-          zh: "🔎 在一个「判定条件单调」的空间里定位一个答案",
+          en: "Locating one answer inside a range where a yes/no test behaves monotonically",
+          zh: "在一个「判定条件单调」的空间里定位一个答案",
         },
         next: "search",
       },
       {
         label: {
-          en: "✂️ Splitting the input into smaller copies of the same problem, solving each, then merging",
-          zh: "✂️ 能把它切成「同款小问题」分别解再合并",
+          en: "Splitting the input into smaller copies of the same problem, solving each, then merging",
+          zh: "能把它拆成规模更小的同类问题,分别求解再合并",
         },
         next: "r-divide",
       },
       {
         label: {
-          en: "🔧 Working only on the binary digits of integers (sets, switches, XOR)",
-          zh: "🔧 只在整数的二进制位上做文章(集合 / 开关 / 异或)",
+          en: "Working only on the binary digits of integers (sets, switches, XOR)",
+          zh: "只在整数的二进制位上做文章(集合 / 开关 / 异或)",
         },
         next: "r-bits",
       },
@@ -83,20 +83,20 @@ const TREE: Record<string, Node> = {
     kind: "q",
     q: {
       en: "Question 2: if you take the best option available at each step, can you prove with an exchange argument that the result is still optimal overall?",
-      zh: "第二问:每一步都拿眼前最优,你能用「交换论证」证明它全局也不后悔吗?",
+      zh: "第二问:每一步都取眼前最优,你能用「交换论证」证明结果在全局上仍然最优吗?",
     },
     opts: [
       {
         label: {
-          en: "✅ Yes, I can prove the greedy choice is safe",
-          zh: "✅ 能证明,贪了不后悔",
+          en: "Yes, I can prove the greedy choice is safe",
+          zh: "能证明,贪心选择是安全的",
         },
         next: "r-greedy",
       },
       {
         label: {
-          en: "🤔 No proof, or I already have a counterexample (coins [1, 3, 4])",
-          zh: "🤔 证不出来 / 已有反例(如硬币 [1,3,4])",
+          en: "No proof, or I already have a counterexample (coins [1, 3, 4])",
+          zh: "无法证明 / 已有反例(如硬币 [1,3,4])",
         },
         next: "opt-dp",
       },
@@ -111,15 +111,15 @@ const TREE: Record<string, Node> = {
     opts: [
       {
         label: {
-          en: "✅ Both: overlapping subproblems and optimal substructure",
-          zh: "✅ 两个都有:重叠子问题 + 最优子结构",
+          en: "Both: overlapping subproblems and optimal substructure",
+          zh: "两个都有:重叠子问题 + 最优子结构",
         },
         next: "r-dp",
       },
       {
         label: {
-          en: "❌ The subproblems are independent and never repeat",
-          zh: "❌ 子问题不重叠、各自独立",
+          en: "The subproblems are independent and never repeat",
+          zh: "子问题不重叠、各自独立",
         },
         next: "opt-binans",
       },
@@ -134,15 +134,15 @@ const TREE: Record<string, Node> = {
     opts: [
       {
         label: {
-          en: "✅ Yes, I can guess an answer and then verify it",
-          zh: "✅ 是,可以「先猜一个答案再验证可行性」",
+          en: "Yes, I can guess an answer and then verify it",
+          zh: "是,可以「先猜一个答案再验证可行性」",
         },
         next: "r-binans",
       },
       {
         label: {
-          en: "❌ None of the above. Searching is the only option left",
-          zh: "❌ 都不是,只能老老实实搜索",
+          en: "None of the above. Searching is the only option left",
+          zh: "都不是,只能搜索",
         },
         next: "r-backtrack-opt",
       },
@@ -158,15 +158,15 @@ const TREE: Record<string, Node> = {
     opts: [
       {
         label: {
-          en: "✅ Yes, the counts add up step by step (Climbing Stairs, coin combinations)",
-          zh: "✅ 能递推(方案数逐步累加,如爬楼梯 / 硬币组合)",
+          en: "Yes, the counts add up step by step (Climbing Stairs, coin combinations)",
+          zh: "能递推(方案数逐步累加,如爬楼梯 / 硬币组合)",
         },
         next: "r-dp-count",
       },
       {
         label: {
-          en: "❌ It is plain combinatorics, with a formula or a pattern",
-          zh: "❌ 纯排列组合,有现成公式 / 规律",
+          en: "It is plain combinatorics, with a formula or a pattern",
+          zh: "纯排列组合,有现成公式 / 规律",
         },
         next: "r-math",
       },
@@ -205,11 +205,11 @@ const TREE: Record<string, Node> = {
     chLabel: { en: "06 Greedy", zh: "06 贪心" },
     why: {
       en: "Take the best option available at each step and never revisit it. The hard part is not the choice; it is proving with an exchange argument that no later step is made worse by it. Interval scheduling, Jump Game, and the greedy stock problems all belong here.",
-      zh: "每一步都拿当前最优,不回头。难点从来不是「贪」,而是用交换论证说明「贪完不后悔」。区间调度、跳跃游戏、股票贪心都归它。",
+      zh: "每一步都取当前最优,不回头。难点不在于做出选择,而在于用交换论证说明这个选择不会让后面的结果变差。区间调度、跳跃游戏、股票贪心都属于这一类。",
     },
     runnerUp: {
       en: "Cannot prove the greedy choice is safe? Go back to DP. That is exactly the step from chapter 06 to chapter 07.",
-      zh: "证不出贪心选择性质?立刻退回 DP 兜底 —— 这正是本课 06 → 07 章的叙事。",
+      zh: "无法证明贪心选择性质?立刻退回 DP 兜底 —— 这正是本课 06 → 07 章的叙事。",
     },
   },
   "r-dp": {
@@ -218,8 +218,8 @@ const TREE: Record<string, Node> = {
     href: "/dp",
     chLabel: { en: "07 DP Basics → 10 Advanced DP", zh: "07 DP 入门 → 10 DP 进阶" },
     why: {
-      en: "Store the answer to each subproblem once and reuse it. Five steps: define the state, write the transition, set the initial values, choose the loop order, then check the boundaries. DP needs two things at once — overlapping subproblems and optimal substructure. Without the overlap it is only divide and conquer.",
-      zh: "把算过的子问题记下来,别再算第二遍。五步法:定义状态 → 写转移 → 定初始 → 定遍历顺序 → 验边界。DP 需要两个条件同时成立:重叠子问题 + 最优子结构;少了「重叠」,那就只是分治。",
+      en: "Store the answer to each subproblem once and reuse it. Five steps: define the state, write the transition, set the initial values, choose the loop order, then check a small example by hand. DP needs two things at once — overlapping subproblems and optimal substructure. Without the overlap it is only divide and conquer.",
+      zh: "把算过的子问题记下来,别再算第二遍。五步法:定义状态 → 写转移 → 初始化 → 定遍历顺序 → 手推小例子。DP 需要两个条件同时成立:重叠子问题 + 最优子结构;少了「重叠」,那就只是分治。",
     },
     runnerUp: {
       en: "Knapsack-shaped problems are in chapter 08. Two-sequence problems and edit distance are in chapter 09. State machines, intervals, trees, and bitmasks are in chapter 10.",
@@ -247,7 +247,7 @@ const TREE: Record<string, Node> = {
     kind: "r",
     paradigm: {
       en: "Binary search on the answer",
-      zh: "二分答案 Binary Search on Answer",
+      zh: "二分答案 Binary Search on the Answer",
     },
     href: "/binary",
     chLabel: { en: "03 Binary Search in Depth", zh: "03 二分进阶" },
@@ -257,7 +257,7 @@ const TREE: Record<string, Node> = {
     },
     runnerUp: {
       en: "Koko Eating Bananas (875), Split Array Largest Sum (410), and Capacity to Ship Packages (1011) are all this pattern.",
-      zh: "吃香蕉(875)、分割数组最大值(410)、运送包裹(1011)都是它。",
+      zh: "爱吃香蕉的珂珂(875)、分割数组的最大值(410)、在 D 天内送达包裹的能力(1011)都属于这一类。",
     },
   },
   "r-binary": {
@@ -267,7 +267,7 @@ const TREE: Record<string, Node> = {
     chLabel: { en: "03 Binary Search in Depth", zh: "03 二分进阶" },
     why: {
       en: "Each step throws away half of the remaining range. What makes that safe is not sortedness itself but a yes/no test that flips only once across the range; a sorted array is the most common case of it. The advanced part is finding boundaries (lower and upper bound) and using the fact that in a rotated array one half is always sorted.",
-      zh: "每一步砍掉一半区间。让这件事成立的不是「有序」本身,而是判定条件在区间上只翻转一次 —— 有序数组只是它最常见的形态。进阶在「找边界」(lower / upper bound)与「二段性」(旋转数组每次总有一半有序)。",
+      zh: "每一步去掉一半区间。让这件事成立的不是「有序」本身,而是判定条件在区间上只翻转一次 —— 有序数组只是它最常见的形态。进阶内容是「找边界」(lower / upper bound)与「二段性」(旋转数组每次总有一半有序)。",
     },
     runnerUp: {
       en: "For left and right boundaries see 34, for rotated arrays see 33 and 153, for matrices see 74 and 240.",
@@ -281,28 +281,28 @@ const TREE: Record<string, Node> = {
     chLabel: { en: "05 Backtracking", zh: "05 回溯" },
     why: {
       en: "The standard answer when the task is to list every valid solution. Three things define it: the path so far, the choices still available, and the stop condition. Walk into a dead end, undo one step, take another road. It is a decision tree you can draw.",
-      zh: "「列出所有可行解」的专业户。三问定式:路径(已选什么)、选择列表(还能选什么)、结束条件。走进死胡同就撤一步换条路 —— 本质是一棵画得出来的决策树。",
+      zh: "「列出所有可行解」的标准方法。三个要素:路径(已选什么)、选择列表(还能选什么)、结束条件。走进死胡同就撤回一步、换一条路 —— 本质是一棵画得出来的决策树。",
     },
     runnerUp: {
       en: "Removing duplicates has two forms: skipping across a level and skipping along a branch. Pruning cuts an exponential tree down to a workable size.",
-      zh: "去重分「树层去重」和「树枝去重」两板斧;剪枝能把指数树砍瘦。",
+      zh: "去重有两种方法:「树层去重」和「树枝去重」;剪枝能把指数级的搜索树缩减到可以处理的大小。",
     },
   },
   "r-backtrack-opt": {
     kind: "r",
     paradigm: {
       en: "Backtracking with pruning on the best answer so far",
-      zh: "回溯 + 最优性剪枝(暴搜兜底)",
+      zh: "回溯 + 最优性剪枝(以暴力搜索兜底)",
     },
     href: "/backtrack",
     chLabel: { en: "05 Backtracking", zh: "05 回溯" },
     why: {
       en: "When greedy cannot be proved, subproblems do not overlap, and no monotonic test on the answer exists, searching is what is left. Add one rule: as soon as the partial answer is already worse than the best complete answer you have, stop exploring that branch.",
-      zh: "既贪不了、又没有重叠子问题、答案也不单调时,只能搜。但要带上一条规则:当前部分解已经比已知最优还差,就立刻剪掉这条分支。",
+      zh: "既不能用贪心、又没有重叠子问题、答案也没有单调判定时,只能搜索。但要加上一条规则:当前的部分解已经比已知最优解还差,就立刻剪掉这条分支。",
     },
     runnerUp: {
       en: "If you notice that the subproblems do repeat after all, go back to chapter 07. That is the signal for DP.",
-      zh: "如果发现子问题其实重叠了 —— 回到 07 章,那就是 DP 该出场的信号。",
+      zh: "如果发现子问题其实会重复 —— 回到 07 章,这正是该改用 DP 的信号。",
     },
   },
   "r-divide": {
@@ -315,7 +315,7 @@ const TREE: Record<string, Node> = {
     chLabel: { en: "02 Divide and Conquer", zh: "02 分治" },
     why: {
       en: "Three steps: split, solve, merge. Cut the problem into smaller copies of itself, trust the recursion to return their answers, then combine them. Merge sort, fast exponentiation, and merging k sorted lists all work this way. Use a recursion tree to estimate the cost.",
-      zh: "分 → 治 → 合三步:把大问题切成同款小问题,信任递归带回子答案,再合并。归并排序、快速幂、合并 K 个升序链表都是它;用递归树估复杂度。",
+      zh: "分 → 治 → 合三步:把大问题拆成规模更小的同类问题,相信递归会返回子问题的答案,再合并。归并排序、快速幂、合并 K 个升序链表都属于这一类;用递归树估算复杂度。",
     },
     runnerUp: {
       en: "Once the subproblems start to repeat, divide and conquer becomes DP: store each answer instead of recomputing it.",
@@ -339,7 +339,7 @@ const TREE: Record<string, Node> = {
     chLabel: { en: "11 Math & Number Theory", zh: "11 数学与数论" },
     why: {
       en: "Math problems in interviews rarely test math. They test whether you can find the quantity that does not change: majority vote, the sieve of Eratosthenes, fast exponentiation, parity in a game. Once you see the pattern, an O(n) or even O(1) answer follows.",
-      zh: "数学题不考数学,考的是能不能找到那个不变量:摩尔投票、埃氏筛、快速幂、博弈奇偶。找到规律,O(n) 甚至 O(1) 一步到位。",
+      zh: "面试中的数学题很少真正考数学,考的是能不能找到那个不变量:摩尔投票、埃氏筛、快速幂、博弈奇偶。找到规律后,O(n) 甚至 O(1) 的解法随之而来。",
     },
   },
 };
@@ -354,7 +354,7 @@ export function DecisionLab() {
       <div className="viz-title">
         <T
           en="Choosing a paradigm: the questions to ask, in order"
-          zh="范式选型向导 —— 拿到题,先陪自己走一遍这几问"
+          zh="范式选型向导 —— 拿到题后依次要问的几个问题"
         />
       </div>
 
@@ -393,12 +393,12 @@ export function DecisionLab() {
       ) : (
         <div className="atl-result">
           <div className="atl-result-label">
-            <T en="Recommended paradigm" zh="该亮的灯" />
+            <T en="Recommended paradigm" zh="推荐范式" />
           </div>
           <div className="atl-result-name">{L(cur.paradigm)}</div>
           <p className="atl-result-why">{L(cur.why)}</p>
           {cur.runnerUp && (
-            <p className="atl-result-runner">💡 {L(cur.runnerUp)}</p>
+            <p className="atl-result-runner">{L(cur.runnerUp)}</p>
           )}
           <div className="atl-result-actions">
             <Link href={cur.href} className="btn btn-sm btn-primary">
