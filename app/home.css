@@ -79,6 +79,36 @@
   pointer-events: none;
 }
 
+/* CountStat: the rolling number is shown, the final value is for screen readers; without
+   scripting the final value is all there is */
+/* Holds the line while the rolling number is still empty, so nothing shifts when it appears */
+.home-stat .v {
+  min-height: 1.1em;
+}
+
+.home-stat .count-final {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (scripting: none) {
+  .home-stat .count-live {
+    display: none;
+  }
+
+  .home-stat .count-final {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+  }
+}
+
 .home-stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
