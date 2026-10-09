@@ -1,6 +1,6 @@
 // Chapter 12 - String Algorithms: problem set and quiz data.
-// The problem set runs easy to hard along "brute force -> KMP -> applications of the prefix
-// function -> palindromes -> parsing";
+// The problem set covers KMP, applications of the prefix function, palindromes and parsing,
+// ordered easy to hard;
 // hint only points at a direction without spoiling, key explains the optimal solution in one
 // paragraph.
 // The whole chapter uses one next/pi convention: next[i] = the length of the longest proper
@@ -249,8 +249,8 @@ export const PROBLEMS: Problem[] = [
             expands at most O(n) times, so the total is O(n²) time and O(1) extra space.
             The Manacher algorithm reuses the symmetry of palindromes already found to
             skip repeated expansion and reaches O(n); this chapter explains the idea only.
-            The DataData array and two-pointer chapter introduced expand from center, so this
-            is a review that then connects to Manacher.
+            DataData chapter 02 (String) introduced expand from center, so this is a review
+            that then connects to Manacher.
           </>
         }
         zh={
@@ -258,7 +258,7 @@ export const PROBLEMS: Problem[] = [
             中心扩展:枚举每一个可能的对称中心,两侧字符相等就继续向外扩。中心共有 <b>2n−1</b> 个
             (n 个单字符中心对应奇长度,n−1 个字符缝隙中心对应偶长度)。每个中心最多扩 O(n) 次,
             总计 O(n²) 时间、O(1) 额外空间。Manacher 算法复用「已求出的回文的对称性」跳过重复扩张,
-            做到 O(n),本章只讲它的思路。DataData 的数组 / 双指针章介绍过中心扩展,
+            做到 O(n),本章只讲它的思路。DataData 第 2 章(字符串)介绍过中心扩展,
             这里作复盘,并接上 Manacher。
           </>
         }
@@ -356,7 +356,7 @@ export const PROBLEMS: Problem[] = [
             若 b 是 a 叠加若干次后的子串,那把 a 重复 <b>⌈len(b)/len(a)⌉</b> 次通常已经够长。
             但 b 可能从某一份的靠后位置开始、跨到下一份里,所以还要允许再多叠一次,上界是这个次数 + 1。
             构造出足够长的串后判 b 是否为其子串(KMP 或内置函数),返回用到的叠加次数,
-            判不出返回 −1。套路是「重复到够长 + 判子串」,又是 28 题的一次应用。
+            判不出返回 −1。思路是「重复到够长 + 判子串」,又是 28 题的一次应用。
           </>
         }
       />
@@ -405,7 +405,7 @@ export const PROBLEMS: Problem[] = [
         zh={
           <>
             目标是 s 的<b>最长回文前缀</b>:把它之后的部分翻转,拼到最前面。
-            妙招:构造 <code>t = s + &apos;#&apos; + reverse(s)</code>,对 t 求前缀函数,
+            技巧:构造 <code>t = s + &apos;#&apos; + reverse(s)</code>,对 t 求前缀函数,
             <b>next[末位]</b> 就是 s 的最长回文前缀长度 —— 因为「既是 s 的前缀、又是 reverse(s)
             的后缀」的那段,正是 s 中正反读相同的前缀。分隔符 <code>#</code> 必须取一个 s 里
             不出现的字符,它挡住匹配越过中线、把两半串到一起。O(n)。
@@ -452,7 +452,7 @@ export const PROBLEMS: Problem[] = [
         }
         zh={
           <>
-            本题就是前缀函数的<b>裸定义题</b>:答案 = s[0 .. next[n−1] − 1],
+            本题直接考前缀函数的<b>定义</b>:答案 = s[0 .. next[n−1] − 1],
             即长度为 next[n−1] 的前缀。跑一遍前缀函数构建,取末位值切片即可;末位为 0 时答案是空串。
             O(n)。做完这题,「最长相等真前后缀」这个词就彻底清楚了 ——
             它是 KMP、459、214 背后同一个引擎。
@@ -696,13 +696,18 @@ export const QUIZ: QuizItem[] = [
           <>
             i never moving backwards is why KMP reaches O(n + m). Setting j = next[j−1] means
             you give up the current alignment but keep the part of the matched suffix that is
-            equal to a prefix, so nothing is compared twice.
+            equal to a prefix, so the matched prefix is never compared again from the start. A
+            text character may be compared a few more times after fallbacks, but j rises by at
+            most 1 per step and every fallback lowers it, so there are at most n fallbacks in
+            total and the scan stays O(n).
           </>
         }
         zh={
           <>
             i 永不回退是 KMP 达到 O(n + m) 的关键。j = next[j−1] 意味着放弃当前对齐,
-            但保留已匹配后缀里等于前缀的那一段,所以没有任何字符被重复比较。
+            但保留已匹配后缀里等于前缀的那一段,所以已经匹配的前缀不必从头再比。
+            同一个文本字符在回退后可能再比几次,但 j 每步最多 +1、每次回退至少 −1,
+            所以回退总次数不超过 n,整个扫描仍是 O(n)。
           </>
         }
       />
@@ -741,13 +746,13 @@ export const QUIZ: QuizItem[] = [
         undefined,
         "The prefix and suffix must be proper, so k is always less than n. This test can never be true.",
         "Whether k is even says nothing about the period. The real test is whether n − k divides n.",
-        "The next array almost always contains 0; next[0] is 0 by definition. This test makes no sense.",
+        "The next array always contains a 0, because next[0] is 0 by definition, so this test is never true.",
       ],
       zh: [
         undefined,
         "前后缀必须是「真」的,所以 k 永远小于 n,这个条件恒不成立。",
         "k 的奇偶和循环节没有关系;真正的判据是 n − k 能否整除 n。",
-        "next 里几乎总有 0(next[0] 按定义就是 0),这个条件说不通。",
+        "next 里一定有 0(next[0] 按定义就是 0),这个条件永远不成立。",
       ],
     },
     why: (

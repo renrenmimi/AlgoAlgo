@@ -16,7 +16,7 @@
 
 import { type ReactNode } from "react";
 import { T, useL, type Loc } from "@/lib/i18n";
-import { useStepper, StepControls } from "@/lib/stepper";
+import { useStepper, StepControls, useEdgeFade } from "@/lib/stepper";
 
 /* ================================================================
    Shared helpers: character row / pointer row
@@ -132,11 +132,17 @@ function TwoRowMatch({
 }) {
   const s = useStepper(frames.length, intervalMs);
   const L = useL();
+  const edge = useEdgeFade<HTMLDivElement>();
   const f = frames[s.step];
   return (
     <div className="viz">
       <div className="viz-title">{L(title)}</div>
-      <div className="viz-stage" style={{ flexDirection: "column", gap: 6, overflowX: "auto" }}>
+      <div
+        ref={edge.ref}
+        data-fade={edge.fade}
+        className="viz-stage"
+        style={{ flexDirection: "column", gap: 6, overflowX: "auto" }}
+      >
         <PtrRow ptrs={f.ti !== undefined ? [{ i: f.ti, label: "i" }] : []} total={total} cellW={cellW} />
         <div className="str-tagrow">
           <span className="str-tag">{TAG_TEXT}</span>
@@ -301,7 +307,7 @@ function buildBruteFrames(t: string, p: string): AlignFrame[] {
             }
             zh={
               <>
-                🎉 在起点 <b>{a}</b> 完整匹配!但一路走来做了大量重复比较 —— 最坏情况总共 O(n·m)。
+                🎉 在起点 <b>{a}</b> 完整匹配。但一路走来做了大量重复比较 —— 最坏情况总共 O(n·m)。
                 下面看 KMP 如何把「失败带来的信息」存下来,不再让 i 回退。
               </>
             }
@@ -395,7 +401,7 @@ function buildNextFrames(p: string): NextFrame[] {
         zh={
           <>
             本章约定 <b>next[i] = 子串 p[0..i] 的最长相等真前后缀长度</b>。
-            「真」的意思是它不能等于整个子串。base case:单个字符没有真前缀,
+            「真」的意思是它不能等于整个子串。基例:单个字符没有真前缀,
             所以 <b>next[0] = 0</b>。接下来从 i=1 起,让模式串「和自己比」。
           </>
         }
@@ -481,7 +487,7 @@ function buildNextFrames(p: string): NextFrame[] {
             }
             zh={
               <>
-                对上了!p[{i}] 等于前缀的下一个字符,相等前后缀各长一格 → <b>next[{i}] = {j}</b>。
+                对上了。p[{i}] 等于前缀的下一个字符,相等前后缀各长一格 → <b>next[{i}] = {j}</b>。
                 现在前缀 p[0..{j - 1}] 正好等于以 p[{i}] 结尾的后缀。
               </>
             }
@@ -541,6 +547,7 @@ const NEXT_FRAMES = buildNextFrames(NB_PAT);
 
 export function NextBuilder() {
   const s = useStepper(NEXT_FRAMES.length, 1400);
+  const edge = useEdgeFade<HTMLDivElement>();
   const f = NEXT_FRAMES[s.step];
   const cellW = 52;
   const total = NB_PAT.length;
@@ -552,7 +559,12 @@ export function NextBuilder() {
           zh="★ next 数组构建 · 模式串「abababca」和自己比(蓝实线 = 正在对比的前缀字符 p[j] · 蓝虚线 = 已匹配的前缀)"
         />
       </div>
-      <div className="viz-stage" style={{ flexDirection: "column", gap: 6, overflowX: "auto" }}>
+      <div
+        ref={edge.ref}
+        data-fade={edge.fade}
+        className="viz-stage"
+        style={{ flexDirection: "column", gap: 6, overflowX: "auto" }}
+      >
         <PtrRow ptrs={f.ptrs} total={total} cellW={cellW} />
         <div className="str-tagrow">
           <span className="str-tag">pattern</span>
@@ -639,14 +651,16 @@ function buildKmpFrames(t: string, p: string): AlignFrame[] {
                 <>
                   t[{i}]=<b>{t[i]}</b> is not p[{oldj}]=<b>{p[oldj]}</b>. <b>i stays where it
                   is.</b> Set j = next[{oldj - 1}] = <b>{j}</b> and the pattern slides right:
-                  inside the part that already matched, the last {j} characters are equal to
-                  the prefix p[0..{j - 1}], so those {j} characters are reused instead of
-                  compared again.
+                  inside the part that already matched,{" "}
+                  {j === 1
+                    ? "the last character is equal to the prefix p[0..0], so that character is"
+                    : `the last ${j} characters are equal to the prefix p[0..${j - 1}], so those ${j} characters are`}{" "}
+                  reused instead of compared again.
                 </>
               }
               zh={
                 <>
-                  t[{i}]=<b>{t[i]}</b> ≠ p[{oldj}]=<b>{p[oldj]}</b>。<b>i 原地不动!</b>
+                  t[{i}]=<b>{t[i]}</b> ≠ p[{oldj}]=<b>{p[oldj]}</b>。<b>i 原地不动。</b>
                   令 j = next[{oldj - 1}] = <b>{j}</b>,模式串向右滑 ——
                   已匹配的那段里,末尾 {j} 个字符正好等于前缀 p[0..{j - 1}],这 {j} 个字符直接复用,
                   不用重比。
@@ -741,7 +755,7 @@ function buildKmpFrames(t: string, p: string): AlignFrame[] {
             }
             zh={
               <>
-                🎉 j 到达模式串末尾 → 在下标 <b>{start}</b> 命中!全程 i 只把 {n} 个文本位置
+                🎉 j 到达模式串末尾 → 在下标 <b>{start}</b> 命中。全程 i 只把 {n} 个文本位置
                 各走了一遍,从不回头。建表加这次扫描合计 <b>O(n + m)</b>。
                 这就是把每次失败的信息存下来的回报。
               </>
@@ -1061,7 +1075,7 @@ const CE_FRAMES: CEFrame[] = [
       <T
         en={
           <>
-            s[1]=<b>b</b> equals s[2]=<b>b</b> ✓, so the even-length palindrome <b>bb</b>
+            s[1]=<b>b</b> equals s[2]=<b>b</b> ✓, so the even-length palindrome <b>bb</b>{" "}
             holds. Keep expanding outwards.
           </>
         }
