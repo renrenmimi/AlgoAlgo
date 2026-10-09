@@ -38,7 +38,7 @@ const FIB_METRICS: RaceMetric[] = [
     label: { en: "Function calls", zh: "函数调用次数" },
     tip: {
       en: "One entry into the function; base cases and calls that only hit the memo are counted too.",
-      zh: "进入函数一次记一次;基准情形、以及只命中备忘录就返回的调用也都算。",
+      zh: "进入函数一次记一次;基例、以及只命中备忘录就返回的调用也都算。",
     },
   },
   {
@@ -778,7 +778,7 @@ export default function DPChapter() {
         index="01"
         title={{
           en: "Why DP exists: a recursion tree that grows out of control",
-          zh: "为什么会有 DP:一棵会爆炸的递归树",
+          zh: "为什么会有 DP:一棵指数增长的递归树",
         }}
         desc={{
           en: "DP is not a new trick. It is a repair for recursion that repeats the same work.",
@@ -923,8 +923,8 @@ export default function DPChapter() {
               en={
                 <>
                   Dynamic programming needs <strong>both</strong> properties.
-                  This is also the exact difference from the previous chapter.
-                  Divide and conquer has optimal substructure too: merge sort
+                  This is also the exact difference from divide and conquer in
+                  chapter 02, which has optimal substructure too: merge sort
                   builds a sorted array from two sorted halves. But its
                   subproblems <strong>do not overlap</strong> — the two halves are
                   disjoint, so no subproblem is ever solved twice, and storing
@@ -936,7 +936,7 @@ export default function DPChapter() {
               zh={
                 <>
                   动态规划需要<strong>同时满足这两个性质</strong>,
-                  这也正是它和上一章分治的区别所在。分治同样有最优子结构 ——
+                  这也正是它和第 2 章分治的区别所在。分治同样有最优子结构 ——
                   归并排序用两个有序的半段拼出整段有序。但分治的子问题
                   <strong>不重叠</strong>:两半互不相交,任何子问题都只会被解一次,
                   记结果毫无收益。而这里的子问题大量重叠,
@@ -1081,9 +1081,9 @@ export default function DPChapter() {
     }
 
     private int dfs(int n) {
-        if (n <= 2) return n;              // 基准情形:f(1)=1, f(2)=2
+        if (n <= 2) return n;              // 基例:f(1)=1, f(2)=2
         if (memo[n] != 0) return memo[n];  // ① 先查表
-        memo[n] = dfs(n - 1) + dfs(n - 2); // 老实计算
+        memo[n] = dfs(n - 1) + dfs(n - 2); // 计算
         return memo[n];                    // ② 已记入表中,返回
     }
 }`,
@@ -1101,7 +1101,7 @@ export default function DPChapter() {
               zh: (
                 <>
                   <b>常见错误:</b>用数组当备忘录时,标记「未计算」的值(这里是 0)
-                  不能和真实答案撞车。若答案可能为 0,请改用 <code>-1</code> 初始化,
+                  不能与真实答案重合。若答案可能为 0,请改用 <code>-1</code> 初始化,
                   或换成 <code>HashMap</code>。
                 </>
               ),
@@ -1127,7 +1127,7 @@ export default function DPChapter() {
         @cache                    # ① 一行装饰器 = 自动备忘录
         def dfs(i: int) -> int:
             if i <= 2:
-                return i          # 基准情形
+                return i          # 基例
             return dfs(i - 1) + dfs(i - 2)  # ② 结果自动缓存
 
         return dfs(n)`,
@@ -1167,7 +1167,7 @@ export default function DPChapter() {
               zh: `var climbStairs = function (n) {
   const memo = new Map();          // 备忘录:i -> f(i)
   const dfs = (i) => {
-    if (i <= 2) return i;          // 基准情形
+    if (i <= 2) return i;          // 基例
     if (memo.has(i)) return memo.get(i); // ① 先查表
     const val = dfs(i - 1) + dfs(i - 2);
     memo.set(i, val);              // ② 记入表中再返回
@@ -1263,12 +1263,12 @@ export default function DPChapter() {
                 zh: (
                   <>
                     n = {size} 时朴素递归那条赛道超过操作上限、被中止了。
-                    这次中止本身就是结论,不是组件的毛病:用朴素递归回答 fib({size}),
+                    这次中止本身就是结论,不是组件的缺陷:用朴素递归回答 fib({size}),
                     需要 2·fib({size + 1})−1 = <b>{num(calls)} 次调用</b>和 {num(adds)}{" "}
                     次加法,而 n 再加 1,这个数还要乘以约 1.618。
                     记忆化版本回答的是同一个问题,只花 <b>{memo.cmp} 次调用</b>、
                     {memo.mov} 次加法,也就是 2n−1 与 n−1。
-                    递推做同样的 {loop.mov} 次加法,空间则钉在 {loop.space} 格,
+                    递推做同样的 {loop.mov} 次加法,空间则固定在 {loop.space} 格,
                     而记忆化要占 {memo.space} 格。
                     多写两行,{num(calls)} 变成了 {memo.cmp} ——
                     这个比值就是「O(2ⁿ) 塌缩成 O(n)」的字面意思。
@@ -1284,7 +1284,7 @@ export default function DPChapter() {
                   {num(fibOf(size + 1))} leaves and one internal node per
                   addition. Memoization needs <b>{memo.cmp} calls</b>, which is
                   2n−1: the n−1 genuine subproblems are each computed once, and
-                  every remaining call returns straight from the table. The
+                  every remaining call either hits the table or is a base case. The
                   middle column is the honest one — both DP forms perform exactly{" "}
                   {memo.mov} = n−1 additions, while the naive version performs{" "}
                   {num(naive.counts.mov)}, and everything past n−1 is
@@ -1301,7 +1301,7 @@ export default function DPChapter() {
                   因为它的调用树有 fib({size + 1}) = {num(fibOf(size + 1))} 个叶子,
                   每个内部节点对应一次加法。
                   记忆化只需 <b>{memo.cmp} 次调用</b>,也就是 2n−1:
-                  n−1 个真正的子问题各算一次,余下的调用全都直接从表里返回。
+                  n−1 个真正的子问题各算一次,余下的调用要么直接查表返回,要么是基例。
                   中间那一栏最诚实 —— 两种 DP 形态都恰好做 {memo.mov} = n−1 次加法,
                   而朴素递归做了 {num(naive.counts.mov)} 次,超出 n−1 的部分全是重算。
                   最后一栏属于递推:不管 n 多大都只有 <b>{loop.space} 格</b>,
@@ -1460,7 +1460,7 @@ export default function DPChapter() {
               ),
               zh: (
                 <>
-                  转移只读最近两格,于是数组砍成两个变量,空间 O(n) → <b>O(1)</b>。
+                  转移只读最近两格,于是数组可以换成两个变量,空间 O(n) → <b>O(1)</b>。
                   「滚动优化」在背包一章还会升级,那里连遍历方向都有讲究。
                 </>
               ),
@@ -1529,15 +1529,17 @@ export default function DPChapter() {
             note: {
               en: (
                 <>
-                  For n ≤ 45 the result stays inside the safe integer range. If a
-                  problem allows larger n, JavaScript needs <code>BigInt</code>,
+                  Results stay below 2⁵³ for n ≤ 77, so they are exact in a{" "}
+                  <code>Number</code> (45 is the limit for a Java{" "}
+                  <code>int</code>). Only larger n needs <code>BigInt</code>,
                   because <code>Number</code> loses precision above 2⁵³.
                 </>
               ),
               zh: (
                 <>
-                  n ≤ 45 时结果在安全整数范围内。如果题目允许更大的 n,
-                  JS 要改用 <code>BigInt</code> —— <code>Number</code> 超过 2⁵³ 会丢精度。
+                  n ≤ 77 时结果都在 2⁵³ 以内,<code>Number</code> 能精确表示
+                  (n ≤ 45 是 Java <code>int</code> 的上限)。更大的 n 才需要改用{" "}
+                  <code>BigInt</code> —— <code>Number</code> 超过 2⁵³ 会丢精度。
                 </>
               ),
             },
@@ -1745,12 +1747,12 @@ export default function DPChapter() {
         <div className="dp-steps">
           <div className="dp-step">
             <div>
-              <h4>
+              <h3>
                 <T
                   en="Define the state — say in one plain sentence what dp[i] means"
-                  zh="定义状态 —— 用一句人话说清 dp[i] 是什么"
+                  zh="定义状态 —— 用一句平实的话说清 dp[i] 是什么"
                 />
-              </h4>
+              </h3>
               <p>
                 <T
                   en={
@@ -1776,12 +1778,12 @@ export default function DPChapter() {
           </div>
           <div className="dp-step">
             <div>
-              <h4>
+              <h3>
                 <T
                   en="Write the transition — split the cases by the last step"
                   zh="写转移方程 —— 按「最后一步」分类讨论"
                 />
-              </h4>
+              </h3>
               <p>
                 <T
                   en={
@@ -1806,12 +1808,12 @@ export default function DPChapter() {
           </div>
           <div className="dp-step">
             <div>
-              <h4>
+              <h3>
                 <T
                   en="Initialize — find the cells you can fill without the transition"
                   zh="初始化 —— 找到不用转移就能填的格子"
                 />
-              </h4>
+              </h3>
               <p>
                 <T
                   en={
@@ -1834,12 +1836,12 @@ export default function DPChapter() {
           </div>
           <div className="dp-step">
             <div>
-              <h4>
+              <h3>
                 <T
                   en="Fix the iteration order — every cell the transition reads must already be final"
                   zh="确定遍历顺序 —— 转移读到的格子必须已经是最终值"
                 />
-              </h4>
+              </h3>
               <p>
                 <T
                   en={
@@ -1869,12 +1871,12 @@ export default function DPChapter() {
           </div>
           <div className="dp-step">
             <div>
-              <h4>
+              <h3>
                 <T
                   en="Check a small example by hand — 3 to 6 values are enough"
                   zh="手推一个小例子 —— 3~6 个数据就够"
                 />
-              </h4>
+              </h3>
               <p>
                 <T
                   en={
@@ -1900,7 +1902,7 @@ export default function DPChapter() {
           tone="warn"
           title={{
             en: "Three beginner mistakes, all in the first three steps",
-            zh: "新手三大坑,全在前三步",
+            zh: "新手最常犯的三个错误,都出在前三步",
           }}
         >
           <p>
@@ -1944,7 +1946,7 @@ export default function DPChapter() {
         }}
         desc={{
           en: "Worked example B · LC 62 Unique Paths — one skeleton, three problems",
-          zh: "精讲 B · LC 62 不同路径 —— 一套骨架,三道题换皮",
+          zh: "精讲 B · LC 62 不同路径 —— 一套骨架,三道同构题",
         }}
         badge={<span className="lc-badge" data-d="medium">MEDIUM</span>}
       >
@@ -2068,7 +2070,7 @@ export default function DPChapter() {
                 <>
                   这是一维滚动版:赋值之前,<code>dp[j]</code> 还是上一行的值,
                   而 <code>dp[j-1]</code> 已经是本行的新值 ——
-                  一个 <code>+=</code> 同时吃到「上」和「左」两个来源。
+                  一个 <code>+=</code> 同时读到「上」和「左」两个来源。
                 </>
               ),
             },
@@ -2117,7 +2119,7 @@ export default function DPChapter() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="Variant 01 · LC 63" zh="换皮 01 · LC 63" />
+              <T en="Variant 01 · LC 63" zh="变式 01 · LC 63" />
             </div>
             <div className="card-title">
               <T en="Add obstacles" zh="加障碍" />
@@ -2144,7 +2146,7 @@ export default function DPChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="Variant 02 · LC 64" zh="换皮 02 · LC 64" />
+              <T en="Variant 02 · LC 64" zh="变式 02 · LC 64" />
             </div>
             <div className="card-title">
               <T en="Minimum path sum" zh="求最小和" />
@@ -2171,7 +2173,7 @@ export default function DPChapter() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="Variant 03 · LC 120" zh="换皮 03 · LC 120" />
+              <T en="Variant 03 · LC 120" zh="变式 03 · LC 120" />
             </div>
             <div className="card-title">
               <T en="Triangle" zh="三角形" />
@@ -2237,7 +2239,7 @@ export default function DPChapter() {
         }}
         desc={{
           en: "Worked example C · LC 198 — the bridge to the knapsack chapter. Try it by hand first.",
-          zh: "精讲 C · LC 198 —— 通往背包问题的桥,先亲手偷一轮",
+          zh: "精讲 C · LC 198 —— 通往背包问题的桥,先亲手试一轮",
         }}
         badge={<span className="lc-badge" data-d="medium">MEDIUM</span>}
       >
@@ -2281,7 +2283,7 @@ export default function DPChapter() {
               zh={
                 <>
                   <b>暴力:</b>每间房偷或不偷,共 2ⁿ 种组合逐一验证 ——
-                  n = 100 时根本跑不完。<b>正解:</b>对第 i 间房,决策只有两个:
+                  n = 100 时已无法在合理时间内完成。<b>正解:</b>对第 i 间房,决策只有两个:
                   <strong>偷</strong>(收益 = dp[i−2] + nums[i],因为第 i−1 间必须放弃)
                   或<strong>不偷</strong>(收益 = dp[i−1],直接继承)。取较大者:
                 </>
@@ -2406,18 +2408,17 @@ export default function DPChapter() {
             note: {
               en: (
                 <>
-                  Same sentinel idea as the Python version. The two rolling
-                  assignments must stay in this order: JavaScript has no tuple
-                  unpacking that evaluates the whole right side first, although
-                  destructuring does:{" "}
-                  <code>[prev2, prev1] = [prev1, cur]</code>.
+                  Same sentinel idea as the Python version. These two separate
+                  assignments must stay in this order. Destructuring,{" "}
+                  <code>[prev2, prev1] = [prev1, cur]</code>, evaluates the whole
+                  right side first and avoids the issue.
                 </>
               ),
               zh: (
                 <>
-                  和 Python 版是同一个哨兵技巧。注意两行滚动赋值的顺序不能颠倒 ——
-                  JS 没有「右边整体先求值」的元组解包保护(解构赋值可以:
-                  <code>[prev2, prev1] = [prev1, cur]</code>)。
+                  和 Python 版是同一个哨兵技巧。本段用两行滚动赋值,所以顺序不能颠倒;
+                  也可以改用解构赋值 <code>[prev2, prev1] = [prev1, cur]</code>,
+                  它会先整体求出右边。
                 </>
               ),
             },
@@ -2452,7 +2453,7 @@ export default function DPChapter() {
                   ①「房子围成一圈呢?」(LC 213)→ 首尾不能同偷,
                   拆成 [0, n−2] 和 [1, n−1] 两条链各跑一遍取较大者;
                   ②「房子是一棵树呢?」(LC 337)→ 每个节点返回「偷 / 不偷」两个值,
-                  这是树形 DP,第 10 章主场;
+                  这是树形 DP,第 10 章会专门讲;
                   ③「为什么 dp[i−1] 那一项不加 nums[i]?」→ 回到状态定义:
                   「第 0 到第 i 间之内的最优」并不承诺偷第 i 间。
                 </>
@@ -2576,7 +2577,7 @@ export default function DPChapter() {
                   贪心为什么会失效?硬币系统 [1, 3, 4] 不满足
                   <strong>贪心选择性质</strong>:拿走 ¥4 这个局部最优,
                   会破坏全局最优(3 + 3)的结构。贪心章讲过规则:
-                  <strong>证明不了交换论证,就不要贪</strong>。此时退回 DP:
+                  <strong>证明不了交换论证,就不要用贪心</strong>。此时退回 DP:
                   状态 dp[a] = 恰好凑出金额 a 的最少硬币数,凑不出则为无穷大;
                   按「最后一枚硬币是谁」分类:
                 </>
@@ -2758,7 +2759,7 @@ export default function DPChapter() {
         </Callout>
         <Callout
           tone="idea"
-          title={{ en: "Checkpoint: three strategies compared", zh: "范式雷达 · 阶段小结" }}
+          title={{ en: "Checkpoint: three strategies compared", zh: "范式识别 · 阶段小结" }}
         >
           <p>
             <T
@@ -2770,7 +2771,8 @@ export default function DPChapter() {
                   tree is about O(k^amount). <b>Greedy</b> takes the largest coin
                   each time: fastest, but it needs a proof, and it fails outright
                   on [1, 3, 4]. <b>DP</b> enumerates the decisions and stores the
-                  subproblem answers: always correct, in polynomial time. Working
+                  subproblem answers: always correct, in pseudo-polynomial time,
+                  O(amount × k) (chapter 08 explains the term). Working
                   through an optimization problem in that order is a good way to
                   answer in an interview.
                 </>
@@ -2781,7 +2783,7 @@ export default function DPChapter() {
                   <b>回溯</b>枚举所有拿法(必对,但设面额有 k 种、目标金额为 amount,
                   搜索树约 O(k^amount))→
                   <b>贪心</b>每步拿最大(最快,但需要证明,在 [1, 3, 4] 上直接失效)→
-                  <b>DP</b> 枚举决策 + 记住子问题答案(必对,多项式时间)。
+                  <b>DP</b> 枚举决策 + 记住子问题答案(必对,伪多项式时间 O(amount × k),第 8 章会解释这个术语)。
                   面试遇到最优化问题,按这个顺序梳理一遍,就是很好的作答顺序。
                 </>
               }
@@ -2871,7 +2873,7 @@ export default function DPChapter() {
             </>,
             <>
               标准推导链:<b>暴力递归 → 记忆化搜索 → 递推填表 → 滚动数组</b> ——
-              面试时把这条链讲出来,比直接背最优解值钱。
+              面试时把这条链讲出来,比直接背出最优解更有价值。
             </>,
             <>
               五步法:<b>定义状态 → 按「最后一步」写转移 → 初始化 → 定遍历顺序 →
@@ -2884,7 +2886,7 @@ export default function DPChapter() {
             </>,
             <>
               「<b>选 / 不选</b>」(LC 198)是 DP 最重要的决策模型,直通背包;
-              「<b>枚举最后一步</b>」(LC 322 的最后一枚硬币)是写转移的通用起手式。
+              「<b>枚举最后一步</b>」(LC 322 的最后一枚硬币)是写转移的通用切入点。
             </>,
             <>
               遍历顺序由转移方程决定,不靠习惯:

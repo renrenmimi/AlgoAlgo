@@ -109,7 +109,7 @@ function buildNaiveFrames(): TreeFrame[] {
           }
           zh={
             <>
-              f({node.n}) 是<b>基准情形</b>,直接返回 {node.n}。
+              f({node.n}) 是<b>基例</b>,直接返回 {node.n}。
               {times > 1 && (
                 <> 这已经是第 <b>{times}</b> 次回答同一个问题了。</>
               )}
@@ -130,7 +130,7 @@ function buildNaiveFrames(): TreeFrame[] {
           }
           zh={
             <>
-              ⚠️ 又要算 <b>f({node.n})</b>!它刚才已经算出来过,这是第 {times} 次。
+              ⚠️ 又要算 <b>f({node.n})</b>。它刚才已经算出来过,这是第 {times} 次。
               朴素递归不保留任何结果,只能把下面整棵子树<b>从头再长一遍</b>。
             </>
           }
@@ -276,7 +276,7 @@ const MEMO_FRAMES: TreeFrame[] = [
   {
     states: { r: "path", rL: "path", rLL: "path", rLLL: "path", rLLLL: "cur" },
     msg: (
-      <T en={<>f(1) is a base case. It returns 1.</>} zh={<>f(1) 是基准情形,返回 1。</>} />
+      <T en={<>f(1) is a base case. It returns 1.</>} zh={<>f(1) 是基例,返回 1。</>} />
     ),
   },
   {
@@ -292,7 +292,7 @@ const MEMO_FRAMES: TreeFrame[] = [
         }
         zh={
           <>
-            f(0) 是基准情形,返回 0。于是 f(2) = 1 —— <b>写进备忘录</b>,
+            f(0) 是基例,返回 0。于是 f(2) = 1 —— <b>写进备忘录</b>,
             之后谁再问 f(2),直接从表里读。
           </>
         }
@@ -311,7 +311,7 @@ const MEMO_FRAMES: TreeFrame[] = [
         }
         zh={
           <>
-            回到 f(3):还差 f(1),基准情形返回 1。于是 f(3) = 1 + 1 = 2,
+            回到 f(3):还差 f(1),基例返回 1。于是 f(3) = 1 + 1 = 2,
             <b>记入备忘录</b>。
           </>
         }
@@ -417,6 +417,9 @@ export function RobLab() {
   const L = useL();
   const [picked, setPicked] = useState<boolean[]>(() => HOUSES.map(() => false));
   const [revealed, setRevealed] = useState(false);
+  // The control bar names the best total only after "Show the best" has been pressed
+  // (and until "Clear"), so the answer is not given away before the reader tries.
+  const [bestShown, setBestShown] = useState(false);
 
   const sum = useMemo(
     () => HOUSES.reduce((s, v, i) => s + (picked[i] ? v : 0), 0),
@@ -486,7 +489,7 @@ export function RobLab() {
             }
             zh={
               <>
-                🚨 <b>警报!</b>相邻两间同时被偷 —— 这套方案不合法,先取消一间。
+                🚨 <b>警报。</b>相邻两间同时被偷 —— 这套方案不合法,先取消一间。
               </>
             }
           />
@@ -504,7 +507,7 @@ export function RobLab() {
             zh={
               <>
                 🏆 <b>{sum}</b> —— 这是最优解(2 + 9 + 1)。注意它的代价:
-                拿下 9 之后,第二大的 7 就必须整个放弃 —— 每个决定都牵连左右邻居。
+                选了 9 之后,第二大的 7 就必须整个放弃 —— 每个决定都牵连左右邻居。
                 5 间房还能手点,100 间就不行了,这种全局权衡正是 DP 要处理的事。
               </>
             }
@@ -522,7 +525,7 @@ export function RobLab() {
             zh={
               <>
                 当前 <b>{sum}</b>,最优是 <b>{BEST}</b>(偷下标 0、2、4:2 + 9 + 1)。
-                试着凑出它 —— 然后想想:如果有 100 间房,你还敢靠手点吗?
+                试着凑出它 —— 然后想想:如果有 100 间房,手动挑选还靠得住吗?
               </>
             }
           />
@@ -536,7 +539,7 @@ export function RobLab() {
             }
             zh={
               <>
-                当前合法收益:<b>{sum}</b>。觉得到顶了?点「看最优」对答案。
+                当前合法收益:<b>{sum}</b>。觉得已经是最大值了?点「看最优」核对。
               </>
             }
           />
@@ -549,16 +552,29 @@ export function RobLab() {
           onClick={() => {
             setPicked(HOUSES.map(() => false));
             setRevealed(false);
+            setBestShown(false);
           }}
         >
           <T en="Clear" zh="清空重来" />
         </button>
-        <button type="button" className="btn btn-sm btn-primary" onClick={() => setRevealed(true)}>
+        <button
+          type="button"
+          className="btn btn-sm btn-primary"
+          onClick={() => {
+            setRevealed(true);
+            setBestShown(true);
+          }}
+        >
           <T en="Show the best" zh="看最优" />
         </button>
         <span className="mono dim" style={{ marginLeft: "auto", fontSize: 12 }}>
-          nums = [{HOUSES.join(", ")}] ·{" "}
-          <T en={<>best {BEST}</>} zh={<>最优 {BEST}</>} />
+          nums = [{HOUSES.join(", ")}]
+          {bestShown && (
+            <>
+              {" "}·{" "}
+              <T en={<>best {BEST}</>} zh={<>最优 {BEST}</>} />
+            </>
+          )}
         </span>
       </div>
     </div>

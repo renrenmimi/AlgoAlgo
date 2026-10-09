@@ -299,7 +299,7 @@ export const PROBLEMS: Problem[] = [
     lc: 53,
     title: { en: "Maximum Subarray", zh: "最大子数组和" },
     d: "medium",
-    tags: { en: ["1D DP", "Kadane"], zh: ["一维 DP", "Kadane"] },
+    tags: { en: ["1D DP", "Kadane", "Review"], zh: ["一维 DP", "Kadane", "复盘"] },
     hint: {
       en: "Define dp[i] as the largest sum of a subarray that ends exactly at index i. Note \"ends at i\", not \"within the first i elements\".",
       zh: "把 dp[i] 定义成「以下标 i 结尾的最大子数组和」—— 注意是「以 i 结尾」,不是「前 i 个之内」。",
@@ -458,13 +458,13 @@ export const QUIZ: QuizItem[] = [
       zh: [
         undefined,
         "有序是二分 / 双指针的信号;额外空间只是实现细节,不是 DP 成立的前提。",
-        "「贪心选择性质」恰恰是可以跳过 DP 的理由 —— 能证明它,直接贪就行。无后效性说对了一半,另一半是重叠子问题。",
+        "「贪心选择性质」恰恰是可以跳过 DP 的理由 —— 能证明它,直接用贪心即可。无后效性说对了一半,另一半是重叠子问题。",
         "「子问题互相独立」是分治的信号(归并排序切出的两半互不共享工作)。DP 存在的意义,正是子问题不独立、大量重叠。",
       ],
     },
     why: {
       en: "Overlapping subproblems means storing an answer pays off. Optimal substructure means the stored answers can be combined into the answer above. Without overlap, use divide and conquer. Without optimal substructure, you have to search all combinations.",
-      zh: "重叠子问题 ⇒ 把答案记下来才有收益;最优子结构 ⇒ 记下来的答案能往上拼。不重叠就用分治;拼不出最优解,就只能老实搜索所有组合。",
+      zh: "重叠子问题 ⇒ 把答案记下来才有收益;最优子结构 ⇒ 记下来的答案能往上拼。不重叠就用分治;拼不出最优解,就只能搜索所有组合。",
     },
   },
   {
@@ -563,7 +563,7 @@ export const QUIZ: QuizItem[] = [
     },
     why: {
       en: "The last step into (i, j) has exactly two possibilities: from above or from the left. The two sets of paths do not overlap and cover everything, so the counts add. Splitting by the last step is the standard opening for a counting DP.",
-      zh: "走到 (i, j) 的最后一步只有两种:从上面来、从左面来。两类路径互斥且覆盖全部,所以直接相加。「按最后一步分类」是计数型 DP 的标准起手式。",
+      zh: "走到 (i, j) 的最后一步只有两种:从上面来、从左面来。两类路径互斥且覆盖全部,所以直接相加。「按最后一步分类」是计数型 DP 的标准切入点。",
     },
   },
   {
@@ -620,7 +620,7 @@ export const QUIZ: QuizItem[] = [
         "The more dimensions the state has, the safer, because it carries more information",
       ],
       zh: [
-        "能用一句人话说清 dp[i] 是什么(例如「以下标 i 结尾的最大子数组和」)",
+        "能用一句平实的话说清 dp[i] 是什么(例如「以下标 i 结尾的最大子数组和」)",
         "最终答案能从某一个(或某几个)状态里直接读出来",
         "每次转移只读取「已经算好」的状态",
         "状态维度越多越好,信息越全越安全",
@@ -629,7 +629,7 @@ export const QUIZ: QuizItem[] = [
     correct: [0, 1, 2],
     missHint: {
       en: "Three checks: can you state it, can you read the answer out of it, can you compute it in some order? Look again at which one you left out.",
-      zh: "三件套:说得清、取得出、算得动 —— 再看看你漏了哪一条。",
+      zh: "三个要点:说得清、取得出、算得动 —— 再看看你漏了哪一条。",
     },
     extraHint: {
       en: "More dimensions means a larger state space, which costs more time and more memory. A good state is just large enough to separate the cases that must be separated. If one dimension is enough, do not add a second.",
