@@ -278,7 +278,7 @@ const F_LCS = seqFrames(
             放弃 A 的末字符就落到<b>上方</b>那格 dp[{i - 1}][{j}] ={" "}
             {DP_LCS[i - 1][j]};放弃 B 的末字符就落到<b>左方</b>那格 dp[{i}][
             {j - 1}] = {DP_LCS[i][j - 1]}。取较大的那个:<b>{DP_LCS[i][j]}</b>。
-            注意它<b>任何时候都不清零</b> —— 之前攒下的公共长度原样保留。
+            注意它<b>任何时候都不清零</b> —— 之前积累的公共长度原样保留。
           </>
         }
       />
@@ -383,17 +383,19 @@ const F_718 = seqFrames(
   <T
     en={
       <>
-        The answer is the <b>maximum over the whole table, 3</b>, not the
-        bottom-right cell. The common run [3, 2, 1] ends in the middle of both
-        arrays, and every mismatch resets a cell, so the best value can sit
-        anywhere. Time <b>O(mn)</b>, and the table takes O(mn) space.
+        The answer is the <b>maximum over the whole table, 3</b>. The common run
+        [3, 2, 1] ends at the last element of A but in the middle of B
+        (dp[5][3]), so the maximum is not in the bottom-right cell, and since
+        every mismatch resets a cell, the best value can sit anywhere. Time{" "}
+        <b>O(mn)</b>, and the table takes O(mn) space.
       </>
     }
     zh={
       <>
-        答案是<b>整张表的最大值 3</b>,不是右下角。
-        公共连续段 [3, 2, 1] 在两个数组的中间就结束了,而每次不匹配都会把一格清零,
-        所以最大值可能出现在任何位置。时间 <b>O(mn)</b>,表占 O(mn) 空间。
+        答案是<b>整张表的最大值 3</b>。
+        公共连续段 [3, 2, 1] 在 A 的末尾、B 的中间结束(dp[5][3]),所以最大值不在右下角;
+        而每次不匹配都会把一格清零,最大值可能出现在任何位置。
+        时间 <b>O(mn)</b>,表占 O(mn) 空间。
       </>
     }
   />,
@@ -683,7 +685,7 @@ const LIS_N2 = {
                     dp[i] = max(dp[i], dp[j] + 1)
         return max(dp)                   # 答案是最大的那一格`,
     },
-    hl: [7, 8, 9],
+    hl: [6, 7, 8],
     note: {
       en: (
         <>
@@ -970,7 +972,7 @@ export default function DpSeqChapter() {
           <p>
             <T
               en={<>Every problem in this chapter turns on two words. Fix them first.</>}
-              zh={<>本章所有题都围绕两个词展开,先把它们钉死。</>}
+              zh={<>本章所有题都围绕两个词展开,先把它们界定清楚。</>}
             />
           </p>
           <ul>
@@ -1146,7 +1148,7 @@ export default function DpSeqChapter() {
         index="02"
         title={{
           en: "Worked example A · longest increasing subsequence",
-          zh: "精讲 A · 最长上升子序列(LIS)",
+          zh: "精讲 A · 最长递增子序列(也称最长上升子序列,LIS)",
         }}
         desc={{
           en: "LC 300 — subsequence DP on a single sequence, then the same answer in O(n log n).",
@@ -1190,7 +1192,7 @@ export default function DpSeqChapter() {
               zh={
                 <>
                   <b>暴力:</b>每个元素选或不选,共 2ⁿ 个子序列要逐个检查 ——
-                  n = 40 就已经跑不动了。<b>为什么能用 DP:</b>它有
+                  n = 40 就已经无法在合理时间内完成。<b>为什么能用 DP:</b>它有
                   <strong>最优子结构</strong> ——
                   一条上升子序列去掉末尾元素,剩下的仍然是上升子序列。
                   所以真正的问题是<strong>状态怎么定义</strong>。
@@ -1295,10 +1297,10 @@ export default function DpSeqChapter() {
                 <>
                   The length of <code>tails</code> is the correct answer, but the
                   values inside it <b>are not a valid subsequence of the input in
-                  general</b>. A later replacement can overwrite an entry with a
-                  value that appears earlier in the array than the entries to its
-                  left. For nums = [3, 4, 1], tails ends as [1, 4], yet 1 comes
-                  after 4 in the input. If you also need to reconstruct one actual
+                  general</b>. A later replacement can write a value that appears
+                  later in the input into a slot to the left of entries that
+                  appeared earlier. For nums = [3, 4, 1], tails ends as [1, 4],
+                  yet 1 comes after 4 in the input. If you also need to reconstruct one actual
                   longest subsequence, record the position each value was placed
                   at and follow those links backwards, or use the O(n²) version,
                   where the predecessor of every cell is available directly.
@@ -1308,7 +1310,7 @@ export default function DpSeqChapter() {
                 <>
                   <code>tails</code> 的长度是正确答案,但里面的值
                   <b>一般不是原数组的一条合法子序列</b>。
-                  后来的替换可能写入一个在原数组里位置更靠前的值。
+                  后来的替换会把一个在原数组里出现得更晚的值,写到比它出现得更早的元素的左边。
                   例如 nums = [3, 4, 1] 时,tails 最终是 [1, 4],
                   可是 1 在输入里排在 4 后面。
                   如果还要还原出一条真正的最长子序列,
@@ -1364,8 +1366,8 @@ export default function DpSeqChapter() {
                 }
                 zh={
                   <>
-                    在 dp[i] 旁边再挂一个 cnt[i]:发现更长的就<b>重置计数</b>,
-                    长度打平就<b>累加计数</b>。
+                    在 dp[i] 旁边再维护一个 cnt[i]:发现更长的就<b>重置计数</b>,
+                    长度相同就<b>累加计数</b>。
                     「主数组 + 计数数组」是计数型 DP 的通用形状。
                   </>
                 }
@@ -1378,8 +1380,8 @@ export default function DpSeqChapter() {
             </div>
             <div className="card-title">
               <T
-                en="⚠️ The answer is not in the last cell"
-                zh="⚠️ 答案不在最后一格"
+                en="The answer is not in the last cell"
+                zh="答案不在最后一格"
               />
             </div>
             <p>
@@ -1462,7 +1464,7 @@ export default function DpSeqChapter() {
                   <code>git diff</code> 和各种文本对比工具,
                   找的是两个文件里按相同顺序共有的最长行序列 ——
                   这正是下一节的<b>最长公共子序列</b>,只是把字符换成了整行。
-                  真实的 diff 工具不会老老实实填一张 m×n 的表,
+                  真实的 diff 工具不会完整地填一张 m×n 的表,
                   而是用 Myers 算法这类改进,或者 Hunt–Szymanski ——
                   后者把 LCS 归约成 LIS,在两个文件相同行不多时很快。
                   但它们回答的问题,就是下一节要讲的那个。
@@ -1530,9 +1532,9 @@ export default function DpSeqChapter() {
               zh={
                 <>
                   <b>暴力:</b>枚举 A 的起点、枚举 B 的起点,再往后逐位比较,
-                  代价 O(m·n·min(m, n))。<b>DP 解法:</b>双序列问题的通用起手是
+                  代价 O(m·n·min(m, n))。<b>DP 解法:</b>双序列问题的通用做法是
                   <strong>开一张二维表,行放 A、列放 B</strong>。
-                  由于这段必须连续,状态必须<strong>钉住这段在哪里结束</strong>:
+                  由于这段必须连续,状态必须<strong>确定这段在哪里结束</strong>:
                   <code>dp[i][j] = 正好以 A[i-1] 和 B[j-1] 结尾的最长公共连续段长度</code>。
                   两个元素相等,就在对角线的那段连续段上加一;
                   <strong>不相等则连续段断裂,格子回到 0</strong>:
@@ -1621,17 +1623,19 @@ export default function DpSeqChapter() {
                 <>
                   A cell is only written when the two elements are equal;
                   everything else keeps its initial 0. The table can be reduced to
-                  a single row, but then the row must be updated{" "}
+                  one row, with two changes. j must run{" "}
                   <b>from right to left</b>, because dp[j] reads the previous
-                  row&apos;s dp[j-1] and a left-to-right pass would already have
-                  overwritten it.
+                  row&apos;s dp[j-1]. A mismatch must explicitly set{" "}
+                  <b>dp[j] = 0</b>, because the cell still holds the previous
+                  row&apos;s value and no longer resets on its own.
                 </>
               ),
               zh: (
                 <>
                   只有两个元素相等时才写入,其余格子保持初始的 0。
-                  这张表可以压成一行,但那样必须<b>从右往左</b>更新 ——
-                  因为 dp[j] 要读上一行的 dp[j-1],从左往右扫会先把它覆盖掉。
+                  这张表可以压成一行,但要改两处:j 必须<b>从右往左</b>遍历,
+                  因为 dp[j] 要读上一行的 dp[j-1];不匹配时必须显式写{" "}
+                  <b>dp[j] = 0</b>,因为这一格里残留的是上一行的值,不会自动归零。
                 </>
               ),
             },
@@ -1651,7 +1655,7 @@ export default function DpSeqChapter() {
   }
   return ans;
 };`,
-            hl: [8, 9],
+            hl: [7, 8],
             note: {
               en: (
                 <>
@@ -1684,10 +1688,13 @@ export default function DpSeqChapter() {
                   The most informative cells in this table are not the 1s, 2s and
                   3s. They are the <b>zeros</b>. Each 0 says &quot;a run cannot
                   end here&quot;. The diagonal line of 1 → 2 → 3 is one common run
-                  growing. In the next section the same pair of sequences is used
-                  with the contiguity requirement removed, and those zeros
-                  disappear. That is the difference between LC 718 and LCS, seen
-                  directly in the table.
+                  growing. The next section drops the contiguity requirement,
+                  using the strings abcde and ace. A mismatching cell no longer
+                  resets to 0; it inherits the larger of the cells above and to
+                  the left, so once a common element has appeared, no cell below
+                  or to the right of it drops back to 0. In that table, apart from
+                  row 0 and column 0, no zeros appear. That is the difference
+                  between LC 718 and LCS, seen directly in the table.
                 </>
               }
               zh={
@@ -1695,7 +1702,10 @@ export default function DpSeqChapter() {
                   整张表里信息量最大的不是那些 1、2、3,而是<b>那些 0</b>:
                   每个 0 都在说「连续段不可能在这里结束」。
                   对角线上 1 → 2 → 3 那条斜线,就是一段公共连续段在生长。
-                  下一节把同一对序列去掉「必须连续」的要求,你会看到这些 0 全部消失 ——
+                  下一节去掉「必须连续」的要求(例子换成 abcde 与 ace):
+                  不匹配的格子不再归零,而是继承上方或左方较大的值,
+                  所以一旦出现过公共元素,它右下方的格子就不会再回到 0;
+                  那张表里除第 0 行、第 0 列外不再出现 0 ——
                   LC 718 与 LCS 的差别,直接写在表面上。
                 </>
               }
@@ -1756,7 +1766,7 @@ export default function DpSeqChapter() {
               }
               zh={
                 <>
-                  <b>DP 解法:</b>起手和 LC 718 一样 ——
+                  <b>DP 解法:</b>第一步和 LC 718 一样 ——
                   一张二维表,一个串放行、另一个放列。
                   但因为结果<strong>不要求连续</strong>,状态可以更简单:
                   <code>dp[i][j] = A 的前 i 个字符与 B 的前 j 个字符的最长公共子序列长度</code>,
@@ -2115,7 +2125,7 @@ export default function DpSeqChapter() {
                   共 (m+1)(n+1) 个状态、每格转移 O(1),
                   时间 <b>O(mn)</b>,表本身占 <b>O(mn)</b> 空间。
                   把较短的串放在列上、只保留一行,空间可以压到 O(min(m, n)),
-                  但<b>不是白送的</b>:转移还要读对角线 dp[i-1][j-1],
+                  但<b>这是有代价的</b>:转移还要读对角线 dp[i-1][j-1],
                   而从左往右扫会在用到它之前就把它覆盖 ——
                   必须<b>在写入这一格之前,先把那个值存进临时变量</b>。
                   常见追问:①「把那条公共子序列打印出来」→ 从右下角回溯来源;
@@ -2395,7 +2405,7 @@ export default function DpSeqChapter() {
               ),
               zh: (
                 <>
-                  Python 的 <code>min</code> 可以直接吃三个参数,
+                  Python 的 <code>min</code> 可以直接接收三个参数,
                   三种操作写在一个表达式里。
                   三个来源格分别是对角、上方、左方,
                   和动画里同时高亮的那三格一一对应。
@@ -2470,9 +2480,11 @@ export default function DpSeqChapter() {
                   methods use it to rank <b>&quot;did you mean …&quot;</b>{" "}
                   suggestions. In bioinformatics, aligning DNA or protein
                   sequences (the Needleman–Wunsch algorithm) is the same table
-                  with a score for each operation instead of a fixed cost of 1.
-                  Line-level <code>git</code> diffs, fuzzy finders such as fzf, and
-                  plagiarism checks all rest on this insert-delete-replace DP.
+                  with a score for each operation instead of a fixed cost of 1.{" "}
+                  <code>git diff</code> computes a shortest edit script with only
+                  insertions and deletions, which is equivalent to LCS; fuzzy
+                  finders score matches with a variant of the same family of
+                  alignment DPs.
                 </>
               }
               zh={
@@ -2480,9 +2492,9 @@ export default function DpSeqChapter() {
                   编辑距离(又叫 Levenshtein 距离)是衡量「两个序列有多像」的通用尺子。
                   搜索框和输入法用它给<b>「你是不是想搜……」</b>的候选排序;
                   生物信息学里比对 DNA 或蛋白质序列(Needleman–Wunsch 算法)
-                  就是同一张表,只是把固定代价 1 换成了每种操作各自的分数;
-                  <code>git</code> 的行级 diff、fzf 之类的模糊搜索、查重系统,
-                  底层都是这套「增删改」DP。
+                  就是同一张表,只是把固定代价 1 换成了每种操作各自的分数。
+                  <code>git diff</code> 求的是只含插入与删除的最短编辑脚本(与 LCS 等价);
+                  模糊搜索的打分则是同一类序列比对 DP 的变体。
                 </>
               }
             />
@@ -2732,7 +2744,7 @@ export default function DpSeqChapter() {
               zh: (
                 <>
                   切片 <code>s[l+1:r]</code> 右端开区间,正好就是回文的范围,
-                  连长度计算都省了 —— Python 的切片语义天然吃掉了那个 ±1。
+                  连长度计算都省了 —— Python 的切片语义自然消去了那个 ±1。
                 </>
               ),
             },
@@ -2793,8 +2805,8 @@ export default function DpSeqChapter() {
                   <strong>subsequence</strong>, from the interval DP side. There
                   is a shortcut worth knowing:{" "}
                   <strong>the longest palindromic subsequence of s is the longest
-                  common subsequence of s and reverse(s)</strong>, so the code
-                  from the previous section solves it unchanged. Writing the
+                  common subsequence of s and reverse(s)</strong>, so the LCS code
+                  from §04 solves it unchanged. Writing the
                   interval DP directly also works, and it shows the{" "}
                   <strong>iteration order</strong> that Chapter 10 is built on: i
                   runs from high to low, j from low to high, because dp[i][j]
@@ -2806,7 +2818,7 @@ export default function DpSeqChapter() {
                   再看 LC 516 最长回文<strong>子序列</strong>,
                   从区间 DP 的角度。有一条值得知道的捷径:
                   <strong>s 的最长回文子序列,就是 s 与 reverse(s) 的最长公共子序列</strong>,
-                  所以上一节的代码原封不动就能解它。
+                  所以 §04 的 LCS 代码原封不动就能解它。
                   直接写区间 DP 也可以,而且能看清第 10 章要用的
                   <strong>遍历顺序</strong>:i 从大到小、j 从小到大 ——
                   因为 dp[i][j] 要读 dp[i+1][…]。
@@ -2982,7 +2994,9 @@ export default function DpSeqChapter() {
                   First, interval DP builds <code>isPal[i][j]</code>, a table that
                   answers &quot;is s[i..j] a palindrome&quot; in O(1). Then a
                   one-dimensional DP over the cuts: <code>dp[i] = min(dp[j] + 1)</code>{" "}
-                  over every j for which s[j..i-1] is a palindrome. Building a
+                  over every j for which s[j..i-1] is a palindrome, and dp[i] = 0
+                  when the whole prefix s[0..i-1] is already a palindrome, since it
+                  needs no cut. Building a
                   lookup table first and running the main DP on top of it is a
                   common combination, and worth practising once the main line
                   feels stable.
@@ -2995,7 +3009,8 @@ export default function DpSeqChapter() {
                   先用区间 DP 算出 <code>isPal[i][j]</code>,
                   让「s[i..j] 是否回文」变成 O(1) 查询;
                   再做一维的分割 DP:<code>dp[i] = min(dp[j] + 1)</code>,
-                  其中 j 取遍所有使 s[j..i-1] 为回文的位置。
+                  其中 j 取遍所有使 s[j..i-1] 为回文的位置;
+                  若整个前缀 s[0..i-1] 本身就是回文,则 dp[i] = 0,一刀都不用切。
                   「先预处理一张判定表,再在表上跑主 DP」是很常见的组合,
                   等主线内容熟了之后值得专门练一次。
                 </>
@@ -3014,8 +3029,8 @@ export default function DpSeqChapter() {
           zh: "高频题单:子序列 DP 12 题",
         }}
         desc={{
-          en: "Grouped as subsequence checking, LIS, contiguous, two sequences, and palindromes, from easier to harder. Think for 30 seconds before opening the hint.",
-          zh: "按「子序列判定 → LIS → 连续型 → 双序列 → 回文」分层,由易到难。先想 30 秒再看提示",
+          en: "Ordered from easy to hard. Think for 30 seconds before opening the hint.",
+          zh: "由易到难排列。先想 30 秒再看提示",
         }}
         badge={
           <span className="chip">
@@ -3092,9 +3107,10 @@ export default function DpSeqChapter() {
               dp[i+1][j-1], so i must run downwards or the table must be filled
               by increasing interval length. Complexity is{" "}
               <b>(number of states) × (work per transition)</b>, and the table
-              counts in the space. A rolling row is safe only when the transition
-              reads the previous row alone; if it also reads the diagonal, save
-              that value before overwriting the cell.
+              counts in the space. Before rolling the table into one row, check
+              for every cell the transition reads whether this pass has already
+              overwritten it. The diagonal dp[i-1][j-1] is the cell most often
+              lost this way, so save it before overwriting the cell.
             </>,
             <>
               The most common bug in two-sequence DP is <b>off-by-one
@@ -3138,8 +3154,8 @@ export default function DpSeqChapter() {
               遍历顺序由转移决定:区间 DP 要读 dp[i+1][j-1],
               所以 i 必须倒序,或者按区间长度从短到长填。
               复杂度是<b>状态数 × 单次转移代价</b>,空间要把表本身算进去。
-              只有当转移仅读上一行时,滚动一行才是安全的;
-              若它还要读对角线,就得在覆盖当前格之前先把那个值存下来。
+              滚动成一行之前,先看清转移读到的每一格会不会已被本轮覆盖;
+              最常被覆盖的是对角线 dp[i-1][j-1],要在覆盖当前格之前先把它存下来。
             </>,
             <>
               双序列 DP 最常见的 bug 是<b>下标错位</b>:
