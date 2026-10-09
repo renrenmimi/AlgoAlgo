@@ -23,7 +23,8 @@ import { CodeTabs } from "@/lib/code";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
 import { T } from "@/lib/i18n";
-import { PROBLEMS, QUIZ } from "@/lib/backtrack-data";
+import { PROBLEMS } from "@/lib/backtrack-problems";
+import { QUIZ } from "@/lib/backtrack-quiz";
 import {
   MazeTree,
   CombTreeFull,

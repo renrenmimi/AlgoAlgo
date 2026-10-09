@@ -15,7 +15,8 @@ import { CodeTabs } from "@/lib/code";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
 import { T } from "@/lib/i18n";
-import { PROBLEMS, QUIZ } from "@/lib/dp-pro-data";
+import { PROBLEMS } from "@/lib/dp-pro-problems";
+import { QUIZ } from "@/lib/dp-pro-quiz";
 import { StockFSM, RobTreeDP, BalloonInterval, MaskLab } from "./viz";
 
 const CHIPS = [

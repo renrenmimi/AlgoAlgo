@@ -27,7 +27,8 @@ import { CodeTabs } from "@/lib/code";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
 import { T } from "@/lib/i18n";
-import { PROBLEMS, QUIZ } from "@/lib/sorting-data";
+import { PROBLEMS } from "@/lib/sorting-problems";
+import { QUIZ } from "@/lib/sorting-quiz";
 import { AlgoRace } from "@/lib/race";
 import {
   BUBBLE,

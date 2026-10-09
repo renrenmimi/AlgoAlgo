@@ -23,7 +23,8 @@ import { ArrayStepper, type ArrayFrame, type ArrayCell } from "@/lib/stepper";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
 import { T } from "@/lib/i18n";
-import { PROBLEMS, QUIZ } from "@/lib/math-data";
+import { PROBLEMS } from "@/lib/math-problems";
+import { QUIZ } from "@/lib/math-quiz";
 import { SieveGrid, NimGame, MooreVote } from "./viz";
 
 /* ============ §06 Next Permutation: ArrayStepper frames ============ */

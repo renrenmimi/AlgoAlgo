@@ -17,7 +17,8 @@ import { DPTable, type DPFrame, type DPCell } from "@/lib/algviz";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
 import { T } from "@/lib/i18n";
-import { PROBLEMS, QUIZ } from "@/lib/bits-data";
+import { PROBLEMS } from "@/lib/bits-problems";
+import { QUIZ } from "@/lib/bits-quiz";
 import { BitLamps, OpLab, SubsetLab } from "./viz";
 
 /* ================= Deep dive A - LC 136 XOR the whole array (ArrayStepper) ================= */

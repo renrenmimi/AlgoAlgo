@@ -32,7 +32,8 @@ import { AlgoRace } from "@/lib/race";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
 import { T } from "@/lib/i18n";
-import { PROBLEMS, QUIZ } from "@/lib/binary-data";
+import { PROBLEMS } from "@/lib/binary-problems";
+import { QUIZ } from "@/lib/binary-quiz";
 import { GuessLab, BoundaryStepper, RotatedStepper } from "./viz";
 import {
   cloneHaystack,

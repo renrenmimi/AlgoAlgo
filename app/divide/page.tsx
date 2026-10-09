@@ -29,7 +29,8 @@ import { CodeTabs } from "@/lib/code";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
 import { T } from "@/lib/i18n";
-import { PROBLEMS, QUIZ } from "@/lib/divide-data";
+import { PROBLEMS } from "@/lib/divide-problems";
+import { QUIZ } from "@/lib/divide-quiz";
 import { AlgoRace } from "@/lib/race";
 import { POW_ALGOS, POW_SHAPES, POW_METRICS } from "./race-pow";
 import {

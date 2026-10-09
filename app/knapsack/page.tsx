@@ -19,7 +19,8 @@ import { DPTable, type DPFrame, type DPCell } from "@/lib/algviz";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
 import { T } from "@/lib/i18n";
-import { PROBLEMS, QUIZ } from "@/lib/knapsack-data";
+import { PROBLEMS } from "@/lib/knapsack-problems";
+import { QUIZ } from "@/lib/knapsack-quiz";
 import { KnapSackLab, RollingCompare, TargetSumTree } from "./viz";
 
 /* ============ Shared 1-D row frame generator ============ */

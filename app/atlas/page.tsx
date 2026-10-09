@@ -24,18 +24,18 @@ import { T, useL } from "@/lib/i18n";
 import { DecisionLab } from "./viz";
 
 // The PROBLEMS of all 12 chapters are reused directly, so they match each chapter word for word and share progress.
-import { PROBLEMS as P_SORTING } from "@/lib/sorting-data";
-import { PROBLEMS as P_DIVIDE } from "@/lib/divide-data";
-import { PROBLEMS as P_BINARY } from "@/lib/binary-data";
-import { PROBLEMS as P_BITS } from "@/lib/bits-data";
-import { PROBLEMS as P_BACKTRACK } from "@/lib/backtrack-data";
-import { PROBLEMS as P_GREEDY } from "@/lib/greedy-data";
-import { PROBLEMS as P_DP } from "@/lib/dp-data";
-import { PROBLEMS as P_KNAPSACK } from "@/lib/knapsack-data";
-import { PROBLEMS as P_DPSEQ } from "@/lib/dp-seq-data";
-import { PROBLEMS as P_DPPRO } from "@/lib/dp-pro-data";
-import { PROBLEMS as P_MATH } from "@/lib/math-data";
-import { PROBLEMS as P_STRINGS } from "@/lib/strings-data";
+import { PROBLEMS as P_SORTING } from "@/lib/sorting-problems";
+import { PROBLEMS as P_DIVIDE } from "@/lib/divide-problems";
+import { PROBLEMS as P_BINARY } from "@/lib/binary-problems";
+import { PROBLEMS as P_BITS } from "@/lib/bits-problems";
+import { PROBLEMS as P_BACKTRACK } from "@/lib/backtrack-problems";
+import { PROBLEMS as P_GREEDY } from "@/lib/greedy-problems";
+import { PROBLEMS as P_DP } from "@/lib/dp-problems";
+import { PROBLEMS as P_KNAPSACK } from "@/lib/knapsack-problems";
+import { PROBLEMS as P_DPSEQ } from "@/lib/dp-seq-problems";
+import { PROBLEMS as P_DPPRO } from "@/lib/dp-pro-problems";
+import { PROBLEMS as P_MATH } from "@/lib/math-problems";
+import { PROBLEMS as P_STRINGS } from "@/lib/strings-problems";
 import {
   WEEKS,
   TRACK_LABEL,
