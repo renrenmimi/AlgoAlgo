@@ -60,11 +60,14 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${syne.variable} ${grotesk.variable} ${jetbrains.variable}`}
     >
-      <head>
+      <body>
+        {/* These run before the first paint. They sit at the top of <body>, not in <head>:
+            during hydration the webpack runtime removes the chunk <script> tags it has
+            finished loading from <head>, and when that happens while React is still
+            matching hand-written nodes there, hydration fails (React error #418) and the
+            whole root is rendered again on the client. */}
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script dangerouslySetInnerHTML={{ __html: langScript }} />
-      </head>
-      <body>
         <LangProvider>
           <ThemeProvider>
             <ShellProvider>

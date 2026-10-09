@@ -19,7 +19,7 @@ async function showEverything(page: Page) {
 async function openSorting(page: Page) {
   await page.addInitScript(() => {
     try {
-      window.localStorage.setItem("algo-lang", "en");
+      window.localStorage.setItem("aa-lang", "en");
     } catch {
       /* ignore */
     }
