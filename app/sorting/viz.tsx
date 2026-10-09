@@ -13,6 +13,8 @@
 //    which is how it breaks the comparison-sort lower bound.
 //  - StabilityDemo: stable vs unstable —— whether the relative order of equal-key
 //    elements survives.
+//  - sortRace1Verdict / sortRace2Verdict / sortRace3Verdict: the readings under the
+//    three algorithm races in §05, written against the measured counts.
 //
 // Bilingual: frame narration is written inline as <T en zh />; titles, buttons,
 // legends and pointer labels take { en, zh } and are resolved with useL() inside the
@@ -22,6 +24,7 @@
 import { useState, type ReactNode } from "react";
 import { T, useL, type Loc } from "@/lib/i18n";
 import { useStepper, StepControls, ArrayStepper, type ArrayFrame } from "@/lib/stepper";
+import type { LaneResult, RaceCounts } from "@/lib/race-core";
 
 /* ==================================================================
    SortLab —— the bar-chart sorting lab (bubble / selection / insertion)
@@ -38,8 +41,9 @@ interface BarFrame {
 const BASE = [5, 2, 9, 1, 6]; // 5 values, maxV = 9, which keeps the frame count reasonable
 const MAXV = 9;
 
-/* Bubble sort: swap any adjacent inversion, so large values bubble to the right */
-function bubbleFrames(): BarFrame[] {
+/* Bubble sort: swap any adjacent inversion, so large values bubble to the right.
+   Exported for test/unit/sorting-race-verdicts.test.tsx, which replays the rounds. */
+export function bubbleFrames(): BarFrame[] {
   const a = [...BASE];
   const n = a.length;
   const sorted = new Set<number>();
@@ -111,6 +115,7 @@ function bubbleFrames(): BarFrame[] {
       );
       if (gt) {
         [a[j], a[j + 1]] = [a[j + 1], a[j]];
+        swapped = true;
         snap(
           { [j]: "swap", [j + 1]: "swap" },
           <T
@@ -395,13 +400,13 @@ function insertionFrames(): BarFrame[] {
       <T
         en={
           <>
-            Draw card {i}, the value <b>{key}</b> (blue). Hold it aside; it has
-            to go into the sorted hand on its left.
+            Pick up the card at index {i}, the value <b>{key}</b> (blue). Hold it
+            aside; it has to go into the sorted hand on its left.
           </>
         }
         zh={
           <>
-            摸起第 {i} 张牌,值是 <b>{key}</b>(蓝色)。先把它拿在手上,
+            摸起下标 {i} 的牌,值是 <b>{key}</b>(蓝色)。先把它拿在手上,
             它要插进左边那手已排好的牌里。
           </>
         }
@@ -674,13 +679,13 @@ function partitionFrames(): ArrayFrame[] {
             en={
               <>
                 i advances to {i}, and <b>{moved}</b> is swapped into the left
-                region (exchanged with the value at index {j}).
+                region (exchanged with the value at index {i}).
               </>
             }
             zh={
               <>
                 i 前进到 {i},<b>{moved}</b> 被换进左边那一段
-                (与下标 {j} 上的值交换)。
+                (与下标 {i} 上的值交换)。
               </>
             }
           />,
@@ -1081,7 +1086,7 @@ function countingFrames(): CountFrame[] {
           }
           zh={
             <>
-              输入的第 {i} 位是 <b>{v}</b>,于是 {v} 号桶加一,现在是 {c}。
+              输入下标 {i} 处是 <b>{v}</b>,于是 {v} 号桶加一,现在是 {c}。
             </>
           }
         />
@@ -1556,4 +1561,392 @@ export function IntervalsDemo() {
       <StepControls stepper={stepper} step={stepper.step} total={IV_FRAMES.length} />
     </div>
   );
+}
+
+/* ==================================================================
+   Race verdicts —— the readings printed under the three races in §05.
+   Every number is taken from the measured counts, and every comparison the
+   text makes ("fewer", "writes the fewest", "the asymptotics show") is
+   checked against those counts before it is said.
+   test/unit/sorting-race-verdicts.test.tsx replays every shape × size × seed
+   and holds the wording to the data.
+   ================================================================== */
+
+type RaceCtx = { size: number; inputId: string };
+
+const fmt = (n: number) => n.toLocaleString("en-US");
+
+function countsOf(r: LaneResult[], id: string): RaceCounts {
+  const lane = r.find((x) => x.id === id);
+  if (!lane) throw new Error(`race verdict: no lane "${id}"`);
+  return lane.counts;
+}
+
+/** Both quicksort contenders book one temporary cell before they recurse, so the
+ *  recursion depth is their peak extra space minus that cell. */
+export const quickDepth = (c: RaceCounts) => c.space - 1;
+
+/** Race 1 · insertion, bubble and selection sort on the same array. */
+export function sortRace1Verdict(r: LaneResult[], { size, inputId }: RaceCtx): Loc<ReactNode> {
+  const ins = countsOf(r, "insertion");
+  const bub = countsOf(r, "bubble");
+  const sel = countsOf(r, "selection");
+
+  if (inputId === "sorted" || inputId === "nearly") {
+    return {
+      en: (
+        <>
+          Look at selection sort: <b>{fmt(sel.cmp)} comparisons</b> — exactly the same
+          number it spends on every other shape. It cannot do better, because to name the
+          minimum it must scan all the remaining elements, every single round. Insertion
+          sort needs only {fmt(ins.cmp)} comparisons and{" "}
+          {ins.mov === 0 ? "does not write at all" : `writes ${fmt(ins.mov)} times`}. That
+          gap is what the word <b>adaptive</b> is worth: an algorithm that notices the
+          input is already in order.
+        </>
+      ),
+      zh: (
+        <>
+          看选择排序:<b>{fmt(sel.cmp)} 次比较</b> —— 和它在任何别的形状上花的次数一模一样。
+          它没法更少,因为要说出「谁是最小的」,就必须每轮把剩下的元素全扫一遍。
+          插入排序只要 {fmt(ins.cmp)} 次比较,
+          {ins.mov === 0 ? "一次也不写" : `写 ${fmt(ins.mov)} 次`}。
+          这个差距就是<b>自适应(adaptive)</b>一词的实际意义:
+          一个算法能察觉「输入本来就有序」。
+        </>
+      ),
+    };
+  }
+
+  if (inputId === "reversed") {
+    return {
+      en: (
+        <>
+          Reversed input is insertion sort&apos;s true worst case: every element has to be
+          shifted all the way to the front, so it writes {fmt(ins.mov)} times against
+          selection sort&apos;s {fmt(sel.mov)}. No other shape lets selection sort save as
+          many writes against insertion sort — it swaps at most once per round. Which is
+          exactly when you would pick it: when a write is far more expensive than a
+          comparison.
+        </>
+      ),
+      zh: (
+        <>
+          逆序是插入排序真正的最坏情况:每个元素都得一路挪到最前面,
+          于是它写了 {fmt(ins.mov)} 次,而选择排序只写 {fmt(sel.mov)} 次。
+          在所有形状里,逆序时选择排序比插入排序省下的写入最多 —— 它每轮最多只交换一次。
+          这也正是你会选它的场合:当一次写入远比一次比较昂贵的时候。
+        </>
+      ),
+    };
+  }
+
+  // Random and many-duplicates input.
+  const share = Math.round((100 * ins.cmp) / bub.cmp);
+  // On a few elements the comparisons every round makes regardless of the data are a
+  // large part of both totals, so the ratio sits well above its limit.
+  const close = ins.cmp > 0.65 * bub.cmp;
+  const fewestOther = Math.min(ins.mov, bub.mov);
+  const selWrites: Loc<ReactNode> =
+    sel.mov < fewestOther
+      ? {
+          en: <>, yet it writes the fewest: {fmt(sel.mov)} times</>,
+          zh: <>,但写入最少:只有 {fmt(sel.mov)} 次</>,
+        }
+      : sel.mov === fewestOther
+        ? {
+            en: <>, and its {fmt(sel.mov)} writes tie for the fewest</>,
+            zh: <>,写入 {fmt(sel.mov)} 次,与最少的并列</>,
+          }
+        : {
+            en: (
+              <>
+                , and on this input it does not even write the fewest: insertion sort
+                wrote {fmt(ins.mov)} times, selection sort {fmt(sel.mov)}
+              </>
+            ),
+            zh: (
+              <>
+                ,而且在这一组输入上连写入都不是最少:插入排序写了 {fmt(ins.mov)} 次,
+                选择排序写了 {fmt(sel.mov)} 次
+              </>
+            ),
+          };
+  return {
+    en: (
+      <>
+        On unordered data all three stay in the n² family, but the constants differ.
+        Insertion sort compares {fmt(ins.cmp)} times, {share}% of bubble sort&apos;s{" "}
+        {fmt(bub.cmp)}, because it stops as soon as it finds the right slot instead of
+        sweeping to the end.
+        {close && (
+          <>
+            {" "}
+            At n = {size} the gap is still narrow: the comparisons every round makes
+            regardless of the data are a large share of such small counts. Raise n and
+            insertion sort pulls further ahead.
+          </>
+        )}{" "}
+        Selection sort stays pinned at {fmt(sel.cmp)} comparisons whatever the input
+        {selWrites.en}.
+      </>
+    ),
+    zh: (
+      <>
+        在无序数据上三者都还在 n² 这个量级里,但常数不同。
+        插入排序比较 {fmt(ins.cmp)} 次,是冒泡 {fmt(bub.cmp)} 次的 {share}%,
+        因为它一找到该待的位置就停,不像冒泡非要扫到底。
+        {close && (
+          <>
+            n = {size} 时差距还不明显:每一轮无论数据如何都要做的那几次比较,
+            在这么小的总数里占了很大比重。把 n 调大,插入排序会领先得更多。
+          </>
+        )}
+        选择排序则无论输入如何都钉在 {fmt(sel.cmp)} 次比较上{selWrites.zh}。
+      </>
+    ),
+  };
+}
+
+/** Race 2 · insertion sort against merge sort and randomised quicksort. */
+export function sortRace2Verdict(r: LaneResult[], { size, inputId }: RaceCtx): Loc<ReactNode> {
+  const ins = countsOf(r, "insertion");
+  const mer = countsOf(r, "merge");
+  const qr = countsOf(r, "quick-rand");
+
+  if ((inputId === "sorted" || inputId === "nearly") && ins.cmp < mer.cmp) {
+    const both = ins.cmp < qr.cmp;
+    return {
+      en: (
+        <>
+          Here is the headline: the O(n²) algorithm beats{" "}
+          {both ? "both O(n log n) ones" : "merge sort"}. Insertion sort spends{" "}
+          {fmt(ins.cmp)} comparisons and {fmt(ins.mov)} moves; merge sort spends{" "}
+          {fmt(mer.cmp)} comparisons,{" "}
+          <b>
+            {fmt(mer.mov)} moves and {fmt(mer.space)} cells of extra space
+          </b>{" "}
+          — and it will spend the same {fmt(mer.mov)} moves on every other shape, because
+          textbook merge sort is not adaptive: it splits and merges regardless of what the
+          data already looks like. Big-O was never wrong: O(n²) is insertion sort&apos;s
+          worst case, and on input that is already in order it makes little more than one
+          comparison per element, its O(n) best case. Raising n only widens the gap. This
+          is precisely why Timsort — the real sort in Python, and in Java for objects —
+          first scans for existing sorted runs and hands short pieces to insertion sort.
+        </>
+      ),
+      zh: (
+        <>
+          这就是本场最重要的结果:O(n²) 的算法打赢了
+          {both ? "两个 O(n log n) 的算法" : "归并排序"}。
+          插入排序花 {fmt(ins.cmp)} 次比较、{fmt(ins.mov)} 次移动;归并排序花{" "}
+          {fmt(mer.cmp)} 次比较、
+          <b>
+            {fmt(mer.mov)} 次移动、{fmt(mer.space)} 个额外单元
+          </b>{" "}
+          —— 而且它在任何别的形状上都会花同样的 {fmt(mer.mov)} 次移动,
+          因为教科书版归并不自适应:不管数据长什么样,都照样拆分、照样合并。
+          大 O 从没说错:O(n²) 是插入排序的最坏情况,而在已经有序的输入上,
+          它每个元素只需一次左右的比较,这是它 O(n) 的最好情况。n 越大,差距只会越大。
+          这也正是 Timsort(Python 以及 Java 的对象排序里真正在跑的那个排序)
+          要先扫描已有的有序段、并把短片段交给插入排序的原因。
+        </>
+      ),
+    };
+  }
+
+  if (inputId === "few") {
+    const depth = quickDepth(qr);
+    const deep = depth > 3 * Math.log2(size);
+    const loses = qr.cmp > ins.cmp;
+    return {
+      en: (
+        <>
+          Many duplicates are the one input a random pivot cannot fix. This Lomuto
+          partition sends every copy of the pivot value to the same side, so once a range
+          holds only equal values, each partition removes just one element and the work
+          grows like n²: randomised quicksort needs {fmt(qr.cmp)} comparisons
+          {loses ? (
+            <>, more than even insertion sort&apos;s {fmt(ins.cmp)}</>
+          ) : (
+            <>, against insertion sort&apos;s {fmt(ins.cmp)}</>
+          )}
+          , and its recursion goes {fmt(depth)} levels deep
+          {deep && <>, far deeper than the O(log n) on its lane, which assumes distinct values</>}
+          . Choosing the pivot at random cannot help, because inside such a range every
+          choice has the same value; a three-way partition (LC 75) keeps all copies of the
+          pivot in the middle and fixes this. Merge sort is not slowed down by duplicates
+          and needs {fmt(mer.cmp)}.
+        </>
+      ),
+      zh: (
+        <>
+          大量重复值是随机选轴解决不了的输入。这里的 Lomuto 划分把与基准相等的值全部送到同一侧,
+          所以一旦某个区间只剩相等的值,每次划分只能去掉一个元素,工作量按 n² 增长:
+          随机快排需要 {fmt(qr.cmp)} 次比较
+          {loses ? <>,比插入排序的 {fmt(ins.cmp)} 次还多</> : <>,插入排序是 {fmt(ins.cmp)} 次</>}
+          ,递归深达 {fmt(depth)} 层
+          {deep && <>,远超它赛道上标注的 O(log n) —— 那个标注假定值互不相同</>}
+          。随机选轴帮不上忙,因为在这样的区间里选哪个值都一样;
+          三路划分(LC 75)把基准的所有副本留在中间,才能解决这个问题。
+          归并排序不受重复值影响,需要 {fmt(mer.cmp)} 次比较。
+        </>
+      ),
+    };
+  }
+
+  // Random and reversed input.
+  const ahead = ins.cmp >= 1.2 * mer.cmp;
+  const space: Loc<ReactNode> = {
+    en: (
+      <>
+        {" "}
+        Note the space column too: merge sort rents <b>{fmt(mer.space)} cells</b> of extra
+        space, while randomised quicksort needs only {fmt(qr.space)} — one temporary cell
+        plus its recursion stack — for its {fmt(qr.cmp)} comparisons. Sorting in place or
+        paying memory for a guaranteed O(n log n) is a trade you make on purpose.
+      </>
+    ),
+    zh: (
+      <>
+        也请看额外空间这一栏:归并占用了 <b>{fmt(mer.space)} 个额外单元</b>,
+        而随机快排只用 {fmt(qr.space)} 个 —— 一个临时单元加上递归栈 ——
+        完成 {fmt(qr.cmp)} 次比较。「原地排序」还是「花内存换取有保证的 O(n log n)」,
+        是需要你有意做出的取舍。
+      </>
+    ),
+  };
+  if (ahead)
+    return {
+      en: (
+        <>
+          Now the asymptotics show: insertion sort pays {fmt(ins.cmp)} comparisons against
+          merge sort&apos;s {fmt(mer.cmp)}
+          {size < 128 && <>, and the gap widens as you raise n — try 128</>}.{space.en}
+        </>
+      ),
+      zh: (
+        <>
+          这下渐进复杂度开始显现:插入排序付 {fmt(ins.cmp)} 次比较,归并只付{" "}
+          {fmt(mer.cmp)} 次{size < 128 && <>,而且把 n 调大差距会拉得更开 —— 试试 128</>}。
+          {space.zh}
+        </>
+      ),
+    };
+  return {
+    en: (
+      <>
+        At n = {size} the asymptotics have not taken over yet: insertion sort pays{" "}
+        {fmt(ins.cmp)} comparisons and merge sort {fmt(mer.cmp)}. With this few elements
+        the two growth rates have not separated, so constant factors and lower-order terms
+        decide which one comes out ahead. Raise n and merge sort pulls away.{space.en}
+      </>
+    ),
+    zh: (
+      <>
+        n = {size} 时渐进复杂度还没有起决定作用:插入排序比较 {fmt(ins.cmp)} 次,
+        归并 {fmt(mer.cmp)} 次。元素这么少时,两种增长趋势还没有拉开,
+        谁多谁少由常数和低阶项决定。把 n 调大,归并就会拉开差距。
+        {space.zh}
+      </>
+    ),
+  };
+}
+
+/** Race 3 · the same Lomuto quicksort with a fixed last-element pivot and a random one. */
+export function sortRace3Verdict(r: LaneResult[], { inputId }: RaceCtx): Loc<ReactNode> {
+  const fixed = countsOf(r, "quick-last");
+  const rand = countsOf(r, "quick-rand");
+  const fdepth = quickDepth(fixed);
+  const rdepth = quickDepth(rand);
+
+  if (inputId === "random") {
+    const extra = rand.mov > fixed.mov;
+    return {
+      en: (
+        <>
+          On random data neither pivot rule has a systematic edge: {fmt(fixed.cmp)} versus{" "}
+          {fmt(rand.cmp)} comparisons, and which one comes out ahead changes from draw to
+          draw (try Reroll).{" "}
+          {extra ? (
+            <>
+              The random pivot costs some extra writes — {fmt(rand.mov)} against{" "}
+              {fmt(fixed.mov)} here, starting with the swap that moves each chosen pivot
+              into the last slot — and buys nothing visible.
+            </>
+          ) : (
+            <>
+              This time the random pivots even write less ({fmt(rand.mov)} against{" "}
+              {fmt(fixed.mov)}), so randomisation costs nothing visible either.
+            </>
+          )}{" "}
+          Switch the shape to <b>Already sorted</b> to see what it is actually insurance
+          against.
+        </>
+      ),
+      zh: (
+        <>
+          在随机数据上,两种选轴规则谁也没有系统性的优势:{fmt(fixed.cmp)} 对{" "}
+          {fmt(rand.cmp)} 次比较,谁更少要看这一组数据(可以点「换一组」试试)。
+          {extra ? (
+            <>
+              随机选轴多付了一些写入 —— 这一组是 {fmt(rand.mov)} 对 {fmt(fixed.mov)},
+              其中包括每次把选中的轴换到末位的那一次交换 —— 却看不出任何好处。
+            </>
+          ) : (
+            <>
+              这一组随机选轴的写入反而更少({fmt(rand.mov)} 对 {fmt(fixed.mov)}),
+              随机化看不出任何代价。
+            </>
+          )}
+          把形状切到<b>已排序</b>,就能看到随机选轴防范的是什么。
+        </>
+      ),
+    };
+  }
+
+  if (inputId === "reversed")
+    return {
+      en: (
+        <>
+          Reversed input is just as bad for a fixed pivot. The last element starts as the
+          smallest value, and afterwards the pivot alternates between the smallest and the
+          largest remaining value, so every partition is again 0 : n−1 and the cost
+          degenerates to <b>{fmt(fixed.cmp)} comparisons</b> with a recursion depth of{" "}
+          <b>{fmt(fdepth)}</b>. Randomising the pivot brings the same input down to{" "}
+          {fmt(rand.cmp)} comparisons and depth {fmt(rdepth)}.
+        </>
+      ),
+      zh: (
+        <>
+          逆序输入对固定轴同样致命:末位轴第一次是最小值,
+          之后在剩余元素的最小值与最大值之间交替,每次划分仍是 0 : n−1,
+          于是退化成 <b>{fmt(fixed.cmp)} 次比较</b>、递归深度 <b>{fmt(fdepth)}</b>。
+          把轴随机化,同一份输入降到 {fmt(rand.cmp)} 次比较、深度 {fmt(rdepth)}。
+        </>
+      ),
+    };
+
+  return {
+    en: (
+      <>
+        Sorted input is the fixed-pivot version&apos;s worst case: the pivot is always the
+        largest element left, so every partition splits 0 : n−1 and it degenerates to{" "}
+        <b>{fmt(fixed.cmp)} comparisons</b> with a recursion depth of <b>{fmt(fdepth)}</b>{" "}
+        — the stack grows with n, which is how real services meet a stack overflow.
+        Randomising the pivot brings the same input down to {fmt(rand.cmp)} comparisons and
+        depth {fmt(rdepth)}. Nothing about the input changed; what changed is that an input
+        arranged against the last-element pivot no longer hits it.
+      </>
+    ),
+    zh: (
+      <>
+        已排序输入是固定轴版本的最坏情况:轴永远是剩下元素里最大的那个,
+        于是每次划分都是 0 : n−1,直接退化成 <b>{fmt(fixed.cmp)} 次比较</b>、
+        递归深度 <b>{fmt(fdepth)}</b> —— 栈的深度随 n 增长,真实服务里的栈溢出就是这么来的。
+        把轴随机化,同一份输入降到 {fmt(rand.cmp)} 次比较、深度 {fmt(rdepth)}。
+        输入没有任何变化,变的是:针对末位取轴构造的输入,再也打不中它了。
+      </>
+    ),
+  };
 }
