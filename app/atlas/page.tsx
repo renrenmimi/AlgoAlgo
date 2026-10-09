@@ -409,9 +409,6 @@ export default function AtlasChapter() {
         <div className="atl-std">
           {STANDARDS.map((s, i) => (
             <div key={i} className="atl-std-card">
-              <span className="atl-std-ico" aria-hidden>
-                {s.icon}
-              </span>
               <div>
                 <span className="atl-std-n">
                   <T

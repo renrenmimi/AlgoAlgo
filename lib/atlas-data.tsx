@@ -376,9 +376,8 @@ export const SIDE_CHAPTERS: { ch: ChapterId; href: string; note: Loc<string> }[]
  * Interview-level completion standards + review cadence                 *
  * ===================================================================== */
 
-export const STANDARDS: { icon: string; text: ReactNode }[] = [
+export const STANDARDS: { text: ReactNode }[] = [
   {
-    icon: "🗣",
     text: (
       <T
         en={
@@ -397,7 +396,6 @@ export const STANDARDS: { icon: string; text: ReactNode }[] = [
     ),
   },
   {
-    icon: "🧭",
     text: (
       <T
         en={
@@ -415,7 +413,6 @@ export const STANDARDS: { icon: string; text: ReactNode }[] = [
     ),
   },
   {
-    icon: "📐",
     text: (
       <T
         en={
@@ -433,7 +430,6 @@ export const STANDARDS: { icon: string; text: ReactNode }[] = [
     ),
   },
   {
-    icon: "🧪",
     text: (
       <T
         en={
@@ -452,7 +448,6 @@ export const STANDARDS: { icon: string; text: ReactNode }[] = [
     ),
   },
   {
-    icon: "⌨️",
     text: (
       <T
         en={
@@ -470,7 +465,6 @@ export const STANDARDS: { icon: string; text: ReactNode }[] = [
     ),
   },
   {
-    icon: "⏱",
     text: (
       <T
         en={

@@ -285,12 +285,6 @@
   box-shadow: var(--hi-soft), var(--shadow-1);
 }
 
-[data-ch="atlas"] .atl-std-ico {
-  font-size: 22px;
-  line-height: 1.2;
-  flex: none;
-}
-
 [data-ch="atlas"] .atl-std-n {
   font-family: var(--font-mono);
   font-size: 11px;

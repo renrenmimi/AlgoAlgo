@@ -398,7 +398,7 @@ export function DecisionLab() {
           <div className="atl-result-name">{L(cur.paradigm)}</div>
           <p className="atl-result-why">{L(cur.why)}</p>
           {cur.runnerUp && (
-            <p className="atl-result-runner">💡 {L(cur.runnerUp)}</p>
+            <p className="atl-result-runner">{L(cur.runnerUp)}</p>
           )}
           <div className="atl-result-actions">
             <Link href={cur.href} className="btn btn-sm btn-primary">
