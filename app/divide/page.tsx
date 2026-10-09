@@ -17,7 +17,6 @@
 // stay correct.
 
 import "./chapter.css";
-import type { ReactNode } from "react";
 import {
   Hero,
   Section,
@@ -29,16 +28,19 @@ import {
 import { CodeTabs } from "@/lib/code";
 import { ProblemSet } from "@/lib/problems";
 import { Quiz } from "@/lib/quiz";
-import { T, type Loc } from "@/lib/i18n";
+import { T } from "@/lib/i18n";
 import { PROBLEMS, QUIZ } from "@/lib/divide-data";
-import { AlgoRace, type LaneResult } from "@/lib/race";
+import { AlgoRace } from "@/lib/race";
+import { POW_ALGOS, POW_SHAPES, POW_METRICS } from "./race-pow";
 import {
-  POW_ALGOS,
-  POW_SHAPES,
-  POW_METRICS,
-  pow2Floor,
-} from "./race-pow";
-import { PowTree, MergeSortLayers, MergeKLists, CrossMidLab, InversionLab } from "./viz";
+  PowTree,
+  MergeSortLayers,
+  MergeKLists,
+  CrossMidLab,
+  InversionLab,
+  POW_RACE_SIZES,
+  powVerdict,
+} from "./viz";
 
 const CHIPS = [
   { id: "why", n: "01", label: { en: "Three steps", zh: "分治三步" } },
@@ -50,108 +52,6 @@ const CHIPS = [
   { id: "problems", n: "07", label: { en: "Problem set", zh: "高频题单" } },
   { id: "quiz", n: "08", label: { en: "Quiz", zh: "通关测验" } },
 ];
-
-
-function powVerdict(
-  r: LaneResult[],
-  { size, inputId }: { size: number; inputId: string },
-): Loc<ReactNode> {
-  const g = (id: string) => r.find((x) => x.id === id)!.counts;
-  const nv = g("pow-naive");
-  const rc = g("pow-rec");
-  const it = g("pow-iter");
-  const e = inputId === "pow2" ? pow2Floor(size) : size;
-  const bin = e.toString(2);
-  const lg = bin.length - 1; // ⌊log₂n⌋
-  const ones = bin.split("").filter((c) => c === "1").length; // popcount(n)
-  const ratio = Math.round(nv.cmp / Math.max(1, rc.cmp));
-
-  const spaceEn = (
-    <>
-      {" "}
-      The two fast versions do the same amount of arithmetic — {rc.cmp} against{" "}
-      {it.cmp} multiplications, the iterative one behind by exactly one because its
-      result starts at 1, so its first multiplication is 1 × x. Ignore that. The bar
-      to read is the second one: the recursive version holds <b>{rc.space} units</b>{" "}
-      at the peak and every one of them is a live stack frame (⌊log₂n⌋ + 1 ={" "}
-      {lg + 1}), while the iterative version holds <b>{it.space}</b> no matter how
-      large n grows. Naive chaining is in fact the most frugal on space, with{" "}
-      {nv.space} variable, and it buys nothing — it already lost on the axis that
-      decides this problem. The engineering reading: when a recursion is a straight
-      chain with nothing left to combine on the way back, write the loop. Same
-      complexity, and no stack that can overflow.
-    </>
-  );
-  const spaceZh = (
-    <>
-      {" "}
-      两个快速幂版本做的算术量一样 —— {rc.cmp} 对 {it.cmp} 次乘法,迭代版只多 1 次,
-      原因很小:它的结果从 1 起步,第一次乘的是 1 × x。这 1 次可以不看。
-      要看的是第二根条:递归版峰值占用 <b>{rc.space} 个单元</b>,
-      而且每一个都是活着的栈帧(⌊log₂n⌋ + 1 = {lg + 1});
-      迭代版无论 n 多大都只占 <b>{it.space}</b> 个。
-      朴素连乘反而是空间上最省的({nv.space} 个变量),但这点节省什么也换不到 ——
-      它在决定这道题的那根轴上已经输了。工程上的读法:
-      当递归是一条直链、回来的路上没有东西要合并时,就把它写成循环 ——
-      复杂度一样,而且没有可以溢出的栈。
-    </>
-  );
-
-  if (inputId === "pow2")
-    return {
-      en: (
-        <>
-          Exponent n = {e} = 2^{lg}, a single 1 bit. Fast power then does nothing but
-          square: <b>{rc.cmp} multiplications</b>, exactly log₂n, and no sequence of
-          squarings can reach this exponent in fewer steps. Naive chaining still pays{" "}
-          <b>{nv.cmp}</b>. Now switch the shape back to General and pick 31 =
-          (11111)₂ — the same bit-length, but each remaining 1 bit adds one multiply,
-          taking it from 4 up to 8. That is what ⌊log₂n⌋ + popcount(n) − 1 means in
-          practice: the squarings are fixed by the bit-length, the 1 bits are the
-          surcharge.
-          {spaceEn}
-        </>
-      ),
-      zh: (
-        <>
-          指数 n = {e} = 2^{lg},二进制只有一个 1。此时快速幂只做平方:
-          <b>{rc.cmp} 次乘法</b>,正好是 log₂n,而且没有任何平方序列能更快到达这个指数;
-          朴素连乘仍要付 <b>{nv.cmp}</b> 次。
-          现在把形状切回「一般指数」并选 31 =(11111)₂ —— 同样的位长,
-          但每一个剩下的 1 都要补乘一次,于是从 4 次涨到 8 次。
-          这就是 ⌊log₂n⌋ + popcount(n) − 1 的现实含义:
-          平方次数由位长决定,二进制里的 1 是附加费。
-          {spaceZh}
-        </>
-      ),
-    };
-
-  return {
-    en: (
-      <>
-        Exponent n = {e} = ({bin})₂. Naive chaining pays <b>{nv.cmp}</b>{" "}
-        multiplications — exactly n − 1, one per loop step. Fast power pays{" "}
-        <b>{rc.cmp}</b>, and the number splits cleanly: ⌊log₂n⌋ = {lg} squarings to
-        build x², x⁴, x⁸ … plus popcount(n) − 1 = {ones - 1} extra multiplications,
-        one for each remaining 1 bit. That is a factor of {ratio}, and it is not a
-        fixed factor: doubling n adds {e} steps on the left and one step on the
-        right.
-        {spaceEn}
-      </>
-    ),
-    zh: (
-      <>
-        指数 n = {e} =({bin})₂。朴素连乘付 <b>{nv.cmp}</b> 次乘法 —— 正好是 n − 1,
-        循环每走一步一次。快速幂付 <b>{rc.cmp}</b> 次,而这个数字拆得很干净:
-        ⌊log₂n⌋ = {lg} 次平方,用来造出 x²、x⁴、x⁸…… 外加 popcount(n) − 1 ={" "}
-        {ones - 1} 次补乘,对应二进制里剩下的每一个 1。
-        差距是 {ratio} 倍,而且这个倍数不是固定的:把 n 翻一倍,
-        左边多 {e} 步,右边只多 1 步。
-        {spaceZh}
-      </>
-    ),
-  };
-}
 
 export default function DivideChapter() {
   return (
@@ -207,7 +107,7 @@ export default function DivideChapter() {
         }}
         desc={{
           en: "Recursion is a way to write code. Divide and conquer is a way to design a solution.",
-          zh: "不是新魔法,是把「递归」从一种写法,升级成一种解题世界观",
+          zh: "递归是一种写法,分治是一种设计解法的思路",
         }}
       >
         <div className="prose">
@@ -229,7 +129,7 @@ export default function DivideChapter() {
                   先讲个场景。你面前有一叠 1000 张的选票要清点,一个人数到天黑。
                   聪明的做法:把票<strong>分成 10 摞</strong>,发给 10 个人各数一摞
                   (每个人又可以把自己那摞再分下去),最后<strong>把 10 个小计加起来</strong>。
-                  这就是分治(Divide &amp; Conquer,古罗马人叫它「分而治之」):
+                  这就是分治(Divide &amp; Conquer):
                   大问题拆成同样形状的小问题,分头解决,再汇总。
                 </>
               }
@@ -251,7 +151,7 @@ export default function DivideChapter() {
                 <>
                   它和序章的递归是什么关系?递归是<strong>「函数调用自己」这个语法工具</strong>;
                   分治是<strong>「用递归解题」的一种策略</strong> —— 而且是最经典的那种。
-                  每道分治题,都能拆成雷打不动的三步:
+                  每道分治题,都能拆成固定的三步:
                 </>
               }
             />
@@ -259,10 +159,9 @@ export default function DivideChapter() {
         </div>
         <div className="dvd-steps">
           <div className="dvd-step">
-            <div className="dvd-step-ico" aria-hidden>✂️</div>
-            <h4>
+            <h3>
               <T en={<>Divide</>} zh={<>分<span className="en">Divide</span></>} />
-            </h4>
+            </h3>
             <p>
               <T
                 en={
@@ -285,10 +184,9 @@ export default function DivideChapter() {
             </p>
           </div>
           <div className="dvd-step">
-            <div className="dvd-step-ico" aria-hidden>🧩</div>
-            <h4>
+            <h3>
               <T en={<>Conquer</>} zh={<>治<span className="en">Conquer</span></>} />
-            </h4>
+            </h3>
             <p>
               <T
                 en={
@@ -302,7 +200,7 @@ export default function DivideChapter() {
                 }
                 zh={
                   <>
-                    递归解决每个子问题。到了<b>基准情形</b>(小到不能再分,如单个元素)就直接返回。
+                    递归解决每个子问题。到了<b>基例</b>(小到不能再分,如单个元素)就直接返回。
                     这一步用的是序章的<b>「递归信任」</b>:相信递归会把子答案正确带回来,别去展开想细节。
                   </>
                 }
@@ -310,10 +208,9 @@ export default function DivideChapter() {
             </p>
           </div>
           <div className="dvd-step">
-            <div className="dvd-step-ico" aria-hidden>🔗</div>
-            <h4>
+            <h3>
               <T en={<>Combine</>} zh={<>合<span className="en">Combine</span></>} />
-            </h4>
+            </h3>
             <p>
               <T
                 en={
@@ -340,14 +237,14 @@ export default function DivideChapter() {
                 <>
                   In code the three steps become a fixed skeleton. The example below is{" "}
                   <strong>merge sort</strong>. Sorting is the classic first use of divide
-                  and conquer. Chapter 01 covers its stability and its in-place version;
-                  here it only shows the skeleton.
+                  and conquer. Chapter 01 covers its stability; here it only shows the
+                  skeleton.
                 </>
               }
               zh={
                 <>
                   这三步落到代码里,就是一个固定骨架。下面用<strong>归并排序</strong>当模板
-                  (排序是分治的「首秀」,01 排序章会细讲它的稳定性与原地优化,这里只借它示范骨架):
+                  (排序是分治的「首秀」,第 1 章会细讲它的稳定性,这里只借它示范骨架):
                 </>
               }
             />
@@ -410,7 +307,7 @@ export default function DivideChapter() {
               zh: (
                 <>
                   三步一目了然:<b>分</b>(对半)→ <b>治</b>(递归左右)→ <b>合</b>(merge)。
-                  <code>Arrays.copyOfRange</code> 每层都新建数组,额外空间 O(n);排序章会讲带辅助数组的原地版。
+                  <code>Arrays.copyOfRange</code> 每层都新建数组,额外空间 O(n);排序章会讲只开一块辅助数组、各层复用的写法。
                 </>
               ),
             },
@@ -438,7 +335,7 @@ export default function DivideChapter() {
               zh: `class Solution:
     def sortArray(self, a: list[int]) -> list[int]:
         if len(a) <= 1:
-            return a                     # 治:基准情形
+            return a                     # 治:基例
         mid = len(a) // 2                # 分:对半切
         left = self.sortArray(a[:mid])
         right = self.sortArray(a[mid:])
@@ -454,7 +351,7 @@ export default function DivideChapter() {
         out.extend(x[i:]); out.extend(y[j:])
         return out`,
             },
-            hl: [5, 6, 7, 8],
+            hl: [3, 4, 5, 6, 7, 8],
             note: {
               en: (
                 <>
@@ -467,7 +364,7 @@ export default function DivideChapter() {
               zh: (
                 <>
                   <code>a[:mid]</code> 这类切片每次都<b>复制</b>一份,直观但有额外开销;
-                  竞赛里常改成传下标 <code>(lo, hi)</code> 只读不复制。
+                  常见的改法是传下标 <code>(lo, hi)</code>,只读原列表、不复制。
                 </>
               ),
             },
@@ -492,7 +389,7 @@ function merge(x, y) {
   return out;
 }`,
               zh: `var sortArray = function (a) {
-  if (a.length <= 1) return a;          // 治:基准情形
+  if (a.length <= 1) return a;          // 治:基例
   const mid = a.length >> 1;            // 分:对半切
   const left = sortArray(a.slice(0, mid));
   const right = sortArray(a.slice(mid));
@@ -581,11 +478,11 @@ function merge(x, y) {
               }
               zh={
                 <>
-                  证明分治正确,套的是<b>归纳法</b>,和证递归同一个模子:①<b>基准情形对</b>
+                  证明分治正确,套的是<b>归纳法</b>,和证递归同一个模子:①<b>基例对</b>
                   —— 单个元素本身就是有序的,这一步显然成立;②<b>归纳步对</b> ——
                   假设递归能把左、右两半各自排好(归纳假设),只要 merge 能把两段有序数组正确合成一段有序,
                   那整段就对了。两步都成立 ⇒ 对任意规模都对。<b>你永远只需要证「合」这一步</b>,
-                  递归的部分交给归纳假设,这正是「递归信任」的数学底气。
+                  递归的部分交给归纳假设,这正是「递归信任」的数学依据。
                 </>
               }
             />
@@ -593,7 +490,7 @@ function merge(x, y) {
         </Callout>
         <Callout
           tone="warn"
-          title={{ en: "Two common beginner mistakes", zh: "新手最容易翻的两条船" }}
+          title={{ en: "Two common beginner mistakes", zh: "新手最容易犯的两个错误" }}
         >
           <p>
             <T
@@ -612,8 +509,8 @@ function merge(x, y) {
               zh={
                 <>
                   ① <b>子问题没变小</b>:如果「分」之后子问题规模没真的下降(比如切出一个空段 + 原样大段),
-                  递归就会无限套娃、栈溢出。务必保证每次都朝基准情形靠近。
-                  ② <b>漏写基准情形</b>:忘了 <code>length &lt;= 1</code> 的出口,或出口条件写错,
+                  递归就会无限嵌套下去、栈溢出。务必保证每次都朝基例靠近。
+                  ② <b>漏写基例</b>:忘了 <code>length &lt;= 1</code> 的出口,或出口条件写错,
                   同样停不下来。序章说过:<b>先写出口,再写递归</b>。
                 </>
               }
@@ -624,7 +521,7 @@ function merge(x, y) {
           tone="deep"
           title={{
             en: "In practice: divide and conquer scales computation",
-            zh: "工程现场:分治是大规模计算的底层世界观",
+            zh: "工程现场:分治是大规模计算的底层思路",
           }}
         >
           <p>
@@ -643,8 +540,8 @@ function merge(x, y) {
               }
               zh={
                 <>
-                  Google 的 <b>MapReduce</b>、Hadoop、Spark,本质都是分治:把海量数据切片(map)分发到成千上万台机器,
-                  各自算局部结果,再汇总(reduce)。数据大到单机装不下时,<b>外部归并排序</b>把文件切成能进内存的小块,
+                  Google 的 <b>MapReduce</b>、Hadoop、Spark,本质都是分治:把海量数据切成小块分发到成千上万台机器,
+                  各自做局部计算(map),再汇总(reduce)。数据大到单机装不下时,<b>外部归并排序</b>把文件切成能进内存的小块,
                   分别排好再多路归并 —— 就是本章 merge 的放大版。分治之所以重要,是因为它是「把大事拆成能并行的小事」的通用语言。
                 </>
               }
@@ -737,7 +634,7 @@ function merge(x, y) {
           <p>
             <T
               en={<>The same counting handles most of the recurrences you will meet:</>}
-              zh={<>同一套「数两个数」的方法,能秒算一大票常见递推式:</>}
+              zh={<>同一套「数两个数」的方法,能处理大多数常见的递推式:</>}
             />
           </p>
         </div>
@@ -952,7 +849,7 @@ function merge(x, y) {
         }}
         desc={{
           en: "The first big win of divide and conquer: the exponent is halved at every step.",
-          zh: "分治的第一个惊艳战果 —— 指数每次对半砍",
+          zh: "分治的第一个显著成果 —— 指数每次对半砍",
         }}
         badge={<span className="lc-badge" data-d="medium">MEDIUM</span>}
       >
@@ -1056,8 +953,8 @@ function merge(x, y) {
     }
 
     private double fastPow(double x, long n) {
-        if (n == 0) return 1.0;           // 基准情形:x⁰ = 1
-        double half = fastPow(x, n / 2);  // ★ 只算一次,存进变量!
+        if (n == 0) return 1.0;           // 基例:x⁰ = 1
+        double half = fastPow(x, n / 2);  // ★ 只算一次,存进变量
         double sq = half * half;          // 平方 → 指数翻倍
         return (n % 2 == 1) ? sq * x : sq; // 奇数补乘一个 x
     }
@@ -1076,7 +973,7 @@ function merge(x, y) {
               ),
               zh: (
                 <>
-                  <b>两个坑:</b>① <code>n = Integer.MIN_VALUE</code> 时 <code>-n</code> 溢出 ——
+                  <b>两个陷阱:</b>① <code>n = Integer.MIN_VALUE</code> 时 <code>-n</code> 溢出 ——
                   先转 <code>long</code> 再取负;② 千万别写成
                   <code>fastPow(x,n/2)*fastPow(x,n/2)</code>,那会把同一个子问题算两遍,退化成 O(n)。
                 </>
@@ -1102,7 +999,7 @@ function merge(x, y) {
             x, n = 1 / x, -n         # Python 整数无限精度,取负不会溢出
         def fast(n: int) -> float:
             if n == 0:
-                return 1.0           # 基准情形
+                return 1.0           # 基例
             half = fast(n // 2)      # ★ 只算一次
             sq = half * half
             return sq * x if n & 1 else sq  # n & 1 判奇偶
@@ -1121,7 +1018,7 @@ function merge(x, y) {
               ),
               zh: (
                 <>
-                  Python 的大整数天生免疫溢出坑,负指数直接取负即可。
+                  Python 的整数没有溢出问题,负指数直接取负即可。
                   <code>n &amp; 1</code> 取最低位判奇偶,比 <code>n % 2</code> 更常见(位运算章会细讲)。
                 </>
               ),
@@ -1144,7 +1041,7 @@ function merge(x, y) {
   let N = n;
   if (N < 0) { x = 1 / x; N = -N; }  // 负指数 = 取倒数
   const fast = (n) => {
-    if (n === 0) return 1;           // 基准情形
+    if (n === 0) return 1;           // 基例
     const half = fast(Math.floor(n / 2)); // ★ 只算一次
     const sq = half * half;
     return n % 2 === 1 ? sq * x : sq; // 奇数补乘
@@ -1267,7 +1164,7 @@ function merge(x, y) {
             n >>= 1
         return res`,
             },
-            hl: [6, 7, 8, 9],
+            hl: [7, 8, 9, 10],
             note: {
               en: (
                 <>
@@ -1385,9 +1282,9 @@ function merge(x, y) {
               zh={
                 <>
                   RSA、Diffie-Hellman 这些公钥密码,核心运算是「模幂」a^b mod m,
-                  其中 b 是几百上千位的大数。老老实实一次次相乘,2048 位的指数要乘约 2^2048 次,
+                  其中 b 是几百上千位的大数。一次一次地相乘,2048 位的指数要乘约 2^2048 次,
                   任何机器都算不完;换成快速幂,只需约 2048 次平方,外加每一位至多一次补乘。
-                  浏览器地址栏那把小锁,底层就站着这几行分治代码。
+                  浏览器地址栏那把小锁,底层依靠的就是这几行分治代码。
                 </>
               }
             />
@@ -1431,7 +1328,7 @@ function merge(x, y) {
           }}
           algos={POW_ALGOS}
           inputs={POW_SHAPES}
-          sizes={[10, 31, 100, 1000, 10000]}
+          sizes={POW_RACE_SIZES}
           defaultSize={1000}
           clone={(v) => v}
           metrics={POW_METRICS}
@@ -1466,8 +1363,8 @@ function merge(x, y) {
                   找出最短的这种序列 —— 最短<b>加法链(addition chain)</b> ——
                   是一个真正困难的问题,而快速幂是那个「永远简单、永远够好」的版本。
                   第二,这里的递归<b>在回来的路上没有东西要合并</b>,
-                  它只是把一个值顺着链交上去 —— 而这正是「循环可以白拿地替掉递归」的场合。
-                  §04 是反面例子:合并 K 个链表在回来的路上确实有活要干,
+                  它只是把一个值顺着链交上去 —— 而这正是循环可以无代价地替换递归的场合。
+                  §04 是反面例子:合并 K 个链表在回来的路上确实有工作要做,
                   那里的递归就留着。
                 </>
               }
@@ -1586,7 +1483,7 @@ function merge(x, y) {
 
     // 分治:合并 lists[lo..hi] 这一段链表
     private ListNode merge(ListNode[] lists, int lo, int hi) {
-        if (lo == hi) return lists[lo];        // 基准:只剩一条,直接返回
+        if (lo == hi) return lists[lo];        // 基例:只剩一条,直接返回
         int mid = (lo + hi) >>> 1;             // 分:对半
         ListNode l = merge(lists, lo, mid);    // 治:左半合成一条
         ListNode r = merge(lists, mid + 1, hi);// 治:右半合成一条
@@ -1656,7 +1553,7 @@ function merge(x, y) {
 
         def merge(lo: int, hi: int) -> ListNode:
             if lo == hi:
-                return lists[lo]          # 基准:只剩一条
+                return lists[lo]          # 基例:只剩一条
             mid = (lo + hi) // 2          # 分
             l, r = merge(lo, mid), merge(mid + 1, hi)  # 治
             return merge_two(l, r)        # 合
@@ -1674,7 +1571,7 @@ function merge(x, y) {
 
         return merge(0, len(lists) - 1)`,
             },
-            hl: [9, 10, 11],
+            hl: [7, 8, 9, 10, 11],
             note: {
               en: (
                 <>
@@ -1733,7 +1630,7 @@ function merge(x, y) {
   };
 
   const merge = (lo, hi) => {
-    if (lo === hi) return lists[lo];     // 基准:只剩一条
+    if (lo === hi) return lists[lo];     // 基例:只剩一条
     const mid = (lo + hi) >> 1;          // 分
     const l = merge(lo, mid), r = merge(mid + 1, hi); // 治
     return mergeTwo(l, r);               // 合
@@ -1819,7 +1716,7 @@ function merge(x, y) {
                 <>
                   LSM-Tree(LevelDB、RocksDB、Cassandra 的存储引擎)后台不断把多个有序小文件
                   <b>多路归并</b>成大文件;分布式系统把 k 台机器返回的有序结果流合并成全局有序 ——
-                  都是 LC 23 的工业放大版。区别只在于:数据以亿计时,用的是 k 路堆归并,
+                  都是 LC 23 的工业放大版。区别只在于:数据以十亿计时,用的是 k 路堆归并,
                   一次合并 k 条而非两条。
                 </>
               }
@@ -1838,7 +1735,7 @@ function merge(x, y) {
         }}
         desc={{
           en: "One problem, two methods: O(n log n) here, against Kadane's O(n) in chapter 07.",
-          zh: "一道题,两种世界观 —— 分治的 O(n log n),对照第 7 章 Kadane 的 O(n)",
+          zh: "一道题,两种视角 —— 分治的 O(n log n),对照第 7 章 Kadane 的 O(n)",
         }}
         badge={<span className="lc-badge" data-d="medium">MEDIUM</span>}
       >
@@ -1956,7 +1853,7 @@ function merge(x, y) {
             sum += a[j];
             bestR = Math.max(bestR, sum);
         }
-        return bestL + bestR;                    // both contain mid, so add them
+        return bestL + bestR;                    // left ends at mid, right starts at mid+1
     }
 }`,
               zh: `class Solution {
@@ -1965,7 +1862,7 @@ function merge(x, y) {
     }
 
     private int dc(int[] a, int lo, int hi) {
-        if (lo == hi) return a[lo];              // 基准:单元素
+        if (lo == hi) return a[lo];              // 基例:单元素
         int mid = (lo + hi) >>> 1;
         int left  = dc(a, lo, mid);              // ① 全在左半
         int right = dc(a, mid + 1, hi);          // ② 全在右半
@@ -1985,7 +1882,7 @@ function merge(x, y) {
             sum += a[j];
             bestR = Math.max(bestR, sum);
         }
-        return bestL + bestR;                    // 两段都含中点侧,相加即可
+        return bestL + bestR;                    // 左段含 mid,右段从 mid+1 开始
     }
 }`,
             },
@@ -2037,7 +1934,7 @@ function merge(x, y) {
     def maxSubArray(self, nums: list[int]) -> int:
         def dc(lo: int, hi: int) -> int:
             if lo == hi:
-                return nums[lo]                  # 基准:单元素
+                return nums[lo]                  # 基例:单元素
             mid = (lo + hi) // 2
             left = dc(lo, mid)                   # ① 全在左半
             right = dc(mid + 1, hi)              # ② 全在右半
@@ -2120,7 +2017,7 @@ function merge(x, y) {
   };
 
   const dc = (lo, hi) => {
-    if (lo === hi) return nums[lo];            // 基准:单元素
+    if (lo === hi) return nums[lo];            // 基例:单元素
     const mid = (lo + hi) >> 1;
     const left = dc(lo, mid), right = dc(mid + 1, hi), cross = crossSum(lo, mid, hi);
     return Math.max(left, right, cross);
@@ -2129,7 +2026,7 @@ function merge(x, y) {
   return dc(0, nums.length - 1);
 };`,
             },
-            hl: [18, 19, 20, 21],
+            hl: [20, 21],
             note: {
               en: (
                 <>
@@ -2156,8 +2053,8 @@ function merge(x, y) {
                 <>
                   Complexity <BigO o="nlogn" />: the recurrence is T(n) = 2T(n/2) + O(n),
                   the same as merge sort, with O(log n) stack.{" "}
-                  <strong>But this problem has a faster solution.</strong> Chapter 07 on
-                  dynamic programming gives the Kadane view: define dp[i] as the largest
+                  <strong>But this problem has a faster solution.</strong> The LC 53 entry
+                  in the chapter 07 problem set gives the Kadane view: define dp[i] as the largest
                   sum of a subarray ending at index i, and one linear scan gives{" "}
                   <BigO o="n" /> time and O(1) space. Compare the two:
                 </>
@@ -2166,8 +2063,8 @@ function merge(x, y) {
                 <>
                   复杂度 <BigO o="nlogn" />:递推式 T(n) = 2T(n/2) + O(n),和归并排序同款,
                   另有 O(log n) 递归栈。<strong>但这道题其实有更快的解法。</strong>
-                  第 7 章动态规划会给出 Kadane 视角:定义 dp[i] = 以 i 结尾的最大子数组和,
-                  一次线性扫描搞定 <BigO o="n" />,空间 O(1)。两种世界观对照:
+                  第 7 章题单里的 LC 53 给出了 Kadane 视角:定义 dp[i] = 以 i 结尾的最大子数组和,
+                  一次线性扫描即可完成,<BigO o="n" /> 时间,空间 O(1)。两种视角对照:
                 </>
               }
             />
@@ -2259,14 +2156,14 @@ class Solution {
               en: (
                 <>
                   <code>cur</code> is &quot;the largest sum ending at index i&quot;. It is
-                  the dp array collapsed into a single variable. Chapter 07 derives it in
-                  full.
+                  the dp array collapsed into a single variable. The LC 53 entry in the
+                  chapter 07 problem set gives its DP state and transition.
                 </>
               ),
               zh: (
                 <>
                   <code>cur</code> 就是「以 i 结尾的最大和」,是 dp 数组压成一个变量的结果。
-                  完整推导见第 7 章精讲。
+                  第 7 章题单里的 LC 53 给出了它的 DP 状态与转移。
                 </>
               ),
             },
@@ -2379,7 +2276,7 @@ var maxSubArray = function (nums) {
         }}
         desc={{
           en: "Divide and conquer is not only for sorting. The same merge measures how far an array is from sorted, and a different split makes multiplication faster.",
-          zh: "分治不止排序 —— 同一次合并能顺手量出「数组有多乱」,换一种切法还能让大数乘法更快",
+          zh: "分治不止排序 —— 同一次合并能同时量出「数组有多乱」,换一种切法还能让大数乘法更快",
         }}
       >
         <div className="prose">
@@ -2403,7 +2300,7 @@ var maxSubArray = function (nums) {
                   <code>nums[i] &gt; nums[j]</code> 的数对。它衡量一个数组离有序有多远 ——
                   完全升序是 0 对,长度 n 的完全倒序是 n(n−1)/2 对,取到上限。
                   两两比较是 O(n²)。但归并排序能
-                  <strong>在合并的过程中顺手把它们数出来</strong>,总代价还是 O(n log n)
+                  <strong>在合并的过程中同时把它们数出来</strong>,总代价还是 O(n log n)
                   (LeetCode 中国站的 LCR 170)。
                 </>
               }
@@ -2564,8 +2461,8 @@ var maxSubArray = function (nums) {
           zh: "高频题单:分治 7 题",
         }}
         desc={{
-          en: "From fast power to multi-way merging, ending with a problem that mixes divide and conquer with binary search. Think for 30 seconds before opening a hint.",
-          zh: "从快速幂到多路归并,再到分治 + 二分的压轴。先想 30 秒再看提示",
+          en: "Ordered from easy to hard, ending with a problem that mixes divide and conquer with binary search. Think for 30 seconds before opening a hint.",
+          zh: "由易到难排列,最后一题是分治与二分的综合题。先想 30 秒再看提示",
         }}
         badge={<span className="chip"><T en="Core + review" zh="主线 + 复盘" /></span>}
       >
@@ -2657,11 +2554,11 @@ var maxSubArray = function (nums) {
               LC 23 两两归并对照优先队列 —— 分治视角常通向线段树,DP / 堆视角常更快。
             </>,
             <>
-              归并能顺手<b>数逆序对</b>:从右半取数时,左半剩几个就加几个 ——
+              归并能在合并时同时<b>数出逆序对</b>:从右半取数时,左半剩几个就加几个 ——
               把「排序」的副产品变成「计数」的答案,仍是 O(n log n)。
             </>,
             <>
-              <b>时间之外别忘了栈</b>:递归深度是实打实的内存。归并排序 O(n) 辅助空间 + O(log n) 栈;
+              <b>时间之外别忘了栈</b>:递归深度占用的是真实的内存。归并排序 O(n) 辅助空间 + O(log n) 栈;
               快速幂 O(log n) 栈(迭代版 O(1));LC 23 O(log k) 栈。
             </>,
             <>

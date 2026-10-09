@@ -15,8 +15,8 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Majority Element", zh: "多数元素" },
     d: "easy",
     tags: {
-      en: ["Divide and conquer", "Boyer-Moore", "Review"],
-      zh: ["分治", "摩尔投票", "复盘"],
+      en: ["Divide and conquer", "Boyer-Moore"],
+      zh: ["分治", "摩尔投票"],
     },
     hint: {
       en: "Cut the array in half. If a value is the majority of the whole array, it must also be the majority of at least one of the two halves. That is what makes recursion possible.",
@@ -78,7 +78,7 @@ export const PROBLEMS: Problem[] = [
       zh: (
         <>
           快速幂:把指数 n 对半砍。n 为偶 → x^n =(x^(n/2))²;n 为奇 → 再补乘一个 x。
-          <b>关键坑</b>:必须先把 x^(n/2) 存进变量、<b>只算一次</b>;
+          <b>关键陷阱</b>:必须先把 x^(n/2) 存进变量、<b>只算一次</b>;
           写成两个递归调用相乘,每层调用数就会翻倍,退化回 O(n)。
           指数每层减半 ⇒ 递归 O(log n) 层:时间 O(log n),递归栈 O(log n),迭代版栈 O(1)。
           负指数取底数的倒数,并先把 n 转成 64 位 —— 对 Integer.MIN_VALUE 取负会溢出。
@@ -108,7 +108,8 @@ export const PROBLEMS: Problem[] = [
           the midpoint, so scan left from the midpoint for the largest suffix sum
           of the left half, scan right for the largest prefix sum of the right
           half, and add them. T(n) = 2T(n/2) + O(n) = O(n log n) time with
-          O(log n) stack. Chapter 07 gives the <b>Kadane / DP view</b>: dp[i] =
+          O(log n) stack. The chapter 07 problem set gives the{" "}
+          <b>Kadane / DP view</b>: dp[i] =
           max(nums[i], dp[i-1] + nums[i]), one linear pass in O(n) time and O(1)
           space, which is faster. Know both. Worked example C in this chapter
           animates the crossing scan.
@@ -119,7 +120,7 @@ export const PROBLEMS: Problem[] = [
           分治:dc(l, r) 返回三者取 max —— 左半最大、右半最大、跨中点最大。
           跨中点段必含中点,所以从中点向左扫求左半的最大后缀和、向右扫求右半的最大前缀和,相加即可。
           T(n) = 2T(n/2) + O(n) = O(n log n),递归栈 O(log n)。
-          对照第 7 章的 <b>Kadane / DP 视角</b>:dp[i] = max(nums[i], dp[i-1] + nums[i]),
+          对照第 7 章题单给出的 <b>Kadane / DP 视角</b>:dp[i] = max(nums[i], dp[i-1] + nums[i]),
           一次线性扫描,O(n) 时间、O(1) 空间,更优。两种都要会。本章精讲 C 有跨中点扫描动画。
         </>
       ),
@@ -206,7 +207,7 @@ export const PROBLEMS: Problem[] = [
     d: "hard",
     tags: {
       en: ["Merge", "Divide and conquer", "Linked list"],
-      zh: ["归并分治", "链表"],
+      zh: ["归并", "分治", "链表"],
     },
     hint: {
       en: "Do not take the first list and merge the other lists into it one by one, because that base list keeps growing. Merge the lists in pairs instead, which halves the number of lists each round.",
@@ -271,7 +272,7 @@ export const PROBLEMS: Problem[] = [
           在<b>较短</b>的数组上二分它的切割位置,另一数组的切割位置由「左边总数固定」推出;
           校验 maxLeft ≤ minRight,不满足就调整切点。O(log min(m, n)) 时间、O(1) 额外空间。
           这题难在边界:空的一侧要当成 −∞ / +∞,总长为奇为偶时答案取法也不同。
-          建议学完第 3 章「二分进阶」再回头刷,当作分治 + 二分的综合压轴。
+          建议学完第 3 章「二分进阶」再回头做,当作分治与二分的综合练习。
         </>
       ),
     },
@@ -360,7 +361,7 @@ export const QUIZ: QuizItem[] = [
         undefined,
         "不能只算一层 —— 要乘上层数 log n。单看一层是 O(n),整棵递归树累加才是 O(n log n)。",
         "「两个子问题」不等于平方:每个子问题规模只有 n/2,两个合起来仍是一层 O(n) 的活。",
-        "指数爆炸只发生在「子问题重叠且不记账」时(如朴素递归斐波那契);归并的子问题不重叠、规模逐层减半,是 O(n log n)。",
+        "指数级增长只发生在「子问题重叠且不记录结果」时(如朴素递归斐波那契);归并的子问题不重叠、规模逐层减半,是 O(n log n)。",
       ],
     },
     why: {
@@ -379,7 +380,7 @@ export const QUIZ: QuizItem[] = [
       ),
       zh: (
         <>
-          快速幂把 x¹⁶ 的乘法次数,从暴力的 15 次降到几次?(x²→x⁴→x⁸→x¹⁶,数一数平方了几次)
+          快速幂计算 x¹⁶ 要做几次平方?(x² → x⁴ → x⁸ → x¹⁶,数一数)
         </>
       ),
     },
@@ -390,8 +391,8 @@ export const QUIZ: QuizItem[] = [
       zh: "16 是 2 的 4 次方:每一步把指数翻倍(平方一次),从 x¹ 到 x¹⁶ 需要几步?",
     },
     why: {
-      en: "x² = x·x, x⁴ = (x²)², x⁸ = (x⁴)², x¹⁶ = (x⁸)². That is 4 squarings, against 15 multiplications for the plain loop. Each squaring doubles the exponent, so the count is log₂16 = 4. This is where O(log n) comes from.",
-      zh: "x² = x·x,x⁴ =(x²)²,x⁸ =(x⁴)²,x¹⁶ =(x⁸)²,共 4 次平方,而暴力要乘 15 次。指数每次翻倍 ⇒ log₂16 = 4 步,这就是 O(log n) 的由来。",
+      en: "x² = x·x, x⁴ = (x²)², x⁸ = (x⁴)², x¹⁶ = (x⁸)². That is 4 squarings, against 15 multiplications for the plain loop. Each squaring doubles the exponent, so the count is log₂16 = 4. This is where O(log n) comes from. As everywhere in this chapter, trivial multiplications by 1 are not counted: the recursive code in §03 stops at x⁰ = 1, so on the way back it also computes 1 × 1 and 1 × x, which changes nothing about the growth.",
+      zh: "x² = x·x,x⁴ =(x²)²,x⁸ =(x⁴)²,x¹⁶ =(x⁸)²,共 4 次平方,而暴力要乘 15 次。指数每次翻倍 ⇒ log₂16 = 4 步,这就是 O(log n) 的由来。和本章其他地方一样,这里不计与 1 相乘的平凡乘法:§03 的递归代码以 x⁰ = 1 为基例,回来的路上还会算 1 × 1 和 1 × x,但这不改变增长趋势。",
     },
   },
   {
@@ -431,7 +432,7 @@ export const QUIZ: QuizItem[] = [
         <>
           不是相加,而是三者<b>取 max</b>:左半最大 / 右半最大 / 跨中点最大。
         </>,
-        "只要基准情形(单元素)写对,递归不会漏边界;被漏掉的恰恰是横跨中点的那一段。",
+        "只要基例(单元素)写对,递归不会漏边界;被漏掉的恰恰是横跨中点的那一段。",
       ],
     },
     why: {
@@ -485,7 +486,7 @@ export const QUIZ: QuizItem[] = [
       ],
     },
     why: {
-      en: "Merging one at a time removes one list per round while the base list keeps growing → O(kN). Merging in pairs halves the number of lists each round, so there are log k rounds, and each round touches all N nodes once → O(N log k). Both use O(log k) stack in the recursive form. Worked example B shows this.",
+      en: "Merging one at a time removes one list per round while the base list keeps growing → O(kN). Merging in pairs halves the number of lists each round, so there are log k rounds, and each round touches all N nodes once → O(N log k). Pairwise merging written recursively also uses O(log k) stack. Worked example B shows this.",
       zh: "逐条并入 = 每轮只消掉一条、且底链渐长 → O(kN);两两归并 = 每轮条数减半、共 log k 轮、每轮触碰全部 N 个节点 → O(N log k),递归写法额外 O(log k) 栈。这就是分治的杠杆(本章精讲 B)。",
     },
   },
@@ -506,7 +507,7 @@ export const QUIZ: QuizItem[] = [
         "return pow(x, n/2) * pow(x, n/2) * (n 为奇 ? x : 1);",
         "double h = pow(x, n/2); return h * h * (n 为奇 ? x : 1);",
         "迭代 + 位运算:while (n) { if (n&1) res *= x; x *= x; n >>= 1; }",
-        "n == 0 时返回 1 作为基准情形",
+        "n == 0 时返回 1 作为基例",
       ],
     },
     correct: 0,
@@ -521,7 +522,7 @@ export const QUIZ: QuizItem[] = [
         undefined,
         "这是标准写法:先把 x^(n/2) 存进变量、只算一次,再自乘 —— 正是 O(log n) 的关键。",
         "迭代位运算版每轮把 n 右移一位,循环 log n 次,既正确又没有递归栈开销。",
-        "n == 0 返回 1 是正确的基准情形,和退化无关。",
+        "n == 0 返回 1 是正确的基例,和退化无关。",
       ],
     },
     why: {
@@ -600,7 +601,7 @@ export const QUIZ: QuizItem[] = [
     },
     why: {
       en: "One sentence: independent subproblems → divide and conquer (merge sort, fast power); overlapping subproblems → DP (store each answer). Fast power shows the border. Compute x^(n/2) twice and the time goes back to O(n), because an overlapping subproblem was recomputed instead of stored. Chapters 07 to 10 build on this.",
-      zh: "判据一句话:子问题独立 → 分治(归并、快速幂);子问题重叠 → DP(把答案存下来)。快速幂就是边界的活教材:x^(n/2) 算两遍,时间就回到 O(n) —— 重叠子问题不存就得重算。这也是通往第 7~10 章 DP 的伏笔。",
+      zh: "判据一句话:子问题独立 → 分治(归并、快速幂);子问题重叠 → DP(把答案存下来)。快速幂正好说明了这条边界:x^(n/2) 算两遍,时间就回到 O(n) —— 重叠子问题不存就得重算。这也是通往第 7~10 章 DP 的伏笔。",
     },
   },
 ];

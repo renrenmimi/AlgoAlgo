@@ -26,18 +26,12 @@
   transform: translateY(-2px);
 }
 
-[data-ch="divide"] .dvd-step-ico {
-  font-size: 26px;
-  line-height: 1;
-  margin-bottom: 8px;
-}
-
-[data-ch="divide"] .dvd-step h4 {
+[data-ch="divide"] .dvd-step h3 {
   font-size: 15px;
   margin: 0 0 6px;
 }
 
-[data-ch="divide"] .dvd-step h4 .en {
+[data-ch="divide"] .dvd-step h3 .en {
   font-family: var(--font-mono);
   font-size: 11.5px;
   font-weight: 500;

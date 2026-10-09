@@ -10,6 +10,7 @@
 //  - CrossMidLab: the cross-midpoint maximum-sum scan from the divide-and-conquer
 //    view of LC 53 (reuses ArrayStepper).
 //  - InversionLab: counting inversions during a merge (reuses ArrayStepper).
+//  - powVerdict: the reading under the fast-power race in §03.
 //
 // Bilingual: frame narration is written inline as <T en zh />; title and pointer
 // labels take { en, zh }.
@@ -18,6 +19,8 @@ import { type ReactNode } from "react";
 import { T, useL, type Loc } from "@/lib/i18n";
 import { TreePlayer, type TreeNodeSpec, type TreeFrame, type TreeNodeState } from "@/lib/algviz";
 import { ArrayStepper, useStepper, StepControls, type ArrayFrame, type ArrayCell } from "@/lib/stepper";
+import type { LaneResult } from "@/lib/race-core";
+import { pow2Floor } from "./race-pow";
 
 /* ================= PowTree: the 3¹³ fast-exponentiation decomposition chain (TreePlayer) ================= */
 
@@ -88,7 +91,7 @@ const POW_FRAMES: TreeFrame[] = [
             down. Now the combine step runs back up, squaring at every level.
           </>
         }
-        zh={<>3⁰ = 1,<b>基准情形</b>,触底。现在开始「合」—— 一路平方着回乘。</>}
+        zh={<>3⁰ = 1,这是<b>基例</b>,递归到底。现在开始「合」—— 一路平方着往回乘。</>}
       />
     ),
   },
@@ -96,8 +99,19 @@ const POW_FRAMES: TreeFrame[] = [
     states: { e13: "path", e6: "path", e3: "path", e1: "cur", e0: "done" } as PS,
     msg: (
       <T
-        en={<>Back at 3¹ = 1² × 3 = <b>3</b>. The exponent is odd, so one extra 3 is multiplied in.</>}
-        zh={<>回到 3¹ = 1² × 3 = <b>3</b>(指数是奇数,补乘一个底数 3)。</>}
+        en={
+          <>
+            Back at 3¹ = 1² × 3 = <b>3</b>. The exponent is odd, so one extra 3 is
+            multiplied in. Both multiplications here involve the 1 from the base
+            case, so they do no real work; the count at the end leaves them out.
+          </>
+        }
+        zh={
+          <>
+            回到 3¹ = 1² × 3 = <b>3</b>(指数是奇数,补乘一个底数 3)。
+            这里的两次乘法都是和基例的 1 相乘,属于平凡乘法,最后计数时不算。
+          </>
+        }
       />
     ),
   },
@@ -125,16 +139,20 @@ const POW_FRAMES: TreeFrame[] = [
       <T
         en={
           <>
-            Back at 3¹³ = 729² × 3 = <b>1,594,323</b>. The whole computation used{" "}
-            <b>4 squarings and 3 extra multiplications</b>, about log₂13 steps.
-            Each level halves the exponent, so there are O(log n) levels — and,
-            since the chain is that deep, O(log n) stack frames as well.
+            Back at 3¹³ = 729² × 3 = <b>1,594,323</b>. Leaving out the two
+            trivial multiplications by 1 at the bottom, the whole computation used{" "}
+            <b>5 multiplications: 3 squarings and 2 extra multiplications</b>, which
+            is ⌊log₂13⌋ + popcount(13) − 1 = 3 + 3 − 1. Each level halves the
+            exponent, so there are O(log n) levels — and, since the chain is that
+            deep, O(log n) stack frames as well.
           </>
         }
         zh={
           <>
-            回到 3¹³ = 729² × 3 = <b>1 594 323</b>。全程只做了 <b>4 次平方 + 3 次补乘</b> ——
-            约 log₂13 步。指数每层减半 ⇒ 层数 O(log n);链有多深,递归栈就有多深,同样是 O(log n)。
+            回到 3¹³ = 729² × 3 = <b>1 594 323</b>。不计链底那两次和 1 相乘的平凡乘法,
+            全程只做了 <b>5 次乘法:3 次平方 + 2 次补乘</b>,正是
+            ⌊log₂13⌋ + popcount(13) − 1 = 3 + 3 − 1。
+            指数每层减半 ⇒ 层数 O(log n);链有多深,递归栈就有多深,同样是 O(log n)。
           </>
         }
       />
@@ -507,7 +525,7 @@ const CROSS_FRAMES: ArrayFrame[] = [
             a value further out may still turn it around.
           </>
         }
-        zh={<>加 −3 → 和 0 &lt; 3,不刷新;但要继续往左试(后面可能翻盘)。</>}
+        zh={<>加 −3 → 和 0 &lt; 3,不刷新;但要继续往左试(更外侧的值仍可能让和反超)。</>}
       />
     ),
   }),
@@ -661,7 +679,7 @@ const INV_FRAMES: ArrayFrame[] = [
         }
         zh={
           <>
-            归并排序顺手就能数<b>逆序对</b>(前面比后面大的数对)。左半 [3, 5]、右半 [2, 4] 各自已排好,
+            归并排序在合并时就能同时数出<b>逆序对</b>(前面比后面大的数对)。左半 [3, 5]、右半 [2, 4] 各自已排好,
             合并时只需数「跨越两半」的逆序对。
           </>
         }
@@ -772,4 +790,129 @@ export function InversionLab() {
       cellW={56}
     />
   );
+}
+
+/* ================= Fast-power race verdict (§03) =================
+   Built from the measured counts and the exponent actually raced, so the
+   explanation follows the size and shape the reader picks.
+   test/unit/divide-race-verdict.test.tsx checks every shape × size. */
+
+/** The exponents offered by the fast-power race. */
+export const POW_RACE_SIZES = [10, 31, 100, 1000, 10000];
+
+export function powVerdict(
+  r: LaneResult[],
+  { size, inputId }: { size: number; inputId: string },
+): Loc<ReactNode> {
+  const counts = (id: string) => {
+    const lane = r.find((x) => x.id === id);
+    if (!lane) throw new Error(`fast-power verdict: no lane "${id}"`);
+    return lane.counts;
+  };
+  const nv = counts("pow-naive");
+  const rc = counts("pow-rec");
+  const it = counts("pow-iter");
+  const e = inputId === "pow2" ? pow2Floor(size) : size;
+  const bin = e.toString(2);
+  const lg = bin.length - 1; // ⌊log₂n⌋
+  const ones = bin.split("").filter((c) => c === "1").length; // popcount(n)
+  const extra = ones - 1;
+  const ratio = Math.round(nv.cmp / Math.max(1, rc.cmp));
+
+  const spaceEn = (
+    <>
+      {" "}
+      The two fast versions do the same amount of arithmetic — {rc.cmp} against{" "}
+      {it.cmp} multiplications. The iterative one is behind by exactly one because its
+      result starts at 1, so the first multiplication into it only multiplies by 1.
+      Ignore that. The bar to read is the second one: the recursive version holds{" "}
+      <b>{rc.space} units</b> at the peak and every one of them is a live stack frame
+      (⌊log₂n⌋ + 1 = {lg + 1}), while the iterative version holds <b>{it.space}</b> no
+      matter how large n grows. Naive chaining is in fact the most frugal on space, with{" "}
+      {nv.space} variable, and it buys nothing — it already lost on the axis that
+      decides this problem. The engineering reading: when a recursion is a straight
+      chain with nothing left to combine on the way back, write the loop. Same
+      complexity, and no stack that can overflow.
+    </>
+  );
+  const spaceZh = (
+    <>
+      两个快速幂版本做的算术量一样 —— {rc.cmp} 对 {it.cmp} 次乘法,迭代版只多 1 次,
+      原因很小:它的结果从 1 起步,第一次乘进结果的那一下只是乘以 1。这 1 次可以不看。
+      要看的是第二根条:递归版峰值占用 <b>{rc.space} 个单元</b>,
+      而且每一个都是活着的栈帧(⌊log₂n⌋ + 1 = {lg + 1});
+      迭代版无论 n 多大都只占 <b>{it.space}</b> 个。
+      朴素连乘反而是空间上最省的({nv.space} 个变量),但这点节省什么也换不到 ——
+      它在决定这道题的那根轴上已经输了。工程上的读法:
+      当递归是一条直链、回来的路上没有东西要合并时,就把它写成循环 ——
+      复杂度一样,而且没有可以溢出的栈。
+    </>
+  );
+
+  if (inputId === "pow2") {
+    // The exponent of the same bit-length with every bit set: same squarings, the
+    // most surcharge.
+    const full = 2 * e - 1;
+    const fullBin = full.toString(2);
+    const offered = POW_RACE_SIZES.includes(full);
+    return {
+      en: (
+        <>
+          Exponent n = {e} = 2^{lg}, a single 1 bit. Fast power then does nothing but
+          square: <b>{rc.cmp} multiplications</b>, exactly log₂n, and no sequence of
+          squarings can reach this exponent in fewer steps. Naive chaining still pays{" "}
+          <b>{nv.cmp}</b>. Compare the exponent with the same bit-length and every bit
+          set, {full} = ({fullBin})₂: the squarings stay at {lg}, but the {lg} set bits
+          after the leading one each add a multiply, so fast power needs {2 * lg} there
+          {offered && <> — pick General and {full} to see it</>}. That is what ⌊log₂n⌋ +
+          popcount(n) − 1 means in practice: the squarings are fixed by the bit-length,
+          the 1 bits are the surcharge.
+          {spaceEn}
+        </>
+      ),
+      zh: (
+        <>
+          指数 n = {e} = 2^{lg},二进制只有一个 1。此时快速幂只做平方:
+          <b>{rc.cmp} 次乘法</b>,正好是 log₂n,而且没有任何平方序列能更快到达这个指数;
+          朴素连乘仍要付 <b>{nv.cmp}</b> 次。
+          对照同样位长、各位全是 1 的指数 {full} =({fullBin})₂:平方次数仍是 {lg},
+          但其余 {lg} 个 1 每个都要补乘一次,快速幂要 {2 * lg} 次
+          {offered && <>(选「一般指数」和 {full} 就能看到)</>}。
+          这就是 ⌊log₂n⌋ + popcount(n) − 1 的现实含义:
+          平方次数由位长决定,二进制里的 1 是附加费。
+          {spaceZh}
+        </>
+      ),
+    };
+  }
+
+  const extraEn =
+    extra === 0
+      ? "no extra multiplication, because n has a single 1 bit"
+      : extra === 1
+        ? "popcount(n) − 1 = 1 extra multiplication, for the remaining 1 bit"
+        : `popcount(n) − 1 = ${extra} extra multiplications, one for each remaining 1 bit`;
+  return {
+    en: (
+      <>
+        Exponent n = {e} = ({bin})₂. Naive chaining pays <b>{nv.cmp}</b>{" "}
+        multiplications — exactly n − 1, one per loop step. Fast power pays{" "}
+        <b>{rc.cmp}</b>, and the number splits cleanly: ⌊log₂n⌋ = {lg} squarings to
+        build x², x⁴, x⁸ … plus {extraEn}. That is a factor of {ratio}, and it is not a
+        fixed factor: doubling n adds {e} steps on the left and one step on the right.
+        {spaceEn}
+      </>
+    ),
+    zh: (
+      <>
+        指数 n = {e} =({bin})₂。朴素连乘付 <b>{nv.cmp}</b> 次乘法 —— 正好是 n − 1,
+        循环每走一步一次。快速幂付 <b>{rc.cmp}</b> 次,而这个数字拆得很干净:
+        ⌊log₂n⌋ = {lg} 次平方,用来造出 x²、x⁴、x⁸……
+        外加 popcount(n) − 1 = {extra} 次补乘,对应二进制里剩下的每一个 1。
+        差距是 {ratio} 倍,而且这个倍数不是固定的:把 n 翻一倍,
+        左边多 {e} 步,右边只多 1 步。
+        {spaceZh}
+      </>
+    ),
+  };
 }
