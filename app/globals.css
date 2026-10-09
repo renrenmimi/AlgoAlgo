@@ -505,6 +505,19 @@ html[data-sidebar="collapsed"] .sidebar {
   color: #fff;
   flex: 0 0 auto;
   position: relative;
+}
+
+/* The breathing glow is a pseudo-element whose opacity animates: the compositor runs that on
+   its own, while the old box-shadow animation restyled and repainted every frame on every
+   page */
+.brand-mark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 6px 26px var(--acc-glow), 0 0 0 3px var(--acc-faint);
+  opacity: 0;
+  pointer-events: none;
   animation: brand-breath 4.5s ease-in-out infinite;
 }
 
@@ -518,8 +531,8 @@ html[data-sidebar="collapsed"] .sidebar {
 }
 
 @keyframes brand-breath {
-  0%, 100% { box-shadow: 0 4px 18px var(--acc-glow), var(--hi-soft); }
-  50% { box-shadow: 0 6px 26px var(--acc-glow), 0 0 0 3px var(--acc-faint), var(--hi-soft); }
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
 }
 
 .brand-name {
@@ -2487,7 +2500,8 @@ li code {
   background: var(--ok-bg);
   color: var(--ok);
   box-shadow: 0 0 18px color-mix(in oklab, var(--ok) 45%, transparent);
-  animation: pulse-glow 1.6s ease-in-out infinite;
+  /* A few pulses when the answer is found, then a steady glow */
+  animation: pulse-glow 1.6s ease-in-out 3;
 }
 
 .rs-bar {
@@ -2938,9 +2952,11 @@ li code {
   50% { box-shadow: 0 0 26px var(--acc-glow); }
 }
 
-/* Traveling border light (use sparingly: home-page CTA / KeyPoints) */
+/* Traveling light (use sparingly: home-page CTA). It moves with transform, which the
+   compositor handles; animating background-position repainted every frame. */
 @keyframes edge-shimmer {
-  to { background-position: 200% center; }
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
 }
 
 @media (max-width: 1080px) {
@@ -3036,5 +3052,5 @@ li code {
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; filter: none; }
   .aurora::before { animation: none; }
-  .brand-mark { animation: none; }
+  .brand-mark::before { animation: none; }
 }
