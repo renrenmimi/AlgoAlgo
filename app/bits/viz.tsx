@@ -12,6 +12,7 @@
 
 import { useMemo, useState } from "react";
 import { T, useL, type Loc } from "@/lib/i18n";
+import { useEdgeFade } from "@/lib/stepper";
 
 /* ---------------- Shared: one lamp + a row of lamps ---------------- */
 
@@ -131,10 +132,25 @@ const PRESETS: { label: string; v: number }[] = [
 
 export function BitLamps() {
   const [val, setVal] = useState(42);
+  // Set when the last +1 / −1 crossed the int32 boundary, so the reading can say why
+  // the sign flipped; any other action clears it.
+  const [wrapped, setWrapped] = useState<"up" | "down" | null>(null);
   const L = useL();
+  const edge = useEdgeFade<HTMLDivElement>();
 
   const bits = useMemo(() => bitsOf(val, 32), [val]);
-  const toggle = (idx: number) => setVal((v) => v ^ (1 << (31 - idx)));
+  // Every update stays a 32-bit integer: | 0 wraps the sum the way an int register does.
+  const apply = (f: (v: number) => number) => {
+    setWrapped(null);
+    setVal((v) => f(v) | 0);
+  };
+  const step = (d: 1 | -1) => {
+    setWrapped(
+      d === 1 && val === 2147483647 ? "up" : d === -1 && val === -2147483648 ? "down" : null,
+    );
+    setVal((v) => (v + d) | 0);
+  };
+  const toggle = (idx: number) => apply((v) => v ^ (1 << (31 - idx)));
   const hex = (val >>> 0).toString(16).toUpperCase().padStart(8, "0");
   const neg = val < 0;
 
@@ -146,7 +162,7 @@ export function BitLamps() {
           zh={<>位灯实验室 —— 点任意一盏灯翻转该位(第 31 位是符号位)</>}
         />
       </div>
-      <div className="viz-stage" style={{ overflowX: "auto" }}>
+      <div ref={edge.ref} data-fade={edge.fade} className="viz-stage" style={{ overflowX: "auto" }}>
         <LampBank bits={bits} onToggle={toggle} signMsb />
       </div>
       <div className="bit-readout">
@@ -160,7 +176,43 @@ export function BitLamps() {
         <span className="mono bit-binline">{bin32(val)}</span>
       </div>
       <div className="viz-msg" aria-live="polite">
-        {neg ? (
+        {wrapped === "up" ? (
+          <T
+            en={
+              <>
+                <b>2147483647 + 1 wraps around to −2147483648</b> in 32-bit two&apos;s
+                complement. The carry runs all the way into bit 31, the sign bit, and
+                there is no bit above it to hold the true sum, so the largest int
+                becomes the smallest. Java&apos;s <code>int</code> behaves exactly like
+                this lamp bank.
+              </>
+            }
+            zh={
+              <>
+                <b>2147483647 + 1 在 32 位补码中回绕为 −2147483648</b>。
+                进位一路传到第 31 位,也就是符号位,上面再没有位能装下真正的和,
+                于是最大的 int 变成了最小的。Java 的 <code>int</code> 就和这排灯一样。
+              </>
+            }
+          />
+        ) : wrapped === "down" ? (
+          <T
+            en={
+              <>
+                <b>−2147483648 − 1 wraps around to 2147483647</b> in 32-bit two&apos;s
+                complement. The borrow clears bit 31, the sign bit, and turns every
+                bit below it into 1, so the smallest int becomes the largest.
+              </>
+            }
+            zh={
+              <>
+                <b>−2147483648 − 1 在 32 位补码中回绕为 2147483647</b>。
+                借位清掉了第 31 位(符号位),并把它下面的每一位都变成 1,
+                于是最小的 int 变成了最大的。
+              </>
+            }
+          />
+        ) : neg ? (
           <T
             en={
               <>
@@ -213,19 +265,19 @@ export function BitLamps() {
         )}
       </div>
       <div className="viz-ctl">
-        <button type="button" className="btn btn-sm" onClick={() => setVal((v) => v + 1)}>
+        <button type="button" className="btn btn-sm" onClick={() => step(1)}>
           +1
         </button>
-        <button type="button" className="btn btn-sm" onClick={() => setVal((v) => v - 1)}>
+        <button type="button" className="btn btn-sm" onClick={() => step(-1)}>
           −1
         </button>
-        <button type="button" className="btn btn-sm" onClick={() => setVal((v) => v << 1)}>
+        <button type="button" className="btn btn-sm" onClick={() => apply((v) => v << 1)}>
           &lt;&lt;1
         </button>
-        <button type="button" className="btn btn-sm" onClick={() => setVal((v) => v >> 1)}>
+        <button type="button" className="btn btn-sm" onClick={() => apply((v) => v >> 1)}>
           &gt;&gt;1
         </button>
-        <button type="button" className="btn btn-sm" onClick={() => setVal((v) => ~v)}>
+        <button type="button" className="btn btn-sm" onClick={() => apply((v) => ~v)}>
           ~
         </button>
         <span className="mono dim bit-preset-lab">
@@ -236,7 +288,7 @@ export function BitLamps() {
             key={p.label}
             type="button"
             className={`btn btn-sm${val === p.v ? " btn-primary" : ""}`}
-            onClick={() => setVal(p.v)}
+            onClick={() => apply(() => p.v)}
           >
             {p.label}
           </button>
@@ -255,8 +307,8 @@ const OPS: { op: Op; name: Loc<string> }[] = [
   { op: "|", name: { en: "OR", zh: "或 OR" } },
   { op: "^", name: { en: "XOR", zh: "异或 XOR" } },
   { op: "~", name: { en: "NOT", zh: "非 NOT" } },
-  { op: "<<", name: { en: "Shift left", zh: "左移 SHL" } },
-  { op: ">>", name: { en: "Shift right", zh: "右移 SHR" } },
+  { op: "<<", name: { en: "Shift left", zh: "左移" } },
+  { op: ">>", name: { en: "Shift right", zh: "右移" } },
 ];
 
 const OP_DESC: Record<Op, Loc<string>> = {
@@ -297,6 +349,7 @@ export function OpLab() {
 
   const binary = op === "&" || op === "|" || op === "^";
   const isShift = op === "<<" || op === ">>";
+  const edge = useEdgeFade<HTMLDivElement>();
 
   const res = useMemo(() => {
     switch (op) {
@@ -355,7 +408,12 @@ export function OpLab() {
         ))}
       </div>
 
-      <div className="viz-stage" style={{ flexDirection: "column", gap: 12, overflowX: "auto" }}>
+      <div
+        ref={edge.ref}
+        data-fade={edge.fade}
+        className="viz-stage"
+        style={{ flexDirection: "column", gap: 12, overflowX: "auto" }}
+      >
         <div className="bit-oprow">
           <span className="bit-oprow-lab mono">A = {a}</span>
           <LampBank bits={bitsOf(a, 8)} onToggle={(i) => setA((x) => x ^ (1 << (7 - i)))} />
