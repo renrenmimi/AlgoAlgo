@@ -872,7 +872,10 @@ html[data-sidebar="collapsed"] .sidebar {
 
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(40px, 6.2vw, 64px);
+  /* 32px keeps a long word such as "programming" or "manipulation" inside a 360px screen;
+     a word that still does not fit breaks rather than being clipped */
+  font-size: clamp(32px, 6.2vw, 64px);
+  overflow-wrap: break-word;
   font-weight: 800;
   letter-spacing: -0.01em;
   line-height: 1.05;
@@ -1016,6 +1019,31 @@ html[data-sidebar="collapsed"] .sidebar {
 .sec-badge {
   margin-left: auto;
   flex: 0 0 auto;
+}
+
+/* Phones: the badge moves under the title, aligned with it like .sec-desc, instead of being
+   pushed off the right edge and squeezing the title to a word per line */
+@media (max-width: 560px) {
+  .sec-head {
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+
+  /* A zero basis keeps the title beside the number, wrapping within its row */
+  .sec-title {
+    flex: 1 1 0;
+  }
+
+  .sec-badge {
+    flex-basis: 100%;
+    margin-left: 0;
+    padding-left: 44px;
+  }
+
+  .sec-badge .chip,
+  .sec-badge .lc-badge {
+    white-space: normal;
+  }
 }
 
 .sec-desc {
@@ -2857,6 +2885,20 @@ li code {
   body { font-size: 15px; }
   .cell { width: 42px; height: 42px; font-size: 13px; }
   .nodec { width: 40px; height: 40px; font-size: 12.5px; }
+}
+
+/* iOS Safari zooms the whole page when it focuses a text field whose text is smaller than
+   16px. Phones get 16px in every text field; !important because chapter styles size their
+   lab inputs with more specific selectors. */
+@media (max-width: 560px) {
+  input:not([type]),
+  input[type="text"],
+  input[type="search"],
+  input[type="number"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
