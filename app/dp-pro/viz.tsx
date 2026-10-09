@@ -9,7 +9,7 @@
 // Bilingual: frame narration is written inline as <T en zh />; titles, state names and edge labels take { en, zh } and are resolved with useL().
 
 import { useMemo, useState, type ReactNode } from "react";
-import { useStepper, StepControls } from "@/lib/stepper";
+import { useStepper, StepControls, useEdgeFade } from "@/lib/stepper";
 import { T, useL, type Loc } from "@/lib/i18n";
 import {
   TreePlayer,
@@ -264,6 +264,7 @@ function FsmBox({
 export function StockFSM() {
   const L = useL();
   const stepper = useStepper(FSM_FRAMES.length, 1500);
+  const edge = useEdgeFade<HTMLDivElement>();
   const f = FSM_FRAMES[stepper.step];
   const onE = (e: Edge) => (f.onEdge.includes(e) ? " on" : "");
 
@@ -275,7 +276,12 @@ export function StockFSM() {
           zh={<>LC 309 · 含冷冻期的股票状态机(prices = [1, 2, 3, 0, 2])</>}
         />
       </div>
-      <div className="viz-stage" style={{ overflowX: "auto" }}>
+      <div
+        ref={edge.ref}
+        data-fade={edge.fade}
+        className="viz-stage"
+        style={{ overflowX: "auto" }}
+      >
         <svg
           className="pro-fsm-svg"
           viewBox="0 0 560 320"
@@ -844,7 +850,7 @@ export function MaskLab() {
                 {" "}
                 <T
                   en={<>none — this branch is dead, so it contributes nothing</>}
-                  zh={<>无 —— 这条分支走死了,贡献为 0</>}
+                  zh={<>无 —— 这条分支走不通,贡献为 0</>}
                 />
               </b>
             )}

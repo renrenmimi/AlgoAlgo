@@ -32,8 +32,8 @@ export const PROBLEMS: Problem[] = [
           Two views of one answer. <b>Greedy:</b> take every rise between two
           neighboring days, ans = Σ max(0, price[i] − price[i−1]). This is
           correct because the profit of any rising run equals the sum of its
-          daily differences, so no profit is lost by splitting it up (Chapter 06
-          proves it with an exchange argument). <b>State machine DP:</b> two
+          daily differences, so no profit is lost by splitting it up (chapter 06
+          proves it with an upper-bound argument). <b>State machine DP:</b> two
           states, hold (you own one share) and cash (you own none). hold =
           max(hold, cash − price), cash = max(cash, hold + price). The number of
           trades is unlimited, so the two states can convert into each other any
@@ -43,9 +43,9 @@ export const PROBLEMS: Problem[] = [
       ),
       zh: (
         <>
-          同一个答案,两种视角。<b>贪心:</b>把所有「相邻两天的上涨」全吃下,
+          同一个答案,两种视角。<b>贪心:</b>把所有「相邻两天的上涨」全部收下,
           ans = Σ max(0, price[i] − price[i−1])。它成立是因为任意一段上涨的总利润
-          等于逐日差之和,拆开来算不会少赚(第 6 章用交换论证证过)。
+          等于逐日差之和,拆开来算不会少赚(第 6 章用上界论证证过)。
           <b>状态机 DP:</b>两个状态 —— hold(持有一股)、cash(空仓)。
           hold = max(hold, cash − price)、cash = max(cash, hold + price)。
           交易次数不限,所以两个状态可以反复互相转化。两解结果相同,
@@ -164,8 +164,9 @@ export const PROBLEMS: Problem[] = [
           the second sale. &quot;Not started&quot; is always 0, so four variables
           are enough. Update them in this order every day: buy1 = max(buy1, −p),
           sell1 = max(sell1, buy1 + p), buy2 = max(buy2, sell1 − p), sell2 =
-          max(sell2, buy2 + p). The answer is sell2, which already covers using
-          fewer than two trades because sell2 never decreases. The real move is
+          max(sell2, buy2 + p). The answer is sell2. It already covers using
+          only one trade: the second trade may buy and sell on the same day for
+          no gain, so sell2 is never less than sell1. The real move is
           promoting <b>the number of trades used, k</b>, to a state dimension.
           Generalised to &quot;at most k trades&quot; this becomes LC 188 with
           dp[k][hold], costing O(nk) time. Time O(n), space O(1) here.
@@ -177,7 +178,8 @@ export const PROBLEMS: Problem[] = [
           第二次买入后持有、第二次卖出完成。「没开始」恒为 0,所以四个变量就够了。
           每天按这个顺序更新:buy1 = max(buy1, −p)、sell1 = max(sell1, buy1 + p)、
           buy2 = max(buy2, sell1 − p)、sell2 = max(sell2, buy2 + p)。答案是 sell2 ——
-          它单调不减,所以「只交易一次」的情况已经被包含在内。
+          第二笔交易可以在同一天买入又卖出(收益为 0),所以 sell2 不会小于 sell1,
+          「只交易一次」的情况已经包含在内。
           真正的关键是把<b>已用交易次数 k</b> 升成一个状态维度;
           推广到「最多 k 次」就是 LC 188 的 dp[k][hold],时间 O(nk)。
           本题时间 O(n)、空间 O(1)。
@@ -304,7 +306,7 @@ export const PROBLEMS: Problem[] = [
           否则任一孩子返回 2 → 当前已被覆盖,返 1;否则返 0,等父亲来装。
           若根最终返回 0,再补一台。「把摄像头一路推迟到未覆盖节点的父亲」就是贪心 ——
           装在那里,一台能同时覆盖该节点、它的兄弟和它自己的父亲。时间 O(n)。
-          本题偏难,主线过后再碰。
+          本题偏难,学完主线再做。
         </>
       ),
     },
@@ -323,7 +325,7 @@ export const PROBLEMS: Problem[] = [
     },
     hint: {
       en: "Find the longest palindromic subsequence in one string. When the two ends of the interval hold the same character, you can take both at once.",
-      zh: "在一个字符串里找最长回文「子序列」—— 当区间两端字符相等,能一次吃掉两个。",
+      zh: "在一个字符串里找最长回文「子序列」—— 当区间两端字符相等,两端可以一起用上。",
     },
     key: {
       en: (
@@ -431,7 +433,7 @@ export const PROBLEMS: Problem[] = [
           或 (pos+1) % num == 0 就合法,于是 dp[mask | bit] += dp[mask]。
           从 dp[0] = 1 出发,答案在 dp[(1&lt;&lt;n)−1]。
           复杂度 =(子集个数)×(每个子集的工作量)= 时间 O(2ⁿ × n)、空间 O(2ⁿ),
-          n ≤ 15 完全跑得动。这是状压 DP 的入门模板:一个集合变成一个整数。
+          n ≤ 15 时完全可行。这是状压 DP 的入门模板:一个集合变成一个整数。
           地基是第 4 章的「一个 int 就是一排开关」。
         </>
       ),
@@ -558,7 +560,7 @@ export const QUIZ: QuizItem[] = [
     },
     why: {
       en: "The cooldown means you may only buy from the second day after a sale. Two states cannot express \"I sold yesterday, so today I still may not buy\", so the empty-handed case splits into sold (just sold) and rest (free to buy): hold = max(hold, rest − p), sold = hold + p, rest = max(rest, sold). More conditions in the problem means more states. That is the usual pattern in state machine DP.",
-      zh: "冷冻期的意思是卖出后要隔一天才能买。两个状态无法表达「昨天刚卖,今天还不能买」,所以把空仓拆成 sold(刚卖)和 rest(可买):hold = max(hold, rest − p)、sold = hold + p、rest = max(rest, sold)。题目的约束一多,状态就多 —— 这是状态机 DP 的常见套路。",
+      zh: "冷冻期的意思是卖出后要隔一天才能买。两个状态无法表达「昨天刚卖,今天还不能买」,所以把空仓拆成 sold(刚卖)和 rest(可买):hold = max(hold, rest − p)、sold = hold + p、rest = max(rest, sold)。题目的约束一多,状态就多 —— 这是状态机 DP 的常见模式。",
     },
   },
   {
@@ -729,7 +731,7 @@ export const QUIZ: QuizItem[] = [
         "They give different answers, so you pick one based on the input size",
       ],
       zh: [
-        "两者都对且结果相同:贪心吃下每一段相邻上涨(Σ max(0, p[i]−p[i−1])),DP 在 hold 和 cash 两个状态间转移",
+        "两者都对且结果相同:贪心收下每一段相邻上涨(Σ max(0, p[i]−p[i−1])),DP 在 hold 和 cash 两个状态间转移",
         "贪心是错的,只有 DP 能得到正确答案",
         "DP 是错的,只有贪心对",
         "两者答案不同,要看数据规模选哪一个",
@@ -752,7 +754,7 @@ export const QUIZ: QuizItem[] = [
     },
     why: {
       en: "With unlimited trades, \"take every rise\" is provably safe and equals the hold/cash DP. Add a condition, though, and the greedy has to be re-proved: with a fee (LC 714) or a cooldown (LC 309) the simple rule breaks, while the state machine keeps working. That is why the stock problems are taught as one family.",
-      zh: "交易次数不限时,「吃下每段上涨」可以证明是安全的,和 hold/cash 两状态 DP 等价。但只要加一个约束,贪心就必须重新证明:加手续费(LC 714)或加冷冻期(LC 309)后,这条简单规则就不成立了,而状态机照旧能用。这就是把这些股票题当成一个家族来讲的原因。",
+      zh: "交易次数不限时,「收下每段上涨」可以证明是安全的,和 hold/cash 两状态 DP 等价。但只要加一个约束,贪心就必须重新证明:加手续费(LC 714)或加冷冻期(LC 309)后,这条简单规则就不成立了,而状态机照旧能用。这就是把这些股票题当成一个家族来讲的原因。",
     },
   },
   {

@@ -3,14 +3,6 @@
    colors come only from CSS tokens (var(--acc) and friends) so light and dark
    themes adapt automatically. Never hard-code a color. */
 
-/* ---------- Overview cards for the four major types ---------- */
-
-[data-ch="dp-pro"] .pro-type-ico {
-  font-size: 26px;
-  line-height: 1;
-  margin-bottom: 8px;
-}
-
 /* ---------- The stock-problem family ladder ---------- */
 
 [data-ch="dp-pro"] .pro-ladder {
@@ -53,7 +45,7 @@
   white-space: nowrap;
 }
 
-[data-ch="dp-pro"] .pro-rung h4 {
+[data-ch="dp-pro"] .pro-rung h3 {
   margin: 0 0 3px;
   font-size: 14px;
 }
