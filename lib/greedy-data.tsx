@@ -14,7 +14,7 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Assign Cookies", zh: "分发饼干" },
     d: "easy",
     tags: {
-      en: ["exchange argument", "sorting", "core"],
+      en: ["Exchange argument", "Sorting", "Seed problem"],
       zh: ["交换论证", "排序", "种子题"],
     },
     hint: {
@@ -49,7 +49,7 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Lemonade Change", zh: "柠檬水找零" },
     d: "easy",
     tags: {
-      en: ["simulation", "which bill to spend"],
+      en: ["Simulation", "Which bill to spend"],
       zh: ["模拟", "面额贪心"],
     },
     hint: {
@@ -72,7 +72,7 @@ export const PROBLEMS: Problem[] = [
         <>
           维护两个计数:手里有几张 5、几张 10。收 5 不用找;收 10 找一张 5;
           收 20 可以找 10 + 5 或 5 + 5 + 5,优先前者。
-          为什么这样不吃亏:选 10 + 5 之后,你比另一种选法多两张 5、少一张 10。
+          为什么这样不会更差:选 10 + 5 之后,你比另一种选法多两张 5、少一张 10。
           如果后面某位顾客需要那张你已经没有的 10,你可以改用 5 + 5 + 5 去找他,
           代价正好是多出来的那两张 5。所以优先出 10 不会把本来能做到的情况变成失败。
           O(n)、O(1)。
@@ -84,11 +84,11 @@ export const PROBLEMS: Problem[] = [
     lc: 1005,
     title: {
       en: "Maximize Sum Of Array After K Negations",
-      zh: "K 次取反后最大化数组和",
+      zh: "K 次取反后最大化的数组和",
     },
     d: "easy",
     tags: {
-      en: ["sorting", "two phases", "optional"],
+      en: ["Sorting", "Two phases", "Optional"],
       zh: ["排序", "两段贪心", "选做"],
     },
     hint: {
@@ -124,7 +124,7 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Wiggle Subsequence", zh: "摆动序列" },
     d: "medium",
     tags: {
-      en: ["sequence greedy", "direction changes"],
+      en: ["Sequence greedy", "Direction changes"],
       zh: ["序列贪心", "拐点计数"],
     },
     hint: {
@@ -164,7 +164,7 @@ export const PROBLEMS: Problem[] = [
     },
     d: "medium",
     tags: {
-      en: ["sequence greedy", "stock", "two views"],
+      en: ["Sequence greedy", "Stock", "Two views"],
       zh: ["序列贪心", "股票", "一题两解"],
     },
     hint: {
@@ -204,7 +204,7 @@ export const PROBLEMS: Problem[] = [
     title: { en: "Maximum Subarray", zh: "最大子数组和" },
     d: "medium",
     tags: {
-      en: ["sequence greedy", "Kadane", "review"],
+      en: ["Sequence greedy", "Kadane", "Review"],
       zh: ["序列贪心", "Kadane", "复盘"],
     },
     hint: {
@@ -219,16 +219,16 @@ export const PROBLEMS: Problem[] = [
           negative prefix can only hurt, so start again from the current
           element&quot;. The DP reading is that <code>cur</code> is the largest
           sum of a subarray that ends at index i. Same line of code, two ways to
-          justify it. Chapter 07 is where this is taught in full; here it is a
-          review.
+          justify it. The LC 53 entry in the chapter 07 problem set gives its DP
+          state and transition; here it is a review.
         </>
       ),
       zh: (
         <>
           Kadane:<code>cur = max(nums[i], cur + nums[i])</code>,全程记录最大的{" "}
-          <code>cur</code>。贪心读法是「负的前缀只会拖后腿,不如从当前元素重新开始」;
+          <code>cur</code>。贪心读法是「负的前缀只会让和变小,不如从当前元素重新开始」;
           DP 读法是「<code>cur</code> 表示以下标 i 结尾的最大子数组和」。
-          同一行代码,两种解释。第 7 章主讲,这里只作复盘。
+          同一行代码,两种解释。第 7 章题单里的 LC 53 给出了它的 DP 状态与转移,这里只作复盘。
         </>
       ),
     },
@@ -237,7 +237,7 @@ export const PROBLEMS: Problem[] = [
     lc: 55,
     title: { en: "Jump Game", zh: "跳跃游戏" },
     d: "medium",
-    tags: { en: ["jump", "reach"], zh: ["跳跃", "覆盖范围"] },
+    tags: { en: ["Jump", "Reach"], zh: ["跳跃", "覆盖范围"] },
     hint: {
       en: "Keep one number: the farthest index you can reach so far. You never need to know the actual jumps.",
       zh: "只维护一个数:目前最远能到哪。具体怎么跳根本不用知道。",
@@ -273,7 +273,7 @@ export const PROBLEMS: Problem[] = [
     lc: 45,
     title: { en: "Jump Game II", zh: "跳跃游戏 II" },
     d: "medium",
-    tags: { en: ["jump", "featured", "BFS in O(1) space"], zh: ["跳跃", "精讲", "BFS 压缩"] },
+    tags: { en: ["Jump", "Worked example", "BFS in O(1) space"], zh: ["跳跃", "精讲", "BFS 压缩"] },
     hint: {
       en: "Inside the range of the current jump, look ahead for the landing spot that pushes the next range farthest.",
       zh: "在「这一跳能到的范围」里提前找出:哪个落点能把下一跳的范围推得最远。",
@@ -310,7 +310,7 @@ export const PROBLEMS: Problem[] = [
     lc: 134,
     title: { en: "Gas Station", zh: "加油站" },
     d: "medium",
-    tags: { en: ["simulation", "choosing a start"], zh: ["模拟", "起点选择"] },
+    tags: { en: ["Simulation", "Choosing a start"], zh: ["模拟", "起点选择"] },
     hint: {
       en: "Whether a solution exists is one check. Where it starts is the station right after the tank first goes negative.",
       zh: "有没有解是一道判断题;起点在哪,看油箱第一次变负的下一站。",
@@ -350,7 +350,7 @@ export const PROBLEMS: Problem[] = [
       zh: "根据身高重建队列",
     },
     d: "medium",
-    tags: { en: ["sorting", "insertion", "advanced"], zh: ["排序", "模拟", "进阶"] },
+    tags: { en: ["Sorting", "Insertion", "Advanced"], zh: ["排序", "插入", "进阶"] },
     hint: {
       en: "Place the tall people first. Inserting a shorter person later cannot change what a taller person sees.",
       zh: "先让高个子站好队。矮的后插进来,不会改变高个子看到的人数。",
@@ -387,7 +387,7 @@ export const PROBLEMS: Problem[] = [
       zh: "用最少数量的箭引爆气球",
     },
     d: "medium",
-    tags: { en: ["intervals", "sort by end"], zh: ["区间贪心", "右端排序"] },
+    tags: { en: ["Intervals", "Sort by end"], zh: ["区间贪心", "右端排序"] },
     hint: {
       en: "One arrow at position x bursts every balloon whose interval contains x. Make each arrow cover as many as possible.",
       zh: "一支箭射在 x 处,能引爆所有区间包含 x 的气球 —— 让每支箭尽量多穿几个。",
@@ -419,7 +419,7 @@ export const PROBLEMS: Problem[] = [
     lc: 435,
     title: { en: "Non-overlapping Intervals", zh: "无重叠区间" },
     d: "medium",
-    tags: { en: ["intervals", "featured", "sort by end"], zh: ["区间贪心", "精讲", "右端排序"] },
+    tags: { en: ["Intervals", "Worked example", "Sort by end"], zh: ["区间贪心", "精讲", "右端排序"] },
     hint: {
       en: "Deleting the fewest is the same as keeping the most. Always keep the interval that ends earliest.",
       zh: "「删最少」等价于「保留最多」。永远优先保留结束最早的那个区间。",
@@ -432,8 +432,10 @@ export const PROBLEMS: Problem[] = [
           total minus kept. Sorting by end time is what makes this optimal:
           among all intervals, the one that ends earliest leaves the largest
           remaining time for the rest, and an exchange argument shows any optimal
-          solution can be rewritten to start with it. Sorting by start time or by
-          shortest length is not optimal. O(n log n). Section 06 walks through
+          solution can be rewritten to start with it. Sorting by start time also
+          works if, on an overlap, you keep the interval that ends earlier.
+          Keeping whichever comes first by start time, or sorting by length, is not
+          optimal. O(n log n). Section 06 walks through
           the timeline.
         </>
       ),
@@ -443,7 +445,8 @@ export const PROBLEMS: Problem[] = [
           否则删掉。答案 = 总数 − 保留数。按结束时间排序正是最优性的来源:
           在所有区间里,结束最早的那个给后面留下的时间最多,
           而交换论证说明任何最优解都能改写成以它开头。
-          按起点排序或按长度排序都不是最优的。O(n log n)。§06 有时间轴动画。
+          按开始时间排序也可以,但重叠时必须保留结束更早的那个;
+          只按开始时间贪心保留,或按长度排序,都不是最优。O(n log n)。§06 有时间轴动画。
         </>
       ),
     },
@@ -452,7 +455,7 @@ export const PROBLEMS: Problem[] = [
     lc: 763,
     title: { en: "Partition Labels", zh: "划分字母区间" },
     d: "medium",
-    tags: { en: ["intervals", "advanced"], zh: ["区间贪心", "进阶"] },
+    tags: { en: ["Intervals", "Advanced"], zh: ["区间贪心", "进阶"] },
     hint: {
       en: "A part cannot end while one of its letters still appears later in the string.",
       zh: "只要段内某个字母后面还会出现,这一段就不能收尾。",
@@ -482,7 +485,7 @@ export const PROBLEMS: Problem[] = [
     lc: 56,
     title: { en: "Merge Intervals", zh: "合并区间" },
     d: "medium",
-    tags: { en: ["intervals", "sort by start", "review"], zh: ["区间贪心", "左端排序", "复盘"] },
+    tags: { en: ["Intervals", "Sort by start", "Review"], zh: ["区间贪心", "左端排序", "复盘"] },
     hint: {
       en: "Sort by start. If the next interval touches the current one, extend it; otherwise open a new one.",
       zh: "按左端排序。下一个区间能接上就扩,接不上就另起一段。",
@@ -514,7 +517,7 @@ export const PROBLEMS: Problem[] = [
     lc: 738,
     title: { en: "Monotone Increasing Digits", zh: "单调递增的数字" },
     d: "medium",
-    tags: { en: ["digits", "optional"], zh: ["贪心", "数位", "选做"] },
+    tags: { en: ["Digits", "Optional"], zh: ["数位", "选做"] },
     hint: {
       en: "Scan from the low end. Where a digit is larger than the one on its right, lower it by one and make everything after it a 9.",
       zh: "从低位往高位扫。哪一位比它右边的大,就把它减一,并把后面全部变成 9。",
@@ -548,7 +551,7 @@ export const PROBLEMS: Problem[] = [
     lc: 402,
     title: { en: "Remove K Digits", zh: "移掉 K 位数字" },
     d: "medium",
-    tags: { en: ["monotonic stack", "optional"], zh: ["贪心", "单调栈", "选做"] },
+    tags: { en: ["Monotonic stack", "Optional"], zh: ["单调栈", "选做"] },
     hint: {
       en: "Scan left to right with a stack. When the new digit is smaller than the top, the top is a large digit sitting in a high position.",
       zh: "从左往右配一个栈。新数字比栈顶小时,栈顶就是一个「占着高位的大数字」。",
@@ -562,8 +565,8 @@ export const PROBLEMS: Problem[] = [
           could, because digit position outweighs digit value. When the removal
           budget is used up, stop popping; at the end drop leading zeros and
           remove any remaining budget from the tail. O(n). The stack structure
-          itself is covered in DataData chapter 03; here it carries the greedy
-          idea.
+          itself is covered in DataData chapter 04 (Stack); here it carries the
+          greedy idea.
         </>
       ),
       zh: (
@@ -572,7 +575,7 @@ export const PROBLEMS: Problem[] = [
           把高位上的较大数字删掉,比删任何低位的数字都更能压小整个数 ——
           因为数位的权重高于数字本身的大小。额度用完就停止弹栈,
           最后处理前导零、并把没用完的额度从末尾扣掉。O(n)。
-          单调栈这个结构在 DataData 第 3 章讲过,这里用的是它承载的贪心思想。
+          单调栈这个结构在 DataData 第 4 章(栈)讲过,这里用的是它承载的贪心思想。
         </>
       ),
     },
@@ -581,7 +584,7 @@ export const PROBLEMS: Problem[] = [
     lc: 135,
     title: { en: "Candy", zh: "分发糖果" },
     d: "hard",
-    tags: { en: ["two passes", "constraints"], zh: ["模拟", "两次遍历"] },
+    tags: { en: ["Two passes", "Constraints"], zh: ["两次遍历", "约束"] },
     hint: {
       en: "Each child is constrained by the left neighbor and by the right neighbor. Handle one direction per pass.",
       zh: "每个孩子同时被左邻和右邻约束 —— 一次遍历只处理一个方向。",
@@ -611,7 +614,7 @@ export const PROBLEMS: Problem[] = [
           每一遍给出的都是「只满足一侧约束」的最小值,
           因此两者都是任何合法方案的下界,取 max 之后仍是下界;
           而这个 max 本身是合法的,所以它就是逐位最小的合法方案,总和自然最小。
-          「双向约束拆成两次单向扫描」是这里真正值得带走的招式。O(n)。
+          「双向约束拆成两次单向扫描」是这里真正值得带走的方法。O(n)。
         </>
       ),
     },
@@ -620,7 +623,7 @@ export const PROBLEMS: Problem[] = [
     lc: 968,
     title: { en: "Binary Tree Cameras", zh: "监控二叉树" },
     d: "hard",
-    tags: { en: ["tree greedy", "optional"], zh: ["树形贪心", "选做"] },
+    tags: { en: ["Tree greedy", "Optional"], zh: ["树形贪心", "选做"] },
     hint: {
       en: "A camera on a leaf covers two nodes. The same camera on the leaf's parent covers three. Work bottom up.",
       zh: "摄像头装在叶子上只盖 2 个点,装在叶子的父节点上盖 3 个 —— 所以自底向上处理。",
@@ -949,8 +952,8 @@ export const QUIZ: QuizItem[] = [
       ],
     },
     why: {
-      en: "The rule this chapter leaves you with: prove the exchange argument and you may be greedy; fail to prove it and use DP. On coins [1, 3, 4] the greedy-choice property does not hold, so the problem goes to DP. Note that the same greedy is optimal for other coin sets, such as 1, 5, 10, 25. Chapter 07 opens with exactly this example.",
-      zh: "本章留给你的判据:能证明交换论证就贪,证不出就用 DP。硬币 [1, 3, 4] 上贪心选择性质不成立,于是交给 DP。注意同一种贪心在别的面额上是最优的,比如 1、5、10、25。第 7 章的开场用的正是这个例子。",
+      en: "The rule this chapter leaves you with: prove the exchange argument and you may be greedy; fail to prove it and use DP. On coins [1, 3, 4] the greedy-choice property does not hold, so the problem goes to DP. Note that the same greedy is optimal for other coin sets, such as 1, 5, 10, 25. Worked example D in chapter 07 (LC 322) uses exactly this example.",
+      zh: "本章留给你的判据:能证明交换论证就贪,证不出就用 DP。硬币 [1, 3, 4] 上贪心选择性质不成立,于是交给 DP。注意同一种贪心在别的面额上是最优的,比如 1、5、10、25。第 7 章的精讲 D(LC 322)用的正是这个例子。",
     },
   },
 ];
