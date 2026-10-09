@@ -64,7 +64,7 @@ const KEYS = "ABCDEFGH";
 
 /**
  * Canonical form for comparing a typed answer with an accepted one. NFKC folds full-width
- * forms (（）, ０-９ Ａ-Ｚ) into ASCII. The ideographic full stop becomes "."; the ideographic
+ * forms (（）， ０-９ Ａ-Ｚ) into ASCII. The ideographic full stop becomes "."; the ideographic
  * comma 、 is what a Chinese IME produces both for "," in a list and for "/" in a fraction, so
  * it is resolved to `sep`.
  */
