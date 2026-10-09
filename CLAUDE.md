@@ -176,6 +176,10 @@ argues with data instead of intuition.
 - `<Quiz ch="dp" items={QuizItem[]} />`; question types choice / multi / fill (same
   contract as DataData). **Generic feedback is banned** ("that is incorrect" is not
   acceptable) — every wrong option needs its own explanation of what specifically is wrong.
+- A fill item's `answers` are compared ignoring case, spaces and full-width forms (NFKC),
+  so 「O（n）」 typed with a Chinese input method matches O(n); 「。」 reads as "." and 「、」
+  as either "," or "/". List the English and the Chinese spellings of an answer; after three
+  misses the reader is shown the first one written in their language.
 
 ### lib/problems.tsx
 - `<ProblemSet ch="dp" items={Problem[]} />`
