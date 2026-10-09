@@ -89,7 +89,7 @@ const BOUNDARY: { id: string; topic: ReactNode; where: ReactNode; note: ReactNod
     note: (
       <T
         en="Graph algorithms are easiest to learn together with the graph structure itself."
-        zh="图上算法跟着图结构一起学最顺。"
+        zh="图上的算法和图结构一起学最容易理解。"
       />
     ),
   },
@@ -210,7 +210,7 @@ const QUIZ: QuizItem[] = [
       ],
       zh: [
         undefined,
-        "反了也不对 —— 二者谁也不包含谁:快排不属于任何结构,哈希表也不是算法。",
+        "二者谁也不包含谁:快排不属于任何结构,哈希表也不是算法。",
         "「怎么存」和「怎么算」是两个维度:同一个数组上可以跑一百种不同算法。",
         "没有高下:选错结构的算法会慢,没有算法的结构只是仓库。面试考的是二者的配合。",
       ],
@@ -234,7 +234,7 @@ const QUIZ: QuizItem[] = [
         "A while loop instead of an if statement",
       ],
       zh: [
-        "基准情形(base case)+ 每次递归都向它靠近",
+        "基例(base case)+ 每次递归都向它靠近",
         "调用次数不超过 1000 次",
         "在函数末尾调用自己(尾递归)",
         "用 while 循环代替 if 判断",
@@ -257,7 +257,7 @@ const QUIZ: QuizItem[] = [
     },
     why: {
       en: "Recursion needs two things: an exit that can be answered without recursing, and arguments that get closer to that exit on every call. Miss either one and the stack runs out of space.",
-      zh: "递归两要素:① 有一个不用递归就能直接回答的出口;② 每次调用的参数都在向出口收敛。缺一个就会耗尽栈空间。",
+      zh: "递归需要两个条件:① 有一个不用递归就能直接回答的出口;② 每次调用的参数都在向出口收敛。缺一个就会耗尽栈空间。",
     },
   },
   {
@@ -277,7 +277,7 @@ const QUIZ: QuizItem[] = [
         "3 个 —— fact(3)、fact(2)、fact(1) 同时挂在栈上",
         "1 个,算完一个才有下一个",
         "2 个",
-        "无数个",
+        "没有固定上限",
       ],
     },
     correct: 0,
@@ -292,7 +292,7 @@ const QUIZ: QuizItem[] = [
         undefined,
         "fact(3) 必须等 fact(2) 的结果才能继续,所以它不能退场 —— 等待者会留在栈上。",
         "fact(3) 和 fact(2) 都在等待时,fact(1) 也要压栈:3 个同时在场。",
-        "有基准情形 fact(1) 兜底,栈深最多就是递归深度 n。",
+        "有基例 fact(1) 兜底,栈深最多就是递归深度 n。",
       ],
     },
     why: {
@@ -366,7 +366,7 @@ const QUIZ: QuizItem[] = [
     },
     why: {
       en: "Choosing a paradigm starts with reading the signals: overlapping subproblems plus optimal substructure → DP; independent subproblems → divide and conquer; a provable local choice → greedy; none of these → backtracking as the fallback. The final chapter turns this into a decision map.",
-      zh: "范式选择靠信号识别:重叠子问题 + 最优子结构 → DP;子问题独立 → 分治;局部最优可证 → 贪心;都不沾 → 回溯穷举兜底。终章的选型地图会把这套雷达练成条件反射。",
+      zh: "范式选择靠信号识别:重叠子问题 + 最优子结构 → DP;子问题独立 → 分治;局部最优可证 → 贪心;都不满足 → 回溯穷举兜底。终章会把这套判断整理成一张选型地图。",
     },
   },
   {
@@ -401,7 +401,7 @@ const QUIZ: QuizItem[] = [
     type: "choice",
     q: {
       en: "In an interview, why is it recommended to describe the brute-force solution first and improve it from there, instead of going straight to the optimal one?",
-      zh: "面试时为什么建议「先说暴力解,再谈优化」,而不是直接甩最优解?",
+      zh: "面试时为什么建议「先说暴力解,再谈优化」,而不是直接给出最优解?",
     },
     opts: {
       en: [
@@ -452,7 +452,10 @@ const STATS: { id: string; to: number; suffix?: string; label: Loc<string> }[] =
   {
     id: "problems",
     to: 147,
-    label: { en: "worked LeetCode problems", zh: "LeetCode 高频题精讲" },
+    label: {
+      en: "problem-set entries (131 distinct problems)",
+      zh: "题单收录题次(去重后 131 道)",
+    },
   },
   {
     id: "langs",
@@ -530,7 +533,10 @@ export default function Home() {
         <div>
           <span className="home-kicker">
             <span className="pulse" />
-            INTERACTIVE COURSE · <T en="DATADATA SISTER COURSE" zh="DATADATA 姊妹篇" />
+            <T
+              en="INTERACTIVE COURSE · DATADATA SISTER COURSE"
+              zh="交互式课程 · DataData 姊妹篇"
+            />
           </span>
           <h1 className="hero-title">
             <T
@@ -685,7 +691,7 @@ export default function Home() {
           <div className="card hoverable">
             <div className="card-kicker">STANDARD 01</div>
             <div className="card-title">
-              <T en="✅ First, it must be correct" zh="✅ 首先要对" />
+              <T en="First, it must be correct" zh="首先要对" />
             </div>
             <p>
               <T
@@ -700,7 +706,7 @@ export default function Home() {
                 zh={
                   <>
                     对<b>所有</b>输入都对:空数组、单元素、重复值、负数、溢出边界。
-                    面试里挂掉的代码,大多死在边界而不是思路。
+                    面试中出错的代码,多数错在边界,而不是思路。
                   </>
                 }
               />
@@ -709,7 +715,7 @@ export default function Home() {
           <div className="card hoverable">
             <div className="card-kicker">STANDARD 02</div>
             <div className="card-title">
-              <T en="⚡ Then, fast and small" zh="⚡ 然后要快、要省" />
+              <T en="Then, fast and small" zh="然后要快、要省" />
             </div>
             <p>
               <T
@@ -830,14 +836,14 @@ export default function Home() {
                 <>
                   Some techniques only make sense on one structure: two pointers
                   on an array, a monotonic stack on a stack. DataData already
-                  covers those, so this course does not repeat them. It links to
+                  covers those, so this course does not repeat them. It points to
                   them where they come up.
                 </>
               }
               zh={
                 <>
                   有些套路只在某个结构上才成立(双指针长在数组上、单调栈长在栈上),
-                  那些已经在 DataData 讲透了,本课不再重复 —— 遇到时会给出跳转指引:
+                  那些已经在 DataData 讲透了,本课不再重复 —— 遇到时会注明在 DataData 的哪一章:
                 </>
               }
             />
@@ -907,7 +913,7 @@ export default function Home() {
         }}
         desc={{
           en: "Divide and conquer is recursive, backtracking is recursive, and the first version of a DP solution is recursive too. Make this solid first.",
-          zh: "分治在递归、回溯在递归、DP 的第一步还是递归 —— 先把它焊死",
+          zh: "分治在递归、回溯在递归、DP 的第一步还是递归 —— 先把它打牢",
         }}
       >
         <div className="prose">
@@ -929,7 +935,7 @@ export default function Home() {
                   <strong>递归(recursion)</strong>就是函数调用自己。听起来像悖论:
                   「fact(3) 的答案依赖 fact(2),fact(2) 依赖 fact(1)……」——
                   但只要队伍的尽头有一个<strong>不需要问别人就知道答案的人</strong>,
-                  答案就能一路传回来。那个人叫<strong>基准情形(base case)</strong>。
+                  答案就能一路传回来。那个人叫<strong>基例(base case)</strong>。
                 </>
               }
             />
@@ -945,7 +951,7 @@ export default function Home() {
               }
               zh={
                 <>
-                  递归不是玄学,是<strong>调用栈(call stack)</strong>上实实在在的压栈与弹栈。
+                  递归并不神秘,它是<strong>调用栈(call stack)</strong>上实实在在的压栈与弹栈。
                   亲眼看一遍 fact(3) 的一生:
                 </>
               }
@@ -956,10 +962,10 @@ export default function Home() {
         <div className="grid-3" style={{ marginTop: 18 }}>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="ELEMENT 01" zh="要素 01" />
+              <T en="CONDITION 01" zh="条件 01" />
             </div>
             <div className="card-title">
-              <T en="Base case" zh="基准情形" />
+              <T en="Base case" zh="基例" />
             </div>
             <p>
               <T
@@ -981,7 +987,7 @@ export default function Home() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="ELEMENT 02" zh="要素 02" />
+              <T en="HABIT" zh="习惯" />
             </div>
             <div className="card-title">
               <T en="Trust the recursive call" zh="递归信任" />
@@ -1007,7 +1013,7 @@ export default function Home() {
           </div>
           <div className="card hoverable">
             <div className="card-kicker">
-              <T en="ELEMENT 03" zh="要素 03" />
+              <T en="CONDITION 02" zh="条件 02" />
             </div>
             <div className="card-title">
               <T en="Converging state" zh="状态收敛" />
@@ -1023,7 +1029,7 @@ export default function Home() {
                 }
                 zh={
                   <>
-                    每次调用都必须<b>向基准情形靠近</b>:n−1、区间砍半、树往下走一层。
+                    每次调用都必须<b>向基例靠近</b>:n−1、区间砍半、树往下走一层。
                     收敛方式,就是后面每个算法的「形状」。
                   </>
                 }
@@ -1044,7 +1050,7 @@ public long fact(int n) {
 }                              // (3) n-1 moves toward the exit`,
               zh: `// 阶乘:递归的 hello world
 public long fact(int n) {
-    if (n <= 1) return 1;      // ① 基准情形:出口
+    if (n <= 1) return 1;      // ① 基例:出口
     return n * fact(n - 1);    // ② 信任 fact(n-1),用它拼答案
 }                              // ③ n-1 在向出口收敛`,
             },
@@ -1076,7 +1082,7 @@ def fact(n: int) -> int:
                             # (3) n-1 moves toward the exit`,
               zh: `# 阶乘:递归的 hello world
 def fact(n: int) -> int:
-    if n <= 1:            # ① 基准情形:出口
+    if n <= 1:            # ① 基例:出口
         return 1
     return n * fact(n - 1)  # ② 信任 fact(n-1),用它拼答案
                             # ③ n-1 在向出口收敛`,
@@ -1085,20 +1091,23 @@ def fact(n: int) -> int:
               en: (
                 <>
                   <b>Watch out:</b> Python&apos;s default recursion limit is{" "}
-                  <b>1000</b> (<code>RecursionError</code>). For deep recursion,
-                  call <code>sys.setrecursionlimit(10**6)</code> or rewrite the
-                  function as a loop.
+                  <b>1000</b> (<code>RecursionError</code>).{" "}
+                  <code>sys.setrecursionlimit(10**6)</code> raises it, but a limit
+                  that high can overflow the interpreter&apos;s own stack and crash
+                  the process, so deep recursion is better rewritten as a loop.
                 </>
               ),
               zh: (
                 <>
                   <b>注意:</b>Python 默认递归深度上限 <b>1000</b>(
-                  <code>RecursionError</code>)。刷题遇到深递归,记得{" "}
-                  <code>sys.setrecursionlimit(10**6)</code> 或改成迭代。
+                  <code>RecursionError</code>)。
+                  <code>sys.setrecursionlimit(10**6)</code> 可以调高上限,
+                  但上限调得太大可能耗尽解释器自身的栈、导致进程崩溃,
+                  深递归应改写成循环。
                 </>
               ),
             },
-            hl: [3, 5],
+            hl: [3, 4, 5],
           }}
           js={{
             code: {
@@ -1109,7 +1118,7 @@ function fact(n) {
 }                            // (3) n-1 moves toward the exit`,
               zh: `// 阶乘:递归的 hello world
 function fact(n) {
-  if (n <= 1) return 1;      // ① 基准情形:出口
+  if (n <= 1) return 1;      // ① 基例:出口
   return n * fact(n - 1);    // ② 信任 fact(n-1),用它拼答案
 }                            // ③ n-1 在向出口收敛`,
             },
@@ -1198,8 +1207,8 @@ function fact(n) {
               zh={
                 <>
                   LeetCode 有几千道题,标签听起来五花八门,
-                  但把「依附于某个结构的套路」拿掉之后,解题思路拢共只有四种。
-                  先混个脸熟 —— 每一章都会回到这张图:
+                  但把「依附于某个结构的套路」拿掉之后,解题思路一共只有四种。
+                  先在这里认识它们 —— 每一章都会回到这张图:
                 </>
               }
             />
@@ -1556,7 +1565,7 @@ function fact(n) {
                 zh={
                   <>
                     直觉故事 → 为什么暴力不行 → 核心思想。每个结论都带着「为什么」。
-                    某一段读不懂,就退回上一节,不要硬冲。
+                    某一段读不懂,就退回上一节,不要急于往下读。
                   </>
                 }
               />
@@ -1564,7 +1573,7 @@ function fact(n) {
           </div>
           <div className="card">
             <div className="card-title">
-              <T en="Then play with it" zh="再玩透" />
+              <T en="Then play with it" zh="再推演" />
             </div>
             <p>
               <T
@@ -1587,7 +1596,7 @@ function fact(n) {
           </div>
           <div className="card">
             <div className="card-title">
-              <T en="✍️ Then solve problems" zh="✍️ 后刷题" />
+              <T en="Then solve problems" zh="后做题" />
             </div>
             <p>
               <T
@@ -1613,7 +1622,7 @@ function fact(n) {
           tone="win"
           title={{
             en: "A review schedule: day 1, day 7, day 21",
-            zh: "复习节奏:D+1 / D+7 / D+21",
+            zh: "复习节奏:第二天、一周后、三周后",
           }}
         >
           <p>
@@ -1632,8 +1641,8 @@ function fact(n) {
               }
               zh={
                 <>
-                  每道题做完:<b>第 2 天</b>口述思路 + 手写核心代码;
-                  <b>第 7 天</b>完整重做;<b>第 21 天</b>限时重做
+                  每道题做完:<b>第二天</b>口述思路并手写核心代码;
+                  <b>一周后</b>完整重做;<b>三周后</b>限时重做
                   (中等题 35~45 分钟,含讲解)。面试前按「范式」随机抽题,
                   而不是按章节顺序回忆 —— 真实面试不会告诉你这是哪一章的题。
                 </>
@@ -1732,16 +1741,18 @@ function fact(n) {
             <T
               en={
                 <>
-                  Recursion needs three things:{" "}
-                  <b>a base case, trust in the recursive call, and arguments that
-                  converge</b>. Check a recursion with those three questions
-                  instead of expanding the call tree in your head.
+                  Recursion needs two things:{" "}
+                  <b>a base case and arguments that converge on it</b>. When you
+                  write or check one, add a habit:{" "}
+                  <b>trust the recursive call to keep its promise</b>, instead of
+                  expanding the call tree in your head.
                 </>
               }
               zh={
                 <>
-                  递归三要素:<b>基准情形、递归信任、状态收敛</b> ——
-                  用这三问检查递归,别在脑内展开调用树。
+                  递归需要两个条件:<b>出口,以及向出口收敛的参数</b>;
+                  写和检查递归时,再加一个习惯:<b>相信递归调用能完成它的承诺</b>,
+                  不要在脑内展开调用树。
                 </>
               }
             />
@@ -1762,7 +1773,7 @@ function fact(n) {
                   四大范式一句话:子问题独立 → <b>分治</b>;
                   局部最优能用交换论证证明 → <b>贪心</b>;
                   子问题重叠 + 最优子结构 → <b>DP</b>;
-                  都不沾 → <b>回溯</b>穷举兜底。
+                  都不满足 → <b>回溯</b>穷举兜底。
                 </>
               }
             />
@@ -1797,8 +1808,8 @@ function fact(n) {
               }
               zh={
                 <>
-                  刷题节奏:先想 30 秒再看提示;
-                  <b>D+1 口述、D+7 重做、D+21 限时</b>;
+                  练习节奏:先想 30 秒再看提示;
+                  <b>第二天口述、一周后重做、三周后限时重做</b>;
                   面试前按范式抽题,不按章节顺序。
                 </>
               }
