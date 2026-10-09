@@ -481,7 +481,9 @@ function CountStat({
   label: Loc<string>;
 }) {
   const L = useL();
-  const [n, setN] = useState(0);
+  // null until mounted: the server HTML carries only the real number (in .count-final), so
+  // crawlers and readers without JavaScript never see a 0
+  const [n, setN] = useState<number | null>(null);
 
   useEffect(() => {
     // Do not add a "run only once" ref guard: StrictMode mounts, cleans up and mounts again,
@@ -511,8 +513,14 @@ function CountStat({
   return (
     <div className="home-stat">
       <div className="v">
-        {n}
-        {suffix}
+        {/* The rolling number is decoration; screen readers read the final value */}
+        <span className="count-live" aria-hidden>
+          {n === null ? "" : `${n}${suffix}`}
+        </span>
+        <span className="count-final">
+          {to}
+          {suffix}
+        </span>
       </div>
       <div className="k">{L(label)}</div>
     </div>
