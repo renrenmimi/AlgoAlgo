@@ -7,7 +7,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { chapterByPath } from "@/lib/curriculum";
+import { chapterByPath, PAGE_NOT_FOUND } from "@/lib/curriculum";
 import { useShell, useTheme, type CodeLang } from "./theme-provider";
 import { useL, useLang, type Lang } from "@/lib/i18n";
 import { useNarrowLayout } from "./sidebar";
@@ -25,7 +25,8 @@ const UI_LANGS: { id: Lang; label: string }[] = [
 
 export default function Toolbar() {
   const path = usePathname();
-  const ch = chapterByPath(path);
+  // Outside the course (a 404) the breadcrumb names the page instead
+  const ch = chapterByPath(path) ?? PAGE_NOT_FOUND;
   const { theme, toggleTheme } = useTheme();
   const { lang, setLang } = useLang();
   const L = useL();

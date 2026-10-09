@@ -316,12 +316,50 @@ export const CHAPTERS: Chapter[] = [
   },
 ];
 
-export function chapterByPath(path: string): Chapter {
+/** The prologue's tab title; the root layout renders the English one. */
+export const SITE_TITLE = {
+  en: "AlgoAlgo · Algorithms You Can See",
+  zh: "AlgoAlgo · 看得见的算法",
+};
+
+/** What the breadcrumb shows for a path outside the course (✦ hides the number). */
+export const PAGE_NOT_FOUND: Pick<Chapter, "num" | "title"> = {
+  num: "✦",
+  title: { en: "Page not found", zh: "页面不存在" },
+};
+
+/** The chapter a path belongs to, or null for a path outside the course (a 404). */
+export function chapterByPath(path: string): Chapter | null {
   if (path === "/") return CHAPTERS[0];
   const hit = CHAPTERS.find(
     (c) => c.href !== "/" && (path === c.href || path.startsWith(c.href + "/")),
   );
-  return hit ?? CHAPTERS[0];
+  return hit ?? null;
+}
+
+const enOf = (v: Loc<string>) => (typeof v === "string" ? v : v.en);
+
+/**
+ * Metadata for a chapter route, used by app/<chapter>/layout.tsx. The title is the English
+ * chapter title (the root template appends " · AlgoAlgo"); a Chinese reader's tab is retitled
+ * on the client by app/page-title.tsx.
+ */
+export function chapterMetadata(id: ChapterId) {
+  const ch = CHAPTERS.find((x) => x.id === id)!;
+  const title = enOf(ch.title);
+  const description = enOf(ch.essence);
+  return {
+    title,
+    description,
+    alternates: { canonical: ch.href },
+    openGraph: {
+      title: `${title} · AlgoAlgo`,
+      description,
+      url: ch.href,
+      siteName: "AlgoAlgo",
+      type: "article" as const,
+    },
+  };
 }
 
 /** Subtitle for the sidebar / command palette.

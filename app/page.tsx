@@ -31,6 +31,7 @@ import {
 import { Quiz, type QuizItem } from "@/lib/quiz";
 import { CodeTabs } from "@/lib/code";
 import { HeroDecision, RecursionLab } from "./home-viz";
+import { PageTitle } from "./page-title";
 
 /* ---------- The division of labor with DataData ---------- */
 
@@ -528,6 +529,7 @@ export default function Home() {
   const L = useL();
   return (
     <main className="page" data-ch="home">
+      <PageTitle page={null} />
       {/* Hero */}
       <header className="home-hero">
         <div>
