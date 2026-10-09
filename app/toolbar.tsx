@@ -5,10 +5,12 @@
 // The preferred code language (Java/Python/JS) is linked across the whole site; this is the
 // global entry point for changing it.
 
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { chapterByPath } from "@/lib/curriculum";
 import { useShell, useTheme, type CodeLang } from "./theme-provider";
 import { useL, useLang, type Lang } from "@/lib/i18n";
+import { useNarrowLayout } from "./sidebar";
 
 const LANGS: { id: CodeLang; label: string }[] = [
   { id: "java", label: "Java" },
@@ -28,19 +30,31 @@ export default function Toolbar() {
   const { lang, setLang } = useLang();
   const L = useL();
   const {
+    sidebarOpen,
     setSidebarOpen,
+    sidebarCollapsed,
     toggleSidebarCollapsed,
     setCmdkOpen,
     codeLang,
     setCodeLang,
   } = useShell();
+  const narrow = useNarrowLayout();
+
+  // Show the shortcut the reader's keyboard actually has
+  const [isMac, setIsMac] = useState(true);
+  useEffect(() => {
+    setIsMac(/Mac|iPhone|iPad/.test(navigator.platform));
+  }, []);
 
   return (
     <header className="toolbar">
       <button
         type="button"
+        id="sidebar-toggle"
         className="tb-btn"
         aria-label={L({ en: "Toggle sidebar", zh: "切换侧栏" })}
+        aria-controls="sidebar"
+        aria-expanded={narrow ? sidebarOpen : !sidebarCollapsed}
         onClick={() => {
           if (window.innerWidth <= 960) setSidebarOpen((v) => !v);
           else toggleSidebarCollapsed();
@@ -93,6 +107,7 @@ export default function Toolbar() {
             key={l.id}
             type="button"
             className={`seg-btn${codeLang === l.id ? " on" : ""}`}
+            aria-pressed={codeLang === l.id}
             onClick={() => setCodeLang(l.id)}
           >
             {l.label}
@@ -106,14 +121,19 @@ export default function Toolbar() {
         onClick={() => setCmdkOpen(true)}
         aria-label={L({ en: "Open command palette", zh: "打开命令面板" })}
       >
-        {L({ en: "Jump", zh: "跳转" })} <span className="tb-kbd">⌘K</span>
+        {L({ en: "Jump", zh: "跳转" })}{" "}
+        <span className="tb-kbd">{isMac ? "⌘K" : "Ctrl K"}</span>
       </button>
 
       <button
         type="button"
         className="tb-btn"
         onClick={toggleTheme}
-        aria-label={L({ en: "Toggle theme", zh: "切换主题" })}
+        aria-label={
+          theme === "dark"
+            ? L({ en: "Switch to the light theme", zh: "切换到浅色主题" })
+            : L({ en: "Switch to the dark theme", zh: "切换到深色主题" })
+        }
       >
         {theme === "dark" ? "☾" : "☀"}
       </button>

@@ -1447,6 +1447,8 @@ function fact(n) {
                 href={c.href}
                 className="map-card"
                 style={{ "--ch-hue": c.hue } as React.CSSProperties}
+                // Thirteen cards would otherwise prefetch every chapter after the page loads
+                prefetch={false}
               >
                 <span className="map-watermark" aria-hidden="true">
                   {c.num}
